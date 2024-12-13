@@ -1,6 +1,6 @@
 {
-    "name": "darkirby/symfo-base",
-    "description": "Template to quick start any Symfony project",
+    "name": "darkirby/livror",
+    "description": "Small webapp to share reviews of games with my friends, developed while learning Symfony",
     "type": "project",
     "license": "proprietary",
     "minimum-stability": "stable",

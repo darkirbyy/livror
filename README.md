@@ -1,6 +1,6 @@
 # Symfony Template
 
-Template to quick start any Symfony project.
+Small webapp to share reviews of games with my friends, developed while learning Symfony.
 
 ## Prerequisite
 
@@ -37,23 +37,24 @@ To prettify all files, run `npm run pretty-all`.
 To lint all files from one type, run `composer lint-[php|twig|scss|js]`.  
 To lint all files, run `composer lint-all`.
 
-## Install and dev
+## Install
 
 After cloning the project:
 
-- Install the dependencies with `composer install` and `npm install`.
-- Copy the `.env.dev` file into a `.env.dev.local` file and customize the values.  
-- Copy the `.env` file into a `.env.local` file and customize `APP_NAME`.  
-:information_source: `DATABASE_URL` is not mandatory for dev environment as Symfony will get the correct values from docker.
-
-Start the php/web server along with docker and npm server with `symfony server:start -d`.  
-Check the logs with `symfony server:logs`.  
-Stop all the services with `symfony server:stop`.
+- install the dependencies with `composer install` and `npm install`.
+- copy the `.env.dev` file into a `.env.dev.local` file and customize the values.  
+:information_source: `DATABASE_URL` is not mandatory for dev environment as Symfony will get the correct values from docker.  
 
 To use default git hooks, run `git config core.hooksPath ./githooks`. Current hooks are
 
 - prettify and linting all staged files before commit
 - running all unit tests before push
+
+## Dev
+
+Start the php/web server along with docker and npm server with `symfony server:start -d`.  
+Check the logs with `symfony server:logs`.  
+Stop all the services with `symfony server:stop`.
 
 To increment the version, use `symfony console bizkit:versioning:increment`.
 
@@ -62,34 +63,11 @@ To increment the version, use `symfony console bizkit:versioning:increment`.
 A workflow to build and deploy the application is preconfigured. Some variables and secrets have to been set up on GitHub:
 
 - Global parameters:
-  - variables: server **ADDR** (domain name)
-  - secrets: server **PORT** for SSH connection
+  - variables: **SERV_ADDR** (domain name)
+  - secrets: **SERV_PORT** for SSH connection
 - Environment parameters (for prod and test):
-  - variables: **PATH** where to copy the application on the server
-  - secrets: server **USER** and private **KEYS** for SSH connection
+  - variables: **SERV_PATH** where to copy the application on the server
+  - secrets: **SERV_USER** and private **SERV_KEYS** for SSH connection
 
 The workflow can be triggered manually in GitHub Actions or automatically when pushing to main (for prod) or to develop (for test).  
-:warning: Automatic triggers are disabled by default, uncomment the corresponding lines in `.github/workflows/main.yml`.
-
-On the server, to correctly route the request as the app lives in a subdirectory, use this nginx location block (replacing *symfo-base* with the chosen `APP_NAME`):
-
-```ini
-location @symfo-base {
-  rewrite ^/symfo-base/(.*)$ /symfo-base/index.php/$1 last;
-}
-
-location /symfo-base/ {
-  alias /usr/share/nginx/www/symfo-base/public/;
-  try_files $uri @symfo-base;
-
-  location ~ ^/symfo-base/index\.php(/|$) {
-    fastcgi_split_path_info ^(/symfo-base/index\.php)(/.*)$;
-    include fastcgi_params;
-    fastcgi_param SCRIPT_FILENAME $document_root/index.php;
-    fastcgi_pass php-fpm:9000;
-    internal;
-  }
-}
-```
-
-:warning: On the server, don't forget to create the user and database in the RDBMS, and to create a `.env.local` file with prod/test env and corresponding database credentials.
+:warning: Only prod trigger is available for the moment.

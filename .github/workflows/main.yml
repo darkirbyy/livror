@@ -2,9 +2,9 @@ name: Main Workflow
 run-name: ${{ github.actor }} triggered "Build and Deploy" 🚀
 
 on:
-  # push:
-  #   branches:
-  #     - main
+  push:
+    branches:
+      - main
   #     - develop
 
   workflow_dispatch:
@@ -41,9 +41,9 @@ jobs:
       - name: Extract version, hash and release date
         id: extract-info
         run: |
-          version=$(awk '/symfo-base.version:/ {print $2}' config/version.yaml)
-          hash=$(awk '/symfo-base.hash:/ {print $2}' config/version.yaml)
-          release_date=$(awk '/symfo-base.release_date:/ {gsub(/'\''/, "", $2); print $2}' config/version.yaml)
+          version=$(awk '/livror.version:/ {print $2}' config/version.yaml)
+          hash=$(awk '/livror.hash:/ {print $2}' config/version.yaml)
+          release_date=$(awk '/livror.release_date:/ {gsub(/'\''/, "", $2); print $2}' config/version.yaml)
           echo "version=$version" >> $GITHUB_OUTPUT
           echo "hash=$hash" >> $GITHUB_OUTPUT
           echo "release_date=$release_date" >> $GITHUB_OUTPUT
