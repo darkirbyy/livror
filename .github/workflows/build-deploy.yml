@@ -1,0 +1,114 @@
+name: Build and Deploy
+run-name: ${{ github.actor }} triggered "Build-Deploy" of version ${{ inputs.version }} to ${{ inputs.environment }} 🚀
+
+on:
+  workflow_call:
+    inputs:
+      environment:
+        description: 'The deployment environment (test or prod)'
+        required: true
+        type: string
+      version:
+        description: 'The version deployed (x.x.x)'
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    steps:
+    - name: Checkout code in the runner
+      uses: actions/checkout@v4
+
+    - name: Setup PHP 8.2
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '8.2'
+
+    - name: Cache composer packages
+      id: composer-cache
+      uses: actions/cache@v4
+      with:
+        path: vendor
+        key: ${{ runner.os }}-php-${{ hashFiles('composer.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-php-
+
+    - name: Install PHP dependencies
+      run: composer install --no-scripts --no-interaction --no-progress --prefer-dist --no-dev --optimize-autoloader
+
+    - name: Setup Node.js 18.x
+      uses: actions/setup-node@v4
+      with:
+        node-version: 18.x
+
+    # USELESS as setup-node already cache the packages ?
+    - name: Cache npm packages
+      id: npm-cache
+      uses: actions/cache@v4
+      with:
+        path: node_modules
+        key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-node-
+
+    - name: Install Node dependencies
+      run: npm install
+
+    - name: Build front end using Webpack Encore 
+      run: npm run build
+
+    - name: Upload build
+      uses: actions/upload-artifact@v4
+      with:
+        name: build-${{ inputs.version }}
+        include-hidden-files: true
+        path: |
+          bin/
+          config/
+          migrations/
+          public/
+          src/
+          templates/
+          translations/
+          vendor/
+          composer.json
+          .env
+          .env.${{ inputs.environment }}
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-24.04
+    environment: ${{ inputs.environment }}
+    steps:
+    - name: Setup WARP to enable IPv6
+      uses: fscarmen/warp-on-actions@v1.2
+      with:
+        stack: dual
+
+    - name: Download build
+      uses: actions/download-artifact@v4
+      with:
+        name: build-${{ inputs.version }}
+        path: build
+
+    - name: Deploy on server
+      uses: easingthemes/ssh-deploy@main
+      with:
+        SSH_PRIVATE_KEY: ${{ secrets.SERV_KEYS }}
+        ARGS: "--recursive --delete --links --owner --group --perms --compress --checksum --verbose"
+        EXCLUDE: "/var/, /.env.local, /.env.${{ inputs.environment }}.local"
+        SOURCE: "build/"
+        REMOTE_HOST: ${{ vars.SERV_ADDR }}
+        REMOTE_USER: ${{ secrets.SERV_USER }}
+        REMOTE_PORT: ${{ secrets.SERV_PORT }}
+        TARGET: ${{ vars.SERV_PATH }}
+        SCRIPT_BEFORE: |
+          mkdir -p ${{ vars.SERV_PATH }}
+        SCRIPT_AFTER: |
+          mkdir ${{ vars.SERV_PATH }}/var && chmod 775 ${{ vars.SERV_PATH }}/var
+          sudo docker exec -it php-fpm migrate-app ${{ vars.SERV_PATH }}
+   

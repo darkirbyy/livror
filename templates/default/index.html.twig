@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    Hello World!
+{% endblock %}
+
+{% block body %}
+    <h1>
+        Hello World!
+    </h1>
+    <ul>
+        <li>✅ Server</li>
+        <li>{{ db_test ? '✅' : '❌' }} Database</li>
+        <li class="sass">SASS</li>
+        <li data-controller="test">❌ Stimulus</li>
+        <li>
+            <turbo-frame id="content-frame" src="{{ path('turbo') }}">
+                ❌ Turbo
+            </turbo-frame>
+        </li>
+    </ul>
+{% endblock %}

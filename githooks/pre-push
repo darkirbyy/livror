@@ -1,0 +1,12 @@
+#!/bin/sh
+
+echo "Pre-push hook : testing"
+
+# Check that composer is in the PATH
+HAS_COMPOSER=$(which composer)
+if [ ! $HAS_COMPOSER  ]; then
+    echo "Unable to find composer in PATH. Please install it globally."
+    exit 1
+fi
+
+composer tests-all

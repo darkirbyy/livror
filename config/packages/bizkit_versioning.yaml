@@ -1,0 +1,37 @@
+# Read the full documentation at: https://github.com/HypeMC/versioning-bundle
+
+bizkit_versioning:
+
+    # Prefix added to version parameters.
+    parameter_prefix: '%env(APP_NAME)%'
+
+    # Strategy used for managing version updates.
+    # Options:
+    # - 'semver': Semantic Versioning (e.g., 1.0.0, 2.1.0).
+    # - 'incrementing': Sequential number incrementing (e.g., 1, 2, 3).
+    strategy: semver
+
+    # The name of the file containing the version information.
+    filename: version
+
+    # The path to the file containing the version information.
+    filepath: '%kernel.project_dir%/config'
+
+    # Set to false to disable VCS integration.
+    vcs:
+        # The handler used for the VCS integration,
+        # set to null to disable the integration.
+        handler: git
+
+        # Defines how tags are applied to version commits.
+        # Options:
+        # - 'always': Automatically tag each version commit.
+        # - 'never': Do not tag version commits.
+        # - 'ask': Prompt the user before tagging.
+        tagging_mode: ask
+
+        # Tag message format, where '%s' is a placeholder for the version number.
+        tag_message: 'Update to version %s'
+
+        # Commit message format, where '%s' is a placeholder for the version number.
+        commit_message: 'Update to version %s'

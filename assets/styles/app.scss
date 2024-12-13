@@ -1,0 +1,21 @@
+@use 'sass:color';
+
+$bgcolor: #222222;
+$checkmark: '✅ ';
+
+.sass::before {
+  content: '❌ ';
+}
+
+body {
+  background-color: $bgcolor;
+  color: white;
+
+  h1 {
+    color: color.adjust($bgcolor, $lightness: 50%, $alpha: 1);
+  }
+
+  .sass::before {
+    content: $checkmark;
+  }
+}

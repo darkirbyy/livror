@@ -1,0 +1,43 @@
+#!/bin/sh
+
+echo "Pre-commit hook : using prettier and linter for all staged files"
+
+# Check that composer is in the PATH
+HAS_COMPOSER=$(which composer)
+if [ ! $HAS_COMPOSER  ]; then
+    echo "Unable to find composer in PATH. Please install it globally."
+    exit 1
+fi
+
+# Check that npm is in the PATH
+HAS_NPM=$(which npm)
+if [ ! $HAS_NPM  ]; then
+    echo "Unable to find npm in PATH. Please install it globally."
+    exit 1
+fi
+
+
+ALL_STAGED=$(git diff --cached --name-only --diff-filter=AM)
+
+# Define a helper function to pretty, lint and re-add files
+lint_and_add() {
+    local pattern="$1"
+    local command="$2"
+    local files
+
+    # Filter files by pattern
+    files=$(echo "$ALL_STAGED" | grep -E "$pattern")
+
+    # If there are matching files : pretty, lint and re-add them
+    if [ -n "$files" ]; then
+        echo "$files" | xargs -r -d '\n' npm run pretty-file
+        echo "$files" | xargs -r -d '\n' $command
+        echo "$files" | xargs -r -d '\n' git add
+    fi
+}
+
+lint_and_add '^(src|tests)/.+\.php$' "composer lint-php"
+lint_and_add '^templates/.+\.twig$' "composer lint-twig"
+lint_and_add '^assets/styles/.+\.scss$' "npm run lint-scss-file"
+lint_and_add '^assets/controllers/.+\.js$' "npm run lint-js-file"
+

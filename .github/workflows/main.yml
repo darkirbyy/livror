@@ -1,0 +1,58 @@
+name: Main Workflow
+run-name: ${{ github.actor }} triggered "Build and Deploy" 🚀
+
+on:
+  # push:
+  #   branches:
+  #     - main
+  #     - develop
+
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'The deployment environment'
+        required: true
+        type: environment
+
+jobs:
+  prepare:
+    runs-on: ubuntu-24.04
+    outputs:
+      environment: ${{ steps.determine-env.outputs.environment }}
+      version: ${{ steps.extract-info.outputs.version }}
+    steps:
+      - name: Checkout code in the runner
+        uses: actions/checkout@v4
+
+      - name: Determine deployment environment
+        id: determine-env
+        run: |
+          if [[ -n "${{ inputs.environment }}" ]]; then
+            echo "environment=${{ inputs.environment }}" >> $GITHUB_OUTPUT
+          elif [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
+            echo "environment=prod" >> $GITHUB_OUTPUT
+          elif [[ "${{ github.ref }}" == "refs/heads/develop" ]]; then
+            echo "environment=test" >> $GITHUB_OUTPUT
+          else
+            echo "Unknown branch: ${{ github.ref }}"
+            exit 1
+          fi
+
+      - name: Extract version, hash and release date
+        id: extract-info
+        run: |
+          version=$(awk '/symfo-base.version:/ {print $2}' config/version.yaml)
+          hash=$(awk '/symfo-base.hash:/ {print $2}' config/version.yaml)
+          release_date=$(awk '/symfo-base.release_date:/ {gsub(/'\''/, "", $2); print $2}' config/version.yaml)
+          echo "version=$version" >> $GITHUB_OUTPUT
+          echo "hash=$hash" >> $GITHUB_OUTPUT
+          echo "release_date=$release_date" >> $GITHUB_OUTPUT
+
+  call-build-deploy:
+    needs: prepare
+    uses: ./.github/workflows/build-deploy.yml
+    secrets: inherit
+    with:
+      environment: ${{ needs.prepare.outputs.environment }}
+      version: ${{ needs.prepare.outputs.version }}
+

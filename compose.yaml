@@ -1,0 +1,27 @@
+services:
+  database:
+    image: mariadb:11.5
+    container_name: ${APP_NAME}-mariadb
+    env_file: ".env.dev.local"
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      timeout: 5s
+      retries: 5
+      start_period: 60s
+    ports:
+      - 3306:3306
+    volumes:
+      # You may use a named volume instead to let docker manage the data for you
+      # - database_data:/var/lib/mysql:rw
+      # You may use a bind-mounted host directory instead, so that it is harder to accidentally remove the volume and lose all your data!
+      - ./docker/db-data:/var/lib/mysql:rw
+    networks:
+      - app
+
+networks:
+  app:
+    name: ${APP_NAME}_default
+    driver: bridge  
+
+# volumes:
+#   database_data:

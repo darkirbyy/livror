@@ -1,0 +1,7 @@
+workers:
+    # built-in command that run npm dev server to compile assets and hot reload
+    npm_dev_server:
+        cmd: ['npm', 'run', 'dev-server']
+
+    # start docker compose to run the local mariadb instance
+    docker_compose: ~
