@@ -1,4 +1,4 @@
-# Symfony Template
+# Livror
 
 Small webapp to share reviews of games with my friends, developed while learning Symfony.
 
@@ -60,14 +60,6 @@ To increment the version, use `symfony console bizkit:versioning:increment`.
 
 ## Deploy
 
-A workflow to build and deploy the application is preconfigured. Some variables and secrets have to been set up on GitHub:
-
-- Global parameters:
-  - variables: **SERV_ADDR** (domain name)
-  - secrets: **SERV_PORT** for SSH connection
-- Environment parameters (for prod and test):
-  - variables: **SERV_PATH** where to copy the application on the server
-  - secrets: **SERV_USER** and private **SERV_KEYS** for SSH connection
-
+A workflow to build and deploy the application is preconfigured.  
 The workflow can be triggered manually in GitHub Actions or automatically when pushing to main (for prod) or to develop (for test).  
 :warning: Only prod trigger is available for the moment.

@@ -16,7 +16,15 @@ Encore
     // public path used by the web server to access the output path
     .setPublicPath(Encore.isProduction() ? '/' + app_name + '/build' : '/build')
     // only needed for CDN's or subdirectory deploy
-    .setManifestKeyPrefix(Encore.isProduction() ? app_name+'/' : '') 
+    .setManifestKeyPrefix('build/') 
+    // copy images files to the build
+    .copyFiles({
+        from: './assets/images',
+        // target path, relative to the output dir (+ versioning in prod)
+        to: '[path][name]' + (Encore.isProduction() ? '.[hash:8]' : '') + '.[ext]',
+        // only copy files matching this pattern
+        pattern: /\.(png|jpg|jpeg|svg)$/
+    })
 
     /*
      * ENTRY CONFIG
