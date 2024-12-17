@@ -70,6 +70,14 @@ Encore
 
     // enables Sass/SCSS support
     .enableSassLoader()
+    .enablePostCssLoader((options) => {
+        options.postcssOptions = {
+            plugins: {
+                // add browserslist config to package.json (see below)
+                autoprefixer: {}
+            }
+        };
+    })
 
     // uncomment if you use TypeScript
     //.enableTypeScriptLoader()

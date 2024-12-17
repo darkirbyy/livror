@@ -1,5 +1,7 @@
 #!/bin/sh
 
+set -e
+
 echo "Pre-commit hook : using prettier and linter for all staged files"
 
 # Check that composer is in the PATH
@@ -26,7 +28,7 @@ lint_and_add() {
     local files
 
     # Filter files by pattern
-    files=$(echo "$ALL_STAGED" | grep -E "$pattern")
+    files=$(echo "$ALL_STAGED" | grep -E "$pattern" || true)
 
     # If there are matching files : pretty, lint and re-add them
     if [ -n "$files" ]; then
