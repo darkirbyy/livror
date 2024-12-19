@@ -1,0 +1,36 @@
+{% extends 'base.html.twig' %}
+
+{% set title = 'Ajouter un jeu' %}
+
+{% block main %}
+    <section>
+        <div class="container">
+            <div class="col-10 offset-1 col-md-6 offset-md-3">
+                {{ form_start(form) }}
+                {{ form_row(form.steamId, {label: 'ID Steam'}) }}
+                {{ form_row(form.name, {label: 'Nom'}) }}
+                {{
+                    form_row(
+                        form.developers,
+                        {
+                            label: 'Editeur(s)',
+                            help: 'Séparés par des virgules',
+                        },
+                    )
+                }}
+                {{ form_row(form.releaseDate, {label: 'Date de sortie'}) }}
+                {{ form_row(form.fullPrice, {label: 'Prix de vente'}) }}
+                {{
+                    form_row(
+                        form.genres,
+                        {label: 'Genres', help: 'Séparés par des virgules'},
+                    )
+                }}
+                {{ form_row(form.description, {label: 'Description'}) }}
+                {{ form_row(form.imgUrl, {label: "URL de l'image"}) }}
+                <button type="submit" class="btn btn-primary">Ajouter</button>
+                {{ form_end(form) }}
+            </div>
+        </div>
+    </section>
+{% endblock %}

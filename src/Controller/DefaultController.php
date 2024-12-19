@@ -2,16 +2,15 @@
 
 namespace App\Controller;
 
-use Doctrine\DBAL\Connection;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
 class DefaultController extends AbstractController
 {
-    #[Route('/', name: 'default')]
-    public function index(Connection $connection): Response
+    #[Route('/', name: 'app_default')]
+    public function index(): Response
     {
-        return $this->render('default/index.html.twig', []);
+        return $this->redirectToRoute('app_game_index');
     }
 }
