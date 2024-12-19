@@ -23,6 +23,7 @@
       "files": "../templates/**/*.twig",
       "options": {
         "printWidth": 80,
+        "twigAlwaysBreakObjects": false,
         "tabWidth": 4,
         "singleQuote": false,
         "semi": false
