@@ -13,6 +13,7 @@
         "@zackad/prettier-plugin-twig": "^0.12.0",
         "autoprefixer": "^10.4.20",
         "bootstrap": "^5.3.3",
+        "bootstrap-icons": "^1.11.3",
         "core-js": "^3.38.0",
         "dotenv": "^16.4.7",
         "eslint": "^9.16.0",

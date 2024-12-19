@@ -52,6 +52,7 @@ class GameType extends AbstractType
             ->add('imgUrl', UrlType::class, [
                 'required' => false,
                 'default_protocol' => 'http',
+                'attr' => [],
                 'label' => 'URL de l\'image',
             ]);
     }

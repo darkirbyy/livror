@@ -2,34 +2,75 @@
 
 {% set title = 'Ajouter un jeu' %}
 
+{# {% form_theme form _self %}
+{% block _game_fullPrice_widget %}
+    <div class="input-group mb-3">
+        <div class="input-group-prepend">
+            <span class="input-group-text">{{ money_pattern|form_encode_currency }}</span>
+        </div>
+        <input type="text"
+            class="form-control" />
+    </div>
+{% endblock %} #}
+
+{# <div class="input-group "><input type="text" id="game_fullPrice" name="game[fullPrice]" class="form-control"><span class="input-group-text"> €</span></div> #}
+
 {% block main %}
     <section>
         <div class="container">
-            <div class="col-10 offset-1 col-md-6 offset-md-3">
-                {{ form_start(form) }}
-                {{ form_row(form.steamId, {label: 'ID Steam'}) }}
-                {{ form_row(form.name, {label: 'Nom'}) }}
-                {{
-                    form_row(
-                        form.developers,
-                        {
-                            label: 'Editeur(s)',
-                            help: 'Séparés par des virgules',
-                        },
-                    )
-                }}
-                {{ form_row(form.releaseDate, {label: 'Date de sortie'}) }}
-                {{ form_row(form.fullPrice, {label: 'Prix de vente'}) }}
-                {{
-                    form_row(
-                        form.genres,
-                        {label: 'Genres', help: 'Séparés par des virgules'},
-                    )
-                }}
-                {{ form_row(form.description, {label: 'Description'}) }}
-                {{ form_row(form.imgUrl, {label: "URL de l'image"}) }}
-                <button type="submit" class="btn btn-primary">Ajouter</button>
-                {{ form_end(form) }}
+            <div class="row">
+                <div class="col-10 offset-1 col-lg-8 offset-lg-2">
+                    {{ form_start(form) }}
+                    <div class="row align-items-end">
+                        <div class="col">
+                            {{ form_row(form.steamId, {label: 'ID Steam'}) }}
+                        </div>
+                        <div class="col-auto">
+                            <button type="text"
+                                class="btn btn-outline-secondary bi bi-steam mb-3">
+                                <span class="d-none d-sm-inline">Chercher</span>
+                            </button>
+                        </div>
+                    </div>
+                    {{ form_row(form.name, {label: 'Nom'}) }}
+                    {{
+                        form_row(
+                            form.developers,
+                            {
+                                label: 'Editeur(s)',
+                                help: 'Séparés par des virgules',
+                            },
+                        )
+                    }}
+                    {{
+                        form_row(form.releaseDate, {label: 'Date de sortie'})
+                    }}
+                    {{ form_row(form.fullPrice, {label: 'Prix de vente'}) }}
+                    {{
+                        form_row(
+                            form.genres,
+                            {
+                                label: 'Genres',
+                                help: 'Séparés par des virgules',
+                            },
+                        )
+                    }}
+                    {{ form_row(form.description, {label: 'Description'}) }}
+                    {{ form_row(form.imgUrl, {label: "URL de l'image"}) }}
+                    {{ form_end(form) }}
+
+                    {# <div class="d-flex flex-column flex-sm-row align-items-center align-items-sm-start"> #}
+                    <div class="text-center text-sm-start">
+                        <button type="submit"
+                            class="btn btn-primary bi bi-plus-square-fill">
+                            Ajouter
+                        </button>
+                        <button class="btn btn-outline-secondary">
+                            Annuler
+                        </button>
+                    </div>
+                    {# </div> #}
+                </div>
             </div>
         </div>
     </section>
