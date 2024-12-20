@@ -25,35 +25,27 @@ class GameType extends AbstractType
             ])
             ->add('developers', TextType::class, [
                 'required' => false,
-                'help_attr' => [
-                    'class' => '',
-                ],
             ])
             ->add('releaseDate', DateType::class, [
                 'required' => false,
-                'label' => 'Date de sortie',
                 'widget' => 'single_text',
             ])
             ->add('fullPrice', MoneyType::class, [
                 'required' => false,
-                'label' => 'Prix de vente',
                 'divisor' => 100,
                 'input' => 'integer',
             ])
             ->add('genres', TextType::class, [
                 'required' => false,
-                'label' => 'Genres',
                 'help' => 'Séparés par des virgules',
             ])
             ->add('description', TextareaType::class, [
                 'required' => false,
-                'label' => 'Description',
             ])
             ->add('imgUrl', UrlType::class, [
                 'required' => false,
                 'default_protocol' => 'http',
                 'attr' => [],
-                'label' => 'URL de l\'image',
             ]);
     }
 

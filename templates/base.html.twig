@@ -17,7 +17,7 @@
             {{ encore_entry_script_tags('app') }}
         {% endblock %}
     </head>
-    <body>
+    <body class="d-flex flex-column min-vh-100">
         <header>
             {# <nav class="bg-light">
                 <div class="container">
@@ -25,14 +25,14 @@
                 </div>
             </nav> #}
 
-            <div class="container text-center mb-4 bg-light">
+            <div class="container text-center mb-4">
                 <h1>
                     {{ title }}
                 </h1>
             </div>
         </header>
 
-        <main>
+        <main class="flex-grow-1">
             {% block main %}
 
             {% endblock %}
@@ -44,17 +44,13 @@
                 <div class="row gw-md-4">
                     <div class="col-12 col-md-6 text-center text-md-end">
                         Réalisé avec
-                        <i class="fa-brands fa-symfony">
-
-                        </i><span class="fst-italic ps-1">Symfony</span>
-                        et
-                        <i class="fa-brands fa-bootstrap">
-
-                        </i><span class="fst-italic ps-1">Bootstrap</span>
+                        <i class="fa-brands fa-symfony"></i><span class="fst-italic ms-1">Symfony 7</span>
+                        <span class="mx-1">|</span>
+                        <i class="fa-brands fa-bootstrap"></i><span class="fst-italic ms-1">Bootstrap 5</span>
                     </div>
 
                     <div class="col-12 col-md-6 text-center text-md-start">
-                        Version {{ app.version }} - Mise à jour le {{ app.release_date|date('d/m/Y') }}
+                        Version {{ app.version }} - Mise à jour le {{ app.release_date|format_datetime('short', 'none') }}
                     </div>
                 </div>
             </div>

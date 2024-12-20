@@ -1,21 +1,47 @@
 {% extends 'base.html.twig' %}
 
-{% set title = 'Ajouter un jeu' %}
+{% set game_id = form.vars.value.id %}
 
-{# {% form_theme form _self %}
-{% block _game_fullPrice_widget %}
-    <div class="input-group mb-3">
-        <div class="input-group-prepend">
-            <span class="input-group-text">{{ money_pattern|form_encode_currency }}</span>
-        </div>
-        <input type="text"
-            class="form-control" />
-    </div>
-{% endblock %} #}
-
-{# <div class="input-group "><input type="text" id="game_fullPrice" name="game[fullPrice]" class="form-control"><span class="input-group-text"> €</span></div> #}
+{% if game_id == null %}
+    {% set title = 'Ajouter un jeu' %}
+    {% set bouton = 'Ajouter' %}
+{% else %}
+    {% set game_name = form.vars.value.name %}
+    {% set title %}
+        Modifier {{ game_name }}
+    {% endset %}
+    {% set bouton = 'Modifier' %}
+{% endif %}
 
 {% block main %}
+    {% if game_id != null %}
+        <!-- Delete Modal -->
+        <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-fullscreen-sm-down">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="deleteModalLabel">
+                            Confirmer la suppression
+                        </h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        Vous êtes sur le point du supprimer définitivement {{ game_name }}, ainsi que toutes les reviews associées. Êtes-vous sûr ?
+                    </div>
+                    <div class="modal-footer">
+                        <form action="{{ url('app_game_delete', {id: game_id}) }}" method="post">
+                            <button type="submit" class="btn btn-danger bi bi-trash-fill"><span class="ms-1">Supprimer</span></button>
+                            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Annuler</button>
+                            <input type="hidden" name="token-delete" value="{{ csrf_token('delete-game') }}" />
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+    <!-- Main section -->
+
     <section>
         <div class="container">
             <div class="row">
@@ -26,10 +52,7 @@
                             {{ form_row(form.steamId, {label: 'ID Steam'}) }}
                         </div>
                         <div class="col-auto">
-                            <button type="text"
-                                class="btn btn-outline-secondary bi bi-steam mb-3">
-                                <span class="d-none d-sm-inline">Chercher</span>
-                            </button>
+                            <a type="text" class="btn btn-outline-secondary bi bi-steam mb-3"><span class="d-none d-sm-inline ms-1">Chercher</span></a>
                         </div>
                     </div>
 
@@ -38,49 +61,28 @@
                             {{ form_row(form.name, {label: 'Nom'}) }}
                         </div>
                         <div class="col-12 col-md-4">
-                            {{
-                                form_row(
-                                    form.releaseDate,
-                                    {label: 'Date de sortie'},
-                                )
-                            }}
+                            {{ form_row(form.releaseDate, {label: 'Date de sortie'}) }}
                         </div>
                     </div>
-                    {{
-                        form_row(
-                            form.developers,
-                            {
-                                label: 'Editeur(s)',
-                                help: 'Séparés par des virgules',
-                            },
-                        )
-                    }}
-
                     {{ form_row(form.fullPrice, {label: 'Prix de vente'}) }}
-                    {{
-                        form_row(
-                            form.genres,
-                            {
-                                label: 'Genres',
-                                help: 'Séparés par des virgules',
-                            },
-                        )
-                    }}
+                    {{ form_row(form.developers, {label: 'Editeur(s)', help: 'Séparés par des virgules'}) }}
+                    {{ form_row(form.genres, {label: 'Genre(s)', help: 'Séparés par des virgules'}) }}
                     {{ form_row(form.description, {label: 'Description'}) }}
                     {{ form_row(form.imgUrl, {label: "URL de l'image"}) }}
-                    {{ form_end(form) }}
+                    <div class="row">
+                        <div class="col-sm-8 text-sm-start text-center">
+                            <button type="submit" class="btn btn-primary">{{ bouton }}</button>
 
-                    {# <div class="d-flex flex-column flex-sm-row align-items-center align-items-sm-start"> #}
-                    <div class="text-center text-sm-start">
-                        <button type="submit"
-                            class="btn btn-primary bi bi-plus-square-fill">
-                            Ajouter
-                        </button>
-                        <button class="btn btn-outline-secondary">
-                            Annuler
-                        </button>
+                            <a class="btn btn-outline-secondary" href="{{ path('app_game_index') }}">Annuler</a>
+                        </div>
+                        <div class="col-sm-4 text-sm-end text-center mt-2 mt-sm-0">
+                            {% if game_id != null %}
+                                <button type="button" class="btn btn-outline-danger bi bi-trash-fill" data-bs-toggle="modal" data-bs-target="#deleteModal"><span class="ms-1">Supprimer</span></button>
+                            {% endif %}
+                        </div>
                     </div>
-                    {# </div> #}
+
+                    {{ form_end(form) }}
                 </div>
             </div>
         </div>

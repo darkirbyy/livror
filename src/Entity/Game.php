@@ -17,14 +17,13 @@ class Game
     private ?int $id = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    #[Assert\NotBlank]
     private ?\DateTimeInterface $dateAdd = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    #[Assert\NotBlank]
     private ?\DateTimeInterface $dateUpdate = null;
 
     #[ORM\Column(nullable: true)]
+    #[Assert\PositiveOrZero]
     private ?int $steamId = null;
 
     #[ORM\Column(length: 255)]
@@ -49,7 +48,7 @@ class Game
     private ?string $description = null;
 
     #[ORM\Column(length: 2048, nullable: true)]
-    #[Assert\Url]
+    #[Assert\Url(requireTld: true)]
     private ?string $imgUrl = null;
 
     #[ORM\PrePersist]
