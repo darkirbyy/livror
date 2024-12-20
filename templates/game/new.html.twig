@@ -32,7 +32,20 @@
                             </button>
                         </div>
                     </div>
-                    {{ form_row(form.name, {label: 'Nom'}) }}
+
+                    <div class="row">
+                        <div class="col-12 col-md-8">
+                            {{ form_row(form.name, {label: 'Nom'}) }}
+                        </div>
+                        <div class="col-12 col-md-4">
+                            {{
+                                form_row(
+                                    form.releaseDate,
+                                    {label: 'Date de sortie'},
+                                )
+                            }}
+                        </div>
+                    </div>
                     {{
                         form_row(
                             form.developers,
@@ -42,9 +55,7 @@
                             },
                         )
                     }}
-                    {{
-                        form_row(form.releaseDate, {label: 'Date de sortie'})
-                    }}
+
                     {{ form_row(form.fullPrice, {label: 'Prix de vente'}) }}
                     {{
                         form_row(

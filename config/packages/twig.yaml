@@ -4,6 +4,7 @@ twig:
     globals: 
         app:
             version: '%livror.version%'
+            release_date: '%livror.release_date%'
 
 when@test:
     twig:
