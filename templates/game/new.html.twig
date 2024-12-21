@@ -4,29 +4,29 @@
 
 {% if game_id == null %}
     {% set title = 'Ajouter un jeu' %}
-    {% set bouton = 'Ajouter' %}
+    {% set submitButton = 'Ajouter' %}
 {% else %}
     {% set game_name = form.vars.value.name %}
     {% set title %}
         Modifier {{ game_name }}
     {% endset %}
-    {% set bouton = 'Modifier' %}
+    {% set submitButton = 'Modifier' %}
 {% endif %}
 
 {% block main %}
     {% if game_id != null %}
         <!-- Delete Modal -->
-        <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+        <div class="modal fade" id="delete-modal" tabindex="-1" aria-labelledby="delete-modal-label" aria-hidden="true" loading="lazy">
             <div class="modal-dialog modal-dialog-centered modal-fullscreen-sm-down">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="deleteModalLabel">
+                        <h1 class="modal-title fs-5" id="delete-modal-label">
                             Confirmer la suppression
                         </h1>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        Vous êtes sur le point du supprimer définitivement {{ game_name }}, ainsi que toutes les reviews associées. Êtes-vous sûr ?
+                        Vous êtes sur le point de supprimer <span class="fw-bold">définitivement</span> le jeu, ainsi que toutes les reviews associées. Êtes-vous sûr ?
                     </div>
                     <div class="modal-footer">
                         <form action="{{ url('app_game_delete', {id: game_id}) }}" method="post">
@@ -41,18 +41,28 @@
     {% endif %}
 
     <!-- Main section -->
-
     <section>
         <div class="container">
             <div class="row">
                 <div class="col-10 offset-1 col-lg-8 offset-lg-2">
+                    {# <turbo-frame id="tata"> #}
                     {{ form_start(form) }}
-                    <div class="row align-items-end">
+                    <div class="row">
                         <div class="col">
                             {{ form_row(form.steamId, {label: 'ID Steam'}) }}
                         </div>
                         <div class="col-auto">
-                            <a type="text" class="btn btn-outline-secondary bi bi-steam mb-3"><span class="d-none d-sm-inline ms-1">Chercher</span></a>
+                            <div class="form-label take-space"></div>
+                            {{
+                                form_row(
+                                    form.steamSearch,
+                                    {
+                                        label: '<span class="d-none d-sm-inline ms-1">Chercher</span>',
+                                        label_html: true,
+                                        attr: {'data-turbo': 'false', class: 'btn btn-outline-secondary bi bi-steam'},
+                                    },
+                                )
+                            }}
                         </div>
                     </div>
 
@@ -71,18 +81,18 @@
                     {{ form_row(form.imgUrl, {label: "URL de l'image"}) }}
                     <div class="row">
                         <div class="col-sm-8 text-sm-start text-center">
-                            <button type="submit" class="btn btn-primary">{{ bouton }}</button>
-
+                            {{ form_widget(form.submit, {label: submitButton}) }}
                             <a class="btn btn-outline-secondary" href="{{ path('app_game_index') }}">Annuler</a>
                         </div>
                         <div class="col-sm-4 text-sm-end text-center mt-2 mt-sm-0">
                             {% if game_id != null %}
-                                <button type="button" class="btn btn-outline-danger bi bi-trash-fill" data-bs-toggle="modal" data-bs-target="#deleteModal"><span class="ms-1">Supprimer</span></button>
+                                <button type="button" class="btn btn-outline-danger bi bi-trash-fill" data-bs-toggle="modal" data-bs-target="#delete-modal"><span class="ms-1">Supprimer</span></button>
                             {% endif %}
                         </div>
                     </div>
 
                     {{ form_end(form) }}
+                    {# </turbo-frame> #}
                 </div>
             </div>
         </div>

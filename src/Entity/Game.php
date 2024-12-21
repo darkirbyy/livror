@@ -5,10 +5,13 @@ namespace App\Entity;
 use App\Repository\GameRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: GameRepository::class)]
 #[ORM\HasLifecycleCallbacks]
+#[UniqueEntity('name')]
+#[UniqueEntity('steamId')]
 class Game
 {
     #[ORM\Id]
@@ -22,11 +25,12 @@ class Game
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $dateUpdate = null;
 
-    #[ORM\Column(nullable: true)]
-    #[Assert\PositiveOrZero]
+    #[ORM\Column(nullable: true, unique: true)]
+    #[Assert\PositiveOrZero(groups: ['steamSearch', 'submit'])]
+    #[Assert\NotBlank(groups: ['steamSearch'])]
     private ?int $steamId = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, unique: true)]
     #[Assert\Length(min: 2)]
     #[Assert\NotBlank]
     private ?string $name = null;
@@ -110,7 +114,7 @@ class Game
         return $this->name;
     }
 
-    public function setName(string $name): static
+    public function setName(?string $name): static
     {
         $this->name = $name;
 

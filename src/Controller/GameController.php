@@ -33,11 +33,20 @@ class GameController extends AbstractController
         $form = $this->createForm(GameType::class, $game);
 
         $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->persist($game);
-            $entityManager->flush();
 
-            return $this->redirectToRoute('app_game_index');
+        if ($form->isSubmitted() && $form->isValid()) {
+            if ($form->getClickedButton() === $form->get('steamSearch')) {
+                $game->setGenres('lalala');
+                $form = $this->createForm(GameType::class, $game);
+            } elseif ($form->getClickedButton() === $form->get('submit')) {
+                $entityManager->persist($game);
+                $entityManager->flush();
+
+                // add flash
+                return $this->redirectToRoute('app_game_index');
+            } else {
+                // add flash
+            }
         }
 
         return $this->render('game/new.html.twig', [
