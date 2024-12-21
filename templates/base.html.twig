@@ -4,7 +4,6 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="turbo-refresh-method" content="morph" />
-        {# <meta name="view-transition" content="same-origin" /> #}
         <title>
             {% block tab_title %}
                 {{ title }}
@@ -35,11 +34,9 @@
         </header>
 
         <main class="flex-grow-1">
-            {# <turbo-frame id="whole"> #}
             {% block main %}
 
             {% endblock %}
-            {# </turbo-frame> #}
         </main>
 
         <footer>

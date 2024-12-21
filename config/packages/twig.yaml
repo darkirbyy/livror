@@ -1,6 +1,6 @@
 twig:
     file_name_pattern: '*.twig'
-    form_themes: ['bootstrap_5_layout.html.twig']
+    form_themes: ['theme/form.html.twig']
     globals: 
         app:
             version: '%livror.version%'
