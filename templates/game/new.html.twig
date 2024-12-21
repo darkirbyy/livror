@@ -3,98 +3,92 @@
 {% set game_id = form.vars.value.id %}
 
 {% if game_id == null %}
-    {% set title = 'Ajouter un jeu' %}
-    {% set submitButton = 'Ajouter' %}
+  {% set title = 'Ajouter un jeu' %}
+  {% set submitButton = 'Ajouter' %}
 {% else %}
-    {% set game_name = form.vars.value.name %}
-    {% set title %}
-        Modifier {{ game_name }}
-    {% endset %}
-    {% set submitButton = 'Modifier' %}
+  {% set game_name = form.vars.value.name %}
+  {% set title %}
+    Modifier {{ game_name }}
+  {% endset %}
+  {% set submitButton = 'Modifier' %}
 {% endif %}
 
 {% block main %}
-    {% if game_id != null %}
-        <!-- Delete Modal -->
-        <div class="modal fade" id="delete-modal" tabindex="-1" aria-labelledby="delete-modal-label" aria-hidden="true" loading="lazy">
-            <div class="modal-dialog modal-dialog-centered modal-fullscreen-sm-down">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="delete-modal-label">
-                            Confirmer la suppression
-                        </h1>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        Vous êtes sur le point de supprimer <span class="fw-bold">définitivement</span> le jeu, ainsi que toutes les reviews associées. Êtes-vous sûr ?
-                    </div>
-                    <div class="modal-footer">
-                        <form action="{{ url('app_game_delete', {id: game_id}) }}" method="post">
-                            <button type="submit" class="btn btn-danger bi bi-trash-fill"><span class="ms-1">Supprimer</span></button>
-                            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Annuler</button>
-                            <input type="hidden" name="token-delete" value="{{ csrf_token('delete-game') }}" />
-                        </form>
-                    </div>
-                </div>
-            </div>
+  {% if game_id != null %}
+    <!-- Delete Modal -->
+    <div class="modal fade" id="delete-modal" tabindex="-1" aria-labelledby="delete-modal-label" aria-hidden="true" loading="lazy">
+      <div class="modal-dialog modal-dialog-centered modal-fullscreen-sm-down">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="delete-modal-label">
+              Confirmer la suppression
+            </h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            Vous êtes sur le point de supprimer <span class="fw-bold">définitivement</span> le jeu, ainsi que toutes les reviews associées. Êtes-vous sûr ?
+          </div>
+          <div class="modal-footer">
+            <form action="{{ url('app_game_delete', { id: game_id }) }}" method="post">
+              <button type="submit" class="btn btn-danger bi bi-trash-fill"><span class="ms-1">Supprimer</span></button>
+              <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Annuler</button>
+              <input type="hidden" name="token-delete" value="{{ csrf_token('delete-game') }}" />
+            </form>
+          </div>
         </div>
-    {% endif %}
+      </div>
+    </div>
+  {% endif %}
 
-    <!-- Main section -->
-    <section>
-        <div class="container">
-            <div class="row">
-                <div class="col-10 offset-1 col-lg-8 offset-lg-2">
-                    {{ form_start(form) }}
-                    <div class="row align-items-start">
-                        <div class="col">
-                            {{
-                                form_row(form.steamId, {label: 'ID Steam', help_html: true, help: "Pour connaître l'ID steam, aller sur <a href="https: // steamdb.info / ' target='_blank'>SteamDB</a>'})
-                            }}
-                        </div>
-                        <div class="col-auto">
-                            <div class="take-space mb-4"></div>
-                            {{
-                                form_row(
-                                    form.steamSearch,
-                                    {
-                                        label: '<span class="d-none d-sm-inline ms-1">Chercher</span>',
-                                        label_html: true,
-                                        attr: {'data-turbo': 'false', class: 'btn btn-outline-secondary bi bi-steam'},
-                                    },
-                                )
-                            }}
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-12 col-md-8">
-                            {{ form_row(form.name, {label: 'Nom'}) }}
-                        </div>
-                        <div class="col-12 col-md-4">
-                            {{ form_row(form.releaseDate, {label: 'Date de sortie'}) }}
-                        </div>
-                    </div>
-                    {{ form_row(form.fullPrice, {label: 'Prix de vente'}) }}
-                    {{ form_row(form.developers, {label: 'Editeur(s)', help: 'Séparés par des virgules'}) }}
-                    {{ form_row(form.genres, {label: 'Genre(s)', help: 'Séparés par des virgules'}) }}
-                    {{ form_row(form.description, {label: 'Description'}) }}
-                    {{ form_row(form.imgUrl, {label: "URL de l'image"}) }}
-                    <div class="row">
-                        <div class="col-sm-8 text-sm-start text-center">
-                            {{ form_widget(form.submit, {label: submitButton}) }}
-                            <a class="btn btn-outline-secondary ms-2" href="{{ path('app_game_index') }}">Annuler</a>
-                        </div>
-                        <div class="col-sm-4 text-sm-end text-center mt-2 mt-sm-0">
-                            {% if game_id != null %}
-                                <button type="button" class="btn btn-outline-danger bi bi-trash-fill" data-bs-toggle="modal" data-bs-target="#delete-modal"><span class="ms-1">Supprimer</span></button>
-                            {% endif %}
-                        </div>
-                    </div>
-
-                    {{ form_end(form) }}
-                </div>
+  <!-- Main section -->
+  <section>
+    <div class="container">
+      <div class="row">
+        <div class="col-10 offset-1 col-lg-8 offset-lg-2">
+          {{ form_start(form) }}
+          <div class="row align-items-start">
+            <div class="col">
+              {{ form_row(form.steamId, { label: 'ID Steam', help_html: true, help: "Pour connaître l'ID steam, aller sur <a href='https//steamdb.info/' target='_blank'>SteamDB</a>" }) }}
             </div>
+            <div class="col-auto">
+              <div class="take-space mb-4"></div>
+              {{
+                form_row(
+                  form.steamSearch,
+                  { label: '<span class="d-none d-sm-inline ms-1">Chercher</span>', label_html: true, attr: { 'data-turbo': 'false', class: 'btn btn-outline-secondary bi bi-steam' } },
+                )
+              }}
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-12 col-md-8">
+              {{ form_row(form.name, { label: 'Nom' }) }}
+            </div>
+            <div class="col-12 col-md-4">
+              {{ form_row(form.releaseDate, { label: 'Date de sortie' }) }}
+            </div>
+          </div>
+          {{ form_row(form.fullPrice, { label: 'Prix de vente' }) }}
+          {{ form_row(form.developers, { label: 'Editeur(s)', help: 'Séparés par des virgules' }) }}
+          {{ form_row(form.genres, { label: 'Genre(s)', help: 'Séparés par des virgules' }) }}
+          {{ form_row(form.description, { label: 'Description' }) }}
+          {{ form_row(form.imgUrl, { label: "URL de l'image" }) }}
+          <div class="row">
+            <div class="col-sm-8 text-sm-start text-center">
+              {{ form_widget(form.submit, { label: submitButton }) }}
+              <a class="btn btn-outline-secondary ms-2" href="{{ path('app_game_index') }}">Annuler</a>
+            </div>
+            <div class="col-sm-4 text-sm-end text-center mt-2 mt-sm-0">
+              {% if game_id != null %}
+                <button type="button" class="btn btn-outline-danger bi bi-trash-fill" data-bs-toggle="modal" data-bs-target="#delete-modal"><span class="ms-1">Supprimer</span></button>
+              {% endif %}
+            </div>
+          </div>
+
+          {{ form_end(form) }}
         </div>
-    </section>
+      </div>
+    </div>
+  </section>
 {% endblock %}

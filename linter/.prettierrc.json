@@ -24,7 +24,8 @@
       "options": {
         "printWidth": 200,
         "twigAlwaysBreakObjects": false,
-        "tabWidth": 4,
+        "trailingComma": "all",
+        "tabWidth": 2,
         "singleQuote": false,
         "semi": false
       }
