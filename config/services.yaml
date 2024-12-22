@@ -25,3 +25,12 @@ services:
 
 imports:
     - { resource: 'version.yaml' }
+
+
+when@test: &test
+    services:
+        App\Tests\Mock\ApiMock:
+            decorates: 'http_client'
+            arguments: ['@App\Tests\Mock\ApiMock.inner']
+
+when@dev: *test

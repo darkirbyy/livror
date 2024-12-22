@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Game;
 use App\Form\GameType;
 use App\Repository\GameRepository;
+use App\Service\SteamSearchService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -27,8 +28,12 @@ class GameController extends AbstractController
 
     #[Route('/new', name: 'app_game_new')]
     #[Route('/{id}/edit', name: 'app_game_edit', requirements: ['id' => '\d+'])]
-    public function new(?Game $game, Request $request, EntityManagerInterface $entityManager): Response
-    {
+    public function new(
+        ?Game $game,
+        Request $request,
+        EntityManagerInterface $entityManager,
+        SteamSearchService $steamSearch,
+    ): Response {
         $game ??= new Game();
         $form = $this->createForm(GameType::class, $game);
 
@@ -36,7 +41,8 @@ class GameController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->getClickedButton() === $form->get('steamSearch')) {
-                $game->setGenres('lalala');
+                $content = $steamSearch->fetchSteamGame(2);
+                $game->setName($content['2']['data']['name']);
                 $form = $this->createForm(GameType::class, $game);
             } elseif ($form->getClickedButton() === $form->get('submit')) {
                 $entityManager->persist($game);
