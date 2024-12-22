@@ -13,4 +13,10 @@ class DefaultController extends AbstractController
     {
         return $this->redirectToRoute('app_game_index');
     }
+
+    #[Route('/example', name: 'app_game_examples')]
+    public function test(): Response
+    {
+        return $this->render('default/example.html.twig', []);
+    }
 }
