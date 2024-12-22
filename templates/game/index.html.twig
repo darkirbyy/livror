@@ -3,28 +3,31 @@
 {% set title = 'Tous les jeux' %}
 
 {% block main %}
-    <section>
-        <div class="container">
-            <div class="row">
-                <div class="col text-end">
-                    <a href="{{ path('app_game_new') }}" class="btn btn-primary bi bi-plus-square-fill"><span class="ms-1">Ajouter un jeu</span></a>
-                </div>
-            </div>
-            {% for game in games %}
-                <div class="row bg-light rounded-3 p-2 my-2">
-                    <div class="col-12 col-sm-10">
-                        {{ game.id }} - {{ game.steamId }} - {{ game.name }} - add:{{ game.dateAdd|format_datetime('relative_medium', 'short') }} - update:{{
-                            game.dateUpdate|format_datetime('relative_medium', 'short')
-                        }}
-                        <br />
-                        prix:{{ game.fullPrice }} - release:{{ game.releaseDate|format_datetime('long', 'none', pattern: 'MMMM Y') }} - genre: {{ game.genres }} - editeurs: {{ game.developers }} - description:
-                        {{ game.description }}
-                    </div>
-                    <div class="col-12 col-sm-2 mt-1 mt-sm-0 text-center text-sm-end">
-                        <a class="btn btn-secondary" href="{{ path('app_game_edit', { id: game.id }) }}">Modifier</a>
-                    </div>
-                </div>
-            {% endfor %}
+  <section>
+    <div class="container">
+      {{ block('flash', 'theme/page.html.twig') }}
+      <div class="row">
+        <div class="col text-end">
+          <a href="{{ path('app_game_new') }}" class="btn btn-primary bi bi-plus-square-fill"><span class="ms-1">Ajouter un jeu</span></a>
         </div>
-    </section>
+      </div>
+      {% for game in games %}
+        <div class="row bg-light rounded-3 p-2 my-2">
+          <div class="col-12 col-sm-10">
+            {{ game.id }} - {{ game.steamId }} - {{ game.name }} - add:{{ game.dateAdd|format_datetime('relative_medium', 'short') }} - update:{{
+              game.dateUpdate|format_datetime('relative_medium', 'short')
+            }}
+            <br />
+            prix:{{ game.fullPrice }} - release:{{ game.releaseDate|format_datetime('long', 'none', pattern: 'MMMM Y') }} - genre: {{ game.genres }} - editeurs: {{
+              game.developers
+            }} - description:
+            {{ game.description }}
+          </div>
+          <div class="col-12 col-sm-2 mt-1 mt-sm-0 text-center text-sm-end">
+            <a class="btn btn-secondary" href="{{ path('app_game_edit', { id: game.id }) }}">Modifier</a>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </section>
 {% endblock %}

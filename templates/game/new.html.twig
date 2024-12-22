@@ -45,17 +45,28 @@
     <div class="container">
       <div class="row">
         <div class="col-10 offset-1 col-lg-8 offset-lg-2">
+          {{ block('flash', 'theme/page.html.twig') }}
+
           {{ form_start(form) }}
           <div class="row align-items-start">
             <div class="col">
-              {{ form_row(form.steamId, { label: 'ID Steam', help_html: true, help: "Pour connaître l'ID steam, aller sur <a href='https//steamdb.info/' target='_blank'>SteamDB</a>" }) }}
+              {{
+                form_row(
+                  form.steamId,
+                  { label: 'ID Steam', help_html: true, help: "Pour connaître l'ID steam, aller sur <a href='https//steamdb.info/' target='_blank'>SteamDB</a>" },
+                )
+              }}
             </div>
             <div class="col-auto">
               <div class="take-space mb-4"></div>
               {{
                 form_row(
                   form.steamSearch,
-                  { label: '<span class="d-none d-sm-inline ms-1">Chercher</span>', label_html: true, attr: { 'data-turbo': 'false', class: 'btn btn-outline-secondary bi bi-steam' } },
+                  {
+                    label: '<span class="d-none d-sm-inline ms-1">Chercher</span>',
+                    label_html: true,
+                    attr: { 'data-turbo': 'false', class: 'btn btn-outline-secondary bi bi-steam' },
+                  },
                 )
               }}
             </div>
@@ -81,7 +92,9 @@
             </div>
             <div class="col-sm-4 text-sm-end text-center mt-2 mt-sm-0">
               {% if game_id != null %}
-                <button type="button" class="btn btn-outline-danger bi bi-trash-fill" data-bs-toggle="modal" data-bs-target="#delete-modal"><span class="ms-1">Supprimer</span></button>
+                <button type="button" class="btn btn-outline-danger bi bi-trash-fill" data-bs-toggle="modal" data-bs-target="#delete-modal">
+                  <span class="ms-1">Supprimer</span>
+                </button>
               {% endif %}
             </div>
           </div>

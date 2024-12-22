@@ -1,0 +1,68 @@
+{% block header %}
+  {# <nav class="bg-light">
+                <div class="container">
+                    <div class="bg-secondary py-4"></div>
+                </div>
+            </nav> #}
+
+  <div class="container text-center mb-4">
+    <h1>
+      {{ title }}
+    </h1>
+  </div>
+{% endblock %}
+
+{% block flash %}
+  <div class="row">
+    {% for text in app.flashes('info') %}
+      <div class="alert alert-primary alert-dismissible fade show" role="alert">
+        <div class="bi bi-info-square-fill">
+          {{ text }}
+        </div>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    {% endfor %}
+    {% for text in app.flashes('success') %}
+      <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <div class="bi bi-check-circle-fill">
+          {{ text }}
+        </div>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    {% endfor %}
+    {% for text in app.flashes('warning') %}
+      <div class="alert alert-warning alert-dismissible fade show" role="alert">
+        <div class="bi bi-exclamation-triangle-fill">
+          {{ text }}
+        </div>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    {% endfor %}
+    {% for text in app.flashes('danger') %}
+      <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <div class="bi bi-x-square-fill">
+          {{ text }}
+        </div>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    {% endfor %}
+  </div>
+{% endblock %}
+
+{% block footer %}
+  <div class="container-fluid fw-light bg-light small mt-4 py-2">
+    <div class="row"></div>
+    <div class="row gw-md-4">
+      <div class="col-12 col-md-6 text-center text-md-end">
+        Réalisé avec
+        <i class="fa-brands fa-symfony"></i><span class="fst-italic ms-1">Symfony 7</span>
+        <span class="mx-1">|</span>
+        <i class="fa-brands fa-bootstrap"></i><span class="fst-italic ms-1">Bootstrap 5</span>
+      </div>
+
+      <div class="col-12 col-md-6 text-center text-md-start">
+        Version {{ livror.version }} - Mise à jour le {{ livror.release_date|format_datetime('short', 'none') }}
+      </div>
+    </div>
+  </div>
+{% endblock %}
