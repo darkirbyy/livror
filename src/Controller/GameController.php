@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller;
 
 use App\Entity\Game;
@@ -41,15 +43,19 @@ class GameController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->getClickedButton() === $form->get('steamSearch')) {
                 $steamId = $form->get('steamId')->getData();
-                $steamSearch->fetchSteamGame($steamId);
-                if (SteamSearchStatusEnum::OK === $steamSearch->getStatus()) {
-                    $steamSearch->fillGameData($game);
-                    $form = $this->createForm(GameType::class, $game);
-                    $this->addFlash('success', $translator->trans('Les données du jeu ont été mise à jour depuis Steam !'));
-                } elseif (SteamSearchStatusEnum::INVALID_ID === $steamSearch->getStatus()) {
+                if (null == $steamId) {
                     $form->get('steamId')->addError(new FormError('L\'ID Steam saisi n\'est pas valide'));
                 } else {
-                    $this->addFlash('danger', $translator->trans('Une erreur s\'est produite en se connectant à Steam.'));
+                    $steamSearch->fetchSteamGame($steamId);
+                    if (SteamSearchStatusEnum::OK === $steamSearch->getStatus()) {
+                        $steamSearch->fillGameData($game);
+                        $form = $this->createForm(GameType::class, $game);
+                        $this->addFlash('success', $translator->trans('Les données du jeu ont été mise à jour depuis Steam !'));
+                    } elseif (SteamSearchStatusEnum::INVALID_ID === $steamSearch->getStatus()) {
+                        $form->get('steamId')->addError(new FormError('L\'ID Steam saisi n\'est pas valide'));
+                    } else {
+                        $this->addFlash('danger', $translator->trans('Une erreur s\'est produite en se connectant à Steam.'));
+                    }
                 }
             } elseif ($form->getClickedButton() === $form->get('submit')) {
                 $entityManager->persist($game);

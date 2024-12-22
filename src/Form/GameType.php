@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Form;
 
 use App\Entity\Game;
@@ -23,7 +25,7 @@ class GameType extends AbstractType
                 'required' => false,
             ])
             ->add('steamSearch', SubmitType::class, [
-                'validation_groups' => 'steamSearch',
+                'validation_groups' => false,
                 'attr' => [
                     'value' => 'steamSearch',
                 ],
