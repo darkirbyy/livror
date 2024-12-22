@@ -6,12 +6,14 @@ namespace App\Controller;
 
 use App\Entity\Game;
 use App\Enum\SteamSearchStatusEnum;
+use App\Enum\TypePriceEnum;
 use App\Form\GameType;
 use App\Repository\GameRepository;
 use App\Service\SteamSearchService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormError;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -37,6 +39,7 @@ class GameController extends AbstractController
     {
         $game ??= new Game();
         $form = $this->createForm(GameType::class, $game);
+        $this->setTypePriceFromFullPrice($form, $game);
 
         $form->handleRequest($request);
 
@@ -48,9 +51,10 @@ class GameController extends AbstractController
                 } else {
                     $steamSearch->fetchSteamGame($steamId);
                     if (SteamSearchStatusEnum::OK === $steamSearch->getStatus()) {
-                        $steamSearch->fillGameData($game);
+                        $game = $steamSearch->createNewGame();
                         $form = $this->createForm(GameType::class, $game);
-                        $this->addFlash('success', $translator->trans('Les données du jeu ont été mise à jour depuis Steam !'));
+                        $this->setTypePriceFromFullPrice($form, $game);
+                        $this->addFlash('success', $translator->trans('Les données du jeu ont été complétées avec celle de Steam !'));
                     } elseif (SteamSearchStatusEnum::INVALID_ID === $steamSearch->getStatus()) {
                         $form->get('steamId')->addError(new FormError('L\'ID Steam saisi n\'est pas valide'));
                     } else {
@@ -58,13 +62,14 @@ class GameController extends AbstractController
                     }
                 }
             } elseif ($form->getClickedButton() === $form->get('submit')) {
+                $this->setFullPriceFromTypePrice($form, $game);
                 $entityManager->persist($game);
                 $entityManager->flush();
                 $this->addFlash('success', $translator->trans('Le jeu a été ajouté avec succès !'));
 
                 return $this->redirectToRoute('app_game_index');
             } else {
-                $this->addFlash('warning', 'Unknown action.');
+                $this->addFlash('warning', 'La soumission du formulaire n\'est pas valide.');
 
                 return $this->redirectToRoute('app_game_index');
             }
@@ -85,5 +90,20 @@ class GameController extends AbstractController
         $this->addFlash('success', $game->getName() . ' deleted!');
 
         return $this->redirectToRoute('app_game_index');
+    }
+
+    private function setTypePriceFromFullPrice(FormInterface $form, ?Game $game): void
+    {
+        $typePrice = TypePriceEnum::fromPrice($game->getFullPrice());
+        $form->get('typePrice')->setData($typePrice);
+
+        if (TypePriceEnum::PAYING !== $typePrice) {
+            $form->get('fullPrice')->setData(null);
+        }
+    }
+
+    private function setFullPriceFromTypePrice(FormInterface $form, ?Game $game): void
+    {
+        $game->setFullPrice(TypePriceEnum::toPrice($form->get('typePrice')->getData(), $game->getFullPrice()));
     }
 }

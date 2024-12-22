@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace App\Form;
 
 use App\Entity\Game;
+use App\Enum\TypePriceEnum;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\EnumType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -40,10 +42,24 @@ class GameType extends AbstractType
                 'required' => false,
                 'widget' => 'single_text',
             ])
+            ->add('typePrice', EnumType::class, [
+                'required' => true,
+                'mapped' => false,
+                'class' => TypePriceEnum::class,
+                'expanded' => true,
+                'multiple' => false,
+                'empty_data' => TypePriceEnum::UNKNOW,
+                'attr' => [
+                    'data-type-price-target' => 'choiceFields',
+                ],
+            ])
             ->add('fullPrice', MoneyType::class, [
                 'required' => false,
                 'divisor' => 100,
                 'input' => 'integer',
+                'attr' => [
+                    'data-type-price-target' => 'inputField',
+                ],
             ])
             ->add('genres', TextType::class, [
                 'required' => false,
@@ -71,6 +87,7 @@ class GameType extends AbstractType
             'data_class' => Game::class,
             'attr' => [
                 'novalidate' => 'novalidate',
+                'data-controller' => 'type-price',
             ],
         ]);
     }

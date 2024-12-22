@@ -9,3 +9,7 @@
   content: '.';
   visibility: hidden;
 }
+
+.input-group-text {
+  margin-top: ($spacer * 0.25) !important;
+}

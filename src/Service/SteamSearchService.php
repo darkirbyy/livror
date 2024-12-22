@@ -11,6 +11,7 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 class SteamSearchService
 {
     private SteamSearchStatusEnum $status = SteamSearchStatusEnum::PENDING;
+    private ?int $id = null;
     private array $data = [];
 
     public function __construct(private HttpClientInterface $client, public int $steamSearchTimeout)
@@ -20,7 +21,12 @@ class SteamSearchService
     public function fetchSteamGame(int $id): void
     {
         try {
-            $response = $this->client->request('GET', 'https://store.steampowered.com/api/appdetails?appids=' . $id, ['max_duration' => $this->steamSearchTimeout]);
+            $response = $this->client->request('GET', 'https://store.steampowered.com/api/appdetails?appids=' . $id, [
+                'max_duration' => $this->steamSearchTimeout,
+                'headers' => [
+                    'Accept-Language' => 'fr-FR,en-US;q=0.7,en;q=0.3',
+                ],
+            ]);
 
             $statusCode = $response->getStatusCode();
 
@@ -39,14 +45,17 @@ class SteamSearchService
             }
 
             $this->status = SteamSearchStatusEnum::OK;
+            $this->id = $id;
             $this->data = $content[$id]['data'];
         } catch (\Exception $e) {
             $this->status = SteamSearchStatusEnum::ERROR;
         }
     }
 
-    public function fillGameData(Game $game)
+    public function createNewGame(): Game
     {
+        $game = new Game();
+        $game->setSteamId($this->id);
         $game->setName($this->data['name'] ?? '');
 
         // managing release date
@@ -58,14 +67,20 @@ class SteamSearchService
         }
 
         // managing price
-        if (isset($this->data['price_overview'])) {
-            $game->setFullPrice($this->data['price_overview']['initial'] ?? '');
+        if ($this->data['is_free']) {
+            $game->setFullPrice(0);
+        } elseif (isset($this->data['price_overview'])) {
+            $game->setFullPrice($this->data['price_overview']['initial'] ?? null);
+        } else {
+            $game->setFullPrice(null);
         }
 
         $game->setDevelopers(implode(', ', array_values($this->data['developers'])));
         $game->setGenres(implode(', ', array_column($this->data['genres'], 'description')));
-        $game->setDescription($this->data['short_description'] ?? '');
-        $game->setImgUrl($this->data['header_image'] ?? '');
+        $game->setDescription($this->data['short_description'] ?? null);
+        $game->setImgUrl($this->data['header_image'] ?? null);
+
+        return $game;
     }
 
     public function getStatus(): SteamSearchStatusEnum

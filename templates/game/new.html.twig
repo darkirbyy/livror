@@ -80,7 +80,14 @@
               {{ form_row(form.releaseDate, { label: 'Date de sortie' }) }}
             </div>
           </div>
-          {{ form_row(form.fullPrice, { label: 'Prix de vente' }) }}
+          <div class="row align-items-end">
+            <div class="col-12 col-sm-auto pe-sm-0">
+              {{ form_row(form.typePrice, { label: 'Prix de vente', label_attr: { class: 'radio-inline' } }) }}
+            </div>
+            <div class="col-12 col-sm ps-sm-0">
+              {{ form_row(form.fullPrice, { label: false }) }}
+            </div>
+          </div>
           {{ form_row(form.developers, { label: 'Editeur(s)', help: 'Séparés par des virgules' }) }}
           {{ form_row(form.genres, { label: 'Genre(s)', help: 'Séparés par des virgules' }) }}
           {{ form_row(form.description, { label: 'Description' }) }}

@@ -288,8 +288,113 @@ final class ApiMock extends MockHttpClient
             ],
         ];
 
-        return $this->generateMockResponse(
-            array_key_exists($id, $data) ? [$id => $data[$id]] : [$id => ['success' => false]],
-        );
+        $data['3'] = [
+            'success' => true,
+            'data' => [
+                'type' => 'game',
+                'name' => 'SUPERVIVE',
+                'steam_appid' => 1283700,
+                'required_age' => 0,
+                'is_free' => true,
+                'detailed_description' => '<h2 class="bb_tag">SUPERVIVE est une combinaison de BR MOBA et de JEU DE TIR AVEC DES HÉROS.</h2><p class="bb_paragraph"> Venez découvrir gratuitement cette première combinaison mondiale de vitesse, précision, combat, stratégie et jeu d\'équipe.</p><p class="bb_paragraph"><img class="bb_img" src="https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1283700/extras/Steam-Gif-1-v2.gif?t=1732762006" /></p><p class="bb_paragraph"></p><h2 class="bb_tag">CONTENU DU JEU (CETTE LISTE S\'ÉLARGIRA CHAQUE SEMAINE) :</h2><p class="bb_paragraph">* Plongez dans un bac à sable de combat ouvert et débridé où vous devrez sauter, planer, tirer, frapper, rebondir, bombarder et écraser vos ennemis pour être la dernière équipe debout.</p><p class="bb_paragraph">* Modes de jeu multiples : escouades BR (4 joueurs par équipe), duos BR (2 joueurs par équipe), arène (4c4) et modes d\'événements spéciaux.</p><p class="bb_paragraph">* Plus de 16 chasseurs de tempêtes jouables, dont un chasseur pirate en méca-armure, un renard armé d\'un lance-flammes et un anarchiste maîtrisant le pouvoir de la foudre.</p><p class="bb_paragraph"></p><p class="bb_paragraph"><img class="bb_img" src="https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1283700/extras/Steam-Gif-2-v2.gif?t=1732762006" /></p><p class="bb_paragraph">* UN TAS de pouvoirs et d\'équipements à obtenir à chaque partie pour créer le build parfait : bombardez vos ennemis, dégommez-les avec des lasers, remontez le temps ou transformez-vous en arbre (oui, vous avez bien entendu).</p><p class="bb_paragraph">* Un milliard de façons de revenir et de gagner : aucune exclusion n\'est vraiment définitive.</p><p class="bb_paragraph">* Fruit d\'un studio de développeurs vétérans ayant créé parmi les plus grands jeux JcJ au monde, SUPERVIVE continuera d\'évoluer avec vous pendant des années.</p><p class="bb_paragraph"></p><p class="bb_paragraph"><img class="bb_img" src="https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1283700/extras/Steam-Gif-3-v2.gif?t=1732762006" /></p><h2 class="bb_tag"></h2>',
+                'about_the_game' => '<h2 class="bb_tag">SUPERVIVE est une combinaison de BR MOBA et de JEU DE TIR AVEC DES HÉROS.</h2><p class="bb_paragraph"> Venez découvrir gratuitement cette première combinaison mondiale de vitesse, précision, combat, stratégie et jeu d\'équipe.</p><p class="bb_paragraph"><img class="bb_img" src="https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1283700/extras/Steam-Gif-1-v2.gif?t=1732762006" /></p><p class="bb_paragraph"></p><h2 class="bb_tag">CONTENU DU JEU (CETTE LISTE S\'ÉLARGIRA CHAQUE SEMAINE) :</h2><p class="bb_paragraph">* Plongez dans un bac à sable de combat ouvert et débridé où vous devrez sauter, planer, tirer, frapper, rebondir, bombarder et écraser vos ennemis pour être la dernière équipe debout.</p><p class="bb_paragraph">* Modes de jeu multiples : escouades BR (4 joueurs par équipe), duos BR (2 joueurs par équipe), arène (4c4) et modes d\'événements spéciaux.</p><p class="bb_paragraph">* Plus de 16 chasseurs de tempêtes jouables, dont un chasseur pirate en méca-armure, un renard armé d\'un lance-flammes et un anarchiste maîtrisant le pouvoir de la foudre.</p><p class="bb_paragraph"></p><p class="bb_paragraph"><img class="bb_img" src="https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1283700/extras/Steam-Gif-2-v2.gif?t=1732762006" /></p><p class="bb_paragraph">* UN TAS de pouvoirs et d\'équipements à obtenir à chaque partie pour créer le build parfait : bombardez vos ennemis, dégommez-les avec des lasers, remontez le temps ou transformez-vous en arbre (oui, vous avez bien entendu).</p><p class="bb_paragraph">* Un milliard de façons de revenir et de gagner : aucune exclusion n\'est vraiment définitive.</p><p class="bb_paragraph">* Fruit d\'un studio de développeurs vétérans ayant créé parmi les plus grands jeux JcJ au monde, SUPERVIVE continuera d\'évoluer avec vous pendant des années.</p><p class="bb_paragraph"></p><p class="bb_paragraph"><img class="bb_img" src="https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1283700/extras/Steam-Gif-3-v2.gif?t=1732762006" /></p><h2 class="bb_tag"></h2>',
+                'short_description' => 'UN BATTLE ROYALE MOBA ALLIÉ À UN JEU DE TIR AVEC DES HÉROS. Sautez, planez, tirez, frappez, rebondissez, bombardez et écrasez vos ennemis sur ce champ de bataille aérien chaotique et fluide. Combattez en équipe multi-escouades, tuez des boss pour leur butin, remportez la victoire et recommencez.',
+                'supported_languages' => 'Anglais<strong>*</strong>, Français, Italien, Allemand, Espagnol - Espagne, Polonais, Turc, Russe, Chinois traditionnel, Chinois simplifié, Portugais du Brésil<br><strong>*</strong>Langues avec support audio complet',
+                'header_image' => 'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1283700/header.jpg?t=1732762006',
+                'capsule_image' => 'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1283700/ffd4a9ce4af75b5833a44ddabe98bcd4f4cb72dc/capsule_231x87.jpg?t=1732762006',
+                'capsule_imagev5' => 'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1283700/ffd4a9ce4af75b5833a44ddabe98bcd4f4cb72dc/capsule_184x69.jpg?t=1732762006',
+                'website' => null,
+                'pc_requirements' => [
+                    'minimum' => '<strong>Minimale :</strong><br><ul class="bb_ul"><li>Système d\'exploitation et processeur 64 bits nécessaires<br></li><li><strong>Système d\'exploitation :</strong> Windows 10 64-bit build 1909.1350 or newer<br></li><li><strong>Processeur :</strong> Intel i5-4440 (3.1GHz) - AMD Ryzen 3 3100 (3.6GHz) - 4 physical cores<br></li><li><strong>Mémoire vive :</strong> 8 GB de mémoire<br></li><li><strong>Graphiques :</strong> GeForce GTX 980ti or equivalent<br></li><li><strong>DirectX :</strong> Version 11<br></li><li><strong>Réseau :</strong> connexion internet haut débit<br></li><li><strong>Espace disque :</strong> 8 GB d\'espace disque disponible</li></ul>',
+                    'recommended' => '<strong>Recommandée :</strong><br><ul class="bb_ul"><li>Système d\'exploitation et processeur 64 bits nécessaires<br></li><li><strong>Système d\'exploitation :</strong> Windows 10 64-bit build 1909.1350 or newer<br></li><li><strong>Processeur :</strong> Intel Core i5-9600 - AMD Ryzen 5 3500 or equivalent<br></li><li><strong>Mémoire vive :</strong> 8 GB de mémoire<br></li><li><strong>Graphiques :</strong> Nvidia RTX 2070 - Radeon RX 5700 XT or equivalent - DirectX 12<br></li><li><strong>DirectX :</strong> Version 12<br></li><li><strong>Réseau :</strong> connexion internet haut débit<br></li><li><strong>Espace disque :</strong> 10 GB d\'espace disque disponible</li></ul>',
+                ],
+                'mac_requirements' => [
+                    'minimum' => '<strong>Minimale :</strong><br><ul class="bb_ul"></ul>',
+                    'recommended' => '<strong>Recommandée :</strong><br><ul class="bb_ul"></ul>',
+                ],
+                'linux_requirements' => [
+                    'minimum' => '<strong>Minimale :</strong><br><ul class="bb_ul"></ul>',
+                    'recommended' => '<strong>Recommandée :</strong><br><ul class="bb_ul"></ul>',
+                ],
+                'developers' => [
+                    0 => 'Theorycraft Games',
+                ],
+                'publishers' => [
+                    0 => 'Theorycraft Games',
+                ],
+                'package_groups' => [],
+                'platforms' => [
+                    'windows' => true,
+                    'mac' => false,
+                    'linux' => false,
+                ],
+                'categories' => [
+                    0 => [
+                        'id' => 1,
+                        'description' => 'Multijoueur',
+                    ],
+                    1 => [
+                        'id' => 49,
+                        'description' => 'PvP',
+                    ],
+                    2 => [
+                        'id' => 36,
+                        'description' => 'JcJ en ligne',
+                    ],
+                    3 => [
+                        'id' => 35,
+                        'description' => 'Achats en jeu',
+                    ],
+                ],
+                'genres' => [
+                    0 => [
+                        'id' => '1',
+                        'description' => 'Action',
+                    ],
+                    1 => [
+                        'id' => '37',
+                        'description' => 'Free-to-play',
+                    ],
+                    2 => [
+                        'id' => '70',
+                        'description' => 'Accès anticipé',
+                    ],
+                ],
+                'release_date' => [
+                    'coming_soon' => false,
+                    'date' => '20 nov. 2024',
+                ],
+                'support_info' => [
+                    'url' => 'https://theorycraft.helpshift.com',
+                    'email' => '',
+                ],
+                'background' => 'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1283700/page_bg_generated_v6b.jpg?t=1732762006',
+                'background_raw' => 'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1283700/page.bg.jpg?t=1732762006',
+                'content_descriptors' => [
+                    'ids' => [],
+                    'notes' => null,
+                ],
+                'ratings' => [
+                    'dejus' => [
+                        'rating_generated' => '1',
+                        'rating' => '10',
+                        'required_age' => '10',
+                        'banned' => '0',
+                        'use_age_gate' => '0',
+                        'descriptors' => 'Violência',
+                    ],
+                    'steam_germany' => [
+                        'rating_generated' => '1',
+                        'rating' => '12',
+                        'required_age' => '12',
+                        'banned' => '0',
+                        'use_age_gate' => '0',
+                        'descriptors' => 'Gewalt',
+                    ],
+                ],
+            ],
+        ];
+
+        return $this->generateMockResponse(array_key_exists($id, $data) ? [$id => $data[$id]] : [$id => ['success' => false]]);
     }
 }
