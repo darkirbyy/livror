@@ -1,8 +1,9 @@
 twig:
+    default_path: '%kernel.project_dir%/templates'
     file_name_pattern: '*.twig'
     form_themes: ['theme/form.html.twig']
     globals: 
-        app:
+        livror:
             version: '%livror.version%'
             release_date: '%livror.release_date%'
 

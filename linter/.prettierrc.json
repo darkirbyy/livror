@@ -13,7 +13,7 @@
       "options": {
         "parser": "php",
         "tabWidth": 4,
-        "printWidth": 120,
+        "printWidth": 180,
         "singleQuote": true,
         "phpVersion": "8.0",
         "braceStyle": "psr-2"
@@ -22,7 +22,7 @@
     {
       "files": "../templates/**/*.twig",
       "options": {
-        "printWidth": 200,
+        "printWidth": 180,
         "twigAlwaysBreakObjects": false,
         "trailingComma": "all",
         "tabWidth": 2,
