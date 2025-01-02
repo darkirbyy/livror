@@ -35,8 +35,18 @@ class GameController extends AbstractController
 
     #[Route('/new', name: 'app_game_new')]
     #[Route('/{id}/edit', name: 'app_game_edit', requirements: ['id' => '\d+'])]
-    public function new(?Game $game, Request $request, EntityManagerInterface $entityManager, TranslatorInterface $translator, SteamSearchService $steamSearch): Response
-    {
+    public function new(
+        ?int $id,
+        Request $request,
+        GameRepository $gameRepository,
+        EntityManagerInterface $entityManager,
+        TranslatorInterface $translator,
+        SteamSearchService $steamSearch,
+    ): Response {
+        $newGame = null == $id;
+        if (!$newGame) {
+            $game = $gameRepository->find($id);
+        }
         $game ??= new Game();
         $form = $this->createForm(GameType::class, $game);
         $this->setTypePriceFromFullPrice($form, $game);
