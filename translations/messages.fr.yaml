@@ -1,0 +1,67 @@
+default:
+  page:
+    index:
+      title: Accueil
+
+game:
+  page:
+    index:
+      title: Tous les jeux
+      button:
+        addGame: Ajouter un jeu
+      flash:
+        success:
+          newGame: Le jeu a été ajouté avec succès !
+        warning:
+          formInvalid: La soumission du formulaire n'est pas valide.
+
+    new:
+      title:
+        add: Ajouter un jeu
+        update: Modifier un jeu
+      modalDeleteBody: Vous êtes sur le point de supprimer <span class="fw-bold">définitivement</span> le jeu, ainsi que toutes les avis associés. Êtes-vous sûr ?
+      flash:
+        steamSearch:
+          success: Le formulaire a été complété avec les données de Steam !
+          fail: Une erreur s'est produite en se connectant à Steam. Réessayez plus tard.
+
+  common:
+    field:
+      label:
+        steamId: ID Steam
+        name: Nom
+        releaseDate: Date de parution
+        fullPrice: Prix de vente (hors réduction)
+        developers: Editeur(s)
+        genres: Genre(s)
+        description:  Description
+        imgUrl: URL de l'image
+      help:
+        steamId: Pour connaître l'ID Steam, aller sur <a href='https//steamdb.info/' target='_blank'>SteamDB</a>
+        commaSeparated: Séparés par des virgules
+      error:
+        steamIdInvalid: L'ID Steam saisi n'est pas valide
+
+
+form:  
+  button:
+    add: Ajouter
+    update: Modifier
+    delete: Supprimer
+    cancel: Annuler
+
+modal:
+  title:
+    delete: Confirmer la suppression
+
+app:
+  name: Livror
+  madeWith: Réalisé avec
+  version: Version
+  releaseDate: Mise à jour le
+
+enum:
+  TypePrice:
+    unknown: Inconnu
+    free: Gratuit
+    paying: Payant

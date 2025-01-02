@@ -1,0 +1,5 @@
+game:
+  form:
+    label:
+      releaseDate: Release date
+      fullPrice: Full price

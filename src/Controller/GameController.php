@@ -47,29 +47,30 @@ class GameController extends AbstractController
             if ($form->getClickedButton() === $form->get('steamSearch')) {
                 $steamId = $form->get('steamId')->getData();
                 if (null == $steamId) {
-                    $form->get('steamId')->addError(new FormError('L\'ID Steam saisi n\'est pas valide'));
+                    $form->get('steamId')->addError(new FormError($translator->trans('game.common.field.error.steamIdInvalid')));
                 } else {
                     $steamSearch->fetchSteamGame($steamId);
                     if (SteamSearchStatusEnum::OK === $steamSearch->getStatus()) {
                         $game = $steamSearch->createNewGame();
                         $form = $this->createForm(GameType::class, $game);
                         $this->setTypePriceFromFullPrice($form, $game);
-                        $this->addFlash('success', $translator->trans('Les données du jeu ont été complétées avec celle de Steam !'));
+                        $this->addFlash('success', $translator->trans('game.page.new.flash.steamSearch.success'));
                     } elseif (SteamSearchStatusEnum::INVALID_ID === $steamSearch->getStatus()) {
-                        $form->get('steamId')->addError(new FormError('L\'ID Steam saisi n\'est pas valide'));
+                        $form->get('steamId')->addError(new FormError('game.common.field.error.steamIdInvalid'));
                     } else {
-                        $this->addFlash('danger', $translator->trans('Une erreur s\'est produite en se connectant à Steam.'));
+                        $this->addFlash('danger', $translator->trans('game.page.new.flash.steamSearch.fail'));
                     }
                 }
             } elseif ($form->getClickedButton() === $form->get('submit')) {
                 $this->setFullPriceFromTypePrice($form, $game);
                 $entityManager->persist($game);
                 $entityManager->flush();
-                $this->addFlash('success', $translator->trans('Le jeu a été ajouté avec succès !'));
+                // TODO : ajout/modifier dépend selon !
+                $this->addFlash('success', $translator->trans('game.page.index.flash.success.newGame'));
 
                 return $this->redirectToRoute('app_game_index');
             } else {
-                $this->addFlash('warning', 'La soumission du formulaire n\'est pas valide.');
+                $this->addFlash('warning', 'game.page.index.flash.warning.formInvalid');
 
                 return $this->redirectToRoute('app_game_index');
             }
@@ -87,7 +88,8 @@ class GameController extends AbstractController
         $entityManager->remove($game);
         $entityManager->flush();
 
-        $this->addFlash('success', $game->getName() . ' deleted!');
+        // $this->addFlash('success', $game->getName() . ' deleted!');
+        $this->addFlash('success', 'Le jeu a été supprimé !');
 
         return $this->redirectToRoute('app_game_index');
     }

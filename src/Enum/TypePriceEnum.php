@@ -16,9 +16,9 @@ enum TypePriceEnum: string implements TranslatableInterface
     public function trans(TranslatorInterface $translator, ?string $locale = null): string
     {
         return match ($this) {
-            self::UNKNOW => $translator->trans('Inconnu', locale: $locale),
-            self::FREE => $translator->trans('Gratuit', locale: $locale),
-            self::PAYING => $translator->trans('Payant', locale: $locale),
+            self::UNKNOW => $translator->trans('enum.TypePrice.unknown', locale: $locale),
+            self::FREE => $translator->trans('enum.TypePrice.free', locale: $locale),
+            self::PAYING => $translator->trans('enum.TypePrice.paying', locale: $locale),
         };
     }
 

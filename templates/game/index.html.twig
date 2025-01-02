@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% set title = 'Tous les jeux' %}
+{% set title = 'game.page.index.title' %}
 
 {% block main %}
   <section>
@@ -8,7 +8,7 @@
       {{ block('flash', 'theme/page.html.twig') }}
       <div class="row">
         <div class="col text-end">
-          <a href="{{ path('app_game_new') }}" class="btn btn-primary bi bi-plus-square-fill"><span class="ms-1">Ajouter un jeu</span></a>
+          <a href="{{ path('app_game_new') }}" class="btn btn-primary bi bi-plus-square-fill"><span class="ms-1">{% trans %}game.page.index.button.addGame{% endtrans %}</span></a>
         </div>
       </div>
       {% for game in games %}
@@ -24,7 +24,7 @@
             {{ game.description }}
           </div>
           <div class="col-12 col-sm-2 mt-1 mt-sm-0 text-center text-sm-end">
-            <a class="btn btn-secondary" href="{{ path('app_game_edit', { id: game.id }) }}">Modifier</a>
+            <a class="btn btn-secondary" href="{{ path('app_game_edit', { id: game.id }) }}">{% trans %}form.button.update{% endtrans %}</a>
           </div>
         </div>
       {% endfor %}

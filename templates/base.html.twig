@@ -6,8 +6,8 @@
     <meta name="turbo-refresh-method" content="morph" />
     <title>
       {% block tab_title %}
-        {{ title }}
-      {% endblock %}- Livror - Darkirby
+        {{ title|trans }}
+      {% endblock %}-{% trans %}app.name{% endtrans %}- Darkirby
     </title>
     <link rel="icon" href=" {{ asset('build/favicon.png') }}" />
     {% block stylesheets %}
