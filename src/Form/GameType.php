@@ -26,12 +26,12 @@ class GameType extends AbstractType
             ->add('steamId', IntegerType::class, [
                 'required' => false,
             ])
-            ->add('steamSearch', SubmitType::class, [
-                'validation_groups' => false,
-                'attr' => [
-                    'value' => 'steamSearch',
-                ],
-            ])
+            // ->add('steamSearch', SubmitType::class, [
+            //     'validation_groups' => false,
+            //     'attr' => [
+            //         'value' => 'steamSearch',
+            //     ],
+            // ])
             ->add('name', TextType::class, [
                 'required' => true,
             ])
@@ -74,10 +74,10 @@ class GameType extends AbstractType
                 'attr' => [],
             ])
             ->add('submit', SubmitType::class, [
-                'validation_groups' => ['Default', 'submit'],
-                'attr' => [
-                    'value' => 'submit',
-                ],
+                // 'validation_groups' => ['Default', 'submit'],
+                // 'attr' => [
+                //     'value' => 'submit',
+                // ],
             ]);
     }
 

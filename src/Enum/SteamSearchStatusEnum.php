@@ -8,6 +8,6 @@ enum SteamSearchStatusEnum: string
 {
     case PENDING = 'pending';
     case OK = 'ok';
-    case INVALID_ID = 'invalid_id';
+    case NOT_FOUND = 'not_found';
     case ERROR = 'error';
 }

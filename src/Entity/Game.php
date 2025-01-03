@@ -27,9 +27,9 @@ class Game
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $dateUpdate = null;
 
+    // #[Assert\Regex('/^\d+$/', "game.page.new.flash.steamSearch.invalid")]
     #[ORM\Column(nullable: true, unique: true)]
-    #[Assert\PositiveOrZero(groups: ['steamSearch', 'submit'])]
-    #[Assert\NotBlank(groups: ['steamSearch'])]
+    #[Assert\PositiveOrZero]
     private ?int $steamId = null;
 
     #[ORM\Column(length: 255, unique: true)]

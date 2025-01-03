@@ -12,7 +12,6 @@ use App\Repository\GameRepository;
 use App\Service\SteamSearchService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -43,47 +42,49 @@ class GameController extends AbstractController
         TranslatorInterface $translator,
         SteamSearchService $steamSearch,
     ): Response {
+        // Handling route: creating new game or updating existing one
         $newGame = null == $id;
         if (!$newGame) {
             $game = $gameRepository->find($id);
-        }
-        $game ??= new Game();
-        $form = $this->createForm(GameType::class, $game);
-        $this->setTypePriceFromFullPrice($form, $game);
-
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            if ($form->getClickedButton() === $form->get('steamSearch')) {
-                $steamId = $form->get('steamId')->getData();
-                if (null == $steamId) {
-                    $form->get('steamId')->addError(new FormError($translator->trans('game.common.field.error.steamIdInvalid')));
-                } else {
-                    $steamSearch->fetchSteamGame($steamId);
-                    if (SteamSearchStatusEnum::OK === $steamSearch->getStatus()) {
-                        $game = $steamSearch->createNewGame();
-                        $form = $this->createForm(GameType::class, $game);
-                        $this->setTypePriceFromFullPrice($form, $game);
-                        $this->addFlash('success', $translator->trans('game.page.new.flash.steamSearch.success'));
-                    } elseif (SteamSearchStatusEnum::INVALID_ID === $steamSearch->getStatus()) {
-                        $form->get('steamId')->addError(new FormError('game.common.field.error.steamIdInvalid'));
-                    } else {
-                        $this->addFlash('danger', $translator->trans('game.page.new.flash.steamSearch.fail'));
-                    }
-                }
-            } elseif ($form->getClickedButton() === $form->get('submit')) {
-                $this->setFullPriceFromTypePrice($form, $game);
-                $entityManager->persist($game);
-                $entityManager->flush();
-                // TODO : ajout/modifier dépend selon !
-                $this->addFlash('success', $translator->trans('game.page.index.flash.success.newGame'));
-
-                return $this->redirectToRoute('app_game_index');
-            } else {
-                $this->addFlash('warning', 'game.page.index.flash.warning.formInvalid');
+            if (null == $game) {
+                $this->addFlash('warning', $translator->trans('game.page.index.flash.invalidGame'));
 
                 return $this->redirectToRoute('app_game_index');
             }
+        } else {
+            $game ??= new Game();
+        }
+
+        // Handling steam search with steamId query parameter
+        $steamId = $request->query->get('steamId');
+        if (null != $steamId) {
+            if (!\ctype_digit($steamId)) {
+                $this->addFlash('warning', $translator->trans('game.page.new.flash.steamSearch.invalid'));
+            } else {
+                $steamSearch->fetchSteamGame((int) $steamId);
+                if (SteamSearchStatusEnum::OK === $steamSearch->getStatus()) {
+                    $game = $steamSearch->fillGame($game);
+                    $this->addFlash('success', $translator->trans('game.page.new.flash.steamSearch.success'));
+                } elseif (SteamSearchStatusEnum::NOT_FOUND === $steamSearch->getStatus()) {
+                    $this->addFlash('warning', $translator->trans('game.page.new.flash.steamSearch.notFound'));
+                } else {
+                    $this->addFlash('danger', $translator->trans('game.page.new.flash.steamSearch.fail'));
+                }
+            }
+        }
+
+        $form = $this->createForm(GameType::class, $game);
+        $this->setTypePriceFromFullPrice($form, $game);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->setFullPriceFromTypePrice($form, $game);
+            $entityManager->persist($game);
+            $entityManager->flush();
+            // TODO : ajout/modifier dépend selon !
+            $this->addFlash('success', $translator->trans('game.page.index.flash.newGame'));
+
+            return $this->redirectToRoute('app_game_index');
         }
 
         return $this->render('game/new.html.twig', [
@@ -98,7 +99,7 @@ class GameController extends AbstractController
         $entityManager->remove($game);
         $entityManager->flush();
 
-        // $this->addFlash('success', $game->getName() . ' deleted!');
+        // TODO : ajout trad !
         $this->addFlash('success', 'Le jeu a été supprimé !');
 
         return $this->redirectToRoute('app_game_index');

@@ -39,7 +39,7 @@ class SteamSearchService
             $content = $response->toArray();
 
             if (!isset($content[$id]) || !$content[$id]['success']) {
-                $this->status = SteamSearchStatusEnum::INVALID_ID;
+                $this->status = SteamSearchStatusEnum::NOT_FOUND;
 
                 return;
             }
@@ -52,9 +52,8 @@ class SteamSearchService
         }
     }
 
-    public function createNewGame(): Game
+    public function fillGame(Game $game): Game
     {
-        $game = new Game();
         $game->setSteamId($this->id);
         $game->setName($this->data['name'] ?? '');
 
@@ -64,6 +63,8 @@ class SteamSearchService
             $replaceMonth = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
             $dateParsed = str_replace($findMonth, $replaceMonth, $this->data['release_date']['date']);
             $game->setReleaseDate(new \DateTime($dateParsed));
+        } else {
+            $game->setReleaseDate(null);
         }
 
         // managing price

@@ -10,20 +10,19 @@ game:
       button:
         addGame: Ajouter un jeu
       flash:
-        success:
-          newGame: Le jeu a été ajouté avec succès !
-        warning:
-          formInvalid: La soumission du formulaire n'est pas valide.
-
+        newGame: Le jeu a été ajouté avec succès !
+        invalidGame: Le jeu demandé n'existe pas.
     new:
       title:
         add: Ajouter un jeu
         update: Modifier un jeu
-      modalDeleteBody: Vous êtes sur le point de supprimer <span class="fw-bold">définitivement</span> le jeu, ainsi que toutes les avis associés. Êtes-vous sûr ?
       flash:
         steamSearch:
           success: Le formulaire a été complété avec les données de Steam !
+          invalid: L'ID Steam doit être consituté de chiffres uniquement.
+          notFound: L'ID Steam saisi ne correspond à aucun jeu.
           fail: Une erreur s'est produite en se connectant à Steam. Réessayez plus tard.
+      modalDeleteBody: Vous êtes sur le point de supprimer <span class="fw-bold">définitivement</span> le jeu, ainsi que toutes les avis associés. Êtes-vous sûr ?
 
   common:
     field:
@@ -39,15 +38,13 @@ game:
       help:
         steamId: Pour connaître l'ID Steam, aller sur <a href='https//steamdb.info/' target='_blank'>SteamDB</a>
         commaSeparated: Séparés par des virgules
-      error:
-        steamIdInvalid: L'ID Steam saisi n'est pas valide
-
 
 form:  
   button:
     add: Ajouter
     update: Modifier
     delete: Supprimer
+    search: Chercher
     cancel: Annuler
 
 modal:
