@@ -8,7 +8,7 @@
       {{ block('flash', 'theme/page.html.twig') }}
       <div class="row">
         <div class="col text-end">
-          <a href="{{ path('app_game_new') }}" class="btn btn-primary bi bi-plus-square-fill"><span class="ms-1">{% trans %}game.page.index.button.addGame{% endtrans %}</span></a>
+          <a href="{{ path('app_game_new') }}" class="btn btn-primary"><span class="bi bi-plus-square-fill me-1"></span>{% trans %}game.page.index.button.addGame{% endtrans %}</a>
         </div>
       </div>
       {% for game in games %}

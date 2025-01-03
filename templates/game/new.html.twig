@@ -29,7 +29,7 @@
           </div>
           <div class="modal-footer">
             <form action="{{ path('app_game_delete', { id: game_id }) }}" method="post">
-              <button type="submit" class="btn btn-danger bi bi-trash-fill"><span class="ms-1">{% trans %}form.button.delete{% endtrans %}</span></button>
+              <button type="submit" class="btn btn-danger"><span class="bi bi-trash-fill me-1"></span>{% trans %}form.button.delete{% endtrans %}</button>
               <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">{% trans %}form.button.cancel{% endtrans %}</button>
               <input type="hidden" name="token-delete" value="{{ csrf_token('delete-game') }}" />
             </form>
@@ -47,15 +47,18 @@
           {{ block('flash', 'theme/page.html.twig') }}
 
           {{ form_start(form, { attr: { action: path(app.current_route, { id: game_id }) } }) }}
-          <div class="row align-items-start">
-            <div class="col">
-              {{ form_row(form.steamId, { label: 'game.common.field.label.steamId'|trans, help_html: true, help: 'game.common.field.help.steamId'|trans }) }}
-            </div>
-            <div class="col-auto">
-              <div class="take-space mb-4"></div>
-              <a href=" {{ path(app.current_route, { id: game_id, steamId: 10 }) }} " class="btn btn-outline-secondary bi bi-steam">
-                <span class="d-none d-sm-inline ms-1">{% trans %}form.button.search{% endtrans %}</span>
-              </a>
+          <div class="row" {{ stimulus_controller('search-steam', { url: path(app.current_route, { id: game_id }) }) }}>
+            <div class="col mb-3">
+              {{ form_label(form.steamId, 'game.common.field.label.steamId'|trans) }}
+              {{ form_help(form.steamId, { help_html: true, help: 'game.common.field.help.steamId'|trans }) }}
+              <div class="input-group">
+                {{ form_widget(form.steamId, label: 'tat') }}
+                <a href="#" data-search-steam-target="buttonField" class="btn btn-outline-secondary mt-1">
+                  <span class="bi bi-steam me-1"></span>
+                  <span class="d-none d-sm-inline">{% trans %}form.button.search{% endtrans %}</span>
+                </a>
+              </div>
+              {{ form_errors(form.steamId) }}
             </div>
           </div>
 
@@ -67,7 +70,7 @@
               {{ form_row(form.releaseDate, { label: 'game.common.field.label.releaseDate'|trans }) }}
             </div>
           </div>
-          <div class="row align-items-end">
+          <div class="row align-items-end" {{ stimulus_controller('type-price') }}>
             <div class="col-12 col-sm-auto pe-sm-0">
               {{ form_row(form.typePrice, { label: 'game.common.field.label.fullPrice'|trans, label_attr: { class: 'radio-inline' } }) }}
             </div>
@@ -86,8 +89,8 @@
             </div>
             <div class="col-sm-4 text-sm-end text-center mt-2 mt-sm-0">
               {% if game_id != null %}
-                <button type="button" class="btn btn-outline-danger bi bi-trash-fill" data-bs-toggle="modal" data-bs-target="#delete-modal">
-                  <span class="ms-1">{% trans %}form.button.delete{% endtrans %}</span>
+                <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#delete-modal">
+                  <span class="bi bi-trash-fill me-1"></span>{% trans %}form.button.delete{% endtrans %}
                 </button>
               {% endif %}
             </div>

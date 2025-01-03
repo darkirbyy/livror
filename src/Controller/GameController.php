@@ -12,6 +12,7 @@ use App\Repository\GameRepository;
 use App\Service\SteamSearchService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -57,16 +58,17 @@ class GameController extends AbstractController
 
         // Handling steam search with steamId query parameter
         $steamId = $request->query->get('steamId');
+        $steamIdError = null;
         if (null != $steamId) {
             if (!\ctype_digit($steamId)) {
-                $this->addFlash('warning', $translator->trans('game.page.new.flash.steamSearch.invalid'));
+                $steamIdError = $translator->trans('game.common.field.error.steamId.invalid');
             } else {
                 $steamSearch->fetchSteamGame((int) $steamId);
                 if (SteamSearchStatusEnum::OK === $steamSearch->getStatus()) {
                     $game = $steamSearch->fillGame($game);
                     $this->addFlash('success', $translator->trans('game.page.new.flash.steamSearch.success'));
                 } elseif (SteamSearchStatusEnum::NOT_FOUND === $steamSearch->getStatus()) {
-                    $this->addFlash('warning', $translator->trans('game.page.new.flash.steamSearch.notFound'));
+                    $steamIdError = $translator->trans('game.common.field.error.steamId.notFound');
                 } else {
                     $this->addFlash('danger', $translator->trans('game.page.new.flash.steamSearch.fail'));
                 }
@@ -76,11 +78,15 @@ class GameController extends AbstractController
         $form = $this->createForm(GameType::class, $game);
         $this->setTypePriceFromFullPrice($form, $game);
         $form->handleRequest($request);
+        null != $steamIdError ? $form->get('steamId')->addError(new FormError($steamIdError)) : '';
+        // $form->get('steamId')->getData();
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->setFullPriceFromTypePrice($form, $game);
+
             $entityManager->persist($game);
             $entityManager->flush();
+
             // TODO : ajout/modifier dépend selon !
             $this->addFlash('success', $translator->trans('game.page.index.flash.newGame'));
 

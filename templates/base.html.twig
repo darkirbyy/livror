@@ -7,7 +7,11 @@
     <title>
       {% block tab_title %}
         {{ title|trans }}
-      {% endblock %}-{% trans %}app.name{% endtrans %}- Darkirby
+      {% endblock %}
+      {{ ' - ' }}
+      {% trans %}app.name{% endtrans %}
+      {{ ' - ' }}
+      Darkirby
     </title>
     <link rel="icon" href=" {{ asset('build/favicon.png') }}" />
     {% block stylesheets %}

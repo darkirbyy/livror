@@ -1,10 +1,10 @@
 {% extends 'bootstrap_5_layout.html.twig' %}
 
 {% block form_row %}
-    <div class="mb-3 {% if not compound or force_error|default(false) %}{% for error in errors %} has-error{% endfor %}{% endif %}">
-        {{ form_label(form, label, { label_attr: { class: 'mb-0' } }) }}
-        {{ form_help(form, { help_attr: { class: 'mt-0 mb-0' } }) }}
-        {{ form_widget(form, { attr: { class: 'mt-1' } }) }}
-        {{ form_errors(form) }}
-    </div>
+  <div class="mb-3 {% if not compound or force_error|default(false) %}{% for error in errors %} has-validation{% endfor %}{% endif %}">
+    {{ form_label(form) }}
+    {{ form_help(form) }}
+    {{ form_widget(form) }}
+    {{ form_errors(form) }}
+  </div>
 {% endblock %}

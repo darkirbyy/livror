@@ -88,9 +88,4 @@ class SteamSearchService
     {
         return $this->status;
     }
-
-    public function getData(): array
-    {
-        return $this->data;
-    }
 }

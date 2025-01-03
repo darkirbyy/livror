@@ -9,7 +9,6 @@ use App\Enum\TypePriceEnum;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\EnumType;
-use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
@@ -23,15 +22,12 @@ class GameType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('steamId', IntegerType::class, [
+            ->add('steamId', TextType::class, [
                 'required' => false,
+                'attr' => [
+                    'data-search-steam-target' => 'inputField',
+                ],
             ])
-            // ->add('steamSearch', SubmitType::class, [
-            //     'validation_groups' => false,
-            //     'attr' => [
-            //         'value' => 'steamSearch',
-            //     ],
-            // ])
             ->add('name', TextType::class, [
                 'required' => true,
             ])
@@ -74,10 +70,7 @@ class GameType extends AbstractType
                 'attr' => [],
             ])
             ->add('submit', SubmitType::class, [
-                // 'validation_groups' => ['Default', 'submit'],
-                // 'attr' => [
-                //     'value' => 'submit',
-                // ],
+                'attr' => [],
             ]);
     }
 
@@ -87,7 +80,6 @@ class GameType extends AbstractType
             'data_class' => Game::class,
             'attr' => [
                 'novalidate' => 'novalidate',
-                'data-controller' => 'type-price',
             ],
         ]);
     }

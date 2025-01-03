@@ -55,13 +55,13 @@
     <div class="row gw-md-4">
       <div class="col-12 col-md-6 text-center text-md-end">
         {% trans %}app.madeWith{% endtrans %}
-        <i class="fa-brands fa-symfony"></i><span class="fst-italic ms-1">Symfony 7</span>
+        <span class="fa-brands fa-symfony"></span><span class="fst-italic ms-1">Symfony 7</span>
         <span class="mx-1">|</span>
-        <i class="fa-brands fa-bootstrap"></i><span class="fst-italic ms-1">Bootstrap 5</span>
+        <span class="fa-brands fa-bootstrap"></span><span class="fst-italic ms-1">Bootstrap 5</span>
       </div>
 
       <div class="col-12 col-md-6 text-center text-md-start">
-        {% trans %}app.version{% endtrans %} {{ livror.version }} -{% trans %}app.releaseDate{% endtrans %} {{ livror.release_date|format_datetime('short', 'none') }}
+        {% trans %}app.version{% endtrans %} {{ livror.version ~ ' - ' }}{% trans %}app.releaseDate{% endtrans %} {{ livror.release_date|format_datetime('short', 'none') }}
       </div>
     </div>
   </div>
