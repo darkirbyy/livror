@@ -27,9 +27,8 @@ class Game
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $dateUpdate = null;
 
-    // #[Assert\PositiveOrZero]
     #[ORM\Column(nullable: true, unique: true)]
-    #[Assert\Regex('/^\d+$/', 'game.common.field.error.steamId.invalid')]
+    #[Assert\Regex('/^\d+$/', message: 'game.error.steamId.invalid')]
     private ?int $steamId = null;
 
     #[ORM\Column(length: 255, unique: true)]

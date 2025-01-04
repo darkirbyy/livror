@@ -3,12 +3,12 @@
 {% set game_id = app.request.attributes.get('id') %}
 
 {% if game_id == null %}
-  {% set title = 'game.page.new.title.add' %}
+  {% set title = 'game.new.title.add' %}
   {% set submitButton = 'form.button.add' %}
 {% else %}
   {# {% set game_name = form.vars.value.name %} #}
   {# {{ game_name }} #}
-  {% set title = 'game.page.new.title.update' %}
+  {% set title = 'game.new.title.update' %}
   {% set submitButton = 'form.button.update' %}
 {% endif %}
 
@@ -25,7 +25,7 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-            {% trans %}game.page.new.modalDeleteBody{% endtrans %}
+            {% trans %}game.new.modalDeleteBody{% endtrans %}
           </div>
           <div class="modal-footer">
             <form action="{{ path('app_game_delete', { id: game_id }) }}" method="post">
@@ -48,9 +48,9 @@
 
           {{ form_start(form, { attr: { action: path(app.current_route, { id: game_id }) } }) }}
           <div class="row" {{ stimulus_controller('search-steam', { url: path(app.current_route, { id: game_id }) }) }}>
-            <div class="col mb-3">
-              {{ form_label(form.steamId, 'game.common.field.label.steamId'|trans) }}
-              {{ form_help(form.steamId, { help_html: true, help: 'game.common.field.help.steamId'|trans }) }}
+            <div class="col form-row">
+              {{ form_label(form.steamId, 'game.label.steamId'|trans({ }, 'validators')) }}
+              {{ form_help(form.steamId, { help_html: true, help: 'game.help.steamId'|trans({ }, 'validators') }) }}
               <div class="input-group">
                 {{ form_widget(form.steamId, label: 'tat') }}
                 <a href="#" data-search-steam-target="buttonField" class="btn btn-outline-secondary mt-1">
@@ -64,24 +64,24 @@
 
           <div class="row">
             <div class="col-12 col-md-8">
-              {{ form_row(form.name, { label: 'game.common.field.label.name'|trans }) }}
+              {{ form_row(form.name, { label: 'game.label.name'|trans({ }, 'validators') }) }}
             </div>
             <div class="col-12 col-md-4">
-              {{ form_row(form.releaseDate, { label: 'game.common.field.label.releaseDate'|trans }) }}
+              {{ form_row(form.releaseDate, { label: 'game.label.releaseDate'|trans({ }, 'validators') }) }}
             </div>
           </div>
           <div class="row align-items-end" {{ stimulus_controller('type-price') }}>
             <div class="col-12 col-sm-auto pe-sm-0">
-              {{ form_row(form.typePrice, { label: 'game.common.field.label.fullPrice'|trans, label_attr: { class: 'radio-inline' } }) }}
+              {{ form_row(form.typePrice, { label: 'game.label.fullPrice'|trans({ }, 'validators'), label_attr: { class: 'radio-inline' } }) }}
             </div>
             <div class="col-12 col-sm ps-sm-0">
               {{ form_row(form.fullPrice, { label: false }) }}
             </div>
           </div>
-          {{ form_row(form.developers, { label: 'game.common.field.label.developers'|trans, help: 'game.common.field.help.commaSeparated'|trans }) }}
-          {{ form_row(form.genres, { label: 'game.common.field.label.genres'|trans, help: 'game.common.field.help.commaSeparated'|trans }) }}
-          {{ form_row(form.description, { label: 'game.common.field.label.description'|trans }) }}
-          {{ form_row(form.imgUrl, { label: 'game.common.field.label.imgUrl'|trans }) }}
+          {{ form_row(form.developers, { label: 'game.label.developers'|trans({ }, 'validators'), help: 'game.help.commaSeparated'|trans({ }, 'validators') }) }}
+          {{ form_row(form.genres, { label: 'game.label.genres'|trans({ }, 'validators'), help: 'game.help.commaSeparated'|trans({ }, 'validators') }) }}
+          {{ form_row(form.description, { label: 'game.label.description'|trans({ }, 'validators') }) }}
+          {{ form_row(form.imgUrl, { label: 'game.label.imgUrl'|trans({ }, 'validators') }) }}
           <div class="row">
             <div class="col-sm-8 text-sm-start text-center">
               {{ form_widget(form.submit, { label: submitButton|trans }) }}

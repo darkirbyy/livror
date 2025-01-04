@@ -1,10 +1,15 @@
 {% extends 'bootstrap_5_layout.html.twig' %}
 
 {% block form_row %}
-  <div class="mb-3 {% if not compound or force_error|default(false) %}{% for error in errors %} has-validation{% endfor %}{% endif %}">
+  <div class="form-row {% if not compound or force_error|default(false) %}{% for error in errors %} has-validation{% endfor %}{% endif %}">
     {{ form_label(form) }}
     {{ form_help(form) }}
     {{ form_widget(form) }}
     {{ form_errors(form) }}
   </div>
+{% endblock %}
+
+{% block _game_steamId_widget %}
+  {%- set type = 'text' -%}
+  {{ block('form_widget_simple') }}
 {% endblock %}

@@ -5,10 +5,18 @@
 @import '~bootstrap-icons/font/bootstrap-icons.css';
 @import '~@fortawesome/fontawesome-free/css/all.css';
 
+// Custom classes
+
 .take-space::before {
   content: '.';
   visibility: hidden;
 }
+
+.form-row {
+  margin-bottom: ($spacer * 1) !important;
+}
+
+// Change bootstrap classes
 
 .input-group-text {
   margin-top: ($spacer * 0.25) !important;
