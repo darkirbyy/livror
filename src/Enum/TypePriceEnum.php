@@ -9,16 +9,16 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 enum TypePriceEnum: string implements TranslatableInterface
 {
-    case UNKNOW = 'unknow';
+    case UNKNOWN = 'unknown';
     case FREE = 'free';
     case PAYING = 'paying';
 
-    public function trans(TranslatorInterface $translator, ?string $locale = null): string
+    public function trans(TranslatorInterface $trans, ?string $locale = null): string
     {
         return match ($this) {
-            self::UNKNOW => $translator->trans('enum.TypePrice.unknown', locale: $locale),
-            self::FREE => $translator->trans('enum.TypePrice.free', locale: $locale),
-            self::PAYING => $translator->trans('enum.TypePrice.paying', locale: $locale),
+            self::UNKNOWN => $trans->trans('enum.TypePrice.unknown', locale: $locale),
+            self::FREE => $trans->trans('enum.TypePrice.free', locale: $locale),
+            self::PAYING => $trans->trans('enum.TypePrice.paying', locale: $locale),
         };
     }
 
@@ -27,14 +27,14 @@ enum TypePriceEnum: string implements TranslatableInterface
         return match (true) {
             $price > 0 => self::PAYING,
             0 === $price => self::FREE,
-            default => self::UNKNOW,
+            default => self::UNKNOWN,
         };
     }
 
     public static function toPrice(TypePriceEnum $typePrice, ?int $price): ?int
     {
         return match ($typePrice) {
-            self::UNKNOW => null,
+            self::UNKNOWN => null,
             self::FREE => 0,
             self::PAYING => $price,
         };

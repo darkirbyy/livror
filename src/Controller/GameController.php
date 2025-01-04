@@ -69,7 +69,7 @@ class GameController extends AbstractController
             }
         }
 
-        $form = $this->createForm(GameType::class, $game);
+        $form = $this->createForm(GameType::class, $game, ['currency' => $this->getParameter('app.currency')]);
         $this->setTypePriceFromFullPrice($form, $game);
         $form->handleRequest($request);
         null != $steamIdError ? $form->get('steamId')->addError(new FormError($steamIdError)) : null;

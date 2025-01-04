@@ -16,6 +16,12 @@
   margin-bottom: ($spacer * 1) !important;
 }
 
+label.form-label.required::after,
+legend.col-form-label.required::after {
+  content: ' *';
+  color: $primary !important;
+}
+
 // Change bootstrap classes
 
 .input-group-text {

@@ -3,7 +3,7 @@
 bizkit_versioning:
 
     # Prefix added to version parameters.
-    parameter_prefix: '%env(APP_NAME)%'
+    parameter_prefix: versioning
 
     # Strategy used for managing version updates.
     # Options:

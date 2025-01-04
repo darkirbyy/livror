@@ -14,7 +14,7 @@ class SteamSearchService
     private ?int $id = null;
     private array $data = [];
 
-    public function __construct(private HttpClientInterface $client, public int $steamSearchTimeout)
+    public function __construct(private HttpClientInterface $client, public int $steamSearchTimeout, public string $defaultLocale)
     {
     }
 
@@ -24,7 +24,7 @@ class SteamSearchService
             $response = $this->client->request('GET', 'https://store.steampowered.com/api/appdetails?appids=' . $id, [
                 'max_duration' => $this->steamSearchTimeout,
                 'headers' => [
-                    'Accept-Language' => 'fr-FR,en-US;q=0.7,en;q=0.3',
+                    'Accept-Language' => $this->defaultLocale,
                 ],
             ]);
 
@@ -58,14 +58,16 @@ class SteamSearchService
         $game->setName($this->data['name'] ?? '');
 
         // managing release date
+        $date = null;
         if (!$this->data['release_date']['coming_soon']) {
-            $findMonth = ['janv.', 'févr.', 'mars', 'avr.', 'mai', 'juin', 'juil.', 'aout', 'sep.', 'oct.', 'nov.', 'déc.'];
-            $replaceMonth = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-            $dateParsed = str_replace($findMonth, $replaceMonth, $this->data['release_date']['date']);
-            $game->setReleaseDate(new \DateTime($dateParsed));
-        } else {
-            $game->setReleaseDate(null);
+            $formatter = new \IntlDateFormatter($this->defaultLocale, \IntlDateFormatter::MEDIUM, \IntlDateFormatter::NONE);
+            $timestamp = $formatter->parse('27 aout 2024');
+            if (false != $timestamp) {
+                $date = new \DateTime();
+                $date->setTimestamp($timestamp);
+            }
         }
+        $game->setReleaseDate($date);
 
         // managing price
         if ($this->data['is_free']) {

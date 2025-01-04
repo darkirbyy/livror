@@ -40,12 +40,13 @@ class GameType extends AbstractType
                 'widget' => 'single_text',
             ])
             ->add('typePrice', EnumType::class, [
-                'required' => true,
+                'required' => false,
                 'mapped' => false,
                 'class' => TypePriceEnum::class,
                 'expanded' => true,
                 'multiple' => false,
-                'empty_data' => TypePriceEnum::UNKNOW,
+                'empty_data' => TypePriceEnum::UNKNOWN,
+                'placeholder' => false,
                 'attr' => [
                     'data-type-price-target' => 'choiceFields',
                 ],
@@ -54,6 +55,7 @@ class GameType extends AbstractType
                 'required' => false,
                 'divisor' => 100,
                 'input' => 'integer',
+                'currency' => $options['currency'],
                 'attr' => [
                     'data-type-price-target' => 'inputField',
                 ],
@@ -77,11 +79,13 @@ class GameType extends AbstractType
 
     public function configureOptions(OptionsResolver $resolver): void
     {
-        $resolver->setDefaults([
-            'data_class' => Game::class,
-            'attr' => [
-                'novalidate' => 'novalidate',
-            ],
-        ]);
+        $resolver
+            ->setDefaults([
+                'data_class' => Game::class,
+                'attr' => [
+                    'novalidate' => 'novalidate',
+                ],
+            ])
+            ->setRequired(['currency']);
     }
 }
