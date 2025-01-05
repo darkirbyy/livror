@@ -39,8 +39,9 @@ class Game
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $developers = null;
 
-    #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
-    private ?\DateTimeInterface $releaseDate = null;
+    #[ORM\Column(nullable: true)]
+    #[Assert\Range(min: 1900, max: 2100)]
+    private ?int $releaseYear = null;
 
     #[ORM\Column(nullable: true)]
     #[Assert\PositiveOrZero]
@@ -134,14 +135,14 @@ class Game
         return $this;
     }
 
-    public function getReleaseDate(): ?\DateTimeInterface
+    public function getReleaseYear(): ?int
     {
-        return $this->releaseDate;
+        return $this->releaseYear;
     }
 
-    public function setReleaseDate(?\DateTimeInterface $releaseDate): static
+    public function setReleaseYear(?int $releaseYear): static
     {
-        $this->releaseDate = $releaseDate;
+        $this->releaseYear = $releaseYear;
 
         return $this;
     }

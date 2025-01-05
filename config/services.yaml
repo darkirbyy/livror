@@ -27,7 +27,8 @@ services:
     App\Service\SteamSearchService:
         arguments:
             $steamSearchTimeout: '%env(STEAM_SEARCH_TIMEOUT)%'
-            $defaultLocale: '%env(APP_LOCALE)%'
+            $appLocale: '%env(APP_LOCALE)%'
+            $appCurrency: '%env(APP_CURRENCY)%'
 
 
 when@test: &test

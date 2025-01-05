@@ -7,7 +7,6 @@ namespace App\Form;
 use App\Entity\Game;
 use App\Enum\TypePriceEnum;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\EnumType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
@@ -35,9 +34,8 @@ class GameType extends AbstractType
             ->add('developers', TextType::class, [
                 'required' => false,
             ])
-            ->add('releaseDate', DateType::class, [
+            ->add('releaseYear', IntegerType::class, [
                 'required' => false,
-                'widget' => 'single_text',
             ])
             ->add('typePrice', EnumType::class, [
                 'required' => false,
