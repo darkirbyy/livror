@@ -1,0 +1,47 @@
+default:
+  index:
+    title: Home
+
+game:
+  index:
+    title: All Games
+    button:
+      addGame: Add a new game
+    flash:
+      newGame: '{name} has been added!'
+      updateGame: '{name} has been updated!'
+      deleteGame: '{name} has been deleted!'
+      invalidGame: The requested identifier does not match any game.
+  new:
+    title:
+      add: Add a new game
+      update: 'Edit {name}'
+    flash:
+      steamSearch:
+        success: The form has been filled with data from Steam!
+        fail: An error occurred while connecting to Steam. Please try again later.
+    modalDeleteBody: 'You are about to permanently <span class="fw-bold">delete</span> {name}, along with all associated reviews. Are you sure?'
+
+form:  
+  button:
+    add: Add
+    update: Update
+    delete: Delete
+    search: Search
+    cancel: Cancel
+
+modal:
+  title:
+    delete: Confirm Deletion
+
+app:
+  name: Livror
+  madeWith: Made with
+  version: Version
+  releaseDate: Updated on
+
+enum:
+  TypePrice:
+    unknown: Unknown
+    free: Free
+    paying: Paid

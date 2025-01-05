@@ -1,11 +1,11 @@
 {% extends 'base.html.twig' %}
 
-{% set title = 'game.index.title' %}
+{% set title = 'game.index.title'|trans %}
 
 {% block main %}
   <section>
     <div class="container">
-      {{ block('flash', 'theme/page.html.twig') }}
+      {{ block('flash', 'theme/flash.html.twig') }}
       <div class="row">
         <div class="col text-end">
           <a href="{{ path('app_game_new') }}" class="btn btn-primary"><span class="bi bi-plus-square-fill me-1"></span>{% trans %}game.index.button.addGame{% endtrans %}</a>

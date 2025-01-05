@@ -3,13 +3,12 @@
 {% set game_id = app.request.attributes.get('id') %}
 
 {% if game_id == null %}
-  {% set title = 'game.new.title.add' %}
-  {% set submitButton = 'form.button.add' %}
+  {% set title = 'game.new.title.add'|trans %}
+  {% set submitButton = 'form.button.add'|trans %}
 {% else %}
-  {# {% set game_name = form.vars.value.name %} #}
-  {# {{ game_name }} #}
-  {% set title = 'game.new.title.update' %}
-  {% set submitButton = 'form.button.update' %}
+  {% set game_name = form.vars.value.name %}
+  {% set title = 'game.new.title.update'|trans({ '{name}': game_name }) %}
+  {% set submitButton = 'form.button.update'|trans %}
 {% endif %}
 
 {% block main %}
@@ -25,7 +24,7 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-            {% trans %}game.new.modalDeleteBody{% endtrans %}
+            {% trans with { '{name}': game_name } %}game.new.modalDeleteBody{% endtrans %}
           </div>
           <div class="modal-footer">
             <form action="{{ path('app_game_delete', { id: game_id }) }}" method="post">
@@ -44,7 +43,7 @@
     <div class="container">
       <div class="row">
         <div class="col-10 offset-1 col-lg-8 offset-lg-2">
-          {{ block('flash', 'theme/page.html.twig') }}
+          {{ block('flash', 'theme/flash.html.twig') }}
 
           {{ form_start(form, { attr: { action: path(app.current_route, { id: game_id }) } }) }}
           <div class="row" {{ stimulus_controller('search-steam', { url: path(app.current_route, { id: game_id }) }) }}>
@@ -84,7 +83,7 @@
           {{ form_row(form.imgUrl, { label: 'game.label.imgUrl'|trans({ }, 'validators') }) }}
           <div class="row">
             <div class="col-sm-8 text-sm-start text-center">
-              {{ form_widget(form.submit, { label: submitButton|trans }) }}
+              {{ form_widget(form.submit, { label: submitButton }) }}
               <a class="btn btn-outline-secondary ms-2" href="{{ path('app_game_index') }}">Annuler</a>
             </div>
             <div class="col-sm-4 text-sm-end text-center mt-2 mt-sm-0">

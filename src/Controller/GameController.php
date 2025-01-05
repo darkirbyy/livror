@@ -80,8 +80,11 @@ class GameController extends AbstractController
             $em->persist($game);
             $em->flush();
 
-            // TODO : ajout/modifier dépend selon !
-            $this->addFlash('success', $trans->trans('game.index.flash.newGame'));
+            if ($newGame) {
+                $this->addFlash('success', $trans->trans('game.index.flash.newGame', ['name' => $game->getName()]));
+            } else {
+                $this->addFlash('success', $trans->trans('game.index.flash.updateGame', ['name' => $game->getName()]));
+            }
 
             return $this->redirectToRoute('app_game_index');
         }
@@ -98,7 +101,7 @@ class GameController extends AbstractController
         $em->remove($game);
         $em->flush();
 
-        $this->addFlash('success', $trans->trans('game.index.flash.deleteGame'));
+        $this->addFlash('success', $trans->trans('game.index.flash.deleteGame', ['name' => $game->getName()]));
 
         return $this->redirectToRoute('app_game_index');
     }
