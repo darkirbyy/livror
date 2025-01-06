@@ -4,11 +4,11 @@
 
 {% if game_id == null %}
   {% set title = 'game.new.title.add'|trans %}
-  {% set submitButton = 'form.button.add'|trans %}
+  {% set submitButton = 'form.button.add' %}
 {% else %}
   {% set game_name = form.vars.value.name %}
   {% set title = 'game.new.title.update'|trans({ '{name}': game_name }) %}
-  {% set submitButton = 'form.button.update'|trans %}
+  {% set submitButton = 'form.button.update' %}
 {% endif %}
 
 {% block main %}
@@ -48,10 +48,10 @@
           {{ form_start(form, { attr: { action: path(app.current_route, { id: game_id }) } }) }}
           <div class="row" {{ stimulus_controller('search-steam', { url: path(app.current_route, { id: game_id }) }) }}>
             <div class="col form-row">
-              {{ form_label(form.steamId, 'game.label.steamId'|trans({ }, 'validators')) }}
-              {{ form_help(form.steamId, { help_html: true, help: 'game.help.steamId'|trans({ }, 'validators') }) }}
+              {{ form_label(form.steamId, 'game.label.steamId') }}
+              {{ form_help(form.steamId, { help_html: true, help: 'game.help.steamId' }) }}
               <div class="input-group">
-                {{ form_widget(form.steamId, label: 'tat') }}
+                {{ form_widget(form.steamId) }}
                 <a href="#" data-search-steam-target="buttonField" class="btn btn-outline-secondary mt-1">
                   <span class="bi bi-steam me-1"></span>
                   <span class="d-none d-sm-inline">{% trans %}form.button.search{% endtrans %}</span>
@@ -63,24 +63,24 @@
 
           <div class="row">
             <div class="col-12 col-md-8">
-              {{ form_row(form.name, { label: 'game.label.name'|trans({ }, 'validators') }) }}
+              {{ form_row(form.name, { label: 'game.label.name' }) }}
             </div>
             <div class="col-12 col-md-4">
-              {{ form_row(form.releaseYear, { label: 'game.label.releaseYear'|trans({ }, 'validators') }) }}
+              {{ form_row(form.releaseYear, { label: 'game.label.releaseYear' }) }}
             </div>
           </div>
           <div class="row align-items-end" {{ stimulus_controller('type-price') }}>
             <div class="col-12 col-sm-auto pe-sm-0">
-              {{ form_row(form.typePrice, { label: 'game.label.fullPrice'|trans({ }, 'validators'), label_attr: { class: 'radio-inline' } }) }}
+              {{ form_row(form.typePrice, { label: 'game.label.fullPrice', label_attr: { class: 'radio-inline' } }) }}
             </div>
             <div class="col-12 col-sm ps-sm-0">
               {{ form_row(form.fullPrice, { label: false }) }}
             </div>
           </div>
-          {{ form_row(form.developers, { label: 'game.label.developers'|trans({ }, 'validators'), help: 'game.help.commaSeparated'|trans({ }, 'validators') }) }}
-          {{ form_row(form.genres, { label: 'game.label.genres'|trans({ }, 'validators'), help: 'game.help.commaSeparated'|trans({ }, 'validators') }) }}
-          {{ form_row(form.description, { label: 'game.label.description'|trans({ }, 'validators') }) }}
-          {{ form_row(form.imgUrl, { label: 'game.label.imgUrl'|trans({ }, 'validators') }) }}
+          {{ form_row(form.developers, { label: 'game.label.developers', help: 'game.help.commaSeparated' }) }}
+          {{ form_row(form.genres, { label: 'game.label.genres', help: 'game.help.commaSeparated' }) }}
+          {{ form_row(form.description, { label: 'game.label.description' }) }}
+          {{ form_row(form.imgUrl, { label: 'game.label.imgUrl' }) }}
           <div class="row">
             <div class="col-sm-8 text-sm-start text-center">
               {{ form_widget(form.submit, { label: submitButton }) }}

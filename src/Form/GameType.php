@@ -71,7 +71,7 @@ class GameType extends AbstractType
                 'attr' => [],
             ])
             ->add('submit', SubmitType::class, [
-                'attr' => [],
+                'translation_domain' => 'messages',
             ]);
     }
 
@@ -83,6 +83,7 @@ class GameType extends AbstractType
                 'attr' => [
                     'novalidate' => 'novalidate',
                 ],
+                'translation_domain' => 'validators',
             ])
             ->setRequired(['currency']);
     }

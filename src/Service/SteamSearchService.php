@@ -15,22 +15,17 @@ class SteamSearchService
     private ?int $id = null;
     private array $data = [];
 
-    public function __construct(
-        private HttpClientInterface $client,
-        private LoggerInterface $logger,
-        public int $steamSearchTimeout,
-        public string $appLocale,
-        public string $appCurrency,
-    ) {
+    public function __construct(private HttpClientInterface $client, private LoggerInterface $logger, public int $timeout, public string $locale, public string $appCurrency)
+    {
     }
 
     public function fetchSteamGame(int $id): void
     {
         try {
             $response = $this->client->request('GET', 'https://store.steampowered.com/api/appdetails?appids=' . $id, [
-                'max_duration' => $this->steamSearchTimeout,
+                'max_duration' => $this->timeout,
                 'headers' => [
-                    'Accept-Language' => $this->appLocale,
+                    'Accept-Language' => $this->locale,
                 ],
             ]);
 

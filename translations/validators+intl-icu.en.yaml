@@ -1,0 +1,17 @@
+game:
+  label:
+    steamId: Steam ID
+    name: Name
+    releaseYear: Year of Release
+    fullPrice: Full Price (excluding discounts)
+    developers: Publisher(s)
+    genres: Genre(s)
+    description: Description
+    imgUrl: Image URL
+  help:
+    steamId: To find the Steam ID, go to <a href='https://steamdb.info/' target='_blank'>SteamDB</a>
+    commaSeparated: Separated by commas
+  error:
+    steamId:
+      invalid: A Steam ID must consist of digits only.
+      notFound: The entered Steam ID does not match any game.
