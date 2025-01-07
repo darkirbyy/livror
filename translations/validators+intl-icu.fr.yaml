@@ -3,7 +3,7 @@ game:
     steamId: ID Steam
     name: Nom
     releaseYear: Année de parution
-    fullPrice: Prix de vente (hors réduction)
+    fullPrice: Prix de vente
     developers: Editeur(s)
     genres: Genre(s)
     description:  Description

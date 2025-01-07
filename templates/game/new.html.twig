@@ -14,22 +14,25 @@
 {% block main %}
   {% if game_id != null %}
     <!-- Delete Modal -->
-    <div class="modal fade" id="delete-modal" tabindex="-1" aria-labelledby="delete-modal-label" aria-hidden="true" loading="lazy">
+    <div class="modal fade" id="delete-modal" tabindex="-1" aria-labelledby="delete-modal-label" aria-hidden="true" role="dialog" loading="lazy">
       <div class="modal-dialog modal-dialog-centered modal-fullscreen-sm-down">
         <div class="modal-content">
           <div class="modal-header">
             <h1 class="modal-title fs-5" id="delete-modal-label">
-              {% trans %}modal.title.delete{% endtrans %}
+              {{ 'modal.title.delete'|trans }}
             </h1>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ 'aria.label.close'|trans }}"></button>
           </div>
           <div class="modal-body">
-            {% trans with { '{name}': game_name } %}game.new.modalDeleteBody{% endtrans %}
+            {{ 'game.new.modalDeleteBody'|trans({ '{name}': game_name })|raw }}
           </div>
           <div class="modal-footer">
             <form action="{{ path('app_game_delete', { id: game_id }) }}" method="post">
-              <button type="submit" class="btn btn-danger"><span class="bi bi-trash-fill me-1"></span>{% trans %}form.button.delete{% endtrans %}</button>
-              <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">{% trans %}form.button.cancel{% endtrans %}</button>
+              <button type="submit" class="btn btn-danger">
+                <span class="bi bi-trash-fill me-1"></span>
+                {{ 'form.button.delete'|trans }}
+              </button>
+              <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">{{ 'form.button.cancel'|trans }}</button>
               <input type="hidden" name="token-delete" value="{{ csrf_token('delete-game') }}" />
             </form>
           </div>
@@ -52,9 +55,9 @@
               {{ form_help(form.steamId, { help_html: true, help: 'game.help.steamId' }) }}
               <div class="input-group">
                 {{ form_widget(form.steamId) }}
-                <a href="#" data-search-steam-target="buttonField" class="btn btn-outline-secondary mt-1">
+                <a href="#" data-search-steam-target="buttonField" class="btn btn-outline-secondary mt-1" aria-label="{{ 'aria.label.search'|trans }}">
                   <span class="bi bi-steam me-1"></span>
-                  <span class="d-none d-sm-inline">{% trans %}form.button.search{% endtrans %}</span>
+                  <span class="d-none d-sm-inline">{{ 'form.button.search'|trans }}</span>
                 </a>
               </div>
               {{ form_errors(form.steamId) }}
@@ -71,10 +74,10 @@
           </div>
           <div class="row align-items-end" {{ stimulus_controller('type-price') }}>
             <div class="col-12 col-sm-auto pe-sm-0">
-              {{ form_row(form.typePrice, { label: 'game.label.fullPrice', label_attr: { class: 'radio-inline' } }) }}
+              {{ form_row(form.typePrice, { label: 'game.label.fullPrice', label_attr: { class: 'radio-inline', id: 'fullPriceLabel' } }) }}
             </div>
             <div class="col-12 col-sm ps-sm-0">
-              {{ form_row(form.fullPrice, { label: false }) }}
+              {{ form_row(form.fullPrice, { label: false, attr: { 'aria-labelledby': 'fullPriceLabel' } }) }}
             </div>
           </div>
           {{ form_row(form.developers, { label: 'game.label.developers', help: 'game.help.commaSeparated' }) }}
@@ -89,12 +92,13 @@
             <div class="col-sm-4 text-sm-end text-center mt-2 mt-sm-0">
               {% if game_id != null %}
                 <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#delete-modal">
-                  <span class="bi bi-trash-fill me-1"></span>{% trans %}form.button.delete{% endtrans %}
+                  <span class="bi bi-trash-fill me-1"></span>
+                  {{ 'form.button.delete'|trans }}
                 </button>
               {% endif %}
             </div>
           </div>
-
+          {{ form_rest(form) }}
           {{ form_end(form) }}
         </div>
       </div>

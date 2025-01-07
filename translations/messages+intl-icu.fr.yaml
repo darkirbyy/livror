@@ -59,7 +59,9 @@ aria:
   label:
     mainNavigation: Navigation principale
     toggleNavigation: Basculer la navigation
-    profileAvatar: Avatar
+    avatar: Avatar
     footer: Pied de page
+    search: Chercher
+    close: Fermer
   other:
     skipToContent: Aller au contenu

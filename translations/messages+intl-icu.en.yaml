@@ -37,13 +37,13 @@ modal:
 app:
   name: Livror
   navbar:
-  home: Home
-  game: All games
-  account:
-    signIn: Sign In
-    signOut: Sign Out
-    myReviews: My reviews
-    myAccount: My account
+    home: Home
+    game: All games
+    account:
+      signIn: Sign In
+      signOut: Sign Out
+      myReviews: My reviews
+      myAccount: My account
   footer:
     madeWith: Made with
     version: Version
@@ -59,7 +59,9 @@ aria:
   label:
     mainNavigation: Main navigation
     toggleNavigation: Toggle navigation
-    profileAvatar: Avatar
+    avatar: Avatar
     footer: Footer
+    search: Search
+    close: Close
   other:
     skipToContent: Skip to content

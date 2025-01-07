@@ -1,13 +1,88 @@
-@use 'sass:color';
+@use 'sass:map';
 
 // the ~ allows you to reference things in node_modules
+@import '~bootstrap/scss/functions';
+@import '~bootstrap/scss/variables';
+@import '~bootstrap/scss/variables-dark';
+@import '~bootstrap/scss/maps';
+@import '~bootstrap/scss/mixins';
+@import '~bootstrap/scss/utilities';
+
+$utilities: map.merge(
+  $utilities,
+  (
+    'border': map.merge(
+        map.get($utilities, 'border'),
+        (
+          responsive: true,
+        )
+      ),
+    'border-top': map.merge(
+        map.get($utilities, 'border-top'),
+        (
+          responsive: true,
+        )
+      ),
+    'border-end': map.merge(
+        map.get($utilities, 'border-end'),
+        (
+          responsive: true,
+        )
+      ),
+    'border-bottom': map.merge(
+        map.get($utilities, 'border-bottom'),
+        (
+          responsive: true,
+        )
+      ),
+    'border-start': map.merge(
+        map.get($utilities, 'border-start'),
+        (
+          responsive: true,
+        )
+      ),
+    'flex-even': (
+      responsive: true,
+      class: 'flex-even',
+      property: flex,
+      values: (
+        1: 1 1 0,
+        0: 0 1 auto,
+      ),
+    ),
+
+    'card-max': (
+      responsive: true,
+      class: 'card-max',
+      property: max-width,
+      values: (
+        auto: 460px,
+        none: inherit,
+      ),
+    ),
+  )
+);
+
+@import '~bootstrap/scss/utilities/api';
 @import '~bootstrap/scss/bootstrap';
+
 @import '~bootstrap-icons/font/bootstrap-icons.css';
 @import '~@fortawesome/fontawesome-free/css/all.css';
 
 // Custom classes
 
-.take-space::before {
+@mixin app-avatar($size) {
+  object-fit: cover;
+  object-position: center;
+  height: $size * $font-size-base;
+  width: $size * $font-size-base;
+}
+
+.app-img-fit img {
+  width: 100%;
+}
+
+.app-take-space::before {
   content: '.';
   visibility: hidden;
 }
@@ -16,11 +91,12 @@
   margin-bottom: ($spacer * 1) !important;
 }
 
-.app-profile-pic {
-  object-fit: cover;
-  object-position: center;
-  height: 1.5 * $font-size-base;
-  width: 1.5 * $font-size-base;
+.app-avatar-navbar {
+  @include app-avatar(1.5);
+}
+
+.app-avatar-card {
+  @include app-avatar(1.4);
 }
 
 .app-dropdow-left {

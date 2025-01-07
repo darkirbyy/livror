@@ -8,21 +8,72 @@
       {{ block('flash', 'theme/flash.html.twig') }}
       <div class="row">
         <div class="col text-end">
-          <a href="{{ path('app_game_new') }}" class="btn btn-primary"><span class="bi bi-plus-square-fill me-1"></span>{% trans %}game.index.button.addGame{% endtrans %}</a>
+          <a href="{{ path('app_game_new') }}" class="btn btn-primary">
+            <span class="bi bi-plus-square-fill me-1"></span>
+            {% trans %}game.index.button.addGame{% endtrans %}
+          </a>
         </div>
       </div>
       {% for game in games %}
-        <div class="row bg-light rounded-3 p-2 my-2">
-          <div class="col-12 col-sm-10">
-            {{ game.id }} - {{ game.steamId }} - {{ game.name }} - add:{{ game.dateAdd|format_datetime('relative_medium', 'short') }} - update:{{
-              game.dateUpdate|format_datetime('relative_medium', 'short')
-            }}
-            <br />
-            prix:{{ game.fullPrice }} - release:{{ game.releaseYear }} - genre: {{ game.genres }} - editeurs: {{ game.developers }} - description:
-            {{ game.description }}
+        <div class="card card-max-auto card-max-md-none mx-auto bg-light rounded-3 my-2">
+          <div class="row bg-body-secondary border-bottom gx-0 text-center">
+            <div class="col-12 border-bottom col-md text-md-start border-md-0">
+              <h5 class="card-title mb-0 px-2 py-2 ps-md-3">
+                <a class="btn btn-sm btn-outline-secondary" href="{{ path('app_game_edit', { id: game.id }) }}"><span class="bi bi-pen-fill"></span></a>
+                {{ game.name }}
+              </h5>
+            </div>
+            <div class="col-12 d-flex align-items-center col-md-auto">
+              <div class="flex-even-1 py-1 px-2 py-md-2 d-flex justify-content-center align-items-center flex-even-md-0">
+                <img src=" {{ asset('build/bibi.jpg') }}" class="rounded-circle mx-1 app-avatar-card" alt="TODO" />
+                <img src=" {{ asset('build/bibi.jpg') }}" class="rounded-circle mx-1 app-avatar-card" alt="TODO" />
+                <img src=" {{ asset('build/bibi.jpg') }}" class="rounded-circle mx-1 app-avatar-card" alt="TODO" />
+                <img src=" {{ asset('build/bibi.jpg') }}" class="rounded-circle mx-1 app-avatar-card" alt="TODO" />
+              </div>
+              <div class="flex-even-1 py-1 px-2 py-md-2 border-start flex-even-md-0">
+                1500
+                <span class="fa-regular fa-hourglass-half fa-sm"></span>
+              </div>
+              <div class="flex-even-1 py-1 px-2 py-md-2 border-start flex-even-md-0">
+                6 🌭
+              </div>
+            </div>
           </div>
-          <div class="col-12 col-sm-2 mt-1 mt-sm-0 text-center text-sm-end">
-            <a class="btn btn-secondary" href="{{ path('app_game_edit', { id: game.id }) }}">{% trans %}form.button.update{% endtrans %}</a>
+          <div class="card-body row py-0 g-0 px-0">
+            <div class="col-12 px-0 col-md-6 border-end-md">
+              <div class="row text-center mx-auto">
+                <div class="col-12 px-0 px-md-2 py-md-2 border-bottom-md">
+                  <div class="app-img-fit card-max-auto mx-auto">
+                    <img src="{{ game.imgUrl }}" class="" alt="TODO" />
+                  </div>
+                </div>
+                <div class="col-6 gx-0 border-bottom border-end">
+                  <span class="fst-italic fs-6 fw-light">{{ 'game.label.releaseYear'|trans({ }, 'validators') }}</span><br />
+                  {{ game.releaseYear|default('-') }}
+                </div>
+                <div class="col-6 gx-0 border-bottom">
+                  <span class="fst-italic fs-6 fw-light">{{ 'game.label.fullPrice'|trans({ }, 'validators') }}</span><br />
+                  {{ game.fullPrice }}
+                </div>
+
+                <div class="col-12 border-bottom">
+                  <span class="fst-italic fs-6 fw-light">{{ 'game.label.developers'|trans({ }, 'validators') }}</span><br />
+                  {{ game.developers|default('-') }}
+                </div>
+                <div class="col-12 border-bottom">
+                  <span class="fst-italic fs-6 fw-light">{{ 'game.label.genres'|trans({ }, 'validators') }}</span><br />
+                  {{ game.genres|default('-') }}
+                </div>
+                <div class="col-12 border-bottom">
+                  <span class="fst-italic fs-6 fw-light">{{ 'game.label.description'|trans({ }, 'validators') }}</span><br />
+                  {{ game.description|default('-') }}
+                </div>
+              </div>
+            </div>
+            <div class="col-12 px-0 col-md-6">
+              At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint
+              occaecati cupiditate non provident.
+            </div>
           </div>
         </div>
       {% endfor %}
