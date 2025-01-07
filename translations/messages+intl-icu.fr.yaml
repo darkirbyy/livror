@@ -36,12 +36,30 @@ modal:
 
 app:
   name: Livror
-  madeWith: Réalisé avec
-  version: Version
-  releaseDate: Mise à jour le
+  navbar:
+    home: Accueil
+    game: Tous les jeux
+    account:
+      signIn: Se connecter
+      signOut: Se déconnecter
+      myReviews: Mes avis
+      myAccount: Mon compte
+  footer:
+    madeWith: Réalisé avec
+    version: Version
+    releaseDate: Mise à jour le
 
 enum:
   TypePrice:
     unknown: Inconnu
     free: Gratuit
     paying: Payant
+
+aria:
+  label:
+    mainNavigation: Navigation principale
+    toggleNavigation: Basculer la navigation
+    profileAvatar: Avatar
+    footer: Pied de page
+  other:
+    skipToContent: Aller au contenu

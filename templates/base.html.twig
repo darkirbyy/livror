@@ -1,17 +1,11 @@
 <!DOCTYPE html>
-<html>
+<html lang="{{ app.request.locale|default('fr') }}">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="turbo-refresh-method" content="morph" />
     <title>
-      {% block tab_title %}
-        {{ title }}
-      {% endblock %}
-      {{ ' - ' }}
-      {% trans %}app.name{% endtrans %}
-      {{ ' - ' }}
-      Darkirby
+      {{ title ~ ' - ' ~ ('app.name'|trans) ~ ' - ' ~ 'Darkirby' }}
     </title>
     <link rel="icon" href=" {{ asset('build/favicon.png') }}" />
     {% block stylesheets %}
@@ -24,21 +18,65 @@
   </head>
 
   <body class="d-flex flex-column min-vh-100">
+    <a href="#mainContent" class="visually-hidden-focusable">{{ 'aria.other.skipToContent'|trans }}</a>
     <header>
-      {# <nav class="bg-light">
-                  <div class="container">
-                      <div class="bg-secondary py-4"></div>
-                  </div>
-              </nav> #}
+      <nav class="navbar navbar-expand-sm bg-primary-subtle" aria-label="{{ 'aria.label.mainNavigation'|trans }}">
+        {% set currentRoute = app.current_route %}
+        {% set activeLink = 'class="nav-link active" aria-current="page" aria-selected="true"' %}
+        {% set otherLink = 'class="nav-link"' %}
+        <div class="container-fluid">
+          <div class="navbar-brand">
+            {{ 'app.name'|trans }}
+          </div>
+          <button class="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent"
+            aria-expanded="false"
+            aria-label="{{ 'aria.label.toggleNavigation'|trans }}">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-sm-0">
+              <li class="nav-item">
+                <a {{ currentRoute starts with 'app_default' ? activeLink|raw : otherLink|raw }} href="{{ path('app_default_index') }}">{{ 'app.navbar.home'|trans }}</a>
+              </li>
+              <li class="nav-item">
+                <a {{ currentRoute starts with 'app_game' ? activeLink|raw : otherLink|raw }} href="{{ path('app_game_index') }}">{{ 'app.navbar.game'|trans }}</a>
+              </li>
+            </ul>
+            <ul class="navbar-nav d-flex">
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle app-dropdow-left d-flex align-items-center"
+                  href="#"
+                  role="button"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
+                  aria-haspopup="true">
+                  <span class="">Darkirby</span>
+                  <img src=" {{ asset('build/bibi.jpg') }}" class="img-fluid rounded-circle shadow-sm ms-1 app-profile-pic" alt="{{ 'aria.label.profileAvatar'|trans }}" />
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end" role="menu">
+                  <li><a class="dropdown-item" role="menuitem" href="#">{{ 'app.navbar.account.myReviews'|trans }}</a></li>
+                  <li><a class="dropdown-item" role="menuitem" href="#">{{ 'app.navbar.account.myAccount'|trans }}</a></li>
+                  <li><hr class="dropdown-divider" /></li>
+                  <li><a class="dropdown-item text-danger" role="menuitem" href="#">{{ 'app.navbar.account.signOut'|trans }}</a></li>
+                </ul>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
 
-      <div class="container text-center mb-4">
+      <div class="container-fluid text-center mb-4 py-2">
         <h1>
           {{ title }}
         </h1>
       </div>
     </header>
 
-    <main class="flex-grow-1">
+    <main class="flex-grow-1" role="main" id="mainContent">
       {% block main %}
         {{ block('flash', 'theme/flash.html.twig') }}
         <div class="text-center">
@@ -46,20 +84,21 @@
         </div>
       {% endblock %}
     </main>
-
-    <footer>
-      <div class="container-fluid fw-light bg-light small mt-4 py-2">
+    <footer role="contentinfo" aria-label="{{ 'aria.label.footer'|trans }}">
+      <div class="container-fluid fw-light bg-body-tertiary small mt-4 py-2">
         <div class="row"></div>
         <div class="row gw-md-4">
           <div class="col-12 col-md-6 text-center text-md-end">
-            {% trans %}app.madeWith{% endtrans %}
-            <span class="fa-brands fa-symfony"></span><span class="fst-italic ms-1">Symfony 7</span>
+            {{ 'app.footer.madeWith'|trans }}
+            <span class="fa-brands fa-symfony"></span>
+            <span class="fst-italic ms-1">Symfony 7</span>
             <span class="mx-1">|</span>
-            <span class="fa-brands fa-bootstrap"></span><span class="fst-italic ms-1">Bootstrap 5</span>
+            <span class="fa-brands fa-bootstrap"></span>
+            <span class="fst-italic ms-1">Bootstrap 5</span>
           </div>
 
           <div class="col-12 col-md-6 text-center text-md-start">
-            {% trans %}app.version{% endtrans %} {{ versioning.version ~ ' - ' }}{% trans %}app.releaseDate{% endtrans %} {{ versioning.release_date|format_datetime('short', 'none') }}
+            {{ ('app.footer.version'|trans) ~ versioning.version ~ ' - ' ~ ('app.footer.releaseDate'|trans) ~ ' ' ~ (versioning.release_date|format_datetime('short', 'none')) }}
           </div>
         </div>
       </div>

@@ -1,7 +1,7 @@
 {% extends 'bootstrap_5_layout.html.twig' %}
 
 {% block form_row %}
-  <div class="form-row {% if not compound or force_error|default(false) %}{% for error in errors %} has-validation{% endfor %}{% endif %}">
+  <div class="app-form-row {% if not compound or force_error|default(false) %}{% for error in errors %} has-validation{% endfor %}{% endif %}">
     {{ form_label(form) }}
     {{ form_help(form) }}
     {{ form_widget(form) }}

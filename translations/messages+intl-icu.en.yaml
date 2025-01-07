@@ -22,7 +22,7 @@ game:
         fail: An error occurred while connecting to Steam. Please try again later.
     modalDeleteBody: 'You are about to permanently <span class="fw-bold">delete</span> {name}, along with all associated reviews. Are you sure?'
 
-form:  
+form:
   button:
     add: Add
     update: Update
@@ -36,12 +36,30 @@ modal:
 
 app:
   name: Livror
-  madeWith: Made with
-  version: Version
-  releaseDate: Updated on
+  navbar:
+  home: Home
+  game: All games
+  account:
+    signIn: Sign In
+    signOut: Sign Out
+    myReviews: My reviews
+    myAccount: My account
+  footer:
+    madeWith: Made with
+    version: Version
+    releaseDate: Updated on
 
 enum:
   TypePrice:
     unknown: Unknown
     free: Free
     paying: Paid
+
+aria:
+  label:
+    mainNavigation: Main navigation
+    toggleNavigation: Toggle navigation
+    profileAvatar: Avatar
+    footer: Footer
+  other:
+    skipToContent: Skip to content

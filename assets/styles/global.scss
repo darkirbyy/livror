@@ -12,14 +12,29 @@
   visibility: hidden;
 }
 
-.form-row {
+.app-form-row {
   margin-bottom: ($spacer * 1) !important;
 }
 
-label.form-label.required::after,
-legend.col-form-label.required::after {
-  content: ' *';
-  color: $primary !important;
+.app-profile-pic {
+  object-fit: cover;
+  object-position: center;
+  height: 1.5 * $font-size-base;
+  width: 1.5 * $font-size-base;
+}
+
+.app-dropdow-left {
+  &::after {
+    display: none;
+  }
+
+  &::before {
+    display: inline-block;
+    margin-right: $caret-spacing;
+    vertical-align: $caret-vertical-align;
+    content: '';
+    @include caret-down;
+  }
 }
 
 // Change bootstrap classes
@@ -39,4 +54,10 @@ legend.col-form-label.required::after {
 
 .form-control {
   margin-top: ($spacer * 0.25) !important;
+}
+
+label.form-label.required::after,
+legend.col-form-label.required::after {
+  content: ' *';
+  color: $primary !important;
 }

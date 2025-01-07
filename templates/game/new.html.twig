@@ -47,7 +47,7 @@
 
           {{ form_start(form, { attr: { action: path(app.current_route, { id: game_id }) } }) }}
           <div class="row" {{ stimulus_controller('search-steam', { url: path(app.current_route, { id: game_id }) }) }}>
-            <div class="col form-row">
+            <div class="col app-form-row">
               {{ form_label(form.steamId, 'game.label.steamId') }}
               {{ form_help(form.steamId, { help_html: true, help: 'game.help.steamId' }) }}
               <div class="input-group">
