@@ -12,6 +12,9 @@ game:
       updateGame: '{name} has been updated!'
       deleteGame: '{name} has been deleted!'
       invalidGame: The requested identifier does not match any game.
+    card:
+      informations: Informations
+      reviews: Avis
   new:
     title:
       add: Add a new game

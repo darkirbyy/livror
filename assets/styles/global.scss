@@ -1,6 +1,7 @@
 @use 'sass:map';
 
-// the ~ allows you to reference things in node_modules
+// Note :the ~ allows you to reference things in node_modules
+// Import boostrap basics
 @import '~bootstrap/scss/functions';
 @import '~bootstrap/scss/variables';
 @import '~bootstrap/scss/variables-dark';
@@ -8,6 +9,9 @@
 @import '~bootstrap/scss/mixins';
 @import '~bootstrap/scss/utilities';
 
+$border-color: red;
+
+// use bootstrap API to generate custom responsive classes
 $utilities: map.merge(
   $utilities,
   (
@@ -63,58 +67,15 @@ $utilities: map.merge(
   )
 );
 
+// Import the rest of boostrap classes
 @import '~bootstrap/scss/utilities/api';
 @import '~bootstrap/scss/bootstrap';
 
+// Import icons packages
 @import '~bootstrap-icons/font/bootstrap-icons.css';
 @import '~@fortawesome/fontawesome-free/css/all.css';
 
-// Custom classes
-
-@mixin app-avatar($size) {
-  object-fit: cover;
-  object-position: center;
-  height: $size * $font-size-base;
-  width: $size * $font-size-base;
-}
-
-.app-img-fit img {
-  width: 100%;
-}
-
-.app-take-space::before {
-  content: '.';
-  visibility: hidden;
-}
-
-.app-form-row {
-  margin-bottom: ($spacer * 1) !important;
-}
-
-.app-avatar-navbar {
-  @include app-avatar(1.5);
-}
-
-.app-avatar-card {
-  @include app-avatar(1.4);
-}
-
-.app-dropdow-left {
-  &::after {
-    display: none;
-  }
-
-  &::before {
-    display: inline-block;
-    margin-right: $caret-spacing;
-    vertical-align: $caret-vertical-align;
-    content: '';
-    @include caret-down;
-  }
-}
-
-// Change bootstrap classes
-
+// Improve bootstrap classes for form
 .input-group-text {
   margin-top: ($spacer * 0.25) !important;
 }
@@ -136,4 +97,74 @@ label.form-label.required::after,
 legend.col-form-label.required::after {
   content: ' *';
   color: $primary !important;
+}
+
+// App-specific classes
+// Avatars
+@mixin app-avatar($size) {
+  object-fit: cover;
+  object-position: center;
+  height: $size * $font-size-base;
+  width: $size * $font-size-base;
+}
+
+.app-avatar-navbar {
+  @include app-avatar(1.5);
+}
+
+.app-avatar-card {
+  @include app-avatar(1.4);
+}
+
+// Dropdown
+.app-dropdown-smooth {
+  &::before,
+  &::after {
+    // margin-top: ($spacer * 0.25) !important;
+    transition: transform 0.2s ease-in-out;
+  }
+
+  &[aria-expanded='true']::before,
+  &[aria-expanded='true']::after {
+    transform: rotate(180deg);
+  }
+}
+
+.app-dropdown-left {
+  &::after {
+    display: none;
+  }
+
+  &::before {
+    display: inline-block;
+    margin-right: $caret-spacing;
+    vertical-align: $caret-vertical-align;
+    content: '';
+    @include caret-down;
+  }
+}
+
+// Others
+.app-img-fit {
+  width: 100%;
+}
+
+.app-oneline-trunc {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+.app-take-space::before {
+  content: '.';
+  visibility: hidden;
+}
+
+.app-form-row {
+  margin-bottom: ($spacer * 1) !important;
+}
+
+.app-no-border-bottom[aria-expanded='false'] {
+  border-bottom: none !important;
 }

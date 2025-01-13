@@ -12,6 +12,9 @@ game:
       updateGame: '{name} a été mise à jour !'
       deleteGame: '{name} a été supprimé !'
       invalidGame: L'identifiant demandé ne correspond à aucun jeu.
+    card:
+      informations: Information
+      reviews: Reviews
   new:
     title:
       add: Ajouter un nouveau jeu
@@ -22,7 +25,7 @@ game:
         fail: Une erreur s'est produite en se connectant à Steam. Réessayez plus tard.
     modalDeleteBody: 'Vous êtes sur le point de supprimer <span class="fw-bold">définitivement</span> {name}, ainsi que tous les avis associés. Êtes-vous sûr ?'
 
-form:  
+form:
   button:
     add: Ajouter
     update: Modifier

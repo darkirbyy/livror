@@ -15,11 +15,12 @@
         </div>
       </div>
       {% for game in games %}
-        <div class="card card-max-auto card-max-md-none mx-auto bg-light rounded-3 my-2">
-          <div class="row bg-body-secondary border-bottom gx-0 text-center">
-            <div class="col-12 border-bottom col-md text-md-start border-md-0">
+        {# Each game is displayed on a "card" containing all the data #}
+        <div class="card-max-auto card-max-md-none mx-auto my-3">
+          {# Card title bar with the name, the avatar of the players who give a review, the average hour spent and mark #}
+          <div class="row gx-0 bg-body-secondary rounded-top-3 border text-center">
+            <div class="col-12 border-bottom col-md text-md-start border-bottom-md-0">
               <h5 class="card-title mb-0 px-2 py-2 ps-md-3">
-                <a class="btn btn-sm btn-outline-secondary" href="{{ path('app_game_edit', { id: game.id }) }}"><span class="bi bi-pen-fill"></span></a>
                 {{ game.name }}
               </h5>
             </div>
@@ -39,40 +40,60 @@
               </div>
             </div>
           </div>
-          <div class="card-body row py-0 g-0 px-0">
-            <div class="col-12 px-0 col-md-6 border-end-md">
-              <div class="row text-center mx-auto">
-                <div class="col-12 px-0 px-md-2 py-md-2 border-bottom-md">
-                  <div class="app-img-fit card-max-auto mx-auto">
-                    <img src="{{ game.imgUrl }}" class="" alt="TODO" />
+          {# Card body divided in two parts : some generic informations, and the review of each player #}
+          <div class="card-body row py-0 g-0 px-0 bg-body-tertiary rounded-bottom-3 border border-top-0">
+            {# Card body - first part : generic information #}
+            <div class="col-12 px-0 col-md-6 card-max-md-auto border-bottom border-end-md border-bottom-md-0">
+              <div class="mx-auto">
+                {% set collapseId = 'collapseInformations' ~ game.id %}
+                <h6 class="py-1 my-0 border-bottom text-center dropdown-toggle app-dropdown-smooth app-no-border-bottom fs-5 d-md-none"
+                  data-bs-toggle="collapse"
+                  data-bs-target="#{{ collapseId }}"
+                  aria-expanded="false"
+                  aria-controls="{{ collapseId }}">
+                  {{ 'game.index.card.informations'|trans }}
+                </h6>
+                <div class="row p-0 m-0 collapse d-md-flex" id="{{ collapseId }}">
+                  <div class="col-12 px-0 border-bottom">
+                    <div class="mx-auto">
+                      <img src="{{ game.imgUrl }}" class="app-img-fit" alt="TODO" />
+                    </div>
                   </div>
-                </div>
-                <div class="col-6 gx-0 border-bottom border-end">
-                  <span class="fst-italic fs-6 fw-light">{{ 'game.label.releaseYear'|trans({ }, 'validators') }}</span><br />
-                  {{ game.releaseYear|default('-') }}
-                </div>
-                <div class="col-6 gx-0 border-bottom">
-                  <span class="fst-italic fs-6 fw-light">{{ 'game.label.fullPrice'|trans({ }, 'validators') }}</span><br />
-                  {{ game.fullPrice }}
-                </div>
+                  {% for field in ['releaseYear', 'fullPrice', 'developers', 'genres', 'description'] %}
+                    <div class="col-4 py-1 px-1 text-end app-oneline-trunc {{ field != 'description' ? 'border-bottom' : '' }}">
+                      <span class="fst-italic fs-6 fw-light">{{ ('game.label.' ~ field)|trans({ }, 'validators') }}</span>
+                    </div>
+                    <div class="col-8 py-1 text-start {{ field != 'description' ? 'app-oneline-trunc border-bottom' : '' }}">
+                      {{ attribute(game, field)|default('-') }}
+                    </div>
+                  {% endfor %}
 
-                <div class="col-12 border-bottom">
-                  <span class="fst-italic fs-6 fw-light">{{ 'game.label.developers'|trans({ }, 'validators') }}</span><br />
-                  {{ game.developers|default('-') }}
-                </div>
-                <div class="col-12 border-bottom">
-                  <span class="fst-italic fs-6 fw-light">{{ 'game.label.genres'|trans({ }, 'validators') }}</span><br />
-                  {{ game.genres|default('-') }}
-                </div>
-                <div class="col-12 border-bottom">
-                  <span class="fst-italic fs-6 fw-light">{{ 'game.label.description'|trans({ }, 'validators') }}</span><br />
-                  {{ game.description|default('-') }}
+                  <div class="col-4 text-start">
+                    <a class="btn btn-sm btn-outline-secondary" href="{{ path('app_game_edit', { id: game.id }) }}"><span class="bi bi-pen-fill"></span></a>
+                  </div>
                 </div>
               </div>
             </div>
-            <div class="col-12 px-0 col-md-6">
-              At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint
-              occaecati cupiditate non provident.
+            {# Card body - second part : all reviews #}
+
+            <div class="col-12 px-0 col-md">
+              <div class="mx-auto">
+                {% set collapseId = 'collapseReviews' ~ game.id %}
+                <h6 class="py-1 my-0 border-bottom text-center dropdown-toggle app-dropdown-smooth app-no-border-bottom fs-5 d-md-none"
+                  data-bs-toggle="collapse"
+                  data-bs-target="#{{ collapseId }}"
+                  aria-expanded="false"
+                  aria-controls="{{ collapseId }}">
+                  {{ 'game.index.card.reviews'|trans }}
+                </h6>
+
+                <div class="row p-0 m-0 collapse d-md-flex" id="{{ collapseId }}">
+                  <div class="col-12 p-2">
+                    At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias
+                    excepturi sint occaecati cupiditate non provident.
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -80,3 +101,34 @@
     </div>
   </section>
 {% endblock %}
+
+{# <div class="col-12 px-0 col-md-6 card-max-md-auto border-end-md">
+  <div class="row text-center mx-auto">
+    <div class="col-12 px-0 border-bottom-md">
+      <div class="mx-auto">
+        <img src="{{ game.imgUrl }}" class="app-img-fit" alt="TODO"/>
+      </div>
+    </div>
+    <div class="col-6 gx-0 border-bottom border-end">
+      <span class="fst-italic fs-6 fw-light">{{ 'game.label.releaseYear'|trans({ }, 'validators') }}</span><br/>
+      {{ game.releaseYear|default('-') }}
+    </div>
+    <div class="col-6 gx-0 border-bottom">
+      <span class="fst-italic fs-6 fw-light">{{ 'game.label.fullPrice'|trans({ }, 'validators') }}</span><br/>
+      {{ game.fullPrice }}
+    </div>
+
+    <div class="col-12 border-bottom">
+      <span class="fst-italic fs-6 fw-light">{{ 'game.label.developers'|trans({ }, 'validators') }}</span><br/>
+      {{ game.developers|default('-') }}
+    </div>
+    <div class="col-12 border-bottom">
+      <span class="fst-italic fs-6 fw-light">{{ 'game.label.genres'|trans({ }, 'validators') }}</span><br/>
+      {{ game.genres|default('-') }}
+    </div>
+    <div class="col-12 border-bottom">
+      <span class="fst-italic fs-6 fw-light">{{ 'game.label.description'|trans({ }, 'validators') }}</span><br/>
+      {{ game.description|default('-') }}
+    </div>
+  </div>
+</div> #}
