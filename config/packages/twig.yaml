@@ -3,6 +3,7 @@ twig:
     file_name_pattern: '*.twig'
     form_themes: ['theme/form.html.twig']
     globals: 
+        app_currency: '%app.currency%'
         versioning:
             version: '%versioning.version%'
             release_date: '%versioning.release_date%'

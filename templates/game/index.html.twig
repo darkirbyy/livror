@@ -15,6 +15,13 @@
         </div>
       </div>
       {% for game in games %}
+        {% set gameData = {
+          releaseYear: game.releaseYear,
+          fullPrice: (game.fullPrice / 100)|format_currency(app_currency, { decimal_always_shown: true, fraction_digit: 2 }),
+          developers: game.developers,
+          genres: game.genres,
+          description: game.description,
+        } %}
         {# Each game is displayed on a "card" containing all the data #}
         <div class="card-max-auto card-max-md-none mx-auto my-3">
           {# Card title bar with the name, the avatar of the players who give a review, the average hour spent and mark #}
@@ -72,15 +79,15 @@
                 <div class="row p-0 m-0 collapse d-md-flex" id="{{ collapseId }}">
                   <div class="col-12 px-0 border-bottom">
                     <div class="mx-auto">
-                      <img src="{{ game.imgUrl }}" class="app-img-fit" alt="TODO" />
+                      <img src="{{ game.imgUrl }}" class="app-card-img-fit {{ game.imgUrl == '' ? 'placeholder placeholder-glow bg-secondary' : '' }}" alt="" />
                     </div>
                   </div>
-                  {% for field in ['releaseYear', 'fullPrice', 'developers', 'genres', 'description'] %}
+                  {% for field, value in gameData %}
                     <div class="col-4 py-1 px-1 text-end text-truncate {{ field != 'description' ? 'border-bottom' : '' }}">
                       <span class="fst-italic fs-6 fw-light">{{ ('game.label.' ~ field)|trans({ }, 'validators') }}</span>
                     </div>
                     <div class="col-8 py-1 text-start {{ field != 'description' ? 'text-truncate border-bottom' : '' }}">
-                      {{ attribute(game, field)|default('-') }}
+                      {{ value|default('-') }}
                     </div>
                   {% endfor %}
                 </div>
@@ -120,7 +127,7 @@
   <div class="row text-center mx-auto">
     <div class="col-12 px-0 border-bottom-md">
       <div class="mx-auto">
-        <img src="{{ game.imgUrl }}" class="app-img-fit" alt="TODO"/>
+        <img src="{{ game.imgUrl }}" class="app-card-img-fit" alt="TODO"/>
       </div>
     </div>
     <div class="col-6 gx-0 border-bottom border-end">
