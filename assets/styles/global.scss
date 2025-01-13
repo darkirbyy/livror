@@ -9,7 +9,8 @@
 @import '~bootstrap/scss/mixins';
 @import '~bootstrap/scss/utilities';
 
-$border-color: red;
+// $border-color: red;
+$primary: red;
 
 // use bootstrap API to generate custom responsive classes
 $utilities: map.merge(
@@ -118,15 +119,19 @@ legend.col-form-label.required::after {
 
 // Dropdown
 .app-dropdown-smooth {
-  &::before,
-  &::after {
-    // margin-top: ($spacer * 0.25) !important;
+  &::before {
     transition: transform 0.2s ease-in-out;
+    transform: rotate(-90deg);
+  }
+
+  &::after {
+    transition: transform 0.2s ease-in-out;
+    transform: rotate(90deg);
   }
 
   &[aria-expanded='true']::before,
-  &[aria-expanded='true']::after {
-    transform: rotate(180deg);
+  .link-secondary:hover &[aria-expanded='true']::after {
+    transform: rotate(0deg);
   }
 }
 
@@ -149,22 +154,46 @@ legend.col-form-label.required::after {
   width: 100%;
 }
 
-.app-oneline-trunc {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 100%;
-}
-
-.app-take-space::before {
-  content: '.';
-  visibility: hidden;
-}
-
 .app-form-row {
   margin-bottom: ($spacer * 1) !important;
 }
 
-.app-no-border-bottom[aria-expanded='false'] {
-  border-bottom: none !important;
+.app-no-border-bottom {
+  transition: border-radius 0.3s ease-in-out;
+
+  &[aria-expanded='true'] {
+    @include border-bottom-radius(0);
+  }
+
+  &[aria-expanded='false'] {
+    border-bottom: none !important;
+    @include border-bottom-radius($border-radius-lg);
+  }
 }
+
+// Not used
+
+// .app-take-space::before {
+//   content: '.';
+//   visibility: hidden;
+// }
+
+// .app-oneline-trunc {
+//   white-space: nowrap;
+//   overflow: hidden;
+//   text-overflow: ellipsis;
+//   max-width: 100%;
+// }
+
+// .hover-effect {
+//   background-color: $dropdown-bg;
+//   transition: background-color 0.3s ease-in-out;
+
+//   &:hover {
+//       background-color: $dropdown-link-hover-bg;
+//   }
+
+//   &:active {
+//     background-color: $dropdown-link-active-bg;
+// }
+// }
