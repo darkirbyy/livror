@@ -8,7 +8,9 @@ use App\Repository\GameRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 #[ORM\Entity(repositoryClass: GameRepository::class)]
 #[ORM\HasLifecycleCallbacks]
@@ -56,6 +58,41 @@ class Game
     #[ORM\Column(length: 2048, nullable: true)]
     #[Assert\Url(requireTld: true)]
     private ?string $imgUrl = null;
+
+    #[Assert\Callback]
+    public function validateImageUrl(ExecutionContextInterface $context): void
+    {
+        if (empty($this->imgUrl)) {
+            return;
+        }
+
+        // Check valid image extensions
+        $validExtensions = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
+        $cleanUrl = strtok($this->imgUrl, '?');
+        $extension = strtolower(pathinfo($cleanUrl, PATHINFO_EXTENSION));
+        if (!in_array($extension, $validExtensions, true)) {
+            $context->buildViolation('game.error.imgUrl.notValidExtension')->atPath('imgUrl')->addViolation();
+
+            return;
+        }
+
+        // Check image is reachable, status code, redirect counts and Content-Type
+        $httpClient = HttpClient::create();
+        try {
+            $response = $httpClient->request('HEAD', $this->imgUrl, [
+                'timeout' => $_ENV['APP_REQUEST_TIMEOUT'],
+            ]);
+
+            $statusCode = $response->getStatusCode();
+            $redirectCount = $response->getInfo('redirect_count');
+            $contentType = $response->getHeaders()['content-type'][0] ?? null;
+            if (200 !== $statusCode || $redirectCount > 0 || !str_starts_with($contentType, 'image/')) {
+                $context->buildViolation('game.error.imgUrl.notAnImage')->atPath('imgUrl')->addViolation();
+            }
+        } catch (\Exception $e) {
+            $context->buildViolation('game.error.imgUrl.notReachable')->atPath('imgUrl')->addViolation();
+        }
+    }
 
     #[ORM\PrePersist]
     public function onPrePersit(): void

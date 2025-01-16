@@ -152,7 +152,13 @@ legend.col-form-label.required::after {
 // Others
 .app-card-img-fit {
   width: 100%;
+  aspect-ratio: 460 / 215;
+}
+
+.app-card-img-missing {
   min-height: 215px;
+  font-size: 8rem;
+  opacity: 0.25;
 }
 
 .app-form-row {

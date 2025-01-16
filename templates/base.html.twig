@@ -20,7 +20,7 @@
   <body class="d-flex flex-column min-vh-100">
     <a href="#mainContent" class="visually-hidden-focusable">{{ 'aria.other.skipToContent'|trans }}</a>
     <header>
-      <nav class="navbar navbar-expand-sm bg-primary-subtle" aria-label="{{ 'aria.label.mainNavigation'|trans }}">
+      <nav class="navbar navbar-expand-sm bg-body-secondary" aria-label="{{ 'aria.label.mainNavigation'|trans }}">
         {% set currentRoute = app.current_route %}
         {% set activeLink = 'class="nav-link active" aria-current="page" aria-selected="true"' %}
         {% set otherLink = 'class="nav-link"' %}
@@ -85,7 +85,7 @@
       {% endblock %}
     </main>
     <footer role="contentinfo" aria-label="{{ 'aria.label.footer'|trans }}">
-      <div class="container-fluid fw-light bg-body-tertiary small mt-4 py-2">
+      <div class="container-fluid fw-light bg-body-secondary small mt-4 py-2">
         <div class="row"></div>
         <div class="row gw-md-4">
           <div class="col-12 col-md-6 text-center text-md-end">
@@ -98,7 +98,7 @@
           </div>
 
           <div class="col-12 col-md-6 text-center text-md-start">
-            {{ ('layout.footer.version'|trans) ~ env.versioning.version ~ ' - ' ~ ('layout.footer.releaseDate'|trans) ~ ' '
+            {{ ('layout.footer.version'|trans) ~ ' ' ~ env.versioning.version ~ ' - ' ~ ('layout.footer.releaseDate'|trans) ~ ' '
               ~ (env.versioning.release_date|format_datetime('short', 'none')) }}
           </div>
         </div>

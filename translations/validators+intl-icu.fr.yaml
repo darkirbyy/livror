@@ -15,3 +15,7 @@ game:
     steamId:
       invalid: Un ID Steam doit être composé uniquement de chiffres.
       notFound: L'ID Steam saisi ne correspond à aucun jeu.
+    imgUrl:
+      notValidExtension: Les extensions autorisées sont jpg, jpeg, png, gif, webp.
+      notReachable: L'URL n'est pas joignable ou n'existe pas.
+      notAnImage: L'URL n'est pas une image.

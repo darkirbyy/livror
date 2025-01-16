@@ -3,7 +3,7 @@
 {% set title = 'game.index.title'|trans %}
 
 {% block main %}
-  <section>
+  <section data-controller="image-load">
     <div class="container">
       {{ block('flash', 'theme/flash.html.twig') }}
       <div class="row card-max-auto card-max-md-none mx-auto">
@@ -29,7 +29,7 @@
         <div class="card-max-auto card-max-md-none mx-auto my-3">
           {# Card title bar with the name, the avatar of the players who give a review, the average hour spent and mark #}
           {% set collapseId = 'collapseAll' ~ game.id %}
-          <div class="row gx-0 bg-body-secondary rounded-top-3 border text-center">
+          <div class="row gx-0 bg-primary-subtle rounded-top-3 border text-center">
             <div class="col-12 border-bottom col-md border-bottom-md-0">
               {# <div class="d-none d-md-flex py-2 px-2 ps-md-3 justify-content-center justify-content-md-start align-items-center dropdown-toggle app-dropdown-left app-dropdown-smooth"
                 data-bs-toggle="collapse"
@@ -81,8 +81,9 @@
                 </div>
                 <div class="row p-0 m-0 collapse d-md-flex" id="{{ collapseId }}">
                   <div class="col-12 px-0 border-bottom">
-                    <div class="mx-auto">
-                      <img src="{{ game.imgUrl }}" class="app-card-img-fit {{ game.imgUrl == '' ? 'placeholder placeholder-glow bg-secondary' : '' }}" alt="" />
+                    <div class="mx-auto placeholder-glow" data-image-load-target="imageDiv">
+                      <img src="{{ game.imgUrl }}" class="app-card-img-fit placeholder" alt="" />
+                      <div class="d-none bi bi-image text-center app-card-img-fit app-card-img-missing bg-body-secondary"></div>
                     </div>
                   </div>
                   {% for field, value in gameData %}
@@ -125,34 +126,3 @@
     </div>
   </section>
 {% endblock %}
-
-{# <div class="col-12 px-0 col-md-6 card-max-md-auto border-end-md">
-  <div class="row text-center mx-auto">
-    <div class="col-12 px-0 border-bottom-md">
-      <div class="mx-auto">
-        <img src="{{ game.imgUrl }}" class="app-card-img-fit" alt="TODO"/>
-      </div>
-    </div>
-    <div class="col-6 gx-0 border-bottom border-end">
-      <span class="fst-italic fs-6 fw-light">{{ 'game.label.releaseYear'|trans({ }, 'validators') }}</span><br/>
-      {{ game.releaseYear|default('-') }}
-    </div>
-    <div class="col-6 gx-0 border-bottom">
-      <span class="fst-italic fs-6 fw-light">{{ 'game.label.fullPrice'|trans({ }, 'validators') }}</span><br/>
-      {{ game.fullPrice }}
-    </div>
-
-    <div class="col-12 border-bottom">
-      <span class="fst-italic fs-6 fw-light">{{ 'game.label.developers'|trans({ }, 'validators') }}</span><br/>
-      {{ game.developers|default('-') }}
-    </div>
-    <div class="col-12 border-bottom">
-      <span class="fst-italic fs-6 fw-light">{{ 'game.label.genres'|trans({ }, 'validators') }}</span><br/>
-      {{ game.genres|default('-') }}
-    </div>
-    <div class="col-12 border-bottom">
-      <span class="fst-italic fs-6 fw-light">{{ 'game.label.description'|trans({ }, 'validators') }}</span><br/>
-      {{ game.description|default('-') }}
-    </div>
-  </div>
-</div> #}
