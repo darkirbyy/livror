@@ -14,10 +14,13 @@
           </a>
         </div>
       </div>
+
       {% for game in games %}
         {% set gameData = {
           releaseYear: game.releaseYear,
-          fullPrice: (game.fullPrice / 100)|format_currency(app_currency, { decimal_always_shown: true, fraction_digit: 2 }),
+          fullPrice: game.fullPrice > 0
+            ? (game.fullPrice / 100)|format_currency(env.app.currency, { decimal_always_shown: true, fraction_digit: 2 })
+            : game.fullPrice|fmt_full_price(env.app.locale),
           developers: game.developers,
           genres: game.genres,
           description: game.description,

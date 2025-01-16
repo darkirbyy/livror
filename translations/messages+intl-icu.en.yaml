@@ -37,7 +37,7 @@ modal:
   title:
     delete: Confirm Deletion
 
-app:
+layout:
   name: Livror
   navbar:
     home: Home

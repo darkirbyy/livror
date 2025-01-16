@@ -3,10 +3,15 @@ twig:
     file_name_pattern: '*.twig'
     form_themes: ['theme/form.html.twig']
     globals: 
-        app_currency: '%app.currency%'
-        versioning:
-            version: '%versioning.version%'
-            release_date: '%versioning.release_date%'
+        env:
+            app:
+                name: '%app.name%'
+                currency: '%app.currency%'
+                locale: '%app.locale%'
+            versioning:
+                version: '%versioning.version%'
+                version_hash: '%versioning.version_hash%'
+                release_date: '%versioning.release_date%'
 
 when@test:
     twig:

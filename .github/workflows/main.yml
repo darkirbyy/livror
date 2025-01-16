@@ -38,14 +38,14 @@ jobs:
             exit 1
           fi
 
-      - name: Extract version, hash and release date
+      - name: Extract version, version_hash and release_date
         id: extract-info
         run: |
           version=$(awk '/versioning.version:/ {print $2}' config/version.yaml)
-          hash=$(awk '/versioning.hash:/ {print $2}' config/version.yaml)
+          version_hash=$(awk '/versioning.version_hash:/ {print $2}' config/version.yaml)
           release_date=$(awk '/versioning.release_date:/ {gsub(/'\''/, "", $2); print $2}' config/version.yaml)
           echo "version=$version" >> $GITHUB_OUTPUT
-          echo "hash=$hash" >> $GITHUB_OUTPUT
+          echo "version_hash=$version_hash" >> $GITHUB_OUTPUT
           echo "release_date=$release_date" >> $GITHUB_OUTPUT
 
   call-build-deploy:

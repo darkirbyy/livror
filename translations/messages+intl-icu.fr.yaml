@@ -37,7 +37,7 @@ modal:
   title:
     delete: Confirmer la suppression
 
-app:
+layout:
   name: Livror
   navbar:
     home: Accueil

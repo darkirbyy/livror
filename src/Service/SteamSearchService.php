@@ -15,7 +15,7 @@ class SteamSearchService
     private ?int $id = null;
     private array $data = [];
 
-    public function __construct(private HttpClientInterface $client, private LoggerInterface $logger, public int $timeout, public string $locale, public string $appCurrency)
+    public function __construct(private HttpClientInterface $client, private LoggerInterface $logger, public int $timeout, public string $locale, public string $currency)
     {
     }
 
@@ -74,7 +74,7 @@ class SteamSearchService
             $currency = $this->data['price_overview']['currency'] ?? null;
             $fullPrice = $this->data['price_overview']['initial'] ?? null;
 
-            if ($currency === $this->appCurrency && is_numeric($fullPrice) && $fullPrice > 0) {
+            if ($currency === $this->currency && is_numeric($fullPrice) && $fullPrice > 0) {
                 $game->setFullPrice((int) $fullPrice);
             } else {
                 $game->setFullPrice(null);
