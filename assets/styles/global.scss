@@ -9,8 +9,7 @@
 @import '~bootstrap/scss/mixins';
 @import '~bootstrap/scss/utilities';
 
-// $border-color: red;
-$primary: red;
+$border-color: $gray-500;
 
 // use bootstrap API to generate custom responsive classes
 $utilities: map.merge(
@@ -156,9 +155,9 @@ legend.col-form-label.required::after {
 }
 
 .app-card-img-missing {
-  min-height: 215px;
-  font-size: 8rem;
+  font-size: 4rem;
   opacity: 0.25;
+  align-content: center;
 }
 
 .app-form-row {
@@ -168,13 +167,8 @@ legend.col-form-label.required::after {
 .app-no-border-bottom {
   transition: border-radius 0.3s ease-in-out;
 
-  &[aria-expanded='true'] {
-    @include border-bottom-radius(0);
-  }
-
   &[aria-expanded='false'] {
     border-bottom: none !important;
-    @include border-bottom-radius($border-radius-lg);
   }
 }
 

@@ -26,25 +26,14 @@
           description: game.description,
         } %}
         {# Each game is displayed on a "card" containing all the data #}
-        <div class="card-max-auto card-max-md-none mx-auto my-3">
+        <div class="card-max-auto card-max-md-none mx-auto my-3 rounded-3 border overflow-hidden">
           {# Card title bar with the name, the avatar of the players who give a review, the average hour spent and mark #}
-          {% set collapseId = 'collapseAll' ~ game.id %}
-          <div class="row gx-0 bg-primary-subtle rounded-top-3 border text-center">
+          <div class="row gx-0 bg-primary-subtle border-bottom text-center">
             <div class="col-12 border-bottom col-md border-bottom-md-0">
-              {# <div class="d-none d-md-flex py-2 px-2 ps-md-3 justify-content-center justify-content-md-start align-items-center dropdown-toggle app-dropdown-left app-dropdown-smooth"
-                data-bs-toggle="collapse"
-                data-bs-target="#{{ collapseId }}"
-                aria-expanded="false"
-                aria-controls="{{ collapseId }}">
-                <h5 class="m-0 p-0">
-                  {{ game.name }}
-                </h5>
-              </div> #}
               <div class="d-flex py-2 px-2 ps-md-3 justify-content-center justify-content-md-start align-items-center">
-                {# TODO : simplify, add d-md-none if uncomment previous block #}
                 <h5 class="mb-0 p-0">
                   {{ game.name }}
-                  <a class="fs-6 p-0 link-secondary" href="{{ path('app_game_edit', { id: game.id }) }}"><span class="bi bi-pen-fill"></span></a>
+                  <a class="fs-6 p-0 link-secondary" href="{{ path('app_game_edit', { id: game.id }) }}"><span class="bi bi-pen ps-1"></span></a>
                 </h5>
               </div>
             </div>
@@ -65,12 +54,12 @@
             </div>
           </div>
           {# Card body divided in two parts : some generic informations, and the review of each player #}
-          <div class="card-body row py-0 g-0 px-0 bg-body-tertiary rounded-bottom-3 border border-top-0 collapse show" id="{{ collapseId }}">
+          <div class="row py-0 g-0 px-0 bg-body-tertiary">
             {# Card body - first part : generic information #}
             <div class="col-12 px-0 col-md-6 card-max-md-auto border-bottom border-end-md border-bottom-md-0">
               <div class="mx-auto">
                 {% set collapseId = 'collapseInformations' ~ game.id %}
-                <div class="btn btn-outline-secondary d-flex w-100 justify-content-center align-items-center border-0 border-bottom app-no-border-bottom rounded-0 py-1 my-0 dropdown-toggle app-dropdown-left app-dropdown-smooth d-md-none"
+                <button class="btn btn-outline-secondary d-flex w-100 justify-content-center align-items-center border-0 border-bottom app-no-border-bottom rounded-0 py-1 my-0 dropdown-toggle app-dropdown-left app-dropdown-smooth d-md-none"
                   data-bs-toggle="collapse"
                   data-bs-target="#{{ collapseId }}"
                   aria-expanded="false"
@@ -78,7 +67,7 @@
                   <h6 class="m-0 p-0 fs-5">
                     {{ 'game.index.card.informations'|trans }}
                   </h6>
-                </div>
+                </button>
                 <div class="row p-0 m-0 collapse d-md-flex" id="{{ collapseId }}">
                   <div class="col-12 px-0 border-bottom">
                     <div class="mx-auto placeholder-glow" data-image-load-target="imageDiv">
@@ -90,7 +79,7 @@
                     <div class="col-4 py-1 px-1 text-end text-truncate {{ field != 'description' ? 'border-bottom' : '' }}">
                       <span class="fst-italic fs-6 fw-light">{{ ('game.label.' ~ field)|trans({ }, 'validators') }}</span>
                     </div>
-                    <div class="col-8 py-1 text-start {{ field != 'description' ? 'text-truncate border-bottom' : '' }}">
+                    <div class="col-8 py-1 text-start {{ (field not in ['genres', 'description'] ? 'text-truncate') ~ ' ' ~ (field != 'description' ? 'border-bottom') }}">
                       {{ value|default('-') }}
                     </div>
                   {% endfor %}
@@ -102,7 +91,7 @@
             <div class="col-12 px-0 col-md">
               <div class="mx-auto">
                 {% set collapseId = 'collapseReviews' ~ game.id %}
-                <button class="btn btn-outline-secondary d-flex w-100 justify-content-center align-items-center border-0 border-bottom app-no-border-bottom rounded-top-0 py-1 my-0 dropdown-toggle app-dropdown-left app-dropdown-smooth d-md-none"
+                <button class="btn btn-outline-secondary d-flex w-100 justify-content-center align-items-center border-0 border-bottom app-no-border-bottom rounded-0 py-1 my-0 dropdown-toggle app-dropdown-left app-dropdown-smooth d-md-none"
                   data-bs-toggle="collapse"
                   data-bs-target="#{{ collapseId }}"
                   aria-expanded="false"
