@@ -25,9 +25,9 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class GameController extends AbstractController
 {
     #[Route('', name: 'app_game_index')]
-    public function index(GameRepository $gameRepo): Response
+    public function index(GameRepository $gameRepo, Request $request): Response
     {
-        $games = $gameRepo->findWithOrder();
+        $games = $gameRepo->findAndSort($request->query->get('sortField') ?? 'name', $request->query->get('sortOrder') ?? 'asc');
 
         return $this->render('game/index.html.twig', [
             'games' => $games,

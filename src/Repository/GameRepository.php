@@ -8,9 +8,6 @@ use App\Entity\Game;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
-/**
- * @extends ServiceEntityRepository<Game>
- */
 class GameRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
@@ -18,20 +15,25 @@ class GameRepository extends ServiceEntityRepository
         parent::__construct($registry, Game::class);
     }
 
-    //    /**
-    //     * @return Game[] Returns an array of Game objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('g')
-    //            ->andWhere('g.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('g.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
+    public function findAndSort($sortField, $sortOrder): array
+    {
+        $allowedFields = ['id', 'name', 'releaseYear'];
+        $allowedOrder = ['asc', 'desc'];
+
+        // Validate the input parameters
+        if (!in_array($sortField, $allowedFields)) {
+            throw new \InvalidArgumentException('Invalid field for sorting');
+        }
+
+        if (!in_array($sortOrder, $allowedOrder)) {
+            throw new \InvalidArgumentException('Invalid order for sorting');
+        }
+
+        $qb = $this->createQueryBuilder('g');
+        $qb->orderBy('g.' . $sortField, strtoupper($sortOrder))->setMaxResults(5);
+
+        return $qb->getQuery()->getResult();
+    }
 
     //    public function findOneBySomeField($value): ?Game
     //    {

@@ -1,16 +1,40 @@
 {% extends 'base.html.twig' %}
 
+{% macro sortOrderButton(searchParam) %}
+  <a role="button"
+    class="btn btn-outline-secondary"
+    href="{{ path(app.current_route, { sortField: searchParam.sortField, sortOrder: searchParam.sortOrder == 'asc' ? 'desc' : 'asc' }) }}">
+    <span class="bi bi-arrow-{{ searchParam.sortOrder == 'asc' ? 'up' : 'down' }}"></span>
+  </a>
+{% endmacro %}
+
+{% macro sortFieldButton(searchParam, sortField) %}
+  <a role="button"
+    class="btn btn-outline-secondary {{ searchParam.sortField == sortField ? 'active' }}"
+    href="{{ path(app.current_route, { sortField: sortField, sortOrder: searchParam.sortOrder }) }}">
+    {{ ('game.label.' ~ sortField)|trans({ }, 'validators') }}
+  </a>
+{% endmacro %}
+
 {% set title = 'game.index.title'|trans %}
+{% set searchParam = { sortField: app.request.query.get('sortField') ?? 'name', sortOrder: app.request.query.get('sortOrder') ?? 'asc' } %}
 
 {% block main %}
   <section data-controller="image-load">
     <div class="container">
       {{ block('flash', 'theme/flash.html.twig') }}
-      <div class="row card-max-auto card-max-md-none mx-auto">
-        <div class="col px-0 text-end">
+      <div class="d-flex flex-wrap-reverse justify-content-center card-max-auto justify-content-md-between card-max-md-none mx-auto">
+        <div class="mt-2 mt-md-0">
+          <div class="btn-group" role="group" aria-label="{{ 'aria.label.close'|trans }}">
+            {{ _self.sortOrderButton(searchParam) }}
+            {{ _self.sortFieldButton(searchParam, 'name') }}
+            {{ _self.sortFieldButton(searchParam, 'releaseYear') }}
+          </div>
+        </div>
+        <div class="text-end">
           <a href="{{ path('app_game_new') }}" class="btn btn-primary">
             <span class="bi bi-plus-square-fill me-1"></span>
-            {% trans %}game.index.button.addGame{% endtrans %}
+            {{ 'game.index.button.addGame'|trans }}
           </a>
         </div>
       </div>

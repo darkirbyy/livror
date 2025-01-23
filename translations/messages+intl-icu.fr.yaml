@@ -61,6 +61,7 @@ aria:
   label:
     mainNavigation: Navigation principale
     toggleNavigation: Basculer la navigation
+    sortButtons: Boutons de tri
     avatar: Avatar
     footer: Pied de page
     search: Chercher
