@@ -33,14 +33,14 @@ class GameRepository extends ServiceEntityRepository
             throw new \InvalidArgumentException('Invalid first result offset');
         }
 
-        if ($maxResults <= 0 || $maxResults > 100) {
+        if ($maxResults <= 0) {
             throw new \InvalidArgumentException('Invalid max results limit');
         }
 
         $qb = $this->createQueryBuilder('g');
         $qb->orderBy('g.' . $sortField, strtoupper($sortOrder))
             ->setFirstResult($firstResult)
-            ->setMaxResults($maxResults);
+            ->setMaxResults($maxResults + 1);
 
         return $qb->getQuery()->getResult();
     }

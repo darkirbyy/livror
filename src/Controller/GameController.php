@@ -35,7 +35,8 @@ class GameController extends AbstractController
         $games = $gameRepo->findSortLimit($sortField, $sortOrder, $firstResult, $maxResults);
 
         $data = [
-            'games' => $games,
+            'games' => array_slice($games, 0, $maxResults),
+            'hasMore' => count($games) > $maxResults,
             'searchParam' => [
                 'sortField' => $sortField,
                 'sortOrder' => $sortOrder,

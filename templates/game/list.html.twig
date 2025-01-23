@@ -99,7 +99,7 @@
   </div>
 {% endfor %}
 
-{% if (games|length) == env.app.max_results %}
+{% if hasMore %}
   <div class="text-center"
     {{ stimulus_controller('load-more', { url: get_path(searchParam.sortField, searchParam.sortOrder, searchParam.firstResult + env.app.max_results)|trim }) }}>
     <button class="btn btn-outline-secondary" data-load-more-target="button">{{ 'game.index.button.showMore'|trans }}</button>
