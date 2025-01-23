@@ -7,6 +7,7 @@ game:
     title: All Games
     button:
       sortBy: Sort by
+      showMore: Show more
       addGame: Add a new game
     flash:
       newGame: '{name} has been added!'

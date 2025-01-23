@@ -1,109 +1,107 @@
-<turbo-frame id="load-more-{{ firstResult }}" target="_top">
-  {% for game in games %}
-    {% set gameData = {
-      releaseYear: game.releaseYear,
-      fullPrice: game.fullPrice > 0
-        ? (game.fullPrice / 100)|format_currency(env.app.currency, { decimal_always_shown: true, fraction_digit: 2 })
-        : game.fullPrice|fmt_full_price(env.app.locale),
-      developers: game.developers,
-      genres: game.genres,
-      description: game.description,
-    } %}
+{% from 'game/index.html.twig' import get_path %}
 
-    {# Each game is displayed on a "card" containing all the data #}
-    <div class="card-max-auto card-max-md-none mx-auto my-3 rounded-3 border overflow-hidden">
-      {# Card title bar with the name, the avatar of the players who give a review, the average hour spent and mark #}
-      <div class="row gx-0 bg-primary-subtle border-bottom text-center">
-        <div class="col-12 border-bottom col-md border-bottom-md-0">
-          <div class="d-flex py-2 px-2 ps-md-3 justify-content-center justify-content-md-start align-items-center">
-            <h5 class="mb-0 p-0">
-              {{ game.name }}
-              <a class="fs-6 p-0 link-secondary" href="{{ path('app_game_edit', { id: game.id }) }}"><span class="bi bi-pen ps-1"></span></a>
-            </h5>
-          </div>
+{% for game in games %}
+  {% set gameData = {
+    releaseYear: game.releaseYear,
+    fullPrice: game.fullPrice > 0
+      ? (game.fullPrice / 100)|format_currency(env.app.currency, { decimal_always_shown: true, fraction_digit: 2 })
+      : game.fullPrice|fmt_full_price(env.app.locale),
+    developers: game.developers,
+    genres: game.genres,
+    description: game.description,
+  } %}
+
+  {# Each game is displayed on a "card" containing all the data #}
+  <div class="card-max-auto card-max-md-none mx-auto my-3 rounded-3 border overflow-hidden">
+    {# Card title bar with the name, the avatar of the players who give a review, the average hour spent and mark #}
+    <div class="row gx-0 bg-primary-subtle border-bottom text-center">
+      <div class="col-12 border-bottom col-md border-bottom-md-0">
+        <div class="d-flex py-2 px-2 ps-md-3 justify-content-center justify-content-md-start align-items-center">
+          <h5 class="mb-0 p-0">
+            {{ game.name }}
+            <a class="fs-6 p-0 link-secondary" href="{{ path('app_game_edit', { id: game.id }) }}"><span class="bi bi-pen ps-1"></span></a>
+          </h5>
         </div>
-        <div class="col-12 d-flex align-items-center col-md-auto">
-          <div class="flex-even-1 py-1 px-2 py-md-2 d-flex justify-content-center align-items-center flex-even-md-0">
-            <img src=" {{ asset('build/bibi.jpg') }}" class="rounded-circle mx-1 app-avatar-card" alt="TODO" />
-            <img src=" {{ asset('build/bibi.jpg') }}" class="rounded-circle mx-1 app-avatar-card" alt="TODO" />
-            <img src=" {{ asset('build/bibi.jpg') }}" class="rounded-circle mx-1 app-avatar-card" alt="TODO" />
-            <img src=" {{ asset('build/bibi.jpg') }}" class="rounded-circle mx-1 app-avatar-card" alt="TODO" />
-          </div>
-          <div class="flex-even-1 py-1 px-2 py-md-2 border-start flex-even-md-0">
-            1500
-            <span class="fa-regular fa-hourglass-half fa-sm"></span>
-          </div>
-          <div class="flex-even-1 py-1 px-2 py-md-2 border-start flex-even-md-0">
-            6 🌭
+      </div>
+      <div class="col-12 d-flex align-items-center col-md-auto">
+        <div class="flex-even-1 py-1 px-2 py-md-2 d-flex justify-content-center align-items-center flex-even-md-0">
+          <img src=" {{ asset('build/bibi.jpg') }}" class="rounded-circle mx-1 app-avatar-card" alt="TODO" />
+          <img src=" {{ asset('build/bibi.jpg') }}" class="rounded-circle mx-1 app-avatar-card" alt="TODO" />
+          <img src=" {{ asset('build/bibi.jpg') }}" class="rounded-circle mx-1 app-avatar-card" alt="TODO" />
+          <img src=" {{ asset('build/bibi.jpg') }}" class="rounded-circle mx-1 app-avatar-card" alt="TODO" />
+        </div>
+        <div class="flex-even-1 py-1 px-2 py-md-2 border-start flex-even-md-0">
+          1500
+          <span class="fa-regular fa-hourglass-half fa-sm"></span>
+        </div>
+        <div class="flex-even-1 py-1 px-2 py-md-2 border-start flex-even-md-0">
+          6 🌭
+        </div>
+      </div>
+    </div>
+    {# Card body divided in two parts : some generic informations, and the review of each player #}
+    <div class="row py-0 g-0 px-0 bg-body-tertiary">
+      {# Card body - first part : generic information #}
+      <div class="col-12 px-0 col-md-6 card-max-md-auto border-bottom border-end-md border-bottom-md-0">
+        <div class="mx-auto">
+          {% set collapseId = 'collapseInformations' ~ game.id %}
+          <button class="btn btn-outline-secondary d-flex w-100 justify-content-center align-items-center border-0 border-bottom app-no-border-bottom rounded-0 py-1 my-0 dropdown-toggle app-dropdown-left app-dropdown-smooth d-md-none"
+            data-bs-toggle="collapse"
+            data-bs-target="#{{ collapseId }}"
+            aria-expanded="false"
+            aria-controls="{{ collapseId }}">
+            <h6 class="m-0 p-0 fs-5">
+              {{ 'game.index.card.informations'|trans }}
+            </h6>
+          </button>
+          <div class="row p-0 m-0 collapse d-md-flex" id="{{ collapseId }}">
+            <div class="col-12 px-0 border-bottom">
+              <div class="mx-auto placeholder-glow" data-image-load-target="imageDiv">
+                <img src="{{ game.imgUrl }}" class="app-card-img-fit placeholder" alt="" />
+                <div class="d-none bi bi-image text-center app-card-img-fit app-card-img-missing bg-body-secondary"></div>
+              </div>
+            </div>
+            {% for field, value in gameData %}
+              <div class="col-4 py-1 px-1 text-end text-truncate {{ field != 'description' ? 'border-bottom' : '' }}">
+                <span class="fst-italic fs-6 fw-light">{{ ('game.label.' ~ field)|trans({ }, 'validators') }}</span>
+              </div>
+              <div class="col-8 py-1 text-start {{ (field not in ['genres', 'description'] ? 'text-truncate') ~ ' ' ~ (field != 'description' ? 'border-bottom') }}">
+                {{ value|default('-') }}
+              </div>
+            {% endfor %}
           </div>
         </div>
       </div>
-      {# Card body divided in two parts : some generic informations, and the review of each player #}
-      <div class="row py-0 g-0 px-0 bg-body-tertiary">
-        {# Card body - first part : generic information #}
-        <div class="col-12 px-0 col-md-6 card-max-md-auto border-bottom border-end-md border-bottom-md-0">
-          <div class="mx-auto">
-            {% set collapseId = 'collapseInformations' ~ game.id %}
-            <button class="btn btn-outline-secondary d-flex w-100 justify-content-center align-items-center border-0 border-bottom app-no-border-bottom rounded-0 py-1 my-0 dropdown-toggle app-dropdown-left app-dropdown-smooth d-md-none"
-              data-bs-toggle="collapse"
-              data-bs-target="#{{ collapseId }}"
-              aria-expanded="false"
-              aria-controls="{{ collapseId }}">
-              <h6 class="m-0 p-0 fs-5">
-                {{ 'game.index.card.informations'|trans }}
-              </h6>
-            </button>
-            <div class="row p-0 m-0 collapse d-md-flex" id="{{ collapseId }}">
-              <div class="col-12 px-0 border-bottom">
-                <div class="mx-auto placeholder-glow" data-image-load-target="imageDiv">
-                  <img src="{{ game.imgUrl }}" class="app-card-img-fit placeholder" alt="" />
-                  <div class="d-none bi bi-image text-center app-card-img-fit app-card-img-missing bg-body-secondary"></div>
-                </div>
-              </div>
-              {% for field, value in gameData %}
-                <div class="col-4 py-1 px-1 text-end text-truncate {{ field != 'description' ? 'border-bottom' : '' }}">
-                  <span class="fst-italic fs-6 fw-light">{{ ('game.label.' ~ field)|trans({ }, 'validators') }}</span>
-                </div>
-                <div class="col-8 py-1 text-start {{ (field not in ['genres', 'description'] ? 'text-truncate') ~ ' ' ~ (field != 'description' ? 'border-bottom') }}">
-                  {{ value|default('-') }}
-                </div>
-              {% endfor %}
-            </div>
-          </div>
-        </div>
-        {# Card body - second part : all reviews #}
+      {# Card body - second part : all reviews #}
 
-        <div class="col-12 px-0 col-md">
-          <div class="mx-auto">
-            {% set collapseId = 'collapseReviews' ~ game.id %}
-            <button class="btn btn-outline-secondary d-flex w-100 justify-content-center align-items-center border-0 border-bottom app-no-border-bottom rounded-0 py-1 my-0 dropdown-toggle app-dropdown-left app-dropdown-smooth d-md-none"
-              data-bs-toggle="collapse"
-              data-bs-target="#{{ collapseId }}"
-              aria-expanded="false"
-              aria-controls="{{ collapseId }}">
-              <h6 class="m-0 p-0 fs-5">
-                {{ 'game.index.card.reviews'|trans }}
-              </h6>
-            </button>
+      <div class="col-12 px-0 col-md">
+        <div class="mx-auto">
+          {% set collapseId = 'collapseReviews' ~ game.id %}
+          <button class="btn btn-outline-secondary d-flex w-100 justify-content-center align-items-center border-0 border-bottom app-no-border-bottom rounded-0 py-1 my-0 dropdown-toggle app-dropdown-left app-dropdown-smooth d-md-none"
+            data-bs-toggle="collapse"
+            data-bs-target="#{{ collapseId }}"
+            aria-expanded="false"
+            aria-controls="{{ collapseId }}">
+            <h6 class="m-0 p-0 fs-5">
+              {{ 'game.index.card.reviews'|trans }}
+            </h6>
+          </button>
 
-            <div class="row p-0 m-0 collapse d-md-flex" id="{{ collapseId }}">
-              <div class="col-12 p-2">
-                At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi
-                sint occaecati cupiditate non provident.
-              </div>
+          <div class="row p-0 m-0 collapse d-md-flex" id="{{ collapseId }}">
+            <div class="col-12 p-2">
+              At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint
+              occaecati cupiditate non provident.
             </div>
           </div>
         </div>
       </div>
     </div>
-  {% endfor %}
+  </div>
+{% endfor %}
 
-  {% if (games|length) == env.app.max_results %}
-    <turbo-frame id="load-more-{{ firstResult + env.app.max_results }}">
-      <div class="text-center">
-        {# <button id="load-more-button" class="btn btn-outline-secondary" {{ stimulus_controller('load-more', {url : path(app.current_route)}) }} >Voir plus</a> #}
-        <a class="btn btn-outline-secondary" href="/game?firstResult={{ firstResult + env.app.max_results }}">Voir plus</a>
-      </div>
-    </turbo-frame>
-  {% endif %}
-</turbo-frame>
+{% if (games|length) == env.app.max_results %}
+  <div class="text-center"
+    {{ stimulus_controller('load-more', { url: get_path(searchParam.sortField, searchParam.sortOrder, searchParam.firstResult + env.app.max_results)|trim }) }}>
+    <button class="btn btn-outline-secondary" data-load-more-target="button">{{ 'game.index.button.showMore'|trans }}</button>
+  </div>
+{% endif %}

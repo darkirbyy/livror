@@ -1,37 +1,16 @@
 {% extends 'base.html.twig' %}
 
-{% macro sortFieldOption(searchParam, sortField) %}
-  <option value="{{ path(app.current_route, { sortField: sortField, sortOrder: searchParam.sortOrder }) }}" {{ searchParam.sortField == sortField ? 'selected="selected"' }}>
-    {{ ('game.label.' ~ sortField)|trans({ }, 'validators') }}
-  </option>
-{% endmacro %}
-
-{% macro sortFieldButton(searchParam, sortField) %}
-  <a role="button"
-    class="btn btn-outline-secondary app-btn-border-light {{ searchParam.sortField == sortField ? 'active' }}"
-    href="{{ path(app.current_route, { sortField: sortField, sortOrder: searchParam.sortOrder }) }}">
-    {{ ('game.label.' ~ sortField)|trans({ }, 'validators') }}
-  </a>
-{% endmacro %}
-
-{% macro sortFieldButton(searchParam, sortField) %}
-  <a role="button"
-    class="btn btn-outline-secondary app-btn-border-light {{ searchParam.sortField == sortField ? 'active' }}"
-    href="{{ path(app.current_route, { sortField: sortField, sortOrder: searchParam.sortOrder }) }}">
-    {{ ('game.label.' ~ sortField)|trans({ }, 'validators') }}
-  </a>
-{% endmacro %}
-
-{% macro sortOrderButton(searchParam) %}
-  <a role="button"
-    class="btn btn-outline-secondary app-btn-border-light"
-    href="{{ path(app.current_route, { sortField: searchParam.sortField, sortOrder: searchParam.sortOrder == 'asc' ? 'desc' : 'asc' }) }}">
-    <span class="bi bi-arrow-{{ searchParam.sortOrder == 'asc' ? 'up' : 'down' }}"></span>
-  </a>
+{% macro get_path(sortField, sortOrder, firstResult) %}
+  {{ path(app.current_route, { sortField: sortField, sortOrder: sortOrder, firstResult: firstResult })|raw }}
 {% endmacro %}
 
 {% set title = 'game.index.title'|trans %}
-{% set searchParam = { sortField: app.request.query.get('sortField') ?? 'name', sortOrder: app.request.query.get('sortOrder') ?? 'asc' } %}
+{% set sortFieldPossible = ['name', 'releaseYear'] %}
+{% set sortOrderButton %}
+  <a role="button" class="btn btn-outline-secondary app-btn-border-light" href="{{ _self.get_path(searchParam.sortField, searchParam.sortOrder == 'asc' ? 'desc' : 'asc', 0) }}">
+    <span class="bi bi-arrow-{{ searchParam.sortOrder == 'asc' ? 'up' : 'down' }}"></span>
+  </a>
+{% endset %}
 
 {% block main %}
   <section {{ stimulus_controller('image-load') }}>
@@ -42,9 +21,14 @@
         <div class="d-none d-md-block">
           <div class="input-group" role="group" aria-labelledby="sortFieldButtons">
             <label class="input-group-text" id="sortFieldButtons">{{ 'game.index.button.sortBy'|trans }}</label>
-            {{ _self.sortFieldButton(searchParam, 'name') }}
-            {{ _self.sortFieldButton(searchParam, 'releaseYear') }}
-            {{ _self.sortOrderButton(searchParam) }}
+            {% for newSortField in sortFieldPossible %}
+              <a role="button"
+                class="btn btn-outline-secondary app-btn-border-light {{ searchParam.sortField == newSortField ? 'active' }}"
+                href="{{ _self.get_path(newSortField, searchParam.sortOrder, 0) }}">
+                {{ ('game.label.' ~ newSortField)|trans({ }, 'validators') }}
+              </a>
+            {% endfor %}
+            {{ sortOrderButton }}
           </div>
         </div>
 
@@ -52,10 +36,13 @@
           <div class="input-group">
             <label class="input-group-text" for="sortFieldOptions">{{ 'game.index.button.sortBy'|trans }}</label>
             <select class="form-select" id="sortFieldOptions" {{ stimulus_controller('sort-select') }}>
-              {{ _self.sortFieldOption(searchParam, 'name') }}
-              {{ _self.sortFieldOption(searchParam, 'releaseYear') }}
+              {% for newSortField in sortFieldPossible %}
+                <option value="{{ _self.get_path(newSortField, searchParam.sortOrder, 0) }}" {{ searchParam.sortField == newSortField ? 'selected="selected"' }}>
+                  {{ ('game.label.' ~ newSortField)|trans({ }, 'validators') }}
+                </option>
+              {% endfor %}
             </select>
-            {{ _self.sortOrderButton(searchParam) }}
+            {{ sortOrderButton }}
           </div>
         </div>
         <div class="ms-2">

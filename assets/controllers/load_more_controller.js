@@ -1,13 +1,22 @@
 import { Controller } from '@hotwired/stimulus';
+// import { fetch } from '@hotwired/turbo';
 
 export default class extends Controller {
+  static targets = ['button'];
   static values = { url: String };
 
   connect() {
-    this.element.addEventListener('click', this.loadMore.bind(this));
+    this.buttonTarget.addEventListener('click', this.loadMore.bind(this));
   }
 
   loadMore() {
-    alert(this.urlValue);
+    fetch(this.urlValue, {
+      method: 'GET',
+      headers: { 'X-Requested-With': 'XMLHttpRequest' },
+    })
+      .then((response) => response.text())
+      .then((html) => {
+        this.element.outerHTML = html;
+      });
   }
 }
