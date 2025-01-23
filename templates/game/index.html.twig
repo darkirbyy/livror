@@ -15,7 +15,9 @@
 {% block main %}
   <section {{ stimulus_controller('image-load') }}>
     <div class="container">
-      {{ block('flash', 'theme/flash.html.twig') }}
+      <div class="mx-auto card-max-auto card-max-md-none">
+        {{ block('flash', 'theme/flash.html.twig') }}
+      </div>
 
       <div class="d-flex card-max-auto align-items-center justify-content-between card-max-md-none mx-auto">
         <div class="d-none d-md-block">
