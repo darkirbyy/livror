@@ -16,6 +16,7 @@ use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsCsrfTokenValid;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -26,7 +27,7 @@ class GameController extends AbstractController
     #[Route('', name: 'app_game_index')]
     public function index(GameRepository $gameRepo): Response
     {
-        $games = $gameRepo->findAll();
+        $games = $gameRepo->findWithOrder();
 
         return $this->render('game/index.html.twig', [
             'games' => $games,
@@ -35,19 +36,16 @@ class GameController extends AbstractController
 
     #[Route('/new', name: 'app_game_new')]
     #[Route('/{id}/edit', name: 'app_game_edit', requirements: ['id' => '\d+'])]
-    public function new(?int $id, Request $request, GameRepository $gameRepo, EntityManagerInterface $em, TranslatorInterface $trans, SteamSearchService $steamSearch): Response
+    public function new(?Game $game, Request $request, EntityManagerInterface $em, TranslatorInterface $trans, SteamSearchService $steamSearch): Response
     {
         // Handling route: creating new game or updating existing one
-        $newGame = null == $id;
-        if (!$newGame) {
-            $game = $gameRepo->find($id);
-            if (null == $game) {
-                $this->addFlash('warning', $trans->trans('game.index.flash.invalidGame'));
-
-                return $this->redirectToRoute('app_game_index');
+        $isNewGame = str_ends_with($request->attributes->get('_route'), 'new');
+        if (empty($game)) {
+            if ($isNewGame) {
+                $game = new Game();
+            } else {
+                throw new NotFoundHttpException(Game::class . ' object not found.');
             }
-        } else {
-            $game ??= new Game();
         }
 
         // Handling steam search with steamId query parameter
@@ -80,7 +78,7 @@ class GameController extends AbstractController
             $em->persist($game);
             $em->flush();
 
-            if ($newGame) {
+            if ($isNewGame) {
                 $this->addFlash('success', $trans->trans('game.index.flash.newGame', ['name' => $game->getName()]));
             } else {
                 $this->addFlash('success', $trans->trans('game.index.flash.updateGame', ['name' => $game->getName()]));

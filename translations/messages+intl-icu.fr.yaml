@@ -11,10 +11,9 @@ game:
       newGame: '{name} a été ajouté !'
       updateGame: '{name} a été mise à jour !'
       deleteGame: '{name} a été supprimé !'
-      invalidGame: L'identifiant demandé ne correspond à aucun jeu.
     card:
-      informations: Information
-      reviews: Reviews
+      informations: Informations
+      reviews: Avis
   new:
     title:
       add: Ajouter un nouveau jeu
