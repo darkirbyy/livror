@@ -6,6 +6,7 @@ game:
   index:
     title: All Games
     button:
+      sortBy: Sort by
       addGame: Add a new game
     flash:
       newGame: '{name} has been added!'
@@ -61,7 +62,6 @@ aria:
   label:
     mainNavigation: Main navigation
     toggleNavigation: Toggle navigation
-    sortButtons: Sort buttons
     avatar: Avatar
     footer: Footer
     search: Search

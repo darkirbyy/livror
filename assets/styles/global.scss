@@ -76,10 +76,6 @@ $utilities: map.merge(
 @import '~@fortawesome/fontawesome-free/css/all.css';
 
 // Improve bootstrap classes for form
-.input-group-text {
-  margin-top: ($spacer * 0.25) !important;
-}
-
 .form-label {
   margin-bottom: 0 !important;
 }
@@ -89,8 +85,8 @@ $utilities: map.merge(
   margin-bottom: 0 !important;
 }
 
-.form-control {
-  margin-top: ($spacer * 0.25) !important;
+.input-group-text {
+  margin-top: ($spacer * 0) !important;
 }
 
 label.form-label.required::after,
@@ -170,6 +166,10 @@ legend.col-form-label.required::after {
   &[aria-expanded='false'] {
     border-bottom: none !important;
   }
+}
+
+.app-btn-border-light {
+  border-color: var(--bs-border-color) !important;
 }
 
 // Not used

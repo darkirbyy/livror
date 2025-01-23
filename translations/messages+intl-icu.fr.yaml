@@ -6,6 +6,7 @@ game:
   index:
     title: Tous les jeux
     button:
+      sortBy: Trier par
       addGame: Ajouter un nouveau jeu
     flash:
       newGame: '{name} a été ajouté !'
@@ -61,7 +62,6 @@ aria:
   label:
     mainNavigation: Navigation principale
     toggleNavigation: Basculer la navigation
-    sortButtons: Boutons de tri
     avatar: Avatar
     footer: Pied de page
     search: Chercher

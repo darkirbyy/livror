@@ -1,18 +1,32 @@
 {% extends 'base.html.twig' %}
 
-{% macro sortOrderButton(searchParam) %}
+{% macro sortFieldOption(searchParam, sortField) %}
+  <option value="{{ path(app.current_route, { sortField: sortField, sortOrder: searchParam.sortOrder }) }}" {{ searchParam.sortField == sortField ? 'selected="selected"' }}>
+    {{ ('game.label.' ~ sortField)|trans({ }, 'validators') }}
+  </option>
+{% endmacro %}
+
+{% macro sortFieldButton(searchParam, sortField) %}
   <a role="button"
-    class="btn btn-outline-secondary"
-    href="{{ path(app.current_route, { sortField: searchParam.sortField, sortOrder: searchParam.sortOrder == 'asc' ? 'desc' : 'asc' }) }}">
-    <span class="bi bi-arrow-{{ searchParam.sortOrder == 'asc' ? 'up' : 'down' }}"></span>
+    class="btn btn-outline-secondary app-btn-border-light {{ searchParam.sortField == sortField ? 'active' }}"
+    href="{{ path(app.current_route, { sortField: sortField, sortOrder: searchParam.sortOrder }) }}">
+    {{ ('game.label.' ~ sortField)|trans({ }, 'validators') }}
   </a>
 {% endmacro %}
 
 {% macro sortFieldButton(searchParam, sortField) %}
   <a role="button"
-    class="btn btn-outline-secondary {{ searchParam.sortField == sortField ? 'active' }}"
+    class="btn btn-outline-secondary app-btn-border-light {{ searchParam.sortField == sortField ? 'active' }}"
     href="{{ path(app.current_route, { sortField: sortField, sortOrder: searchParam.sortOrder }) }}">
     {{ ('game.label.' ~ sortField)|trans({ }, 'validators') }}
+  </a>
+{% endmacro %}
+
+{% macro sortOrderButton(searchParam) %}
+  <a role="button"
+    class="btn btn-outline-secondary app-btn-border-light"
+    href="{{ path(app.current_route, { sortField: searchParam.sortField, sortOrder: searchParam.sortOrder == 'asc' ? 'desc' : 'asc' }) }}">
+    <span class="bi bi-arrow-{{ searchParam.sortOrder == 'asc' ? 'up' : 'down' }}"></span>
   </a>
 {% endmacro %}
 
@@ -20,21 +34,34 @@
 {% set searchParam = { sortField: app.request.query.get('sortField') ?? 'name', sortOrder: app.request.query.get('sortOrder') ?? 'asc' } %}
 
 {% block main %}
-  <section data-controller="image-load">
+  <section {{ stimulus_controller('image-load') }}>
     <div class="container">
       {{ block('flash', 'theme/flash.html.twig') }}
-      <div class="d-flex flex-wrap-reverse justify-content-center card-max-auto justify-content-md-between card-max-md-none mx-auto">
-        <div class="mt-2 mt-md-0">
-          <div class="btn-group" role="group" aria-label="{{ 'aria.label.close'|trans }}">
-            {{ _self.sortOrderButton(searchParam) }}
+
+      <div class="d-flex card-max-auto align-items-center justify-content-between card-max-md-none mx-auto">
+        <div class="d-none d-md-block">
+          <div class="input-group" role="group" aria-labelledby="sortFieldButtons">
+            <label class="input-group-text" id="sortFieldButtons">{{ 'game.index.button.sortBy'|trans }}</label>
             {{ _self.sortFieldButton(searchParam, 'name') }}
             {{ _self.sortFieldButton(searchParam, 'releaseYear') }}
+            {{ _self.sortOrderButton(searchParam) }}
           </div>
         </div>
-        <div class="text-end">
+
+        <div class="d-md-none">
+          <div class="input-group">
+            <label class="input-group-text" for="sortFieldOptions">{{ 'game.index.button.sortBy'|trans }}</label>
+            <select class="form-select" id="sortFieldOptions" {{ stimulus_controller('sort-select') }}>
+              {{ _self.sortFieldOption(searchParam, 'name') }}
+              {{ _self.sortFieldOption(searchParam, 'releaseYear') }}
+            </select>
+            {{ _self.sortOrderButton(searchParam) }}
+          </div>
+        </div>
+        <div class="ms-2">
           <a href="{{ path('app_game_new') }}" class="btn btn-primary">
-            <span class="bi bi-plus-square-fill me-1"></span>
-            {{ 'game.index.button.addGame'|trans }}
+            <span class="bi bi-plus-square-fill me-md-1"></span>
+            <span class="d-none d-md-inline">{{ 'game.index.button.addGame'|trans }}</span>
           </a>
         </div>
       </div>

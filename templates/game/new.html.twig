@@ -55,8 +55,8 @@
               {{ form_help(form.steamId, { help_html: true, help: 'game.help.steamId' }) }}
               <div class="input-group">
                 {{ form_widget(form.steamId) }}
-                <a href="#" data-search-steam-target="buttonField" class="btn btn-outline-secondary mt-1" aria-label="{{ 'aria.label.search'|trans }}">
-                  <span class="bi bi-steam me-1"></span>
+                <a href="#" data-search-steam-target="buttonField" class="btn btn-outline-secondary" aria-label="{{ 'aria.label.search'|trans }}">
+                  <span class="bi bi-steam me-sm-1"></span>
                   <span class="d-none d-sm-inline">{{ 'form.button.search'|trans }}</span>
                 </a>
               </div>
@@ -87,7 +87,7 @@
           <div class="row">
             <div class="col-sm-8 text-sm-start text-center">
               {{ form_widget(form.submit, { label: submitButton }) }}
-              <a class="btn btn-outline-secondary ms-2" href="{{ path('app_game_index') }}">Annuler</a>
+              <a class="btn btn-outline-secondary ms-2" href="{{ path('app_game_index') }}">{{ 'form.button.cancel'|trans }}</a>
             </div>
             <div class="col-sm-4 text-sm-end text-center mt-2 mt-sm-0">
               {% if game_id != null %}
