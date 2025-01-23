@@ -13,7 +13,6 @@ use App\Service\SteamSearchService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormError;
-use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -24,7 +23,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 #[Route('/game')]
 class GameController extends AbstractController
 {
-    #[Route('', name: 'app_game_index')]
+    #[Route('', name: 'app_game_index', methods: ['GET'])]
     public function index(GameRepository $gameRepo, Request $request): Response
     {
         $sortField = $request->query->getString('sortField', 'name');
@@ -51,8 +50,8 @@ class GameController extends AbstractController
         return $this->render('game/index.html.twig', $data);
     }
 
-    #[Route('/new', name: 'app_game_new')]
-    #[Route('/{id}/edit', name: 'app_game_edit', requirements: ['id' => '\d+'])]
+    #[Route('/new', name: 'app_game_new', methods: ['GET', 'POST'])]
+    #[Route('/{id}/edit', name: 'app_game_edit', methods: ['GET, POST'], requirements: ['id' => '\d+'])]
     public function new(?Game $game, Request $request, EntityManagerInterface $em, TranslatorInterface $trans, SteamSearchService $steamSearch): Response
     {
         // Handling route: creating new game or updating existing one
@@ -84,13 +83,19 @@ class GameController extends AbstractController
             }
         }
 
+        // Create the form and fill the non-mapped typePrice field depending on the value of fullPrice
         $form = $this->createForm(GameType::class, $game, ['currency' => $this->getParameter('app.currency')]);
-        $this->setTypePriceFromFullPrice($form, $game);
+        $typePrice = TypePriceEnum::fromPrice($game->getFullPrice());
+        $form->get('typePrice')->setData($typePrice);
+        TypePriceEnum::PAYING !== $typePrice ? $form->get('fullPrice')->setData(null) : null;
+
+        // Fill the form with the request data and add custom steam error id needed
         $form->handleRequest($request);
         null != $steamIdError ? $form->get('steamId')->addError(new FormError($steamIdError)) : null;
 
+        // If the form is submitted and valid : recalculate the fullPrice from the non-mapped typePrice field, then persist and send flash
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->setFullPriceFromTypePrice($form, $game);
+            $game->setFullPrice(TypePriceEnum::toPrice($form->get('typePrice')->getData(), $game->getFullPrice()));
 
             $em->persist($game);
             $em->flush();
@@ -110,7 +115,7 @@ class GameController extends AbstractController
     }
 
     #[IsCsrfTokenValid('delete-game', tokenKey: 'token-delete')]
-    #[Route('/{id}/delete', name: 'app_game_delete', requirements: ['id' => '\d+'])]
+    #[Route('/{id}/delete', name: 'app_game_delete', methods: ['GET'], requirements: ['id' => '\d+'])]
     public function delete(Game $game, EntityManagerInterface $em, TranslatorInterface $trans): Response
     {
         $em->remove($game);
@@ -119,20 +124,5 @@ class GameController extends AbstractController
         $this->addFlash('success', $trans->trans('game.index.flash.deleteGame', ['name' => $game->getName()]));
 
         return $this->redirectToRoute('app_game_index');
-    }
-
-    private function setTypePriceFromFullPrice(FormInterface $form, ?Game $game): void
-    {
-        $typePrice = TypePriceEnum::fromPrice($game->getFullPrice());
-        $form->get('typePrice')->setData($typePrice);
-
-        if (TypePriceEnum::PAYING !== $typePrice) {
-            $form->get('fullPrice')->setData(null);
-        }
-    }
-
-    private function setFullPriceFromTypePrice(FormInterface $form, ?Game $game): void
-    {
-        $game->setFullPrice(TypePriceEnum::toPrice($form->get('typePrice')->getData(), $game->getFullPrice()));
     }
 }
