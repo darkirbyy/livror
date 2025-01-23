@@ -15,33 +15,33 @@ class GameRepository extends ServiceEntityRepository
         parent::__construct($registry, Game::class);
     }
 
-    public function findAndSort($sortField, $sortOrder): array
+    public function findSortLimit(string $sortField, string $sortOrder, int $firstResult, int $maxResults): array
     {
-        $allowedFields = ['id', 'name', 'releaseYear'];
-        $allowedOrder = ['asc', 'desc'];
+        $allowedSortFields = ['id', 'name', 'releaseYear'];
+        $allowedSortOrder = ['asc', 'desc'];
 
         // Validate the input parameters
-        if (!in_array($sortField, $allowedFields)) {
+        if (!in_array($sortField, $allowedSortFields)) {
             throw new \InvalidArgumentException('Invalid field for sorting');
         }
 
-        if (!in_array($sortOrder, $allowedOrder)) {
+        if (!in_array($sortOrder, $allowedSortOrder)) {
             throw new \InvalidArgumentException('Invalid order for sorting');
         }
 
+        if ($firstResult < 0) {
+            throw new \InvalidArgumentException('Invalid first result offset');
+        }
+
+        if ($maxResults <= 0 || $maxResults > 100) {
+            throw new \InvalidArgumentException('Invalid max results limit');
+        }
+
         $qb = $this->createQueryBuilder('g');
-        $qb->orderBy('g.' . $sortField, strtoupper($sortOrder))->setMaxResults(5);
+        $qb->orderBy('g.' . $sortField, strtoupper($sortOrder))
+            ->setFirstResult($firstResult)
+            ->setMaxResults($maxResults);
 
         return $qb->getQuery()->getResult();
     }
-
-    //    public function findOneBySomeField($value): ?Game
-    //    {
-    //        return $this->createQueryBuilder('g')
-    //            ->andWhere('g.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
 }

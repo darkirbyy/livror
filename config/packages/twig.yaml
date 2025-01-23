@@ -8,6 +8,7 @@ twig:
                 name: '%app.name%'
                 currency: '%app.currency%'
                 locale: '%app.locale%'
+                max_results: '%app.max_results%'
             versioning:
                 version: '%versioning.version%'
                 version_hash: '%versioning.version_hash%'

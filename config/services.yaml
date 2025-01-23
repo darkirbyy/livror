@@ -4,10 +4,11 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
-    app.name: '%env(APP_NAME)%'
-    app.currency: '%env(APP_CURRENCY)%'
-    app.locale: '%env(APP_LOCALE)%'
-    app.request_timeout: '%env(APP_REQUEST_TIMEOUT)%'
+    app.name: '%env(string:APP_NAME)%'
+    app.currency: '%env(string:APP_CURRENCY)%'
+    app.locale: '%env(string:APP_LOCALE)%'
+    app.request_timeout: '%env(int:APP_REQUEST_TIMEOUT)%'
+    app.max_results: '%env(int:APP_MAX_RESULTS)%'
 
 imports:
     - { resource: 'version.yaml' }

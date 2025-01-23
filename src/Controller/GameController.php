@@ -20,6 +20,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsCsrfTokenValid;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use Symfony\UX\Turbo\TurboBundle;
 
 #[Route('/game')]
 class GameController extends AbstractController
@@ -27,10 +28,33 @@ class GameController extends AbstractController
     #[Route('', name: 'app_game_index')]
     public function index(GameRepository $gameRepo, Request $request): Response
     {
-        $games = $gameRepo->findAndSort($request->query->get('sortField') ?? 'name', $request->query->get('sortOrder') ?? 'asc');
+        $sortField = $request->query->get('sortField', 'name');
+        $sortOrder = $request->query->getString('sortOrder', 'asc');
+        $firstResult = $request->query->getInt('firstResult', 0);
+        $maxResults = $this->getParameter('app.max_results');
+
+        $games = $gameRepo->findSortLimit($sortField, $sortOrder, $firstResult, $maxResults);
+
+        // if ($request->isXmlHttpRequest()) {
+        //     return $this->render('game/list.html.twig', [
+        //         'games' => $games,
+        //         'firstResult' => $firstResult,
+        //     ]);
+        // }
+
+        // 🔥 The magic happens here! 🔥
+        if (TurboBundle::STREAM_FORMAT === $request->getPreferredFormat()) {
+            $request->setRequestFormat(TurboBundle::STREAM_FORMAT);
+
+            return $this->render('game/list.html.twig', [
+                'games' => $games,
+                'firstResult' => $firstResult,
+            ]);
+        }
 
         return $this->render('game/index.html.twig', [
             'games' => $games,
+            'firstResult' => $firstResult,
         ]);
     }
 
