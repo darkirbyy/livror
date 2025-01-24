@@ -57,11 +57,11 @@
           </button>
           <div class="row p-0 m-0 collapse d-md-flex" id="{{ collapseId }}">
             <div class="col-12 px-0 border-bottom">
-              <div class="mx-auto placeholder-glow" {{ game.imgUrl is not empty ? stimulus_controller('load-image') }}>
+              <div class="mx-auto">
                 {% if game.imgUrl is not empty %}
-                  <img src="{{ game.imgUrl }}" class="app-card-img-fit" alt="" data-load-image-target="image" />
+                  <img src="{{ game.imgUrl }}" class="app-card-img-fit" alt="TODO" />
                 {% else %}
-                  <div class="bi bi-image text-center app-card-img-fit app-card-img-missing bg-body-secondary" data-load-image-target="placeholder"></div>
+                  <div class="bi bi-image text-center app-card-img-fit app-card-img-missing bg-body-secondary"></div>
                 {% endif %}
               </div>
             </div>
