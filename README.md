@@ -63,5 +63,5 @@ By default in dev environment, the HTTP request to Steam API is mocked with dumm
 ## Deploy
 
 A workflow to build and deploy the application is preconfigured.  
-The workflow can be triggered manually in GitHub Actions or automatically when pushing to main (for prod) or to develop (for test).  
+The workflow can be triggered manually in GitHub Actions or automatically when pushing to main (for prod) or to develop (for stage).  
 :warning: Only prod trigger is available for the moment.

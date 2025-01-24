@@ -145,6 +145,18 @@ legend.col-form-label.required::after {
 }
 
 // Others
+
+.app-env-dev {
+  background: repeating-linear-gradient(
+    45deg,
+    #e7b871,
+    #e7b871 10px,
+    #ce994b 10px,
+    #ce994b 20px
+  );
+  color: #704300;
+}
+
 .app-card-img-fit {
   width: 100%;
   aspect-ratio: 460 / 215;

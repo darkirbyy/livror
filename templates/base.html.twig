@@ -21,9 +21,7 @@
   <body class="d-flex flex-column min-vh-100">
     {# Skip to content link for screen reader #}
     <a href="#mainContent" class="visually-hidden-focusable">{{ 'aria.other.skipToContent'|trans }}</a>
-
-    {# The HEADER regroup the navbar and the main title #}
-    <header>
+    {% if env.app.env == 'dev' %}
       <div class="container-fluid p-0 m-0 text-center fw-bold d-flex justify-content-around app-env-dev">
         {% for i in 1..10 %}
           <div>
@@ -31,6 +29,9 @@
           </div>
         {% endfor %}
       </div>
+    {% endif %}
+    {# The HEADER regroup the navbar and the main title #}
+    <header>
       <nav class="navbar navbar-expand-sm bg-body-secondary" aria-label="{{ 'aria.label.mainNavigation'|trans }}">
         {% set currentRoute = app.current_route %}
         {% set activeLink = 'class="nav-link active" aria-current="page" aria-selected="true"' %}

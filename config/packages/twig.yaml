@@ -6,6 +6,7 @@ twig:
         env:
             app:
                 name: '%app.name%'
+                env: '%app.env%'
                 currency: '%app.currency%'
                 locale: '%app.locale%'
                 max_results: '%app.max_results%'
