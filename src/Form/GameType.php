@@ -24,9 +24,6 @@ class GameType extends AbstractType
         $builder
             ->add('steamId', IntegerType::class, [
                 'required' => false,
-                'attr' => [
-                    'data-search-steam-target' => 'inputField',
-                ],
             ])
             ->add('name', TextType::class, [
                 'required' => true,
@@ -45,22 +42,15 @@ class GameType extends AbstractType
                 'multiple' => false,
                 'empty_data' => TypePriceEnum::UNKNOWN,
                 'placeholder' => false,
-                'attr' => [
-                    'data-type-price-target' => 'choiceFields',
-                ],
             ])
             ->add('fullPrice', MoneyType::class, [
                 'required' => false,
                 'divisor' => 100,
                 'input' => 'integer',
                 'currency' => $options['currency'],
-                'attr' => [
-                    'data-type-price-target' => 'inputField',
-                ],
             ])
             ->add('genres', TextType::class, [
                 'required' => false,
-                'help' => 'Séparés par des virgules',
             ])
             ->add('description', TextareaType::class, [
                 'required' => false,
@@ -68,7 +58,6 @@ class GameType extends AbstractType
             ->add('imgUrl', UrlType::class, [
                 'required' => false,
                 'default_protocol' => 'http',
-                'attr' => [],
             ])
             ->add('submit', SubmitType::class, [
                 'translation_domain' => 'messages',

@@ -102,8 +102,9 @@
 
 {% if hasMore %}
   <div class="text-center"
-    {{ stimulus_controller('load-more', { url: get_path(searchParam.sortField, searchParam.sortOrder, searchParam.firstResult + env.app.max_results)|trim, lazy: false }) }}>
-    <button class="btn btn-outline-secondary" data-load-more-target="button">{{ 'game.index.button.showMore'|trans }}</button>
+    {{ stimulus_controller('load-more', { url: get_path(searchParam.sortField, searchParam.sortOrder, searchParam.firstResult + env.app.max_results)|trim, lazy: true }) }}>
+    <button class="btn btn-outline-secondary" data-load-more-target="button remove">{{ 'game.index.button.showMore'|trans }}</button>
+    <span class="fs-4 text-muted" data-load-more-target="spinner"></span>
   </div>
 {% endif %}
 

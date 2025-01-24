@@ -49,16 +49,17 @@
           {{ block('flash', 'theme/flash.html.twig') }}
 
           {{ form_start(form, { attr: { action: path(app.current_route, { id: game_id }) } }) }}
-          <div class="row" {{ stimulus_controller('search-steam', { url: path(app.current_route, { id: game_id }) }) }}>
+          <div class="row" {{ stimulus_controller('steam-search', { url: path(app.current_route, { id: game_id }), lazy: false }) }}>
             <div class="col app-form-row">
               {{ form_label(form.steamId, 'game.label.steamId') }}
               {{ form_help(form.steamId, { help_html: true, help: 'game.help.steamId' }) }}
               <div class="input-group">
-                {{ form_widget(form.steamId) }}
-                <a href="#" data-search-steam-target="buttonField" class="btn btn-outline-secondary" aria-label="{{ 'aria.label.search'|trans }}">
-                  <span class="bi bi-steam me-sm-1"></span>
-                  <span class="d-none d-sm-inline">{{ 'form.button.search'|trans }}</span>
-                </a>
+                {{ form_widget(form.steamId, { attr: { 'data-steam-search-target': 'input' } }) }}
+                <button data-steam-search-target="button" class="btn btn-outline-secondary" aria-label="{{ 'aria.label.search'|trans }}">
+                  <span data-steam-search-target="remove" class="bi bi-steam"></span>
+                  <span data-steam-search-target="spinner"></span>
+                  <span class="d-none d-sm-inline ms-sm-1">{{ 'form.button.search'|trans }}</span>
+                </button>
               </div>
               {{ form_errors(form.steamId) }}
             </div>
@@ -74,10 +75,15 @@
           </div>
           <div class="row align-items-end" {{ stimulus_controller('type-price') }}>
             <div class="col-12 col-sm-auto pe-sm-0">
-              {{ form_row(form.typePrice, { label: 'game.label.fullPrice', label_attr: { class: 'radio-inline', id: 'fullPriceLabel' } }) }}
+              {{
+                form_row(
+                  form.typePrice,
+                  { attr: { 'data-type-price-target': 'choices' }, label: 'game.label.fullPrice', label_attr: { class: 'radio-inline', id: 'fullPriceLabel' } },
+                )
+              }}
             </div>
             <div class="col-12 col-sm ps-sm-0">
-              {{ form_row(form.fullPrice, { label: false, attr: { 'aria-labelledby': 'fullPriceLabel' } }) }}
+              {{ form_row(form.fullPrice, { label: false, attr: { 'data-type-price-target': 'input', 'aria-labelledby': 'fullPriceLabel' } }) }}
             </div>
           </div>
           {{ form_row(form.developers, { label: 'game.label.developers', help: 'game.help.commaSeparated' }) }}
