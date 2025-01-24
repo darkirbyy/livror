@@ -7,6 +7,6 @@ export default class extends Controller {
   }
 
   change(event) {
-    Turbo.visit(event.target.value);
+    Turbo.visit(event.target.value, { action: 'replace' });
   }
 }

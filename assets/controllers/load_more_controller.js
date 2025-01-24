@@ -1,5 +1,4 @@
 import { Controller } from '@hotwired/stimulus';
-// import { fetch } from '@hotwired/turbo';
 
 export default class extends Controller {
   static targets = ['button'];
