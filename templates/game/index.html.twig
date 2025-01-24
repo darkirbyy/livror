@@ -1,5 +1,6 @@
 {% extends 'base.html.twig' %}
 
+{# Macro to lighten the code to generate path with query params for the sort #}
 {% macro get_path(sortField, sortOrder, firstResult) %}
   {{ path(app.current_route, { sortField: sortField, sortOrder: sortOrder, firstResult: firstResult })|raw }}
 {% endmacro %}
@@ -15,11 +16,16 @@
 {% block main %}
   <section>
     <div class="container">
+      {# Redefine the flashes with the same width as the cards #}
       <div class="mx-auto card-max-auto card-max-md-none">
         {{ block('flash', 'theme/flash.html.twig') }}
       </div>
+
+      {# Turboframe to refresh only the main section when sorting the results #}
       <turbo-frame id="main-section">
+        {# Before the first card : field to sort on the left, button to add new game on the right #}
         <div class="d-flex card-max-auto align-items-center justify-content-between card-max-md-none mx-auto">
+          {# Fields to sort on large screen : independant buttons for each possibility + asc/desc button #}
           <div class="d-none d-md-block">
             <div class="input-group" role="group" aria-labelledby="sortFieldButtons">
               <label class="input-group-text" id="sortFieldButtons">{{ 'game.index.button.sortBy'|trans }}</label>
@@ -34,6 +40,7 @@
             </div>
           </div>
 
+          {# Fields to sort on small screen : on select with all possibilities + asc/desc button #}
           <div class="d-md-none">
             <div class="input-group">
               <label class="input-group-text" for="sortFieldOptions">{{ 'game.index.button.sortBy'|trans }}</label>
@@ -47,6 +54,8 @@
               {{ sortOrderButton }}
             </div>
           </div>
+
+          {# Button to add a new game #}
           <div class="ms-2">
             <a href="{{ path('app_game_new') }}" class="btn btn-primary" data-turbo-frame="_top">
               <span class="bi bi-plus-square-fill me-md-1"></span>
@@ -55,6 +64,7 @@
           </div>
         </div>
 
+        {# Include the template to render the card of each game + show more button #}
         {{ include('game/list.html.twig') }}
       </turbo-frame>
     </div>

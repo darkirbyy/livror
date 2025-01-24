@@ -18,6 +18,7 @@ use Symfony\Component\Validator\Context\ExecutionContextInterface;
 #[UniqueEntity('steamId')]
 class Game
 {
+    // All fields and their validation constraints
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -59,14 +60,16 @@ class Game
     #[Assert\Url(requireTld: true)]
     private ?string $imgUrl = null;
 
+    // Custom callback to check that the image URL is a valid one
     #[Assert\Callback]
     public function validateImageUrl(ExecutionContextInterface $context): void
     {
+        // No checks if the field if empty
         if (empty($this->imgUrl)) {
             return;
         }
 
-        // Check valid image extensions
+        // Check image : valid extensions
         $validExtensions = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
         $cleanUrl = strtok($this->imgUrl, '?');
         $extension = strtolower(pathinfo($cleanUrl, PATHINFO_EXTENSION));
@@ -76,7 +79,7 @@ class Game
             return;
         }
 
-        // Check image is reachable, status code, redirect counts and Content-Type
+        // Check image : is reachable, good status code, no redirect and good Content-Type
         $httpClient = HttpClient::create();
         try {
             $response = $httpClient->request('HEAD', $this->imgUrl, [
@@ -94,19 +97,21 @@ class Game
         }
     }
 
+    // Auto fill "dateAd" and "dateUpdate" date when storing the entity to the database
     #[ORM\PrePersist]
     public function onPrePersit(): void
     {
         $this->dateAdd = new \DateTimeImmutable();
-        $this->setUpdatedAtValue();
+        $this->onPreUpdate();
     }
 
     #[ORM\PreUpdate]
-    public function setUpdatedAtValue(): void
+    public function onPreUpdate(): void
     {
         $this->dateUpdate = new \DateTimeImmutable();
     }
 
+    // Doctrine auto-generated getter and setter
     public function getDateAdd(): ?\DateTimeInterface
     {
         return $this->dateAdd;

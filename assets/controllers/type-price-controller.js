@@ -1,5 +1,6 @@
 import { Controller } from '@hotwired/stimulus';
 
+// Controller that enable/disable the price input field, depending on the type-of-price radio button currently selected
 export default class extends Controller {
   static targets = ['choices', 'input'];
 

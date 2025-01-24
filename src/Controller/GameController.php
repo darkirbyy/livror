@@ -23,19 +23,23 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 #[Route('/game')]
 class GameController extends AbstractController
 {
+    // List and find games
     #[Route('', name: 'app_game_index', methods: ['GET'])]
     public function index(GameRepository $gameRepo, Request $request): Response
     {
+        // Parse all the query parameters
         $sortField = $request->query->getString('sortField', 'name');
         $sortOrder = $request->query->getString('sortOrder', 'asc');
         $firstResult = $request->query->getInt('firstResult', 0);
         $maxResults = $this->getParameter('app.max_results');
 
+        // Make the database query and get the corresponding games
         $games = $gameRepo->findSortLimit($sortField, $sortOrder, $firstResult, $maxResults);
 
+        // Prepare the data for the twig renderer
         $data = [
-            'games' => array_slice($games, 0, $maxResults),
-            'hasMore' => count($games) > $maxResults,
+            'games' => array_slice($games, 0, $maxResults), // remove on result as we have fetched one more that configured
+            'hasMore' => count($games) > $maxResults, // determine if there is more games to fetch
             'searchParam' => [
                 'sortField' => $sortField,
                 'sortOrder' => $sortOrder,
@@ -43,6 +47,7 @@ class GameController extends AbstractController
             ],
         ];
 
+        // Render only the game list block when the request comes from the JavaScript, otherwise render the whole page
         if ($request->isXmlHttpRequest()) {
             return $this->render('game/list.html.twig', $data);
         }
@@ -50,6 +55,7 @@ class GameController extends AbstractController
         return $this->render('game/index.html.twig', $data);
     }
 
+    // Edit or add new game
     #[Route('/new', name: 'app_game_new', methods: ['GET', 'POST'])]
     #[Route('/{id}/edit', name: 'app_game_edit', methods: ['GET', 'POST'], requirements: ['id' => '\d+'])]
     public function new(?Game $game, Request $request, EntityManagerInterface $em, TranslatorInterface $trans, SteamSearchService $steamSearch): Response
@@ -89,7 +95,7 @@ class GameController extends AbstractController
         $form->get('typePrice')->setData($typePrice);
         TypePriceEnum::PAYING !== $typePrice ? $form->get('fullPrice')->setData(null) : null;
 
-        // Fill the form with the request data and add custom steam error id needed
+        // Fill the form with the request data and add custom steam error if needed
         $form->handleRequest($request);
         null != $steamIdError ? $form->get('steamId')->addError(new FormError($steamIdError)) : null;
 
@@ -114,6 +120,7 @@ class GameController extends AbstractController
         ]);
     }
 
+    // Delete a game
     #[IsCsrfTokenValid('delete-game', tokenKey: 'token-delete')]
     #[Route('/{id}/delete', name: 'app_game_delete', methods: ['GET'], requirements: ['id' => '\d+'])]
     public function delete(Game $game, EntityManagerInterface $em, TranslatorInterface $trans): Response

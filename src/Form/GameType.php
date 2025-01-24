@@ -41,11 +41,11 @@ class GameType extends AbstractType
                 'expanded' => true,
                 'multiple' => false,
                 'empty_data' => TypePriceEnum::UNKNOWN,
-                'placeholder' => false,
+                'placeholder' => false, // To prevent the 'None' choice, as it is handled through JavaScript
             ])
             ->add('fullPrice', MoneyType::class, [
                 'required' => false,
-                'divisor' => 100,
+                'divisor' => 100, // The price is stored in cent as an integer, or 0 for free, or null for unknown
                 'input' => 'integer',
                 'currency' => $options['currency'],
             ])
@@ -70,7 +70,7 @@ class GameType extends AbstractType
             ->setDefaults([
                 'data_class' => Game::class,
                 'attr' => [
-                    'novalidate' => 'novalidate',
+                    'novalidate' => 'novalidate', // TODO : remove and keep HTML validation ?
                 ],
                 'translation_domain' => 'validators',
             ])

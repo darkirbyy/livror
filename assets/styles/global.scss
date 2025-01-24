@@ -11,7 +11,7 @@
 
 $border-color: $gray-500;
 
-// use bootstrap API to generate custom responsive classes
+// Use bootstrap API to generate custom responsive classes
 $utilities: map.merge(
   $utilities,
   (
@@ -172,7 +172,7 @@ legend.col-form-label.required::after {
   border-color: var(--bs-border-color) !important;
 }
 
-// Not used
+// Not use anymore
 
 // .app-take-space::before {
 //   content: '.';

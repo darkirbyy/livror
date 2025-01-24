@@ -1,5 +1,6 @@
 {% extends 'base.html.twig' %}
 
+{# the game_id set if it's EDIT mode or NEW mode #}
 {% set game_id = app.request.attributes.get('id') %}
 
 {% if game_id is not null %}
@@ -12,20 +13,25 @@
 {% endif %}
 
 {% block main %}
+  {# Modal to confirm delete, if in EDIT mode #}
   {% if game_id is not null %}
-    <!-- Delete Modal -->
     <div class="modal fade" id="delete-modal" tabindex="-1" aria-labelledby="delete-modal-label" aria-hidden="true" role="dialog" loading="lazy">
       <div class="modal-dialog modal-dialog-centered modal-fullscreen-sm-down">
         <div class="modal-content">
+          {# Header with title and dismiss button #}
           <div class="modal-header">
             <h1 class="modal-title fs-5" id="delete-modal-label">
               {{ 'modal.title.delete'|trans }}
             </h1>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ 'aria.label.close'|trans }}"></button>
           </div>
+
+          {# Body with message #}
           <div class="modal-body">
             {{ 'game.new.modalDeleteBody'|trans({ '{name}': game_name })|raw }}
           </div>
+
+          {# Footer with cancel or confirm buttons #}
           <div class="modal-footer">
             <form action="{{ path('app_game_delete', { id: game_id }) }}" method="post">
               <button type="submit" class="btn btn-danger">
@@ -41,15 +47,18 @@
     </div>
   {% endif %}
 
-  <!-- Main section -->
+  {# Actual content with flashes and form #}
   <section>
     <div class="container">
       <div class="row">
         <div class="col-10 offset-1 col-lg-8 offset-lg-2">
+          {# Insert the flashes in the same col size as the form #}
           {{ block('flash', 'theme/flash.html.twig') }}
 
+          {# Form #}
           {{ form_start(form, { attr: { action: path(app.current_route, { id: game_id }) } }) }}
           <div class="row" {{ stimulus_controller('steam-search', { url: path(app.current_route, { id: game_id }), lazy: false }) }}>
+            {# Field to write the steam ID and press the search button #}
             <div class="col app-form-row">
               {{ form_label(form.steamId, 'game.label.steamId') }}
               {{ form_help(form.steamId, { help_html: true, help: 'game.help.steamId' }) }}
@@ -65,6 +74,7 @@
             </div>
           </div>
 
+          {# Fields name and releaseYear next to each other on large screen #}
           <div class="row">
             <div class="col-12 col-md-8">
               {{ form_row(form.name, { label: 'game.label.name' }) }}
@@ -73,6 +83,8 @@
               {{ form_row(form.releaseYear, { label: 'game.label.releaseYear' }) }}
             </div>
           </div>
+
+          {# Radio button to choose the type of price, and the price input field, next to each other on large screen #}
           <div class="row align-items-end" {{ stimulus_controller('type-price') }}>
             <div class="col-12 col-sm-auto pe-sm-0">
               {{
@@ -86,15 +98,21 @@
               {{ form_row(form.fullPrice, { label: false, attr: { 'data-type-price-target': 'input', 'aria-labelledby': 'fullPriceLabel' } }) }}
             </div>
           </div>
+
+          {# All other fields fill the entire col #}
           {{ form_row(form.developers, { label: 'game.label.developers', help: 'game.help.commaSeparated' }) }}
           {{ form_row(form.genres, { label: 'game.label.genres', help: 'game.help.commaSeparated' }) }}
           {{ form_row(form.description, { label: 'game.label.description' }) }}
           {{ form_row(form.imgUrl, { label: 'game.label.imgUrl' }) }}
+
+          {# Buttons to submit, cancel or open the delete modal on right/left for large screen / top/bottom for small screen #}
           <div class="row">
+            {# Left part : submit and cancel #}
             <div class="col-sm-8 text-sm-start text-center">
               {{ form_widget(form.submit, { label: submitButton }) }}
               <a class="btn btn-outline-secondary ms-2" href="{{ path('app_game_index') }}">{{ 'form.button.cancel'|trans }}</a>
             </div>
+            {# Right part (if in EDIT mode) : open delete modal #}
             <div class="col-sm-4 text-sm-end text-center mt-2 mt-sm-0">
               {% if game_id is not null %}
                 <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#delete-modal">

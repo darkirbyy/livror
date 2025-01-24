@@ -13,6 +13,7 @@ enum TypePriceEnum: string implements TranslatableInterface
     case FREE = 'free';
     case PAYING = 'paying';
 
+    // Implement the TranslatableInterface so that the label are automatically translated in the form
     public function trans(TranslatorInterface $trans, ?string $locale = null): string
     {
         return match ($this) {
@@ -22,6 +23,7 @@ enum TypePriceEnum: string implements TranslatableInterface
         };
     }
 
+    // Determine the type of price from a price (in cent, no decimal)
     public static function fromPrice(?int $price): TypePriceEnum
     {
         return match (true) {
@@ -31,6 +33,7 @@ enum TypePriceEnum: string implements TranslatableInterface
         };
     }
 
+    // Determine the value of the price that must be stored in the database, depending on the type of price
     public static function toPrice(TypePriceEnum $typePrice, ?int $price): ?int
     {
         return match ($typePrice) {

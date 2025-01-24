@@ -17,14 +17,13 @@ class GameRepository extends ServiceEntityRepository
 
     public function findSortLimit(string $sortField, string $sortOrder, int $firstResult, int $maxResults): array
     {
+        // Validate the input parameters, as they come from the user
         $allowedSortFields = ['id', 'name', 'releaseYear'];
-        $allowedSortOrder = ['asc', 'desc'];
-
-        // Validate the input parameters
         if (!in_array($sortField, $allowedSortFields)) {
             throw new \InvalidArgumentException('Invalid field for sorting');
         }
 
+        $allowedSortOrder = ['asc', 'desc'];
         if (!in_array($sortOrder, $allowedSortOrder)) {
             throw new \InvalidArgumentException('Invalid order for sorting');
         }
@@ -37,11 +36,13 @@ class GameRepository extends ServiceEntityRepository
             throw new \InvalidArgumentException('Invalid max results limit');
         }
 
+        // Build the query (fetch one more result to determine is there are more to fetch)
         $qb = $this->createQueryBuilder('g');
         $qb->orderBy('g.' . $sortField, strtoupper($sortOrder))
             ->setFirstResult($firstResult)
             ->setMaxResults($maxResults + 1);
 
+        // Execute and fetch the query
         return $qb->getQuery()->getResult();
     }
 }
