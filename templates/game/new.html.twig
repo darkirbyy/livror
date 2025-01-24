@@ -2,17 +2,17 @@
 
 {% set game_id = app.request.attributes.get('id') %}
 
-{% if game_id == null %}
-  {% set title = 'game.new.title.add'|trans %}
-  {% set submitButton = 'form.button.add' %}
-{% else %}
+{% if game_id is not null %}
   {% set game_name = form.vars.value.name %}
   {% set title = 'game.new.title.update'|trans({ '{name}': game_name }) %}
   {% set submitButton = 'form.button.update' %}
+{% else %}
+  {% set title = 'game.new.title.add'|trans %}
+  {% set submitButton = 'form.button.add' %}
 {% endif %}
 
 {% block main %}
-  {% if game_id != null %}
+  {% if game_id is not null %}
     <!-- Delete Modal -->
     <div class="modal fade" id="delete-modal" tabindex="-1" aria-labelledby="delete-modal-label" aria-hidden="true" role="dialog" loading="lazy">
       <div class="modal-dialog modal-dialog-centered modal-fullscreen-sm-down">
@@ -96,7 +96,7 @@
               <a class="btn btn-outline-secondary ms-2" href="{{ path('app_game_index') }}">{{ 'form.button.cancel'|trans }}</a>
             </div>
             <div class="col-sm-4 text-sm-end text-center mt-2 mt-sm-0">
-              {% if game_id != null %}
+              {% if game_id is not null %}
                 <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#delete-modal">
                   <span class="bi bi-trash-fill me-1"></span>
                   {{ 'form.button.delete'|trans }}
