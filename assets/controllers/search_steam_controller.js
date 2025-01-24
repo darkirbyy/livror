@@ -11,7 +11,9 @@ export default class extends Controller {
       event.preventDefault();
       icon.classList.remove('bi-steam', 'bi');
       icon.classList.add('fa-solid', 'fa-spinner', 'fa-spin');
-      Turbo.visit(this.urlValue + '?steamId=' + this.inputFieldTarget.value);
+      Turbo.visit(this.urlValue + '?steamId=' + this.inputFieldTarget.value, {
+        action: 'replace',
+      });
     });
   }
 }

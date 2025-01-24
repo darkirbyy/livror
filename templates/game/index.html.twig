@@ -13,8 +13,8 @@
 {% endset %}
 
 {% block main %}
-  <section {{ stimulus_controller('image-load') }}>
-    <div class="container">
+  <section>
+    <div class="container" {{ stimulus_controller('image-load') }}>
       <div class="mx-auto card-max-auto card-max-md-none">
         {{ block('flash', 'theme/flash.html.twig') }}
       </div>
