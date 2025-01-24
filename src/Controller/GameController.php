@@ -51,7 +51,7 @@ class GameController extends AbstractController
     }
 
     #[Route('/new', name: 'app_game_new', methods: ['GET', 'POST'])]
-    #[Route('/{id}/edit', name: 'app_game_edit', methods: ['GET, POST'], requirements: ['id' => '\d+'])]
+    #[Route('/{id}/edit', name: 'app_game_edit', methods: ['GET', 'POST'], requirements: ['id' => '\d+'])]
     public function new(?Game $game, Request $request, EntityManagerInterface $em, TranslatorInterface $trans, SteamSearchService $steamSearch): Response
     {
         // Handling route: creating new game or updating existing one

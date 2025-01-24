@@ -19,7 +19,7 @@
         <div class="d-flex py-2 px-2 ps-md-3 justify-content-center justify-content-md-start align-items-center">
           <h5 class="mb-0 p-0">
             {{ game.name }}
-            <a class="fs-6 p-0 link-secondary" href="{{ path('app_game_edit', { id: game.id }) }}"><span class="bi bi-pen ps-1"></span></a>
+            <a class="fs-6 p-0 link-secondary" href="{{ path('app_game_edit', { id: game.id }) }}" data-turbo-frame="_top"><span class="bi bi-pen ps-1"></span></a>
           </h5>
         </div>
       </div>
