@@ -12,6 +12,7 @@ use App\Repository\GameRepository;
 use App\Service\SteamSearchService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\ExpressionLanguage\Expression;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -121,8 +122,8 @@ class GameController extends AbstractController
     }
 
     // Delete a game
-    #[IsCsrfTokenValid('delete-game', tokenKey: 'token-delete')]
-    #[Route('/{id}/delete', name: 'app_game_delete', methods: ['GET'], requirements: ['id' => '\d+'])]
+    #[IsCsrfTokenValid(new Expression('"delete-" ~ args["game"].getId()'), tokenKey: 'delete_token')]
+    #[Route('/{id}/delete', name: 'app_game_delete', methods: ['POST'], requirements: ['id' => '\d+'])]
     public function delete(Game $game, EntityManagerInterface $em): Response
     {
         $em->remove($game);
