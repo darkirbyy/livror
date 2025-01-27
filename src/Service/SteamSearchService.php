@@ -26,7 +26,7 @@ class SteamSearchService
             $response = $this->client->request('GET', 'https://store.steampowered.com/api/appdetails?appids=' . $id, [
                 'max_duration' => $this->timeout,
                 'headers' => [
-                    'Accept-Language' => $this->locale,
+                    'Accept-Language' => str_replace('_', '-', $this->locale),
                 ],
             ]);
 
@@ -51,6 +51,7 @@ class SteamSearchService
             $this->data = $content[$id]['data'];
         } catch (\Exception $e) {
             // Catch any other kind of errors
+            $this->logger->warning('Error while making steam API call with steamId: {steamId}. Error: {error}', ['steamId' => $this->id, 'error' => $e->getMessage()]);
             $this->status = SteamSearchStatusEnum::ERROR;
         }
     }
