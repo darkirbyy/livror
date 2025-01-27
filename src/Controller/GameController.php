@@ -80,11 +80,11 @@ class GameController extends AbstractController
                 $steamSearch->fetchSteamGame((int) $steamId);
                 if (SteamSearchStatusEnum::OK === $steamSearch->getStatus()) {
                     $game = $steamSearch->fillGame($game);
-                    $this->addFlash('success', $trans->trans('game.new.flash.steamSearch.success'));
+                    $this->addFlash('success', ['message' => 'game.new.flash.steamSearch.success']);
                 } elseif (SteamSearchStatusEnum::NOT_FOUND === $steamSearch->getStatus()) {
                     $steamIdError = $trans->trans('game.error.steamId.notFound', [], 'validators');
                 } else {
-                    $this->addFlash('danger', $trans->trans('game.new.flash.steamSearch.fail'));
+                    $this->addFlash('danger', ['message' => 'game.new.flash.steamSearch.fail']);
                 }
             }
         }
@@ -107,9 +107,9 @@ class GameController extends AbstractController
             $em->flush();
 
             if ($isNewGame) {
-                $this->addFlash('success', $trans->trans('game.index.flash.newGame', ['name' => $game->getName()]));
+                $this->addFlash('success', ['message' => 'game.index.flash.newGame', 'params' => ['name' => $game->getName()]]);
             } else {
-                $this->addFlash('success', $trans->trans('game.index.flash.updateGame', ['name' => $game->getName()]));
+                $this->addFlash('success', ['message' => 'game.index.flash.updateGame', 'params' => ['name' => $game->getName()]]);
             }
 
             return $this->redirectToRoute('app_game_index');
@@ -123,12 +123,12 @@ class GameController extends AbstractController
     // Delete a game
     #[IsCsrfTokenValid('delete-game', tokenKey: 'token-delete')]
     #[Route('/{id}/delete', name: 'app_game_delete', methods: ['GET'], requirements: ['id' => '\d+'])]
-    public function delete(Game $game, EntityManagerInterface $em, TranslatorInterface $trans): Response
+    public function delete(Game $game, EntityManagerInterface $em): Response
     {
         $em->remove($game);
         $em->flush();
 
-        $this->addFlash('success', $trans->trans('game.index.flash.deleteGame', ['name' => $game->getName()]));
+        $this->addFlash('success', ['message' => 'game.index.flash.deleteGame', 'params' => ['name' => $game->getName()]]);
 
         return $this->redirectToRoute('app_game_index');
     }

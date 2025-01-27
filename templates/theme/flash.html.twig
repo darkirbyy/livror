@@ -1,33 +1,37 @@
+{% macro trans_flash(flash) %}
+  {{ flash.message|trans(flash.params|default([]), flash.domain|default('messages')) }}
+{% endmacro %}
+
 {% block flash %}
   <div aria-live="polite">
-    {% for text in app.flashes('info') %}
+    {% for flash in app.flashes('info') %}
       <div class="alert alert-primary alert-dismissible fade show" role="alert">
         <div class="bi bi-info-square-fill">
-          {{ text|trans }}
+          {{ _self.trans_flash(flash) }}
         </div>
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="{{ 'aria.label.close'|trans }}"></button>
       </div>
     {% endfor %}
-    {% for text in app.flashes('success') %}
+    {% for flash in app.flashes('success') %}
       <div class="alert alert-success alert-dismissible fade show" role="alert">
         <div class="bi bi-check-circle-fill">
-          {{ text|trans }}
+          {{ _self.trans_flash(flash) }}
         </div>
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="{{ 'aria.label.close'|trans }}"></button>
       </div>
     {% endfor %}
-    {% for text in app.flashes('warning') %}
+    {% for flash in app.flashes('warning') %}
       <div class="alert alert-warning alert-dismissible fade show" role="alert">
         <div class="bi bi-exclamation-triangle-fill">
-          {{ text|trans }}
+          {{ _self.trans_flash(flash) }}
         </div>
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="{{ 'aria.label.close'|trans }}"></button>
       </div>
     {% endfor %}
-    {% for text in app.flashes('danger') %}
+    {% for flash in app.flashes('danger') %}
       <div class="alert alert-danger alert-dismissible fade show" role="alert">
         <div class="bi bi-x-square-fill">
-          {{ text|trans }}
+          {{ _self.trans_flash(flash) }}
         </div>
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="{{ 'aria.label.close'|trans }}"></button>
       </div>
