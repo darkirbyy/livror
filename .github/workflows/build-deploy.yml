@@ -5,7 +5,7 @@ on:
   workflow_call:
     inputs:
       environment:
-        description: 'The deployment environment (test or prod)'
+        description: 'The deployment environment (stage or prod)'
         required: true
         type: string
       version:
@@ -109,6 +109,5 @@ jobs:
         SCRIPT_BEFORE: |
           mkdir -p ${{ vars.SERV_PATH }}
         SCRIPT_AFTER: |
-          mkdir ${{ vars.SERV_PATH }}/var && chmod 775 ${{ vars.SERV_PATH }}/var
-          sudo docker exec -it php-fpm migrate-app ${{ vars.SERV_PATH }}
+          sudo /usr/bin/docker exec -u php-fpm php-fpm upgrade-app ${{ vars.SERV_PATH }}
    
