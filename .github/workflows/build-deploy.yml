@@ -109,5 +109,7 @@ jobs:
         SCRIPT_BEFORE: |
           mkdir -p ${{ vars.SERV_PATH }}
         SCRIPT_AFTER: |
+          mkdir -p ${{ vars.SERV_PATH }}/var && chmod 775 ${{ vars.SERV_PATH }}/var
           sudo /usr/bin/docker exec -u php-fpm php-fpm upgrade-app ${{ vars.SERV_PATH }}
+          sudo /usr/bin/docker restart php-fpm
    
