@@ -33,7 +33,7 @@
 
           {# Footer with cancel or confirm buttons #}
           <div class="modal-footer">
-            <form action="{{ path('app_game_delete', { id: game_id }) }}" method="post">
+            <form action="{{ path('game_delete', { id: game_id }) }}" method="post">
               <button type="submit" class="btn btn-danger">
                 <span class="bi bi-trash-fill me-1"></span>
                 {{ 'form.button.delete'|trans }}
@@ -110,7 +110,7 @@
             {# Left part : submit and cancel #}
             <div class="col-sm-8 text-sm-start text-center">
               {{ form_widget(form.submit, { label: submitButton }) }}
-              <a class="btn btn-outline-secondary ms-2" href="{{ path('app_game_index') }}">{{ 'form.button.cancel'|trans }}</a>
+              <a class="btn btn-outline-secondary ms-2" href="{{ path('game_index') }}">{{ 'form.button.cancel'|trans }}</a>
             </div>
             {# Right part (if in EDIT mode) : open delete modal #}
             <div class="col-sm-4 text-sm-end text-center mt-2 mt-sm-0">
