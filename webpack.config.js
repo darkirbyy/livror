@@ -1,4 +1,5 @@
 const Encore = require('@symfony/webpack-encore');
+const path = require('path');
 const dotenv = require('dotenv');
 
 dotenv.config();
@@ -77,6 +78,17 @@ Encore
                 autoprefixer: {}
             }
         };
+    })
+
+    // add https support (port option useless as the manifest will not be updated accordingly)
+    .configureDevServerOptions(options => {
+        options.server = {
+            type: 'https',
+            options: {
+                pfx: path.join(process.env.HOME, '.symfony5/certs/default.p12'),
+            },
+        }
+        // options.port = 'auto'
     })
 
     // uncomment if you use TypeScript
