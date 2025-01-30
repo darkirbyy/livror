@@ -21,11 +21,11 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsCsrfTokenValid;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-#[Route('/game')]
+#[Route('/game', name: 'game_')]
 class GameController extends AbstractController
 {
     // List and find games
-    #[Route('', name: 'game_index', methods: ['GET'])]
+    #[Route('', name: 'index', methods: ['GET'])]
     public function index(GameRepository $gameRepo, Request $request): Response
     {
         // Parse all the query parameters
@@ -57,8 +57,8 @@ class GameController extends AbstractController
     }
 
     // Edit or add new game
-    #[Route('/new', name: 'game_new', methods: ['GET', 'POST'])]
-    #[Route('/{id}/edit', name: 'game_edit', methods: ['GET', 'POST'], requirements: ['id' => '\d+'])]
+    #[Route('/new', name: 'new', methods: ['GET', 'POST'])]
+    #[Route('/{id}/edit', name: 'edit', methods: ['GET', 'POST'], requirements: ['id' => '\d+'])]
     public function new(?Game $game, Request $request, EntityManagerInterface $em, TranslatorInterface $trans, SteamSearchService $steamSearch): Response
     {
         // Handling route: creating new game or updating existing one
@@ -113,7 +113,7 @@ class GameController extends AbstractController
                 $this->addFlash('success', ['message' => 'game.index.flash.updateGame', 'params' => ['name' => $game->getName()]]);
             }
 
-            return $this->redirectToRoute('game_index');
+            return $this->redirectToRoute('game_index', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('game/new.html.twig', [
@@ -123,7 +123,7 @@ class GameController extends AbstractController
 
     // Delete a game
     #[IsCsrfTokenValid(new Expression('"delete-" ~ args["game"].getId()'), tokenKey: 'delete_token')]
-    #[Route('/{id}/delete', name: 'game_delete', methods: ['POST'], requirements: ['id' => '\d+'])]
+    #[Route('/{id}/delete', name: 'delete', methods: ['POST'], requirements: ['id' => '\d+'])]
     public function delete(Game $game, EntityManagerInterface $em): Response
     {
         $em->remove($game);
@@ -131,6 +131,6 @@ class GameController extends AbstractController
 
         $this->addFlash('success', ['message' => 'game.index.flash.deleteGame', 'params' => ['name' => $game->getName()]]);
 
-        return $this->redirectToRoute('game_index');
+        return $this->redirectToRoute('game_index', [], Response::HTTP_SEE_OTHER);
     }
 }
