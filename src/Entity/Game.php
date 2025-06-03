@@ -97,7 +97,7 @@ class Game
         }
     }
 
-    // Auto fill "dateAd" and "dateUpdate" date when storing the entity to the database
+    // Auto fill "dateAdd" and "dateUpdate" date when storing the entity to the database
     #[ORM\PrePersist]
     public function onPrePersit(): void
     {

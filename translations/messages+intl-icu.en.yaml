@@ -36,7 +36,7 @@ form:
 
 modal:
   title:
-    delete: Confirm Deletion
+    delete: Confirm deletion
 
 layout:
   name: Livror

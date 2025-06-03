@@ -12,6 +12,7 @@
 $border-color: $gray-500;
 
 // Use bootstrap API to generate custom responsive classes
+
 $utilities: map.merge(
   $utilities,
   (
@@ -102,6 +103,8 @@ legend.col-form-label.required::after {
   object-position: center;
   height: $size * $font-size-base;
   width: $size * $font-size-base;
+  box-shadow: $box-shadow-sm !important;
+  border-radius: 50% !important;
 }
 
 .app-avatar-navbar {
@@ -147,13 +150,7 @@ legend.col-form-label.required::after {
 // Others
 
 .app-env-dev {
-  background: repeating-linear-gradient(
-    45deg,
-    #e7b871,
-    #e7b871 10px,
-    #ce994b 10px,
-    #ce994b 20px
-  );
+  background: repeating-linear-gradient(45deg, #e7b871, #e7b871 10px, #ce994b 10px, #ce994b 20px);
   color: #704300;
 }
 

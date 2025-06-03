@@ -6,7 +6,7 @@
     <meta name="turbo-refresh-method" content="morph" />
     <meta name="turbo-refresh-scroll" content="preserve" />
     <title>
-      {{ title ~ ' - ' ~ ('layout.name'|trans) ~ ' - ' ~ 'Darkirby' }}
+      {{ title ~ ' - ' ~ ('layout.name'|trans) }}
     </title>
     <link rel="icon" href=" {{ asset('build/favicon.png') }}" />
     {% block stylesheets %}
@@ -73,7 +73,7 @@
                   aria-expanded="false"
                   aria-haspopup="true">
                   <span class="">Darkirby</span>
-                  <img src=" {{ asset('build/bibi.jpg') }}" class="img-fluid rounded-circle shadow-sm ms-1 app-avatar-navbar" alt="{{ 'aria.label.avatar'|trans }}" />
+                  <img src=" {{ asset('build/bibi.jpg') }}" class="img-fluid ms-1 app-avatar-navbar" alt="{{ 'aria.label.avatar'|trans }}" />
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end" role="menu">
                   <li><a class="dropdown-item" role="menuitem" href="#">{{ 'layout.navbar.account.myReviews'|trans }}</a></li>

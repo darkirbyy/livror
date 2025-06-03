@@ -82,6 +82,13 @@ Encore
 
     // add https support (port option useless as the manifest will not be updated accordingly)
     .configureDevServerOptions(options => {
+        options.liveReload = true;
+        options.static = {
+            watch: false
+        };
+        options.watchFiles = {
+            paths: ['templates/**/*'],
+        };
         options.server = {
             type: 'https',
             options: {
