@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use App\Entity\Game;
+use App\Entity\Main\Game;
 use App\Enum\SteamSearchStatusEnum;
 use App\Enum\TypePriceEnum;
 use App\Form\GameType;
-use App\Repository\GameRepository;
+use App\Repository\Main\GameRepository;
 use App\Service\SteamSearchService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
