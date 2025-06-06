@@ -35,6 +35,10 @@ services:
             $locale: '%env(APP_LOCALE)%'
             $currency: '%env(APP_CURRENCY)%'
 
+    App\Security\AccountEntryPoint:
+        arguments:
+            $hubLoginRoute: '%env(HUB_LOGIN_ROUTE)%'
+
 when@test: &test
     services:
         App\Tests\Mock\ApiMock:

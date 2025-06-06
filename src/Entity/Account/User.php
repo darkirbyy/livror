@@ -2,11 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Entity\Hub;
+namespace App\Entity\Account;
 
-use App\Repository\Hub\UserRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
+use App\Repository\Account\UserRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -29,17 +28,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?string $password = null;
 
-    // /**
-    //  * @var Collection<int, Right>
-    //  */
-    // #[ORM\ManyToMany(targetEntity: Right::class, inversedBy: 'users')]
-    // private Collection $rights;
-
+    #[ORM\Column(type: Types::JSON)]
     private ?array $roles = null;
 
     public function __construct()
     {
-        // $this->rights = new ArrayCollection();
     }
 
     public function __toString(): string
@@ -53,7 +46,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             'id' => $this->getId(),
             'username' => $this->getUsername(),
             'password' => $this->getPassword(),
-            // 'roles' => $this->getRoles(),
+            'roles' => $this->getRoles(),
         ];
     }
 
@@ -62,7 +55,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->id = $data['id'];
         $this->username = $data['username'];
         $this->password = $data['password'];
-        // $this->roles = $data['roles'];
+        $this->roles = $data['roles'];
     }
 
     public function getUserIdentifier(): string
@@ -72,7 +65,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function eraseCredentials(): void
     {
-        $this->password = null;
     }
 
     public function getId(): ?int
@@ -103,11 +95,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
-
+    
     public function getRoles(): array
     {
-        // return $this->roles;
-        return ['ROLE_USER'];
+        return $this->roles;
     }
 
     public function setRoles(?array $roles): static

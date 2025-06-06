@@ -5,32 +5,13 @@ doctrine:
                 url: '%env(resolve:DATABASE_URL)%'
                 profiling_collect_backtrace: '%kernel.debug%'
                 use_savepoints: true
-            hub:
+            account:
                 url: '%env(resolve:HUB_DATABASE_URL)%'
                 profiling_collect_backtrace: '%kernel.debug%'
                 use_savepoints: true
         default_connection: default
 
-        # IMPORTANT: You MUST configure your server version,
-        # either here or in the DATABASE_URL env var (see .env file)
-        #server_version: '16'
-
     orm:
-        # auto_generate_proxy_classes: true
-        # enable_lazy_ghost_objects: true
-        # report_fields_where_declared: true
-        # validate_xml_mapping: true
-        # naming_strategy: doctrine.orm.naming_strategy.underscore_number_aware
-        # identity_generation_preferences:
-        #     Doctrine\DBAL\Platforms\PostgreSQLPlatform: identity
-        # auto_mapping: true
-        # mappings:
-        #     App:
-        #         type: attribute
-        #         is_bundle: false
-        #         dir: '%kernel.project_dir%/src/Entity'
-        #         prefix: 'App\Entity'
-        #         alias: App
         controller_resolver:
             auto_mapping: false
         default_entity_manager: default
@@ -51,19 +32,19 @@ doctrine:
                         dir: '%kernel.project_dir%/src/Entity/Main'
                         prefix: 'App\Entity\Main'
                         alias: Main
-            hub:
-                connection: hub
+            account:
+                connection: account
                 report_fields_where_declared: true
                 validate_xml_mapping: true
                 naming_strategy: doctrine.orm.naming_strategy.underscore_number_aware
                 identity_generation_preferences:
                     Doctrine\DBAL\Platforms\PostgreSQLPlatform: identity
                 mappings:
-                    Hub:
+                    Account:
                         is_bundle: false
-                        dir: '%kernel.project_dir%/src/Entity/Hub'
-                        prefix: 'App\Entity\Hub'
-                        alias: Hub
+                        dir: '%kernel.project_dir%/src/Entity/Account'
+                        prefix: 'App\Entity\Account'
+                        alias: Account
 when@test:
     doctrine:
         dbal:
