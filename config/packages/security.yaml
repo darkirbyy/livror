@@ -17,7 +17,7 @@ security:
             entry_point: App\Security\AccountEntryPoint
 
     access_control:
-        - { path: ^/game, roles: ROLE_LIVROR_USER }
+        - { path: ^/, roles: ROLE_LIVROR_USER }
 
 when@test:
     security:

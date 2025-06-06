@@ -9,7 +9,7 @@
         <div class="bi bi-info-square-fill">
           {{ _self.trans_flash(flash) }}
         </div>
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="{{ 'aria.label.close'|trans }}"></button>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="{{ 'form.button.close'|trans }}"></button>
       </div>
     {% endfor %}
     {% for flash in app.flashes('success') %}
@@ -17,7 +17,7 @@
         <div class="bi bi-check-circle-fill">
           {{ _self.trans_flash(flash) }}
         </div>
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="{{ 'aria.label.close'|trans }}"></button>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="{{ 'form.button.close'|trans }}"></button>
       </div>
     {% endfor %}
     {% for flash in app.flashes('warning') %}
@@ -25,7 +25,7 @@
         <div class="bi bi-exclamation-triangle-fill">
           {{ _self.trans_flash(flash) }}
         </div>
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="{{ 'aria.label.close'|trans }}"></button>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="{{ 'form.button.close'|trans }}"></button>
       </div>
     {% endfor %}
     {% for flash in app.flashes('danger') %}
@@ -33,7 +33,7 @@
         <div class="bi bi-x-square-fill">
           {{ _self.trans_flash(flash) }}
         </div>
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="{{ 'aria.label.close'|trans }}"></button>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="{{ 'form.button.close'|trans }}"></button>
       </div>
     {% endfor %}
   </div>

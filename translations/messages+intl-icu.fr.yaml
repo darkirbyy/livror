@@ -33,6 +33,7 @@ form:
     delete: Supprimer
     search: Chercher
     cancel: Annuler
+    close: Fermer
 
 modal:
   title:
@@ -60,12 +61,8 @@ enum:
     paying: Payant
 
 aria:
-  label:
-    mainNavigation: Navigation principale
-    toggleNavigation: Basculer la navigation
-    avatar: Avatar
-    footer: Pied de page
-    search: Chercher
-    close: Fermer
-  other:
-    skipToContent: Aller au contenu
+  skipToContent: Aller au contenu
+  mainNavigation: Navigation principale
+  toggleNavigation: Basculer la navigation
+  footer: Pied de page
+  avatar: Avatar

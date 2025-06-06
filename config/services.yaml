@@ -35,9 +35,12 @@ services:
             $locale: '%env(APP_LOCALE)%'
             $currency: '%env(APP_CURRENCY)%'
 
-    App\Security\AccountEntryPoint:
+    App\Service\AccountUrlGenerator:
         arguments:
+            $hubBaseUrl: '%env(HUB_BASE_URL)%'
             $hubLoginRoute: '%env(HUB_LOGIN_ROUTE)%'
+            $hubLogoutRoute: '%env(HUB_LOGOUT_ROUTE)%'
+            $hubAccountRoute: '%env(HUB_ACCOUNT_ROUTE)%'
 
 when@test: &test
     services:

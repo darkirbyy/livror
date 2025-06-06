@@ -1,0 +1,119 @@
+@use 'sass:map';
+
+///////////////////////////////////
+// Framework improvements /////////
+///////////////////////////////////
+
+.form-label {
+  margin-bottom: 0 !important;
+}
+
+.help-text {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+}
+
+.input-group-text {
+  margin-top: ($spacer * 0) !important;
+}
+
+label.form-label.required::after,
+legend.col-form-label.required::after {
+  content: ' *';
+  color: $primary !important;
+}
+
+///////////////////////////////////
+// App-specific classes ///////////
+///////////////////////////////////
+
+// Avatars ////////////////////////
+@mixin app-avatar($size) {
+  object-fit: cover;
+  object-position: center;
+  height: $size * $font-size-base;
+  width: $size * $font-size-base;
+  box-shadow: $box-shadow-sm !important;
+  border-radius: 50% !important;
+}
+
+.app-avatar-navbar {
+  @include app-avatar(1.5);
+}
+
+.app-avatar-card {
+  @include app-avatar(1.4);
+}
+
+// Dropdown ///////////////////////
+.app-dropdown-smooth {
+  &::before {
+    transition: transform 0.2s ease-in-out;
+    transform: rotate(-90deg);
+  }
+
+  &::after {
+    transition: transform 0.2s ease-in-out;
+    transform: rotate(90deg);
+  }
+
+  &[aria-expanded='true']::before,
+  .link-secondary:hover &[aria-expanded='true']::after {
+    transform: rotate(0deg);
+  }
+}
+
+.app-dropdown-left {
+  &::after {
+    display: none;
+  }
+
+  &::before {
+    display: inline-block;
+    margin-right: $caret-spacing;
+    vertical-align: $caret-vertical-align;
+    content: '';
+    @include caret-down;
+  }
+}
+
+// Misc ///////////////////////////
+
+.app-card-img-fit {
+  width: 100%;
+  aspect-ratio: 460 / 215;
+}
+
+.app-card-img-missing {
+  font-size: 4rem;
+  opacity: 0.25;
+  align-content: center;
+}
+
+.app-form-row {
+  margin-bottom: ($spacer * 1) !important;
+}
+
+.app-no-border-bottom {
+  transition: border-radius 0.3s ease-in-out;
+
+  &[aria-expanded='false'] {
+    border-bottom: none !important;
+  }
+}
+
+.app-btn-border-light {
+  border-color: var(--bs-border-color) !important;
+}
+
+// Others /////////////////////////
+
+.app-skip-link {
+  z-index: 900;
+}
+
+.app-env-dev {
+  z-index: 1000;
+  color: #4d2e00;
+  background: repeating-linear-gradient(45deg, #e7b871, #e7b871 10px, #ce994b 10px, #ce994b 20px);
+}

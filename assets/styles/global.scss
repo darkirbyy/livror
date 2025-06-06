@@ -1,209 +1,24 @@
 @use 'sass:map';
 
-// Note :the ~ allows you to reference things in node_modules
-// Import boostrap basics
+// Import Bootstrap core functions
 @import '~bootstrap/scss/functions';
+
+// Import Bootstrap variables
 @import '~bootstrap/scss/variables';
 @import '~bootstrap/scss/variables-dark';
-@import '~bootstrap/scss/maps';
-@import '~bootstrap/scss/mixins';
-@import '~bootstrap/scss/utilities';
 
-$border-color: $gray-500;
+// Import custom variables
+@import 'variables';
 
-// Use bootstrap API to generate custom responsive classes
+// Import custom API
+@import 'api';
 
-$utilities: map.merge(
-  $utilities,
-  (
-    'border': map.merge(
-        map.get($utilities, 'border'),
-        (
-          responsive: true,
-        )
-      ),
-    'border-top': map.merge(
-        map.get($utilities, 'border-top'),
-        (
-          responsive: true,
-        )
-      ),
-    'border-end': map.merge(
-        map.get($utilities, 'border-end'),
-        (
-          responsive: true,
-        )
-      ),
-    'border-bottom': map.merge(
-        map.get($utilities, 'border-bottom'),
-        (
-          responsive: true,
-        )
-      ),
-    'border-start': map.merge(
-        map.get($utilities, 'border-start'),
-        (
-          responsive: true,
-        )
-      ),
-    'flex-even': (
-      responsive: true,
-      class: 'flex-even',
-      property: flex,
-      values: (
-        1: 1 1 0,
-        0: 0 1 auto,
-      ),
-    ),
-
-    'card-max': (
-      responsive: true,
-      class: 'card-max',
-      property: max-width,
-      values: (
-        auto: 460px,
-        none: inherit,
-      ),
-    ),
-  )
-);
-
-// Import the rest of boostrap classes
-@import '~bootstrap/scss/utilities/api';
+// Import Bootstrap (finalizes everything)
 @import '~bootstrap/scss/bootstrap';
 
 // Import icons packages
 @import '~bootstrap-icons/font/bootstrap-icons.css';
 @import '~@fortawesome/fontawesome-free/css/all.css';
 
-// Improve bootstrap classes for form
-.form-label {
-  margin-bottom: 0 !important;
-}
-
-.help-text {
-  margin-top: 0 !important;
-  margin-bottom: 0 !important;
-}
-
-.input-group-text {
-  margin-top: ($spacer * 0) !important;
-}
-
-label.form-label.required::after,
-legend.col-form-label.required::after {
-  content: ' *';
-  color: $primary !important;
-}
-
-// App-specific classes
-// Avatars
-@mixin app-avatar($size) {
-  object-fit: cover;
-  object-position: center;
-  height: $size * $font-size-base;
-  width: $size * $font-size-base;
-  box-shadow: $box-shadow-sm !important;
-  border-radius: 50% !important;
-}
-
-.app-avatar-navbar {
-  @include app-avatar(1.5);
-}
-
-.app-avatar-card {
-  @include app-avatar(1.4);
-}
-
-// Dropdown
-.app-dropdown-smooth {
-  &::before {
-    transition: transform 0.2s ease-in-out;
-    transform: rotate(-90deg);
-  }
-
-  &::after {
-    transition: transform 0.2s ease-in-out;
-    transform: rotate(90deg);
-  }
-
-  &[aria-expanded='true']::before,
-  .link-secondary:hover &[aria-expanded='true']::after {
-    transform: rotate(0deg);
-  }
-}
-
-.app-dropdown-left {
-  &::after {
-    display: none;
-  }
-
-  &::before {
-    display: inline-block;
-    margin-right: $caret-spacing;
-    vertical-align: $caret-vertical-align;
-    content: '';
-    @include caret-down;
-  }
-}
-
-// Others
-
-.app-env-dev {
-  background: repeating-linear-gradient(45deg, #e7b871, #e7b871 10px, #ce994b 10px, #ce994b 20px);
-  color: #704300;
-}
-
-.app-card-img-fit {
-  width: 100%;
-  aspect-ratio: 460 / 215;
-}
-
-.app-card-img-missing {
-  font-size: 4rem;
-  opacity: 0.25;
-  align-content: center;
-}
-
-.app-form-row {
-  margin-bottom: ($spacer * 1) !important;
-}
-
-.app-no-border-bottom {
-  transition: border-radius 0.3s ease-in-out;
-
-  &[aria-expanded='false'] {
-    border-bottom: none !important;
-  }
-}
-
-.app-btn-border-light {
-  border-color: var(--bs-border-color) !important;
-}
-
-// Not use anymore
-
-// .app-take-space::before {
-//   content: '.';
-//   visibility: hidden;
-// }
-
-// .app-oneline-trunc {
-//   white-space: nowrap;
-//   overflow: hidden;
-//   text-overflow: ellipsis;
-//   max-width: 100%;
-// }
-
-// .hover-effect {
-//   background-color: $dropdown-bg;
-//   transition: background-color 0.3s ease-in-out;
-
-//   &:hover {
-//       background-color: $dropdown-link-hover-bg;
-//   }
-
-//   &:active {
-//     background-color: $dropdown-link-active-bg;
-// }
-// }
+// Import custom css
+@import 'custom';

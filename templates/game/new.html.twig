@@ -23,7 +23,7 @@
             <h1 class="modal-title fs-5" id="delete-modal-label">
               {{ 'modal.title.delete'|trans }}
             </h1>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ 'aria.label.close'|trans }}"></button>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ 'form.button.close'|trans }}"></button>
           </div>
 
           {# Body with message #}
@@ -64,7 +64,7 @@
               {{ form_help(form.steamId, { help_html: true, help: 'game.help.steamId' }) }}
               <div class="input-group">
                 {{ form_widget(form.steamId, { attr: { 'data-steam-search-target': 'input' } }) }}
-                <button data-steam-search-target="button" class="btn btn-outline-secondary" aria-label="{{ 'aria.label.search'|trans }}">
+                <button data-steam-search-target="button" class="btn btn-outline-secondary" aria-label="{{ 'form.button.search'|trans }}">
                   <span data-steam-search-target="remove" class="bi bi-steam"></span>
                   <span data-steam-search-target="spinner"></span>
                   <span class="d-none d-sm-inline ms-sm-1">{{ 'form.button.search'|trans }}</span>

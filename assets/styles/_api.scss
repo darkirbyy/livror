@@ -1,0 +1,64 @@
+// Import Bootstrap API
+@import '~bootstrap/scss/maps';
+@import '~bootstrap/scss/mixins';
+@import '~bootstrap/scss/utilities';
+
+// Use bootstrap API to generate custom responsive classes
+
+$utilities: map.merge(
+  $utilities,
+  (
+    'border': map.merge(
+        map.get($utilities, 'border'),
+        (
+          responsive: true,
+        )
+      ),
+    'border-top': map.merge(
+        map.get($utilities, 'border-top'),
+        (
+          responsive: true,
+        )
+      ),
+    'border-end': map.merge(
+        map.get($utilities, 'border-end'),
+        (
+          responsive: true,
+        )
+      ),
+    'border-bottom': map.merge(
+        map.get($utilities, 'border-bottom'),
+        (
+          responsive: true,
+        )
+      ),
+    'border-start': map.merge(
+        map.get($utilities, 'border-start'),
+        (
+          responsive: true,
+        )
+      ),
+    'flex-even': (
+      responsive: true,
+      class: 'flex-even',
+      property: flex,
+      values: (
+        1: 1 1 0,
+        0: 0 1 auto,
+      ),
+    ),
+
+    'card-max': (
+      responsive: true,
+      class: 'card-max',
+      property: max-width,
+      values: (
+        auto: 460px,
+        none: inherit,
+      ),
+    ),
+  )
+);
+
+// Import Bootstrap utilities API (processes utility changes)
+@import '~bootstrap/scss/utilities/api';

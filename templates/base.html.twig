@@ -19,20 +19,25 @@
   </head>
 
   <body class="d-flex flex-column min-vh-100">
-    {# Skip to content link for screen reader #}
-    <a href="#mainContent" class="visually-hidden-focusable">{{ 'aria.other.skipToContent'|trans }}</a>
-    {% if env.app.env == 'dev' %}
+    {# Bar not visible in prod env #}
+    {% if env.app.env != 'prod' %}
       <div class="container-fluid p-0 m-0 text-center fw-bold d-flex justify-content-around app-env-dev">
         {% for i in 1..10 %}
           <div>
-            DEV
+            {{ env.app.env|upper }}
           </div>
         {% endfor %}
       </div>
     {% endif %}
+
+    {# Skip to content link for screen reader #}
+    <div class="ps-3 app-skip-link">
+      <a class="icon-link visually-hidden-focusable" href="#mainContent">{{ 'aria.skipToContent'|trans }}</a>
+    </div>
+
     {# The HEADER regroup the navbar and the main title #}
     <header>
-      <nav class="navbar navbar-expand-sm bg-body-secondary" aria-label="{{ 'aria.label.mainNavigation'|trans }}">
+      <nav class="navbar navbar-expand-sm bg-body-secondary" aria-label="{{ 'aria.mainNavigation'|trans }}">
         {% set currentRoute = app.current_route %}
         {% set activeLink = 'class="nav-link active" aria-current="page" aria-selected="true"' %}
         {% set otherLink = 'class="nav-link"' %}
@@ -49,7 +54,7 @@
             data-bs-target="#navbarSupportedContent"
             aria-controls="navbarSupportedContent"
             aria-expanded="false"
-            aria-label="{{ 'aria.label.toggleNavigation'|trans }}">
+            aria-label="{{ 'aria.toggleNavigation'|trans }}">
             <span class="navbar-toggler-icon"></span>
           </button>
           {# Content as two lists : one on the left, the other on the right for lage screen / both on the top of each other for small screen #}
@@ -72,14 +77,18 @@
                   data-bs-toggle="dropdown"
                   aria-expanded="false"
                   aria-haspopup="true">
-                  <span class="">Darkirby</span>
-                  <img src=" {{ asset('build/bibi.jpg') }}" class="img-fluid ms-1 app-avatar-navbar" alt="{{ 'aria.label.avatar'|trans }}" />
+                  <span class="me-1">{{ app.user.username }}</span>
+                  <img src=" {{ asset('build/bibi.jpg') }}" class="img-fluid ms-1 app-avatar-navbar" alt="{{ 'aria.avatar'|trans }}" />
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end" role="menu">
                   <li><a class="dropdown-item" role="menuitem" href="#">{{ 'layout.navbar.account.myReviews'|trans }}</a></li>
-                  <li><a class="dropdown-item" role="menuitem" href="#">{{ 'layout.navbar.account.myAccount'|trans }}</a></li>
                   <li><hr class="dropdown-divider" /></li>
-                  <li><a class="dropdown-item text-danger" role="menuitem" href="#">{{ 'layout.navbar.account.signOut'|trans }}</a></li>
+                  <li><a class="dropdown-item" role="menuitem" href="{{ accountUrlGenerator.getHubAccountUrl() }}">{{ 'layout.navbar.account.myAccount'|trans }}</a></li>
+                  <li>
+                    <a class="dropdown-item text-danger" role="menuitem" href="{{ accountUrlGenerator.getHubLogoutUrl() ~ '?disconnect_user[_token]=' ~ csrf_token('logout') }}">
+                      {{ 'layout.navbar.account.signOut'|trans }}
+                    </a>
+                  </li>
                 </ul>
               </li>
             </ul>
@@ -105,7 +114,7 @@
     </main>
 
     {# The FOOTER divided in two part : left/right on large screen / on the top of each other on small screen #}
-    <footer role="contentinfo" aria-label="{{ 'aria.label.footer'|trans }}">
+    <footer role="contentinfo" aria-label="{{ 'aria.footer'|trans }}">
       <div class="container-fluid fw-light bg-body-secondary small mt-4 py-2">
         <div class="row gw-md-4">
           {# Left part : references to frameworks #}
