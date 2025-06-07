@@ -31,6 +31,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: Types::JSON)]
     private ?array $roles = null;
 
+    #[ORM\Column]
+    private ?string $avatarPath = null;
+
     public function __construct()
     {
     }
@@ -95,7 +98,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
-    
+
     public function getRoles(): array
     {
         return $this->roles;
@@ -104,6 +107,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setRoles(?array $roles): static
     {
         $this->roles = $roles;
+
+        return $this;
+    }
+
+    public function getAvatarPath(): ?string
+    {
+        return $this->avatarPath;
+    }
+
+    public function setAvatarPath(string $avatarPath): static
+    {
+        $this->avatarPath = $avatarPath;
 
         return $this;
     }

@@ -78,14 +78,21 @@
                   aria-expanded="false"
                   aria-haspopup="true">
                   <span class="me-1">{{ app.user.username }}</span>
-                  <img src=" {{ asset('build/bibi.jpg') }}" class="img-fluid ms-1 app-avatar-navbar" alt="{{ 'aria.avatar'|trans }}" />
+                  <img src="{{ HubUrlGenerator.generateRoot(app.user.avatarPath) }}" class="img-fluid ms-1 app-avatar-navbar" alt="{{ 'aria.avatar'|trans }}" />
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end" role="menu">
                   <li><a class="dropdown-item" role="menuitem" href="#">{{ 'layout.navbar.account.myReviews'|trans }}</a></li>
                   <li><hr class="dropdown-divider" /></li>
-                  <li><a class="dropdown-item" role="menuitem" href="{{ accountUrlGenerator.getHubAccountUrl() }}">{{ 'layout.navbar.account.myAccount'|trans }}</a></li>
                   <li>
-                    <a class="dropdown-item text-danger" role="menuitem" href="{{ accountUrlGenerator.getHubLogoutUrl() ~ '?disconnect_user[_token]=' ~ csrf_token('logout') }}">
+                    <a class="dropdown-item" role="menuitem" href="{{ HubUrlGenerator.generateAccount('') }}" data-turbo-prefetch="false">
+                      {{ 'layout.navbar.account.myAccount'|trans }}
+                    </a>
+                  </li>
+                  <li>
+                    <a class="dropdown-item text-danger"
+                      role="menuitem"
+                      href="{{ HubUrlGenerator.generateAccount('/logout') ~ '?disconnect_user[_token]=' ~ csrf_token('logout') }}"
+                      data-turbo-prefetch="false">
                       {{ 'layout.navbar.account.signOut'|trans }}
                     </a>
                   </li>

@@ -14,7 +14,7 @@ twig:
                 version: '%versioning.version%'
                 version_hash: '%versioning.version_hash%'
                 release_date: '%versioning.release_date%'
-        accountUrlGenerator: "@App\\Service\\AccountUrlGenerator"
+        HubUrlGenerator: "@App\\Service\\HubUrlGenerator"
 
 when@test:
     twig:
