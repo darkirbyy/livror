@@ -26,7 +26,7 @@ class SteamSearchService
             $response = $this->client->request('GET', 'https://store.steampowered.com/api/appdetails?appids=' . $id, [
                 'max_duration' => $this->timeout,
                 'headers' => [
-                    'Accept-Language' => str_replace('_', '-', $this->locale),
+                    'Accept-Language' => str_replace('_', '-', $this->locale) . ';q=0.5',
                 ],
             ]);
 
