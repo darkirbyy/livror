@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Entity\Main;
 
-use App\Repository\Main\GameRepository;
+use App\Repository\GameRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
@@ -14,11 +16,16 @@ use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 #[ORM\Entity(repositoryClass: GameRepository::class)]
 #[ORM\HasLifecycleCallbacks]
-#[UniqueEntity('name')]
-#[UniqueEntity('steamId')]
+#[UniqueEntity(fields: ['name'])]
+#[UniqueEntity(fields: ['steamId'])]
+#[ORM\UniqueConstraint(fields: ['name'])]
+#[ORM\UniqueConstraint(fields: ['steamId'])]
 class Game
 {
-    // All fields and their validation constraints
+    // /////////////////////////////////////////////////////
+    // All fields and their validation constraints ////////
+    // /////////////////////////////////////////////////////
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -30,11 +37,11 @@ class Game
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $dateUpdate = null;
 
-    #[ORM\Column(nullable: true, unique: true)]
+    #[ORM\Column(nullable: true)]
     #[Assert\Regex('/^\d+$/', message: 'game.error.steamId.invalid')]
     private ?int $steamId = null;
 
-    #[ORM\Column(length: 255, unique: true)]
+    #[ORM\Column(length: 255)]
     #[Assert\Length(min: 2)]
     #[Assert\NotBlank]
     private ?string $name = null;
@@ -59,6 +66,21 @@ class Game
     #[ORM\Column(length: 2048, nullable: true)]
     #[Assert\Url(requireTld: true)]
     private ?string $imgUrl = null;
+
+    /**
+     * @var Collection<int, Review>
+     */
+    #[ORM\OneToMany(targetEntity: Review::class, mappedBy: 'game', orphanRemoval: true)]
+    private Collection $reviews;
+
+    public function __construct()
+    {
+        $this->reviews = new ArrayCollection();
+    }
+
+    // /////////////////////////////////////////////////////
+    // Custom methods and validation constraints //////////
+    // /////////////////////////////////////////////////////
 
     // Custom callback to check that the image URL is a valid one
     #[Assert\Callback]
@@ -111,7 +133,15 @@ class Game
         $this->dateUpdate = new \DateTimeImmutable();
     }
 
-    // Doctrine auto-generated getter and setter
+    // /////////////////////////////////////////////////////
+    // Doctrine auto-generated getter and setter //////////
+    // /////////////////////////////////////////////////////
+
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
     public function getDateAdd(): ?\DateTimeInterface
     {
         return $this->dateAdd;
@@ -134,11 +164,6 @@ class Game
         $this->dateUpdate = $dateUpdate;
 
         return $this;
-    }
-
-    public function getId(): ?int
-    {
-        return $this->id;
     }
 
     public function getSteamId(): ?int
@@ -233,6 +258,36 @@ class Game
     public function setImgUrl(?string $imgUrl): static
     {
         $this->imgUrl = $imgUrl;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Review>
+     */
+    public function getReviews(): Collection
+    {
+        return $this->reviews;
+    }
+
+    public function addReview(Review $review): static
+    {
+        if (!$this->reviews->contains($review)) {
+            $this->reviews->add($review);
+            $review->setGame($this);
+        }
+
+        return $this;
+    }
+
+    public function removeReview(Review $review): static
+    {
+        if ($this->reviews->removeElement($review)) {
+            // set the owning side to null (unless already changed)
+            if ($review->getGame() === $this) {
+                $review->setGame(null);
+            }
+        }
 
         return $this;
     }

@@ -28,6 +28,12 @@ services:
             - '../src/DependencyInjection/'
             - '../src/Entity/'
             - '../src/Kernel.php'
+            
+    App\Form\:
+        resource: '../src/Form'
+        tags: ['form.type']
+        arguments:
+            $htmlValidation: '%env(bool:APP_HTML_VALIDATION)%'
 
     App\Service\SteamSearchService:
         arguments:

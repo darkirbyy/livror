@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Repository\Main;
+namespace App\Repository;
 
 use App\Entity\Main\Game;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;

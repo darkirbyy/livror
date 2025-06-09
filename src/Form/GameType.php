@@ -6,7 +6,6 @@ namespace App\Form;
 
 use App\Entity\Main\Game;
 use App\Enum\TypePriceEnum;
-use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\EnumType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
@@ -17,7 +16,7 @@ use Symfony\Component\Form\Extension\Core\Type\UrlType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class GameType extends AbstractType
+class GameType extends DefaultType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
@@ -66,13 +65,11 @@ class GameType extends AbstractType
 
     public function configureOptions(OptionsResolver $resolver): void
     {
+        parent::configureOptions($resolver);
+
         $resolver
             ->setDefaults([
                 'data_class' => Game::class,
-                'attr' => [
-                    'novalidate' => 'novalidate', // TODO : remove and keep HTML validation ?
-                ],
-                'translation_domain' => 'validators',
             ])
             ->setRequired(['currency']);
     }

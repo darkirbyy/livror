@@ -1,7 +1,14 @@
+{# A flash message MUST be an array with a mandatory key `message` (string)
+  and two options keys `params` (array, default to empty) and `domain` (string, default to `messages`) #}
+
+{# Macro to translate the flash message while escaping the parameters #}
 {% macro trans_flash(flash) %}
-  {{ flash.message|trans(flash.params|default([]), flash.domain|default('messages')) }}
+  {% set message = flash.message|trans(flash.params|default({ })|map(p => p|e), flash.domain|default('messages')) %}
+  {{ message|raw }}
 {% endmacro %}
 
+{# This block SHOULD be inserted on every page, at the top of the first section.
+  4 types of flashes: info, success, warning, danger #}
 {% block flash %}
   <div aria-live="polite">
     {% for flash in app.flashes('info') %}

@@ -62,7 +62,7 @@
             {# Left part of the navbar #}
             <ul class="navbar-nav me-auto mb-2 mb-sm-0">
               <li class="nav-item">
-                <a {{ currentRoute starts with 'default' ? activeLink|raw : otherLink|raw }} href="{{ path('default_index') }}">{{ 'layout.navbar.home'|trans }}</a>
+                <a {{ currentRoute starts with 'default' ? activeLink|raw : otherLink|raw }} href="{{ path('home_index') }}">{{ 'layout.navbar.home'|trans }}</a>
               </li>
               <li class="nav-item">
                 <a {{ currentRoute starts with 'game' ? activeLink|raw : otherLink|raw }} href="{{ path('game_index') }}">{{ 'layout.navbar.game'|trans }}</a>

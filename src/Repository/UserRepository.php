@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Repository\Account;
+namespace App\Repository;
 
 use App\Entity\Account\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
