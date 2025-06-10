@@ -31,7 +31,7 @@ class FormManager
     /**
      * Validate an entity according to the form and persist it with a custom flash message upon success.
      */
-    public function validateAndPersist(FormInterface $form, object $object, ?string $flashSuccess = null): bool
+    public function validateAndPersist(FormInterface $form, object $object, ?array $flashSuccess = null): bool
     {
         if ($form->isSubmitted() && $form->isValid()) {
             return $this->persist($object, $flashSuccess);
@@ -43,14 +43,14 @@ class FormManager
     /**
      * Check the CSRF token and persist the entity with a custom flash message upon success.
      */
-    public function checkTokenAndPersist(string $tokenName, object $object, ?string $flashSuccess = null): bool
+    public function checkTokenAndPersist(string $tokenName, object $object, ?array $flashSuccess = null): bool
     {
         $tokenValue = $this->requestStack
             ->getCurrentRequest()
             ->getPayload()
             ->get($tokenName . '_token');
         if (!$this->csrfTokenManager->isTokenValid(new CsrfToken($tokenName, $tokenValue))) {
-            $this->flashBag->add('error', ['message' => 'form.flash.invalidCsrf']);
+            $this->flashBag->add('danger', ['message' => 'form.flash.invalidCsrf']);
 
             return false;
         }
@@ -61,14 +61,14 @@ class FormManager
     /**
      * Check the CSRF token and remove the entity with a custom flash message upon success.
      */
-    public function checkTokenAndRemove(string $tokenName, object $object, ?string $flashSuccess = null): bool
+    public function checkTokenAndRemove(string $tokenName, object $object, ?array $flashSuccess = null): bool
     {
         $tokenValue = $this->requestStack
             ->getCurrentRequest()
             ->getPayload()
             ->get($tokenName . '_token');
         if (!$this->csrfTokenManager->isTokenValid(new CsrfToken($tokenName, $tokenValue))) {
-            $this->flashBag->add('error', ['message' => 'form.flash.invalidCsrf']);
+            $this->flashBag->add('danger', ['message' => 'form.flash.invalidCsrf']);
 
             return false;
         }

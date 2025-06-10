@@ -1,20 +1,16 @@
 {% extends 'base.html.twig' %}
 
-{# the game_id set if it's EDIT mode or NEW mode #}
-{% set game_id = app.request.attributes.get('id') %}
-
-{% if game_id is not null %}
-  {% set game_name = form.vars.value.name %}
-  {% set title = 'game.new.title.update'|trans({ '{name}': game_name }) %}
+{% if game.id is not null %}
+  {% set title = 'game.edit.title.update'|trans({ '{name}': game.name }) %}
   {% set submitButton = 'form.button.update' %}
 {% else %}
-  {% set title = 'game.new.title.add'|trans %}
+  {% set title = 'game.edit.title.add'|trans %}
   {% set submitButton = 'form.button.add' %}
 {% endif %}
 
 {% block main %}
   {# Modal to confirm delete, if in EDIT mode #}
-  {% if game_id is not null %}
+  {% if game.id is not null %}
     <div class="modal fade" id="delete-modal" tabindex="-1" aria-labelledby="delete-modal-label" aria-hidden="true" role="dialog" loading="lazy">
       <div class="modal-dialog modal-dialog-centered modal-fullscreen-sm-down">
         <div class="modal-content">
@@ -28,18 +24,19 @@
 
           {# Body with message #}
           <div class="modal-body">
-            {{ 'game.new.modalDeleteBody'|trans({ '{name}': game_name })|raw }}
+            {{ 'game.edit.modalDeleteBody'|trans({ '{name}': game.name })|raw }}
           </div>
 
           {# Footer with cancel or confirm buttons #}
           <div class="modal-footer">
-            <form action="{{ path('game_delete', { id: game_id }) }}" method="post">
+            <form action="{{ path('game_delete', { id: game.id }) }}" method="post">
               <button type="submit" class="btn btn-danger">
                 <span class="bi bi-trash-fill me-1"></span>
                 {{ 'form.button.delete'|trans }}
               </button>
               <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">{{ 'form.button.cancel'|trans }}</button>
-              <input type="hidden" name="delete_token" value="{{ csrf_token('delete-' ~ game_id) }}" />
+              {% set token_id = 'delete-' ~ game.id %}
+              <input type="hidden" name="{{ token_id ~ '_token' }}" value="{{ csrf_token(token_id) }}" />
             </form>
           </div>
         </div>
@@ -56,8 +53,8 @@
           {{ block('flash', 'theme/flash.html.twig') }}
 
           {# Form #}
-          {{ form_start(form, { attr: { action: path(app.current_route, { id: game_id }) } }) }}
-          <div class="row" {{ stimulus_controller('steam-search', { url: path(app.current_route, { id: game_id }), lazy: false }) }}>
+          {{ form_start(form, { attr: { action: path(app.current_route, { id: game.id }) } }) }}
+          <div class="row" {{ stimulus_controller('steam-search', { url: path(app.current_route, { id: game.id }), lazy: false }) }}>
             {# Field to write the steam ID and press the search button #}
             <div class="col app-form-row">
               {{ form_label(form.steamId, 'game.label.steamId') }}
@@ -114,7 +111,7 @@
             </div>
             {# Right part (if in EDIT mode) : open delete modal #}
             <div class="col-sm-4 text-sm-end text-center mt-2 mt-sm-0">
-              {% if game_id is not null %}
+              {% if game.id is not null %}
                 <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#delete-modal">
                   <span class="bi bi-trash-fill me-1"></span>
                   {{ 'form.button.delete'|trans }}

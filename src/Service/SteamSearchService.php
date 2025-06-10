@@ -76,7 +76,7 @@ class SteamSearchService
             $game->setReleaseYear((int) $matches[1]);
         } else {
             $game->setReleaseYear(null);
-            $this->logger->warning('Unable to parse the release year or release date not found for the game with steamId: {steamId}', ['steamId' => $this->id]);
+            $this->exceptionManager->handle('warning', 'Unable to parse the release year or release date not found for the game with steamId: {steamId}', ['steamId' => $this->id]);
         }
 
         // Managing price : 0 = free, otherwise = check if the currency is the same as the application and the price is a valid integer, else null
@@ -90,7 +90,7 @@ class SteamSearchService
                 $game->setFullPrice((int) $fullPrice);
             } else {
                 $game->setFullPrice(null);
-                $this->logger->warning('Unable to parse the price or invalid currency for the game with steamId: {steamId}', ['steamId' => $this->id]);
+                $this->exceptionManager->handle('warning', 'Unable to parse the price or invalid currency for the game with steamId: {steamId}', ['steamId' => $this->id]);
             }
         }
 

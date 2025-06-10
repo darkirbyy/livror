@@ -20,7 +20,7 @@ game:
     card:
       informations: Informations
       reviews: Avis
-  new:
+  edit:
     title:
       add: Ajouter un nouveau jeu
       update: 'Modifier {name}'

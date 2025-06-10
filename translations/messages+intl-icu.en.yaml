@@ -20,7 +20,7 @@ game:
     card:
       informations: Information
       reviews: Reviews
-  new:
+  edit:
     title:
       add: Add a new game
       update: 'Edit {name}'

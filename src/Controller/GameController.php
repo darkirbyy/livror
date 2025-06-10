@@ -5,21 +5,13 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Entity\Main\Game;
-use App\Enum\SteamSearchStatusEnum;
-use App\Enum\TypePriceEnum;
 use App\Form\GameType;
 use App\Repository\GameRepository;
-use App\Service\SteamSearchService;
-use Doctrine\ORM\EntityManagerInterface;
+use App\Service\FormManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\ExpressionLanguage\Expression;
-use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Component\Security\Http\Attribute\IsCsrfTokenValid;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 #[Route('/game', name: 'game_')]
 class GameController extends AbstractController
@@ -56,81 +48,56 @@ class GameController extends AbstractController
         return $this->render('game/index.html.twig', $data);
     }
 
-    // Edit or add new game
+    // Add new game
     #[Route('/new', name: 'new', methods: ['GET', 'POST'])]
-    #[Route('/{id}/edit', name: 'edit', methods: ['GET', 'POST'], requirements: ['id' => '\d+'])]
-    public function new(?Game $game, Request $request, EntityManagerInterface $em, TranslatorInterface $trans, SteamSearchService $steamSearch): Response
+    public function new(Request $request, FormManager $fm): Response
     {
-        // Handling route: creating new game or updating existing one
-        $isNewGame = str_ends_with($request->attributes->get('_route'), 'new');
-        if (empty($game)) {
-            if ($isNewGame) {
-                $game = new Game();
-            } else {
-                throw new NotFoundHttpException(Game::class . ' object not found.');
-            }
-        }
-
-        // Handling steam search with steamId query parameter
+        $game = new Game();
         $steamId = $request->query->get('steamId');
-        $steamIdError = null;
-        if (null != $steamId) {
-            if (!\ctype_digit($steamId)) {
-                $steamIdError = $trans->trans('game.error.steamId.invalid', [], 'validators');
-            } else {
-                $steamSearch->fetchSteamGame((int) $steamId);
-                if (SteamSearchStatusEnum::OK === $steamSearch->getStatus()) {
-                    $game = $steamSearch->fillGame($game);
-                    $this->addFlash('success', ['message' => 'game.new.flash.steamSearch.success']);
-                } elseif (SteamSearchStatusEnum::NOT_FOUND === $steamSearch->getStatus()) {
-                    $steamIdError = $trans->trans('game.error.steamId.notFound', [], 'validators');
-                } else {
-                    $this->addFlash('danger', ['message' => 'game.new.flash.steamSearch.fail']);
-                }
-            }
-        }
 
-        // Create the form and fill the non-mapped typePrice field depending on the value of fullPrice
-        $form = $this->createForm(GameType::class, $game, ['currency' => $this->getParameter('app.currency')]);
-        $typePrice = TypePriceEnum::fromPrice($game->getFullPrice());
-        $form->get('typePrice')->setData($typePrice);
-        TypePriceEnum::PAYING !== $typePrice ? $form->get('fullPrice')->setData(null) : null;
-
-        // Fill the form with the request data and add custom steam error if needed
+        $form = $this->createForm(GameType::class, $game, ['steamId' => $steamId]);
         $form->handleRequest($request);
-        null != $steamIdError ? $form->get('steamId')->addError(new FormError($steamIdError)) : null;
 
-        // If the form is submitted and valid : recalculate the fullPrice from the non-mapped typePrice field, then persist and send flash
-        if ($form->isSubmitted() && $form->isValid()) {
-            $game->setFullPrice(TypePriceEnum::toPrice($form->get('typePrice')->getData(), $game->getFullPrice()));
-
-            $em->persist($game);
-            $em->flush();
-
-            if ($isNewGame) {
-                $this->addFlash('success', ['message' => 'game.index.flash.newGame', 'params' => ['name' => $game->getName()]]);
-            } else {
-                $this->addFlash('success', ['message' => 'game.index.flash.updateGame', 'params' => ['name' => $game->getName()]]);
-            }
-
+        $flashSuccess = ['message' => 'game.index.flash.newGame', 'params' => ['name' => $game->getName()]];
+        if ($fm->validateAndPersist($form, $game, $flashSuccess)) {
             return $this->redirectToRoute('game_index', [], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->render('game/new.html.twig', [
+        return $this->render('game/edit.html.twig', [
+            'game' => $game,
+            'form' => $form,
+        ]);
+    }
+
+    // Edit an existing game
+    #[Route('/{id}/edit', name: 'edit', methods: ['GET', 'POST'], requirements: ['id' => '\d+'])]
+    public function edit(Game $game, Request $request, FormManager $fm): Response
+    {
+        $steamId = $request->query->get('steamId');
+
+        $form = $this->createForm(GameType::class, $game, ['steamId' => $steamId]);
+        $form->handleRequest($request);
+
+        $flashSuccess = ['message' => 'game.index.flash.updateGame', 'params' => ['name' => $game->getName()]];
+        if ($fm->validateAndPersist($form, $game, $flashSuccess)) {
+            return $this->redirectToRoute('game_index', [], Response::HTTP_SEE_OTHER);
+        }
+
+        return $this->render('game/edit.html.twig', [
+            'game' => $game,
             'form' => $form,
         ]);
     }
 
     // Delete a game
-    #[IsCsrfTokenValid(new Expression('"delete-" ~ args["game"].getId()'), tokenKey: 'delete_token')]
-    #[Route('/{id}/delete', name: 'delete', methods: ['POST'], requirements: ['id' => '\d+'])]
-    public function delete(Game $game, EntityManagerInterface $em): Response
+    #[Route('/{id}/delete', name: 'delete', methods: ['GET', 'POST'], requirements: ['id' => '\d+'])]
+    public function delete(Game $game, FormManager $fm): Response
     {
-        $em->remove($game);
-        $em->flush();
+        $flashSuccess = ['message' => 'game.index.flash.deleteGame', 'params' => ['name' => $game->getName()]];
+        if ($fm->checkTokenAndRemove('delete-' . $game->getId(), $game, $flashSuccess)) {
+            return $this->redirectToRoute('game_index', [], Response::HTTP_SEE_OTHER);
+        }
 
-        $this->addFlash('success', ['message' => 'game.index.flash.deleteGame', 'params' => ['name' => $game->getName()]]);
-
-        return $this->redirectToRoute('game_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('game_edit', ['id' => $game->getId()], Response::HTTP_SEE_OTHER);
     }
 }

@@ -10,6 +10,9 @@ parameters:
     app.locale: '%env(string:APP_LOCALE)%'
     app.request_timeout: '%env(int:APP_REQUEST_TIMEOUT)%'
     app.max_results: '%env(int:APP_MAX_RESULTS)%'
+    app.html_validation: '%env(bool:APP_HTML_VALIDATION)%'
+    hub.base_url: '%env(string:HUB_BASE_URL)%'
+    hub.account_route: '%env(string:HUB_ACCOUNT_ROUTE)%'
 
 imports:
     - { resource: 'version.yaml' }
@@ -33,18 +36,23 @@ services:
         resource: '../src/Form'
         tags: ['form.type']
         arguments:
-            $htmlValidation: '%env(bool:APP_HTML_VALIDATION)%'
+            $htmlValidation: '%app.html_validation%'
+
+    App\Form\GameType:
+        arguments:
+            $htmlValidation: '%app.html_validation%'
+            $currency: '%app.currency%'
 
     App\Service\SteamSearchService:
         arguments:
-            $timeout: '%env(APP_REQUEST_TIMEOUT)%'
-            $locale: '%env(APP_LOCALE)%'
-            $currency: '%env(APP_CURRENCY)%'
+            $timeout: '%app.request_timeout%'
+            $locale: '%app.locale%'
+            $currency: '%app.currency%'
 
     App\Service\HubUrlGenerator:
         arguments:
-            $hubBaseUrl: '%env(HUB_BASE_URL)%'
-            $hubAccountRoute: '%env(HUB_ACCOUNT_ROUTE)%'
+            $hubBaseUrl: '%hub.base_url%'
+            $hubAccountRoute: '%hub.account_route%'
 
 when@test: &test
     services:
