@@ -1,0 +1,131 @@
+{% extends 'base.html.twig' %}
+
+{# the game_id set if it's EDIT mode or NEW mode #}
+{% set review_id = app.request.attributes.get('id') %}
+
+{% if review_id is not null %}
+  {# {% set game_name = form.vars.value.name %}
+  {% set title = 'game.new.title.update'|trans({ '{name}': game_name }) %} #}
+  {% set submitButton = 'form.button.update' %}
+{% else %}
+  {# {% set title = 'game.new.title.add'|trans %} #}
+  {% set submitButton = 'form.button.add' %}
+{% endif %}
+
+{% block main %}
+  {# Modal to confirm delete, if in EDIT mode #}
+  {% if review_id is not null %}
+    <div class="modal fade" id="delete-modal" tabindex="-1" aria-labelledby="delete-modal-label" aria-hidden="true" role="dialog" loading="lazy">
+      <div class="modal-dialog modal-dialog-centered modal-fullscreen-sm-down">
+        <div class="modal-content">
+          {# Header with title and dismiss button #}
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="delete-modal-label">
+              {{ 'modal.title.delete'|trans }}
+            </h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ 'form.button.close'|trans }}"></button>
+          </div>
+
+          {# Body with message #}
+          <div class="modal-body">
+            {{ 'game.new.modalDeleteBody'|trans({ '{name}': game_name })|raw }}
+          </div>
+
+          {# Footer with cancel or confirm buttons #}
+          <div class="modal-footer">
+            <form action="{{ path('game_delete', { id: review_id }) }}" method="post">
+              <button type="submit" class="btn btn-danger">
+                <span class="bi bi-trash-fill me-1"></span>
+                {{ 'form.button.delete'|trans }}
+              </button>
+              <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">{{ 'form.button.cancel'|trans }}</button>
+              <input type="hidden" name="delete_token" value="{{ csrf_token('delete-' ~ game_id) }}" />
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+
+  {# Actual content with flashes and form #}
+  <section>
+    <div class="container">
+      <div class="row">
+        <div class="col-10 offset-1 col-lg-8 offset-lg-2">
+          {# Insert the flashes in the same col size as the form #}
+          {{ block('flash', 'theme/flash.html.twig') }}
+
+          {# Form #}
+          {{ form_start(form, { attr: { action: path(app.current_route, { id: game_id }) } }) }}
+          <div class="row" {{ stimulus_controller('steam-search', { url: path(app.current_route, { id: game_id }), lazy: false }) }}>
+            {# Field to write the steam ID and press the search button #}
+            <div class="col app-form-row">
+              {{ form_label(form.steamId, 'game.label.steamId') }}
+              {{ form_help(form.steamId, { help_html: true, help: 'game.help.steamId' }) }}
+              <div class="input-group">
+                {{ form_widget(form.steamId, { attr: { 'data-steam-search-target': 'input' } }) }}
+                <button data-steam-search-target="button" class="btn btn-outline-secondary" aria-label="{{ 'form.button.search'|trans }}">
+                  <span data-steam-search-target="remove" class="bi bi-steam"></span>
+                  <span data-steam-search-target="spinner"></span>
+                  <span class="d-none d-sm-inline ms-sm-1">{{ 'form.button.search'|trans }}</span>
+                </button>
+              </div>
+              {{ form_errors(form.steamId) }}
+            </div>
+          </div>
+
+          {# Fields name and releaseYear next to each other on large screen #}
+          <div class="row">
+            <div class="col-12 col-md-8">
+              {{ form_row(form.name, { label: 'game.label.name' }) }}
+            </div>
+            <div class="col-12 col-md-4">
+              {{ form_row(form.releaseYear, { label: 'game.label.releaseYear' }) }}
+            </div>
+          </div>
+
+          {# Radio button to choose the type of price, and the price input field, next to each other on large screen #}
+          <div class="row align-items-end" {{ stimulus_controller('type-price') }}>
+            <div class="col-12 col-sm-auto pe-sm-0">
+              {{
+                form_row(
+                  form.typePrice,
+                  { attr: { 'data-type-price-target': 'choices' }, label: 'game.label.fullPrice', label_attr: { class: 'radio-inline', id: 'fullPriceLabel' } },
+                )
+              }}
+            </div>
+            <div class="col-12 col-sm ps-sm-0">
+              {{ form_row(form.fullPrice, { label: false, attr: { 'data-type-price-target': 'input', 'aria-labelledby': 'fullPriceLabel' } }) }}
+            </div>
+          </div>
+
+          {# All other fields fill the entire col #}
+          {{ form_row(form.developers, { label: 'game.label.developers', help: 'game.help.commaSeparated' }) }}
+          {{ form_row(form.genres, { label: 'game.label.genres', help: 'game.help.commaSeparated' }) }}
+          {{ form_row(form.description, { label: 'game.label.description' }) }}
+          {{ form_row(form.imgUrl, { label: 'game.label.imgUrl' }) }}
+
+          {# Buttons to submit, cancel or open the delete modal on right/left for large screen / top/bottom for small screen #}
+          <div class="row">
+            {# Left part : submit and cancel #}
+            <div class="col-sm-8 text-sm-start text-center">
+              {{ form_widget(form.submit, { label: submitButton }) }}
+              <a class="btn btn-outline-secondary ms-2" href="{{ path('game_index') }}">{{ 'form.button.cancel'|trans }}</a>
+            </div>
+            {# Right part (if in EDIT mode) : open delete modal #}
+            <div class="col-sm-4 text-sm-end text-center mt-2 mt-sm-0">
+              {% if game_id is not null %}
+                <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#delete-modal">
+                  <span class="bi bi-trash-fill me-1"></span>
+                  {{ 'form.button.delete'|trans }}
+                </button>
+              {% endif %}
+            </div>
+          </div>
+          {{ form_rest(form) }}
+          {{ form_end(form) }}
+        </div>
+      </div>
+    </div>
+  </section>
+{% endblock %}

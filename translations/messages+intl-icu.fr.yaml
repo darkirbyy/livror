@@ -1,4 +1,8 @@
-default:
+##################################
+# Page-specific translations #####
+##################################
+
+home:
   index:
     title: Accueil
 
@@ -26,6 +30,10 @@ game:
         fail: Une erreur s'est produite en se connectant à Steam. Réessayez plus tard.
     modalDeleteBody: 'Vous êtes sur le point de supprimer <span class="fw-bold">définitivement</span> {name}, ainsi que tous les avis associés. Êtes-vous sûr ?'
 
+##################################
+# Common translations ############
+##################################
+
 form:
   button:
     add: Ajouter
@@ -34,6 +42,12 @@ form:
     search: Chercher
     cancel: Annuler
     close: Fermer
+  flash:
+    invalidCsrf: Le jeton CSRF est invalide.
+    foreignKey: Impossible de supprimer cet élément tant que d'autres éléments y font référence.
+    notNull: Impossible d'ajouter ou de modifier cet élément car certains champs requis sont vides.
+    unique: Impossible d'ajouter ou de modifier cet élément car certains champs doivent être uniques.
+    other: Erreur lors de l'ajout, de la modification ou de la suppression de cet élément.
 
 modal:
   title:

@@ -6,7 +6,6 @@ namespace App\Service;
 
 use App\Entity\Main\Game;
 use App\Enum\SteamSearchStatusEnum;
-use Psr\Log\LoggerInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class SteamSearchService
@@ -15,8 +14,13 @@ class SteamSearchService
     private ?int $id = null;
     private array $data = [];
 
-    public function __construct(private HttpClientInterface $client, private LoggerInterface $logger, public int $timeout, public string $locale, public string $currency)
-    {
+    public function __construct(
+        private ExceptionManager $exceptionManager,
+        private HttpClientInterface $client,
+        public int $timeout,
+        public string $locale,
+        public string $currency,
+    ) {
     }
 
     public function fetchSteamGame(int $id): void
@@ -51,7 +55,10 @@ class SteamSearchService
             $this->data = $content[$id]['data'];
         } catch (\Exception $e) {
             // Catch any other kind of errors
-            $this->logger->warning('Error while making steam API call with steamId: {steamId}. Error: {error}', ['steamId' => $this->id, 'error' => $e->getMessage()]);
+            $this->exceptionManager->handle('warning', 'Error while making steam API call with steamId: {steamId}. Error: {error}', [
+                'steamId' => $this->id,
+                'error' => $e->getMessage(),
+            ]);
             $this->status = SteamSearchStatusEnum::ERROR;
         }
     }

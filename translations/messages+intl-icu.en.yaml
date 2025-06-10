@@ -1,4 +1,8 @@
-default:
+##################################
+# Page-specific translations #####
+##################################
+
+home:
   index:
     title: Home
 
@@ -26,6 +30,10 @@ game:
         fail: An error occurred while connecting to Steam. Please try again later.
     modalDeleteBody: 'You are about to permanently <span class="fw-bold">delete</span> {name}, along with all associated reviews. Are you sure?'
 
+##################################
+# Common translations ############
+##################################
+
 form:
   button:
     add: Add
@@ -34,6 +42,12 @@ form:
     search: Search
     cancel: Cancel
     close: Close
+  flash:
+    invalidCsrf: The CSRF token is invalid.
+    foreignKey: Impossible to delete this element as other elements are referencing it.
+    notNull: Impossible to add or update this element because some fields must are empty.
+    unique: Impossible to add or update this element because some fields must be unique.
+    other: Error when adding, updating or deleting this element.
 
 modal:
   title:
