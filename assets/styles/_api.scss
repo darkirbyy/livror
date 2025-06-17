@@ -8,6 +8,12 @@
 $utilities: map.merge(
   $utilities,
   (
+    'height': map.merge(
+        map.get($utilities, 'height'),
+        (
+          responsive: true,
+        )
+      ),
     'border': map.merge(
         map.get($utilities, 'border'),
         (

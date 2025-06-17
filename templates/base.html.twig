@@ -3,8 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="turbo-refresh-method" content="morph" />
-    <meta name="turbo-refresh-scroll" content="preserve" />
+    {# <meta name="turbo-refresh-method" content="morph" />
+    <meta name="turbo-refresh-scroll" content="preserve" /> #}
     <title>
       {{ title ~ ' - ' ~ ('layout.name'|trans) }}
     </title>
@@ -81,7 +81,7 @@
                   <img src="{{ HubUrlGenerator.generateRoot(app.user.avatarPath) }}" class="img-fluid ms-1 app-avatar-navbar" alt="{{ 'aria.avatar'|trans }}" />
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end" role="menu">
-                  <li><a class="dropdown-item" role="menuitem" href="#">{{ 'layout.navbar.account.myReviews'|trans }}</a></li>
+                  <li><a class="dropdown-item" role="menuitem" href="{{ path('review_index') }}">{{ 'layout.navbar.account.myReviews'|trans }}</a></li>
                   <li><hr class="dropdown-divider" /></li>
                   <li>
                     <a class="dropdown-item" role="menuitem" href="{{ HubUrlGenerator.generateAccount('') }}" data-turbo-prefetch="false">

@@ -19,3 +19,16 @@ game:
       notValidExtension: Les extensions autorisées sont jpg, jpeg, png, gif, webp.
       notReachable: L'URL n'est pas joignable ou n'existe pas.
       notAnImage: L'URL n'est pas une image.
+
+review:
+  label:
+    dateAdd: Date d'ajout
+    comment: Commentaire
+    firstPlay: Premier lancement
+    hourSpend: Heures de jeu
+    mark: Saucisses
+    game: Jeu
+  help:
+  error:
+    game:
+      notUnique: Un avis existe déjà pour ce jeu.

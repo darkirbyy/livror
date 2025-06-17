@@ -1,8 +1,5 @@
 {% from 'game/index.html.twig' import get_path %}
 
-{# Uncomment to use lazy-loading with turbo-frame #}
-{# <turbo-frame id="content-{{searchParam.firstResult}}"> #}
-
 {% for game in games %}
   {# Fetch the data into a temp object to apply cutom formatting #}
   {% set gameData = {
@@ -119,18 +116,7 @@
 {% if hasMore %}
   <div class="text-center"
     {{ stimulus_controller('load-more', { url: get_path(searchParam.sortField, searchParam.sortOrder, searchParam.firstResult + env.app.max_results)|trim, lazy: true }) }}>
-    <button class="btn btn-outline-secondary" data-load-more-target="button remove">{{ 'game.index.button.showMore'|trans }}</button>
+    <button class="btn btn-outline-secondary" data-load-more-target="button remove">{{ 'form.button.showMore'|trans }}</button>
     <span class="fs-4 text-muted" data-load-more-target="spinner"></span>
   </div>
 {% endif %}
-
-{# Uncomment to use lazy-loading with turbo-frame #}
-{# {% if hasMore %}
-  <turbo-frame id="content-{{searchParam.firstResult + env.app.max_results}}" src="{{ get_path(searchParam.sortField,
-  searchParam.sortOrder, searchParam.firstResult + env.app.max_results)|trim }}" loading="lazy">
-    <div class="text-center fs-4 text-muted">
-      <span class="fa fa-spin fa-spinner"></span>
-    </div>
-  </turbo-frame>
-  {% endif %}
-</turbo-frame> #}

@@ -12,8 +12,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ReviewRepository::class)]
 #[ORM\HasLifecycleCallbacks]
-#[UniqueEntity(fields: ['userId', 'game'])]
 #[ORM\UniqueConstraint(fields: ['userId', 'game'])]
+#[UniqueEntity(fields: ['userId', 'game'], errorPath: 'game', message: 'review.error.game.notUnique')]
 class Review
 {
     // /////////////////////////////////////////////////////
@@ -43,7 +43,8 @@ class Review
     #[Assert\PositiveOrZero]
     private ?int $hourSpend = null;
 
-    #[ORM\Column(nullable: true)]
+    #[ORM\Column]
+    #[Assert\NotBlank]
     #[Assert\Range(min: 0, max: 6)]
     private ?int $mark = null;
 

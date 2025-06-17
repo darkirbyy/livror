@@ -90,11 +90,11 @@ class GameController extends AbstractController
     }
 
     // Delete a game
-    #[Route('/{id}/delete', name: 'delete', methods: ['GET', 'POST'], requirements: ['id' => '\d+'])]
+    #[Route('/{id}/delete', name: 'delete', methods: ['POST'], requirements: ['id' => '\d+'])]
     public function delete(Game $game, FormManager $fm): Response
     {
         $flashSuccess = ['message' => 'game.index.flash.deleteGame', 'params' => ['name' => $game->getName()]];
-        if ($fm->checkTokenAndRemove('delete-' . $game->getId(), $game, $flashSuccess)) {
+        if ($fm->checkTokenAndRemove('delete-game-' . $game->getId(), $game, $flashSuccess)) {
             return $this->redirectToRoute('game_index', [], Response::HTTP_SEE_OTHER);
         }
 

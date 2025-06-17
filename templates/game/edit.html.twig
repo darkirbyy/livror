@@ -35,7 +35,7 @@
                 {{ 'form.button.delete'|trans }}
               </button>
               <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">{{ 'form.button.cancel'|trans }}</button>
-              {% set token_id = 'delete-' ~ game.id %}
+              {% set token_id = 'delete-game-' ~ game.id %}
               <input type="hidden" name="{{ token_id ~ '_token' }}" value="{{ csrf_token(token_id) }}" />
             </form>
           </div>
@@ -53,7 +53,7 @@
           {{ block('flash', 'theme/flash.html.twig') }}
 
           {# Form #}
-          {{ form_start(form, { attr: { action: path(app.current_route, { id: game.id }) } }) }}
+          {{ form_start(form) }}
           <div class="row" {{ stimulus_controller('steam-search', { url: path(app.current_route, { id: game.id }), lazy: false }) }}>
             {# Field to write the steam ID and press the search button #}
             <div class="col app-form-row">

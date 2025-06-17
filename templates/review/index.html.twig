@@ -5,8 +5,8 @@
   {{ path(app.current_route, { sortField: sortField, sortOrder: sortOrder, firstResult: firstResult })|raw }}
 {% endmacro %}
 
-{% set title = 'game.index.title'|trans %}
-{% set sortFieldPossible = ['name', 'releaseYear'] %}
+{% set title = 'review.index.title'|trans %}
+{% set sortFieldPossible = ['dateAdd'] %}
 {% set sortOrderButton %}
   <a role="button" class="btn btn-outline-secondary app-btn-border-light" href="{{ _self.get_path(searchParam.sortField, searchParam.sortOrder == 'asc' ? 'desc' : 'asc', 0) }}">
     <span class="bi bi-arrow-{{ searchParam.sortOrder == 'asc' ? 'up' : 'down' }}"></span>
@@ -33,7 +33,7 @@
                 <a role="button"
                   class="btn btn-outline-secondary app-btn-border-light {{ searchParam.sortField == newSortField ? 'active' }}"
                   href="{{ _self.get_path(newSortField, searchParam.sortOrder, 0) }}">
-                  {{ ('game.label.' ~ newSortField)|trans({ }, 'validators') }}
+                  {{ ('review.label.' ~ newSortField)|trans({ }, 'validators') }}
                 </a>
               {% endfor %}
               {{ sortOrderButton }}
@@ -57,15 +57,15 @@
 
           {# Button to add a new game #}
           <div class="ms-2">
-            <a href="{{ path('game_new') }}" class="btn btn-primary" data-turbo-frame="_top">
+            <a href="{{ path('review_new') }}" class="btn btn-primary" data-turbo-frame="_top">
               <span class="bi bi-plus-square-fill me-md-1"></span>
-              <span class="d-none d-md-inline">{{ 'game.index.button.addGame'|trans }}</span>
+              <span class="d-none d-md-inline">{{ 'review.index.button.addReview'|trans }}</span>
             </a>
           </div>
         </div>
 
         {# Include the template to render the card of each game + show more button #}
-        {{ include('game/list.html.twig') }}
+        {{ include('review/list.html.twig') }}
       </turbo-frame>
     </div>
   </section>

@@ -10,8 +10,6 @@ game:
   index:
     title: Tous les jeux
     button:
-      sortBy: Trier par
-      showMore: Voir plus
       addGame: Ajouter un nouveau jeu
     flash:
       newGame: '{name} a été ajouté !'
@@ -42,6 +40,8 @@ form:
     search: Chercher
     cancel: Annuler
     close: Fermer
+    sortBy: Trier par
+    showMore: Voir plus
   flash:
     invalidCsrf: Le jeton CSRF est invalide.
     foreignKey: Impossible de supprimer cet élément tant que d'autres éléments y font référence.
