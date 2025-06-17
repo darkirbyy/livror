@@ -5,7 +5,10 @@ declare(strict_types=1);
 namespace App\Repository;
 
 use App\Entity\Main\Game;
+use App\Entity\Main\Review;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Query\Expr\Join;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
 class GameRepository extends ServiceEntityRepository
@@ -44,5 +47,15 @@ class GameRepository extends ServiceEntityRepository
 
         // Execute and fetch the query
         return $qb->getQuery()->getResult();
+    }
+
+    public function findNotCommented(int $userId): QueryBuilder
+    {
+        $qb = $this->createQueryBuilder('g');
+        $qb->leftJoin(Review::class, 'r', Join::WITH, 'r.game = g.id and r.userId = :userId')
+            ->where('r.id IS NULL')
+            ->setParameter('userId', $userId);
+
+        return $qb;
     }
 }

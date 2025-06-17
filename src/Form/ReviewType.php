@@ -6,8 +6,8 @@ namespace App\Form;
 
 use App\Entity\Main\Game;
 use App\Entity\Main\Review;
+use App\Repository\GameRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
-use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
@@ -20,10 +20,10 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ReviewType extends DefaultType
 {
-    // public function __construct(protected bool $htmlValidation, private Security $security)
-    // {
-    //     parent::__construct($htmlValidation);
-    // }
+    public function __construct(protected bool $htmlValidation, private GameRepository $gameRepo)
+    {
+        parent::__construct($htmlValidation);
+    }
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
@@ -31,6 +31,7 @@ class ReviewType extends DefaultType
             $builder->add('game', EntityType::class, [
                 'required' => true,
                 'class' => Game::class,
+                'query_builder' => $this->gameRepo->findNotCommented($options['userId']),
                 'choice_label' => fn (Game $game) => $game->getName(),
             ]);
         }
@@ -40,6 +41,7 @@ class ReviewType extends DefaultType
             ])
             ->add('firstPlay', DateType::class, [
                 'required' => false,
+                'widget' => 'single_text',
             ])
             ->add('comment', TextareaType::class, [
                 'required' => true,
@@ -57,7 +59,7 @@ class ReviewType extends DefaultType
                     '6' => 6,
                 ],
                 'label_attr' => [
-                    'class' => 'radio-inline',
+                    'class' => 'radio-inline py-0',
                 ],
                 'attr' => [
                     'class' => 'border rounded p-2',
@@ -67,6 +69,12 @@ class ReviewType extends DefaultType
                 'translation_domain' => 'messages',
             ]);
 
+        if (!empty($options['gameId'])) {
+            $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) use ($options) {
+                $review = $event->getData();
+                $review->setGame($this->gameRepo->find($options['gameId']));
+            });
+        }
         if ($options['newReview']) {
             $builder->addEventListener(FormEvents::SUBMIT, function (FormEvent $event) use ($options) {
                 $review = $event->getData();
@@ -79,8 +87,9 @@ class ReviewType extends DefaultType
     {
         parent::configureOptions($resolver);
 
-        $resolver->setRequired(['newReview', 'userId']);
+        $resolver->setRequired(['newReview', 'userId', 'gameId']);
         $resolver->setDefaults([
+            'gameId' => null,
             'data_class' => Review::class,
         ]);
     }

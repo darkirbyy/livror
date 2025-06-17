@@ -52,9 +52,9 @@
             </p>
             <div class="fst-italic fs-6 fw-light">
               {% set date_add = review.dateAdd|format_datetime('relative_medium', 'none') %}
-              {% set date_update = review.dateUpdate|format_datetime('relative_medium', 'none') %}écrit : {{ date_add }}
+              {% set date_update = review.dateUpdate|format_datetime('relative_medium', 'none') %}{{ 'review.index.cards.added'|trans }} : {{ date_add }}
               {% if date_add != date_update %}
-                (modifié : {{ date_update }})
+                ({{ 'review.index.cards.updated'|trans }} : {{ date_update }})
               {% endif %}
               <a class="fs-6 p-0 link-secondary" href="{{ path('review_edit', { id: review.id }) }}" data-turbo-frame="_top"><span class="bi bi-pen ps-1"></span></a>
             </div>
