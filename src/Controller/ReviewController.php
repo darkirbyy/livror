@@ -59,7 +59,7 @@ class ReviewController extends AbstractController
         $form = $this->createForm(ReviewType::class, $review, ['newReview' => true, 'userId' => $userId]);
         $form->handleRequest($request);
 
-        $flashSuccess = ['message' => 'review.index.flash.newReview', 'params' => ['gameName' => $review->getGame()?->getName()]];
+        $flashSuccess = ['message' => 'review.index.flash.newReview', 'params' => ['name' => $review->getGame()?->getName()]];
         if ($fm->validateAndPersist($form, $review, $flashSuccess)) {
             return $this->redirectToRoute('review_index', [], Response::HTTP_SEE_OTHER);
         }
@@ -82,7 +82,7 @@ class ReviewController extends AbstractController
         $form = $this->createForm(ReviewType::class, $review, ['newReview' => false, 'userId' => $userId]);
         $form->handleRequest($request);
 
-        $flashSuccess = ['message' => 'review.index.flash.updateReview', 'params' => ['gameName' => $review->getGame()->getName()]];
+        $flashSuccess = ['message' => 'review.index.flash.updateReview', 'params' => ['name' => $review->getGame()->getName()]];
         if ($fm->validateAndPersist($form, $review, $flashSuccess)) {
             return $this->redirectToRoute('review_index', [], Response::HTTP_SEE_OTHER);
         }
@@ -97,7 +97,7 @@ class ReviewController extends AbstractController
     #[Route('/{id}/delete', name: 'delete', methods: ['POST'], requirements: ['id' => '\d+'])]
     public function delete(Review $review, FormManager $fm): Response
     {
-        $flashSuccess = ['message' => 'review.index.flash.deleteReview', 'params' => ['gameName' => $review->getGame()->getName()]];
+        $flashSuccess = ['message' => 'review.index.flash.deleteReview', 'params' => ['name' => $review->getGame()->getName()]];
         if ($fm->checkTokenAndRemove('delete-review-' . $review->getId(), $review, $flashSuccess)) {
             return $this->redirectToRoute('review_index', [], Response::HTTP_SEE_OTHER);
         }

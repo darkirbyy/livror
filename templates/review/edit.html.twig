@@ -1,7 +1,7 @@
 {% extends 'base.html.twig' %}
 
 {% if review.id is not null %}
-  {% set title = 'review.edit.title.update'|trans({ '{gameName}': review.game.name }) %}
+  {% set title = 'review.edit.title.update'|trans({ '{name}': review.game.name }) %}
   {% set submitButton = 'form.button.update' %}
 {% else %}
   {% set title = 'review.edit.title.add'|trans %}
@@ -24,7 +24,7 @@
 
           {# Body with message #}
           <div class="modal-body">
-            {{ 'review.new.modalDeleteBody'|trans({ '{name}': review.game.name })|raw }}
+            {{ 'review.edit.modalDeleteBody'|trans({ '{name}': review.game.name })|raw }}
           </div>
 
           {# Footer with cancel or confirm buttons #}
@@ -65,8 +65,8 @@
               {{ form_row(form.hourSpend, { label: 'review.label.hourSpend' }) }}
             </div>
           </div>
-          {{ form_row(form.comment, { label: 'review.label.comment' }) }}
           {{ form_row(form.mark, { label: 'review.label.mark' }) }}
+          {{ form_row(form.comment, { label: 'review.label.comment' }) }}
 
           {# Buttons to submit, cancel or open the delete modal on right/left for large screen / top/bottom for small screen #}
           <div class="row">

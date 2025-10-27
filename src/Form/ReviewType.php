@@ -43,9 +43,6 @@ class ReviewType extends DefaultType
                 'required' => false,
                 'widget' => 'single_text',
             ])
-            ->add('comment', TextareaType::class, [
-                'required' => true,
-            ])
             ->add('mark', ChoiceType::class, [
                 'required' => true,
                 'expanded' => true,
@@ -64,6 +61,9 @@ class ReviewType extends DefaultType
                 'attr' => [
                     'class' => 'border rounded p-2',
                 ],
+            ])
+            ->add('comment', TextareaType::class, [
+                'required' => true,
             ])
             ->add('submit', SubmitType::class, [
                 'translation_domain' => 'messages',

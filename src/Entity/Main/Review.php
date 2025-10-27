@@ -119,12 +119,12 @@ class Review
         return $this;
     }
 
-    public function getFirstPlay(): ?string
+    public function getFirstPlay(): ?\DateTimeInterface
     {
         return $this->firstPlay;
     }
 
-    public function setFirstPlay(?string $firstPlay): static
+    public function setFirstPlay(?\DateTimeInterface $firstPlay): static
     {
         $this->firstPlay = $firstPlay;
 

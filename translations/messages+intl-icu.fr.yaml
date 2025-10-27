@@ -28,6 +28,26 @@ game:
         fail: Une erreur s'est produite en se connectant à Steam. Réessayez plus tard.
     modalDeleteBody: 'Vous êtes sur le point de supprimer <span class="fw-bold">définitivement</span> {name}, ainsi que tous les avis associés. Êtes-vous sûr ?'
 
+review:
+  index:
+    title: Mes avis
+    button:
+      addReview: Ecrire un nouvel avis
+    flash:
+      newReview: 'Votre avis sur {name} a été ajouté !'
+      updateReview: 'Votre avis sur {name} a été mise à jour !'
+      deleteReview: 'Votre avis sur  {name} a été supprimé !'
+    card:
+      comment: Commentaire
+      stats: Notation
+      added: Ecrit
+      updated: modifié
+  edit:
+    title:
+      add:  Ecrire un nouvel avis
+      update: 'Modifier votre avis sur {name}'
+    modalDeleteBody: 'Vous êtes sur le point de supprimer <span class="fw-bold">définitivement</span> votre avis sur {name}. Êtes-vous sûr ?'
+
 ##################################
 # Common translations ############
 ##################################

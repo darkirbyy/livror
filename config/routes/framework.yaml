@@ -1,4 +1,15 @@
 when@dev:
     _errors:
-        resource: '@FrameworkBundle/Resources/config/routing/errors.xml'
-        prefix: /_error
+        resource: '@FrameworkBundle/Resources/config/routing/errors.php'
+        type:     php
+        prefix:   /_error
+
+    web_profiler_wdt:
+        resource: '@WebProfilerBundle/Resources/config/routing/wdt.php'
+        type:     php
+        prefix: /_wdt
+
+    web_profiler_profiler:
+        resource: '@WebProfilerBundle/Resources/config/routing/profiler.php'
+        type:     php
+        prefix: /_profiler

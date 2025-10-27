@@ -12,7 +12,7 @@ use Symfony\Component\Security\Http\EntryPoint\AuthenticationEntryPointInterface
 
 class AccountEntryPoint implements AuthenticationEntryPointInterface
 {
-    public function __construct(private HubUrlGenerator $HubUrlGenerator)
+    public function __construct(private HubUrlGenerator $hubUrlGenerator)
     {
     }
 
@@ -20,6 +20,6 @@ class AccountEntryPoint implements AuthenticationEntryPointInterface
     {
         $request->getSession()->set('_login_target_path', $request->getUri());
 
-        return new RedirectResponse($this->HubUrlGenerator->generateAccount('/login'));
+        return new RedirectResponse($this->hubUrlGenerator->generateAccount('/login'));
     }
 }

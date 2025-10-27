@@ -1,7 +1,7 @@
 {% from 'game/index.html.twig' import get_path %}
 
 {% for review in reviews %}
-  {% set reviewData = { mark: review.mark, firstPlay: review.firstPlay, hourSpend: review.hourSpend } %}
+  {% set reviewData = { mark: review.mark, firstPlay: review.firstPlay|format_datetime('short', 'none'), hourSpend: review.hourSpend } %}
   {# Each game is displayed on a "card" containing all the data #}
   <div class="card-max-auto card-max-md-none mx-auto my-3 rounded-3 border overflow-hidden">
     {# Card title bar with the the title on one side, and 3 infos on the other side (or on top of each other on small screen) #}
@@ -52,9 +52,11 @@
             </p>
             <div class="fst-italic fs-6 fw-light">
               {% set date_add = review.dateAdd|format_datetime('relative_medium', 'none') %}
-              {% set date_update = review.dateUpdate|format_datetime('relative_medium', 'none') %}{{ 'review.index.cards.added'|trans }} : {{ date_add }}
+              {% set date_update = review.dateUpdate|format_datetime('relative_medium', 'none') %}
+
+              {{ 'review.index.card.added'|trans }} : {{ date_add }}
               {% if date_add != date_update %}
-                ({{ 'review.index.cards.updated'|trans }} : {{ date_update }})
+                ({{ 'review.index.card.updated'|trans }} : {{ date_update }})
               {% endif %}
               <a class="fs-6 p-0 link-secondary" href="{{ path('review_edit', { id: review.id }) }}" data-turbo-frame="_top"><span class="bi bi-pen ps-1"></span></a>
             </div>

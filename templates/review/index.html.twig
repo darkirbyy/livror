@@ -47,7 +47,7 @@
               <select class="form-select" id="sortFieldOptions" {{ stimulus_controller('sort-select') }}>
                 {% for newSortField in sortFieldPossible %}
                   <option value="{{ _self.get_path(newSortField, searchParam.sortOrder, 0) }}" {{ searchParam.sortField == newSortField ? 'selected="selected"' }}>
-                    {{ ('game.label.' ~ newSortField)|trans({ }, 'validators') }}
+                    {{ ('review.label.' ~ newSortField)|trans({ }, 'validators') }}
                   </option>
                 {% endfor %}
               </select>
