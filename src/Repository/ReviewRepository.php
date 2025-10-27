@@ -6,6 +6,7 @@ namespace App\Repository;
 
 use App\Entity\Main\Review;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\DBAL\ParameterType;
 use Doctrine\Persistence\ManagerRegistry;
 
 class ReviewRepository extends ServiceEntityRepository
@@ -15,7 +16,7 @@ class ReviewRepository extends ServiceEntityRepository
         parent::__construct($registry, Review::class);
     }
 
-    public function findSortLimit(string $sortField, string $sortOrder, int $firstResult, int $maxResults): array
+    public function findSortLimit(int $userId, string $sortField, string $sortOrder, int $firstResult, int $maxResults): array
     {
         // Validate the input parameters, as they come from the user
         $allowedSortFields = ['id', 'dateAdd'];
@@ -38,6 +39,7 @@ class ReviewRepository extends ServiceEntityRepository
 
         // Build the query (fetch one more result to determine is there are more to fetch)
         $qb = $this->createQueryBuilder('r');
+        $qb->where('r.userId = :userId')->setParameter('userId', $userId, ParameterType::INTEGER);
         $qb->orderBy('r.' . $sortField, strtoupper($sortOrder))
             ->setFirstResult($firstResult)
             ->setMaxResults($maxResults + 1);

@@ -21,6 +21,9 @@ class ReviewController extends AbstractController
     #[Route('', name: 'index', methods: ['GET'])]
     public function index(ReviewRepository $reviewRepo, Request $request): Response
     {
+        // Retrieve the connected user id
+        $userId = $this->getUser()->getId();
+
         // Parse all the query parameters
         $sortField = $request->query->getString('sortField', 'dateAdd');
         $sortOrder = $request->query->getString('sortOrder', 'desc');
@@ -28,7 +31,7 @@ class ReviewController extends AbstractController
         $maxResults = $this->getParameter('app.max_results');
 
         // Make the database query and get the corresponding reviews
-        $reviews = $reviewRepo->findSortLimit($sortField, $sortOrder, $firstResult, $maxResults);
+        $reviews = $reviewRepo->findSortLimit($userId, $sortField, $sortOrder, $firstResult, $maxResults);
 
         // Prepare the data for the twig renderer
         $data = [

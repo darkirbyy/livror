@@ -21,13 +21,13 @@ class GameRepository extends ServiceEntityRepository
     public function findSortLimit(string $sortField, string $sortOrder, int $firstResult, int $maxResults): array
     {
         // Validate the input parameters, as they come from the user
-        $allowedSortFields = ['id', 'name', 'releaseYear'];
-        if (!in_array($sortField, $allowedSortFields)) {
+        $allowedSortFields = ['id' => 'g.id', 'name' => 'g.name', 'avgMark' => 'AVG(r.mark)', 'totHourSpend' => 'SUM(r.hourSpend)', 'minFirstPlay' => 'MIN(r.firstPlay)'];
+        if (!array_key_exists($sortField, $allowedSortFields)) {
             throw new \InvalidArgumentException('Invalid field for sorting');
         }
 
-        $allowedSortOrder = ['asc', 'desc'];
-        if (!in_array($sortOrder, $allowedSortOrder)) {
+        $allowedSortOrders = ['asc' => 'ASC', 'desc' => 'DESC'];
+        if (!array_key_exists($sortOrder, $allowedSortOrders)) {
             throw new \InvalidArgumentException('Invalid order for sorting');
         }
 
@@ -41,7 +41,11 @@ class GameRepository extends ServiceEntityRepository
 
         // Build the query (fetch one more result to determine is there are more to fetch)
         $qb = $this->createQueryBuilder('g');
-        $qb->orderBy('g.' . $sortField, strtoupper($sortOrder))
+        $qb->leftJoin('g.reviews', 'r')
+            ->addSelect()
+            ->select('NEW App\Dto\Main\GameIndex(g, AVG(r.mark), SUM(r.hourSpend), MIN(r.firstPlay))')
+            ->groupBy('g.id')
+            ->orderBy($allowedSortFields[$sortField], $allowedSortOrders[$sortOrder])
             ->setFirstResult($firstResult)
             ->setMaxResults($maxResults + 1);
 
@@ -54,7 +58,8 @@ class GameRepository extends ServiceEntityRepository
         $qb = $this->createQueryBuilder('g');
         $qb->leftJoin(Review::class, 'r', Join::WITH, 'r.game = g.id and r.userId = :userId')
             ->where('r.id IS NULL')
-            ->setParameter('userId', $userId);
+            ->setParameter('userId', $userId)
+            ->orderBy('g.name', 'ASC');
 
         return $qb;
     }

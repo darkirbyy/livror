@@ -27,12 +27,12 @@ class GameController extends AbstractController
         $maxResults = $this->getParameter('app.max_results');
 
         // Make the database query and get the corresponding games
-        $games = $gameRepo->findSortLimit($sortField, $sortOrder, $firstResult, $maxResults);
+        $gamesIndex = $gameRepo->findSortLimit($sortField, $sortOrder, $firstResult, $maxResults);
 
         // Prepare the data for the twig renderer
         $data = [
-            'games' => array_slice($games, 0, $maxResults), // remove on result as we have fetched one more that configured
-            'hasMore' => count($games) > $maxResults, // determine if there is more games to fetch
+            'gamesIndex' => array_slice($gamesIndex, 0, $maxResults), // remove on result as we have fetched one more that configured
+            'hasMore' => count($gamesIndex) > $maxResults, // determine if there is more games to fetch
             'searchParam' => [
                 'sortField' => $sortField,
                 'sortOrder' => $sortOrder,

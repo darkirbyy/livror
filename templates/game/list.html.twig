@@ -1,7 +1,8 @@
 {% from 'game/index.html.twig' import get_path %}
 
-{% for game in games %}
+{% for gameIndex in gamesIndex %}
   {# Fetch the data into a temp object to apply cutom formatting #}
+  {% set game = gameIndex.game %}
   {% set gameData = {
     releaseYear: game.releaseYear,
     fullPrice: game.fullPrice > 0
@@ -27,18 +28,22 @@
       </div>
       {# 3 piece of information : player who have written a review, avg hour spent, avg mark #}
       <div class="col-12 d-flex align-items-center col-md-auto">
-        <div class="flex-even-1 py-1 px-2 py-md-2 d-flex justify-content-center align-items-center flex-even-md-0">
+        {# <div class="flex-even-1 py-1 px-2 py-md-2 d-flex justify-content-center align-items-center flex-even-md-0">
           <img src=" {{ asset('build/bibi.jpg') }}" class="rounded-circle mx-1 app-avatar-card" alt="TODO" />
           <img src=" {{ asset('build/bibi.jpg') }}" class="rounded-circle mx-1 app-avatar-card" alt="TODO" />
           <img src=" {{ asset('build/bibi.jpg') }}" class="rounded-circle mx-1 app-avatar-card" alt="TODO" />
           <img src=" {{ asset('build/bibi.jpg') }}" class="rounded-circle mx-1 app-avatar-card" alt="TODO" />
+        </div> #}
+        <div class="flex-even-1 py-1 px-2 py-md-2 border-start flex-even-md-0">
+          <span class="fa-regular fa-star fa-sm"></span> {{ gameIndex.avgMark is not empty ? gameIndex.avgMark : '-' }}
         </div>
         <div class="flex-even-1 py-1 px-2 py-md-2 border-start flex-even-md-0">
-          1500
           <span class="fa-regular fa-hourglass-half fa-sm"></span>
+          {{ gameIndex.totHourSpend is not empty ? gameIndex.totHourSpend ~ 'h' : '-' }}
         </div>
         <div class="flex-even-1 py-1 px-2 py-md-2 border-start flex-even-md-0">
-          6 🌭
+          <span class="fa-regular fa-calendar-days fa-sm"></span>
+          {{ gameIndex.minFirstPlay is not empty ? gameIndex.minFirstPlay|format_datetime('short', 'none') : '-' }}
         </div>
       </div>
     </div>

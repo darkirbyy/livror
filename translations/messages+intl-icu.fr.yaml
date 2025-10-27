@@ -18,6 +18,11 @@ game:
     card:
       informations: Informations
       reviews: Avis
+    sort:
+      name: Nom
+      avgMark: Saucisses
+      totHourSpend: Heures de jeu
+      minFirstPlay: Premier lancement
   edit:
     title:
       add: Ajouter un nouveau jeu
