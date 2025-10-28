@@ -22,7 +22,7 @@ game:
       name: Nom
       avgMark: Saucisses
       totHourSpend: Heures de jeu
-      minFirstPlay: Premier lancement
+      minFirstPlay: Lancement
   edit:
     title:
       add: Ajouter un nouveau jeu
@@ -37,7 +37,7 @@ review:
   index:
     title: Mes avis
     button:
-      addReview: Ecrire un nouvel avis
+      addReview: Ajouter un avis
     flash:
       newReview: 'Votre avis sur {name} a été ajouté !'
       updateReview: 'Votre avis sur {name} a été mise à jour !'
@@ -47,9 +47,14 @@ review:
       stats: Notation
       added: Ecrit
       updated: modifié
+    sort:
+      name: Nom
+      mark: Saucisses
+      hourSpend: Heures de jeu
+      firstPlay: Lancement
   edit:
     title:
-      add:  Ecrire un nouvel avis
+      add:  Ajouter un avis
       update: 'Modifier votre avis sur {name}'
     modalDeleteBody: 'Vous êtes sur le point de supprimer <span class="fw-bold">définitivement</span> votre avis sur {name}. Êtes-vous sûr ?'
 

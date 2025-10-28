@@ -6,12 +6,14 @@ namespace App\Controller;
 
 use App\Entity\Main\Review;
 use App\Form\ReviewType;
+use App\Repository\GameRepository;
 use App\Repository\ReviewRepository;
 use App\Service\FormManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Symfony\Component\HttpKernel\Exception\NotAcceptableHttpException;
 use Symfony\Component\Routing\Attribute\Route;
 
 #[Route('/review', name: 'review_')]
@@ -19,13 +21,13 @@ class ReviewController extends AbstractController
 {
     // List and find reviews
     #[Route('', name: 'index', methods: ['GET'])]
-    public function index(ReviewRepository $reviewRepo, Request $request): Response
+    public function index(GameRepository $gameRepo, ReviewRepository $reviewRepo, Request $request): Response
     {
         // Retrieve the connected user id
         $userId = $this->getUser()->getId();
 
         // Parse all the query parameters
-        $sortField = $request->query->getString('sortField', 'dateAdd');
+        $sortField = $request->query->getString('sortField', 'mark');
         $sortOrder = $request->query->getString('sortOrder', 'desc');
         $firstResult = $request->query->getInt('firstResult', 0);
         $maxResults = $this->getParameter('app.max_results');
@@ -42,6 +44,7 @@ class ReviewController extends AbstractController
                 'sortOrder' => $sortOrder,
                 'firstResult' => $firstResult,
             ],
+            'canAdd' => $gameRepo->countNotCommented($userId) > 0,
         ];
 
         // Render only the review list block when the request comes from the JavaScript, otherwise render the whole page
@@ -54,11 +57,14 @@ class ReviewController extends AbstractController
 
     // Add new review
     #[Route('/new', name: 'new', methods: ['GET', 'POST'])]
-    public function new(Request $request, FormManager $fm): Response
+    public function new(GameRepository $gameRepo, Request $request, FormManager $fm): Response
     {
         $userId = $this->getUser()->getId();
-        $review = new Review();
+        if (0 == $gameRepo->countNotCommented($userId)) {
+            throw new NotAcceptableHttpException();
+        }
 
+        $review = new Review();
         $form = $this->createForm(ReviewType::class, $review, ['newReview' => true, 'userId' => $userId]);
         $form->handleRequest($request);
 
@@ -100,6 +106,11 @@ class ReviewController extends AbstractController
     #[Route('/{id}/delete', name: 'delete', methods: ['POST'], requirements: ['id' => '\d+'])]
     public function delete(Review $review, FormManager $fm): Response
     {
+        $userId = $this->getUser()->getId();
+        if ($userId !== $review->getUserId()) {
+            throw new AccessDeniedHttpException();
+        }
+
         $flashSuccess = ['message' => 'review.index.flash.deleteReview', 'params' => ['name' => $review->getGame()->getName()]];
         if ($fm->checkTokenAndRemove('delete-review-' . $review->getId(), $review, $flashSuccess)) {
             return $this->redirectToRoute('review_index', [], Response::HTTP_SEE_OTHER);

@@ -6,7 +6,7 @@
 {% endmacro %}
 
 {% set title = 'review.index.title'|trans %}
-{% set sortFieldPossible = ['dateAdd'] %}
+{% set sortFieldPossible = ['name', 'mark', 'hourSpend', 'firstPlay'] %}
 {% set sortOrderButton %}
   <a role="button" class="btn btn-outline-secondary app-btn-border-light" href="{{ _self.get_path(searchParam.sortField, searchParam.sortOrder == 'asc' ? 'desc' : 'asc', 0) }}">
     <span class="bi bi-arrow-{{ searchParam.sortOrder == 'asc' ? 'up' : 'down' }}"></span>
@@ -33,7 +33,7 @@
                 <a role="button"
                   class="btn btn-outline-secondary app-btn-border-light {{ searchParam.sortField == newSortField ? 'active' }}"
                   href="{{ _self.get_path(newSortField, searchParam.sortOrder, 0) }}">
-                  {{ ('review.label.' ~ newSortField)|trans({ }, 'validators') }}
+                  {{ ('review.index.sort.' ~ newSortField)|trans }}
                 </a>
               {% endfor %}
               {{ sortOrderButton }}
@@ -47,7 +47,7 @@
               <select class="form-select" id="sortFieldOptions" {{ stimulus_controller('sort-select') }}>
                 {% for newSortField in sortFieldPossible %}
                   <option value="{{ _self.get_path(newSortField, searchParam.sortOrder, 0) }}" {{ searchParam.sortField == newSortField ? 'selected="selected"' }}>
-                    {{ ('review.label.' ~ newSortField)|trans({ }, 'validators') }}
+                    {{ ('review.index.sort.' ~ newSortField)|trans }}
                   </option>
                 {% endfor %}
               </select>
@@ -55,16 +55,16 @@
             </div>
           </div>
 
-          {# Button to add a new game #}
+          {# Button to add a new review #}
           <div class="ms-2">
-            <a href="{{ path('review_new') }}" class="btn btn-primary" data-turbo-frame="_top">
+            <a href="{{ path('review_new') }}" class="btn btn-primary {{ canAdd == false ? 'disabled' }}" data-turbo-frame="_top">
               <span class="bi bi-plus-square-fill me-md-1"></span>
               <span class="d-none d-md-inline">{{ 'review.index.button.addReview'|trans }}</span>
             </a>
           </div>
         </div>
 
-        {# Include the template to render the card of each game + show more button #}
+        {# Include the template to render the card of each review + show more button #}
         {{ include('review/list.html.twig') }}
       </turbo-frame>
     </div>

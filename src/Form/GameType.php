@@ -7,7 +7,7 @@ namespace App\Form;
 use App\Entity\Main\Game;
 use App\Enum\SteamSearchStatusEnum;
 use App\Enum\TypePriceEnum;
-use App\Service\SteamSearchService;
+use App\Service\SteamSearchManager;
 use Symfony\Component\Form\Extension\Core\Type\EnumType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
@@ -26,7 +26,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class GameType extends DefaultType
 {
     public function __construct(
-        private SteamSearchService $steamSearch,
+        private SteamSearchManager $steamSearch,
         private TranslatorInterface $trans,
         private RequestStack $requestStack,
         protected bool $htmlValidation,

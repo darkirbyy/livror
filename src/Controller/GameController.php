@@ -8,6 +8,7 @@ use App\Entity\Main\Game;
 use App\Form\GameType;
 use App\Repository\GameRepository;
 use App\Service\FormManager;
+use App\Service\UserConnector;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -18,7 +19,7 @@ class GameController extends AbstractController
 {
     // List and find games
     #[Route('', name: 'index', methods: ['GET'])]
-    public function index(GameRepository $gameRepo, Request $request): Response
+    public function index(UserConnector $userConnector, GameRepository $gameRepo, Request $request): Response
     {
         // Parse all the query parameters
         $sortField = $request->query->getString('sortField', 'name');
@@ -28,10 +29,11 @@ class GameController extends AbstractController
 
         // Make the database query and get the corresponding games
         $gamesIndex = $gameRepo->findSortLimit($sortField, $sortOrder, $firstResult, $maxResults);
+        $userConnector->toGamesIndex($gamesIndex);
 
         // Prepare the data for the twig renderer
         $data = [
-            'gamesIndex' => array_slice($gamesIndex, 0, $maxResults), // remove on result as we have fetched one more that configured
+            'gamesIndex' => array_slice($gamesIndex, 0, $maxResults), // remove one result as we have fetched one more that configured
             'hasMore' => count($gamesIndex) > $maxResults, // determine if there is more games to fetch
             'searchParam' => [
                 'sortField' => $sortField,

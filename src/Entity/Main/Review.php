@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Entity\Main;
 
+use App\Entity\Account\User;
 use App\Repository\ReviewRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
@@ -55,6 +56,9 @@ class Review
     #[ORM\Column]
     #[Assert\NotNull]
     private ?int $userId = null;
+
+    // No ORM column because it comes from a different doctrine mapping
+    private ?User $user = null;
 
     // /////////////////////////////////////////////////////
     // Custom methods and validation constraints //////////
@@ -175,6 +179,18 @@ class Review
     public function setUserId(?int $userId): static
     {
         $this->userId = $userId;
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): static
+    {
+        $this->user = $user;
 
         return $this;
     }

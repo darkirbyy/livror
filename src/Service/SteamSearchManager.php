@@ -8,7 +8,7 @@ use App\Entity\Main\Game;
 use App\Enum\SteamSearchStatusEnum;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
-class SteamSearchService
+class SteamSearchManager
 {
     private SteamSearchStatusEnum $status = SteamSearchStatusEnum::PENDING;
     private ?int $id = null;

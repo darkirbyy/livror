@@ -8,7 +8,6 @@ use App\Entity\Main\Game;
 use App\Entity\Main\Review;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query\Expr\Join;
-use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
 class GameRepository extends ServiceEntityRepository
@@ -53,7 +52,7 @@ class GameRepository extends ServiceEntityRepository
         return $qb->getQuery()->getResult();
     }
 
-    public function findNotCommented(int $userId): QueryBuilder
+    public function findNotCommented(int $userId): array
     {
         $qb = $this->createQueryBuilder('g');
         $qb->leftJoin(Review::class, 'r', Join::WITH, 'r.game = g.id and r.userId = :userId')
@@ -61,6 +60,17 @@ class GameRepository extends ServiceEntityRepository
             ->setParameter('userId', $userId)
             ->orderBy('g.name', 'ASC');
 
-        return $qb;
+        return $qb->getQuery()->getResult();
+    }
+
+    public function countNotCommented(int $userId): int
+    {
+        $qb = $this->createQueryBuilder('g');
+        $qb->select('COUNT(g.id)')
+            ->leftJoin(Review::class, 'r', Join::WITH, 'r.game = g.id and r.userId = :userId')
+            ->where('r.id IS NULL')
+            ->setParameter('userId', $userId);
+
+        return (int) $qb->getQuery()->getSingleScalarResult();
     }
 }

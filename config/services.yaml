@@ -43,7 +43,7 @@ services:
             $htmlValidation: '%app.html_validation%'
             $currency: '%app.currency%'
 
-    App\Service\SteamSearchService:
+    App\Service\SteamSearchManager:
         arguments:
             $timeout: '%app.request_timeout%'
             $locale: '%app.locale%'

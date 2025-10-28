@@ -14,4 +14,18 @@ class UserRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, User::class);
     }
+
+    public function byUsersId(array $usersId): array
+    {
+        // Fetch the users and index the result by the id
+        $qb = $this->createQueryBuilder('u');
+        $qb->indexBy('u', 'u.id')->where('u.id IN (:ids)')->setParameter('ids', $usersId);
+        $results = $qb->getQuery()->getResult();
+
+        // Create an array with all requested users and replace the fetched-ones
+        $users = array_fill_keys($usersId, null);
+        $users = array_replace($users, $results);
+
+        return $users;
+    }
 }
