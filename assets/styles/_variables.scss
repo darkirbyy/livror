@@ -3,3 +3,6 @@
 @use 'sass:color';
 
 $border-color: $gray-500;
+$form-range-track-bg: $border-color;
+$form-range-thumb-width: 1.25rem;
+$form-range-thumb-height: 0.9rem;

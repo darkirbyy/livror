@@ -2,7 +2,7 @@ import { Controller } from '@hotwired/stimulus';
 
 // Controller that update the rating when the range cursor is changed
 export default class extends Controller {
-  static targets = ['range', 'display'];
+  static targets = ['range', 'display', 'datalist'];
 
   connect() {
     this.change(this.rangeTarget.value);
@@ -10,6 +10,9 @@ export default class extends Controller {
   }
 
   change(newValue) {
-    this.displayTarget.innerText = newValue;
+    const newOption = [...this.datalistTarget.children].find((option) => {
+      return option.getAttribute('value') == newValue;
+    });
+    this.displayTarget.innerText = newOption.getAttribute('label');
   }
 }

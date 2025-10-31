@@ -1,17 +1,7 @@
 {% from 'game/index.html.twig' import get_path %}
 
 {% for gameIndex in gamesIndex %}
-  {# Fetch the data into a temp object to apply cutom formatting #}
   {% set game = gameIndex.game %}
-  {% set gameData = {
-    releaseYear: game.releaseYear,
-    fullPrice: game.fullPrice > 0
-      ? (game.fullPrice / 100)|format_currency(env.app.currency, { decimal_always_shown: true, fraction_digit: 2 })
-      : game.fullPrice|fmt_full_price(env.app.locale),
-    developers: game.developers,
-    genres: game.genres,
-    description: game.description,
-  } %}
 
   {# Each game is displayed on a "card" containing all the data #}
   <div class="card-max-auto card-max-md-none mx-auto my-3 rounded-3 border overflow-hidden">
@@ -33,15 +23,15 @@
           <span class="fa-solid fa-user-group fa-sm"></span> {{ game.reviews is not empty ? game.reviews|length : '-' }}
         </div>
         <div class="flex-even-1 py-1 px-2 py-md-2 border-end text-truncate">
-          <span class="fa-solid fa-star fa-sm"></span> {{ gameIndex.avgRating is not empty ? gameIndex.avgRating : '-' }}
+          <span class="fa-solid fa-star fa-sm"></span> {{ gameIndex.avgRating is not empty ? gameIndex.avgRating|format_number({ fraction_digit: 2 }) : '-' }}
         </div>
         <div class="flex-even-1 py-1 px-2 py-md-2 border-end text-truncate">
           <span class="fa-regular fa-hourglass-half fa-sm"></span>
           {{ gameIndex.totHourSpend is not empty ? gameIndex.totHourSpend ~ 'h' : '-' }}
         </div>
-        <div class="flex-even-1 py-1 px-2 py-md-2 text-truncate small">
+        <div class="flex-even-1 py-1 px-2 py-md-2 text-truncate">
           <span class="fa-regular fa-calendar-days fa-sm"></span>
-          {{ gameIndex.minFirstPlay is not empty ? gameIndex.minFirstPlay|format_datetime('short', 'none') : '-' }}
+          <span class="small">{{ gameIndex.minFirstPlay is not empty ? gameIndex.minFirstPlay|format_datetime('short', 'none') : '-' }}</span>
         </div>
       </div>
     </div>
@@ -76,6 +66,16 @@
             </div>
 
             {# All other information #}
+            {% set gameData = {
+              releaseYear: game.releaseYear,
+              fullPrice: game.fullPrice > 0
+                ? (game.fullPrice / 100)|format_currency(env.app.currency, { decimal_always_shown: true, fraction_digit: 2 })
+                : game.fullPrice|fmt_full_price(env.app.locale),
+              developers: game.developers,
+              genres: game.genres,
+              description: game.description,
+            } %}
+
             {% for field, value in gameData %}
               <div class="col-4 py-1 px-1 text-end text-truncate {{ field != 'description' ? 'border-bottom' : '' }}">
                 <span class="fst-italic fs-6 fw-light">{{ ('game.label.' ~ field)|trans({ }, 'validators') }}</span>
@@ -115,15 +115,15 @@
                     <span class="ms-1 d-none d-md-inline">{{ review.user.username }}</span>
                   </div>
                   <div class="flex-even-1 py-1 px-2 py-md-2 border-start border-end text-truncate">
-                    <span class="fa-solid fa-star fa-sm"></span> {{ review.rating is not empty ? review.rating : '-' }}
+                    <span class="fa-solid fa-star fa-sm"></span> {{ review.rating is not empty ? review.rating|format_number({ fraction_digit: 1 }) : '-' }}
                   </div>
                   <div class="flex-even-1 py-1 px-2 py-md-2 border-end text-truncate">
                     <span class="fa-regular fa-hourglass-half fa-sm"></span>
                     {{ review.hourSpend is not empty ? review.hourSpend ~ 'h' : '-' }}
                   </div>
-                  <div class="flex-even-1 py-1 px-2 py-md-2 text-truncate small">
+                  <div class="flex-even-1 py-1 px-2 py-md-2 text-truncate">
                     <span class="fa-regular fa-calendar-days fa-sm"></span>
-                    {{ review.firstPlay is not empty ? review.firstPlay|format_datetime('short', 'none') : '-' }}
+                    <span class="small">{{ review.firstPlay is not empty ? review.firstPlay|format_datetime('short', 'none') : '-' }}</span>
                   </div>
                 </div>
                 <div class="col-12 mb-2 py-1 px-2 py-md-2">

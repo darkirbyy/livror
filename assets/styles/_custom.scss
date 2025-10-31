@@ -94,6 +94,37 @@ legend.col-form-label.required::after {
   margin-bottom: ($spacer * 1) !important;
 }
 
+.app-form-range-tick {
+  --thickness: 3px;
+  --height: 30%;
+  --color: #{$form-range-track-bg};
+
+  display: inline-block;
+  background: linear-gradient(to right, var(--color) var(--thickness), transparent 1px) repeat-x;
+  background-size: calc(100% / ((var(--max) - var(--min)) / var(--step)) - 0.45%) var(--height);
+  background-position: 1.5% bottom;
+  position: relative;
+}
+
+// todo : display in and max ?
+// .range::before, .range::after {
+//   font: 12px monospace;
+//   content: counter(x);
+//   position: absolute;
+//   bottom: -2ch;
+// }
+
+// .range::before {
+//   counter-reset: x var(--min);
+//   transform: translateX(-50%);
+// }
+
+// .range::after {
+//   counter-reset: x var(--max);
+//   right: 0;
+//   transform: translateX(50%);
+// }
+
 .app-no-border-bottom {
   transition: border-radius 0.3s ease-in-out;
 

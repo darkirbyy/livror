@@ -1,7 +1,6 @@
 {% from 'game/index.html.twig' import get_path %}
 
 {% for review in reviews %}
-  {% set reviewData = { rating: review.rating, hourSpend: review.hourSpend, firstPlay: review.firstPlay is not empty ? review.firstPlay|format_datetime('short', 'none') : '-' } %}
   {# Each game is displayed on a "card" containing all the data #}
   <div class="card-max-auto card-max-md-none mx-auto my-3 rounded-3 border overflow-hidden">
     {# Card title bar with the the title on one side, and 3 infos on the other side (or on top of each other on small screen) #}
@@ -18,7 +17,7 @@
       {# 3 piece of information : player rating, hour spend, and first play date #}
       <div class="col-12 d-flex align-items-center col-md-auto flex-even-1">
         <div class="flex-even-1 py-1 px-2 py-md-2 border-end">
-          <span class="fa-solid fa-star fa-sm"></span> {{ review.rating is not empty ? review.rating : '-' }}
+          <span class="fa-solid fa-star fa-sm"></span> {{ review.rating is not empty ? review.rating|format_number({ fraction_digit: 1 }) : '-' }}
         </div>
         <div class="flex-even-1 py-1 px-2 py-md-2 border-end">
           <span class="fa-regular fa-hourglass-half fa-sm"></span>
@@ -37,7 +36,7 @@
         <div class="row p-0 m-0 d-md-flex h-auto h-md-100">
           <div class="col-12 p-2 d-flex flex-column">
             <p class="mb-0 flex-grow-1">
-              {{ review.comment }}
+              {{ review.comment|default('-') }}
             </p>
             <div class="fst-italic fs-6 fw-light">
               {% set date_add = review.dateAdd|format_datetime('relative_medium', 'none') %}

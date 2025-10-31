@@ -65,17 +65,17 @@
             {{ form_label(form.rating, 'review.label.rating') }}
             {# {{ form_help(form.rating, { help_html: true, help: 'review.help.rating' }) }} #}
             <div class="form-control py-2 d-flex align-items-center">
-              <div class="flex-grow-1 mt-1">
+              <div class="flex-grow-1 mt-1 app-form-range-tick" style="--step:1; --min:0; --max:6">
                 {{ form_widget(form.rating, { attr: { 'data-rating-slide-target': 'range' } }) }}
               </div>
               <div class="app-rating-display text-end px-2">
-                <span data-rating-slide-target="display" class="fs-5 align-middle">3.0</span>
+                <span data-rating-slide-target="display" class="fs-5 align-middle">{{ '3.0'|format_number({ fraction_digit: 1 }) }}</span>
                 <span class="fa-regular fa-star align-middle"></span>
               </div>
             </div>
-            <datalist id="ratingList">
+            <datalist id="ratingList" data-rating-slide-target="datalist">
               {% for rating in range(0, 6, 0.1) %}
-                <option value="{{ rating }}" label="{{ rating }}%"></option>
+                <option value="{{ rating }}" label="{{ rating|format_number({ fraction_digit: 1 }) }}" />
               {% endfor %}
             </datalist>
             {{ form_errors(form.rating) }}
