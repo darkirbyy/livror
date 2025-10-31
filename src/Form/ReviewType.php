@@ -59,7 +59,7 @@ class ReviewType extends DefaultType
                     'class' => 'radio-inline py-0',
                 ],
                 'attr' => [
-                    'class' => 'border rounded p-2',
+                    'class' => 'form-control p-2',
                 ],
             ])
             ->add('comment', TextareaType::class, [

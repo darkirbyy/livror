@@ -51,12 +51,12 @@ class GameType extends DefaultType
                 'required' => false,
             ])
             ->add('typePrice', EnumType::class, [
-                'required' => false,
+                'required' => true,
                 'mapped' => false,
                 'class' => TypePriceEnum::class,
                 'expanded' => true,
                 'multiple' => false,
-                'empty_data' => TypePriceEnum::UNKNOWN,
+                'empty_data' => TypePriceEnum::UNKNOWN->value,
                 'placeholder' => false, // To prevent the 'None' choice, as it is handled through JavaScript
             ])
             ->add('fullPrice', MoneyType::class, [

@@ -71,6 +71,7 @@ class Game
      * @var Collection<int, Review>
      */
     #[ORM\OneToMany(targetEntity: Review::class, mappedBy: 'game', orphanRemoval: true)]
+    #[ORM\OrderBy(['dateAdd' => 'ASC'])]
     private Collection $reviews;
 
     public function __construct()

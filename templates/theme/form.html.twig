@@ -1,5 +1,10 @@
 {% extends 'bootstrap_5_layout.html.twig' %}
 
+{# #################################### #}
+{# ## Global modifications ############ #}
+{# #################################### #}
+
+{# Simplify the standard row #}
 {% block form_row %}
   <div class="app-form-row {% if not compound or force_error|default(false) %}{% for error in errors %} has-validation{% endfor %}{% endif %}">
     {{ form_label(form) }}
@@ -8,6 +13,21 @@
     {{ form_errors(form) }}
   </div>
 {% endblock %}
+
+{# Add .is-invalid on the container div #}
+{% block choice_widget_expanded %}
+  {% set attr = attr|merge({ class: ((attr.class|default('')) ~ (not compound or valid ? '' : ' is-invalid'))|trim }) %}
+
+  <div {{ block('widget_container_attributes') }}>
+    {%- for child in form %}
+      {{- form_widget(child, { parent_label_class: label_attr.class|default(''), translation_domain: choice_translation_domain, valid: valid }) -}}
+    {% endfor -%}
+  </div>
+{% endblock %}
+
+{# #################################### #}
+{# ## Specific modifications ########## #}
+{# #################################### #}
 
 {% block _game_steamId_widget %}
   {%- set type = 'text' -%}

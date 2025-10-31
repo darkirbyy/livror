@@ -16,35 +16,30 @@
   {# Each game is displayed on a "card" containing all the data #}
   <div class="card-max-auto card-max-md-none mx-auto my-3 rounded-3 border overflow-hidden">
     {# Card title bar with the the title on one side, and 3 infos on the other side (or on top of each other on small screen) #}
-    <div class="row gx-0 bg-primary-subtle border-bottom text-center">
+    <div class="row gx-0 bg-primary-subtle border-bottom">
       {# Actual title with the edit button #}
       <div class="col-12 border-bottom col-md-6 border-bottom-md-0 border-end-md card-max-md-auto">
-        <div class="d-flex py-2 px-2 ps-md-3 justify-content-center justify-content-md-start align-items-center">
-          <h5 class="mb-0 p-0">
+        <div class="text-center text-md-start d-flex py-1 px-1 ps-md-2 justify-content-center justify-content-md-start align-items-center">
+          {# TODO : truncate cache l'icone d'édition... #}
+          <h5 class="mb-0 p-1 text-truncate flex-grow-1">
             {{ game.name }}
-            <a class="fs-6 p-0 link-secondary" href="{{ path('game_edit', { id: game.id }) }}" data-turbo-frame="_top"><span class="bi bi-pen ps-1"></span></a>
           </h5>
+          <a class="fs-6 p-1 link-secondary" href="{{ path('game_edit', { id: game.id }) }}" data-turbo-frame="_top"><span class="bi bi-pen ps-1"></span></a>
         </div>
       </div>
-      {# 3 piece of information : player who have written a review, average mark, total hour spend, minimum first play date #}
-      <div class="col-12 d-flex align-items-center col-md-auto flex-even-1">
-        <div class="flex-even-1 py-1 px-2 py-md-2 border-end">
-          {% for review in game.reviews %}
-            {% if review.user is not empty %}
-              <img src="{{ HubUrlGenerator.generateRoot(review.user.avatarPath) }}"
-                class="rounded-circle app-avatar-card"
-                alt="{{ 'aria.avatar'|trans({ name: review.user.username }) }}" />
-            {% endif %}
-          {% endfor %}
+      {# 4 piece of information : player who have written a review, average mark, total hour spend, minimum first play date #}
+      <div class="col-12 text-center d-flex align-items-center col-md-auto flex-even-1">
+        <div class="flex-even-1 py-1 px-2 py-md-2 border-end text-truncate">
+          <span class="fa-solid fa-user-group fa-sm"></span> {{ game.reviews is not empty ? game.reviews|length : '-' }}
         </div>
-        <div class="flex-even-1 py-1 px-2 py-md-2 border-end">
-          <span class="fa-regular fa-star fa-sm"></span> {{ gameIndex.avgMark is not empty ? gameIndex.avgMark : '-' }}
+        <div class="flex-even-1 py-1 px-2 py-md-2 border-end text-truncate">
+          <span class="fa-solid fa-star fa-sm"></span> {{ gameIndex.avgMark is not empty ? gameIndex.avgMark : '-' }}
         </div>
-        <div class="flex-even-1 py-1 px-2 py-md-2 border-end">
+        <div class="flex-even-1 py-1 px-2 py-md-2 border-end text-truncate">
           <span class="fa-regular fa-hourglass-half fa-sm"></span>
           {{ gameIndex.totHourSpend is not empty ? gameIndex.totHourSpend ~ 'h' : '-' }}
         </div>
-        <div class="flex-even-1 py-1 px-2 py-md-2">
+        <div class="flex-even-1 py-1 px-2 py-md-2 text-truncate small">
           <span class="fa-regular fa-calendar-days fa-sm"></span>
           {{ gameIndex.minFirstPlay is not empty ? gameIndex.minFirstPlay|format_datetime('short', 'none') : '-' }}
         </div>
@@ -109,11 +104,33 @@
           </button>
 
           {# Reviews content #}
-          <div class="row p-0 m-0 collapse d-md-flex" id="{{ collapseId }}">
-            <div class="col-12 p-2">
-              At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint
-              occaecati cupiditate non provident.
-            </div>
+          <div class="row gx-0 p-0 m-0 collapse d-md-flex" id="{{ collapseId }}">
+            {% for review in game.reviews %}
+              {% if review.user is not empty %}
+                <div class="col-12 text-center d-flex bg-secondary-subtle align-items-center border-bottom {{ loop.index0 > 0 ? 'border-top' }} border-bottom-md col-md-auto flex-even-1">
+                  <div class="flex-even-1 py-0 px-2 py-md-1 text-truncate">
+                    <img src="{{ HubUrlGenerator.generateRoot(review.user.avatarPath) }}"
+                      class="rounded-circle img-fluid app-avatar-card"
+                      alt="{{ 'aria.avatar'|trans({ name: review.user.username }) }}" />
+                    <span class="ms-1 d-none d-md-inline">{{ review.user.username }}</span>
+                  </div>
+                  <div class="flex-even-1 py-1 px-2 py-md-2 border-start border-end text-truncate">
+                    <span class="fa-solid fa-star fa-sm"></span> {{ review.mark is not empty ? review.mark : '-' }}
+                  </div>
+                  <div class="flex-even-1 py-1 px-2 py-md-2 border-end text-truncate">
+                    <span class="fa-regular fa-hourglass-half fa-sm"></span>
+                    {{ review.hourSpend is not empty ? review.hourSpend ~ 'h' : '-' }}
+                  </div>
+                  <div class="flex-even-1 py-1 px-2 py-md-2 text-truncate small">
+                    <span class="fa-regular fa-calendar-days fa-sm"></span>
+                    {{ review.firstPlay is not empty ? review.firstPlay|format_datetime('short', 'none') : '-' }}
+                  </div>
+                </div>
+                <div class="col-12 mb-2 py-1 px-2 py-md-2">
+                  {{ review.comment }}
+                </div>
+              {% endif %}
+            {% endfor %}
           </div>
         </div>
       </div>
