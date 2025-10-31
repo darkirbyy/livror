@@ -10,7 +10,7 @@ use App\Repository\GameRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
-use Symfony\Component\Form\Extension\Core\Type\NumberType;
+use Symfony\Component\Form\Extension\Core\Type\RangeType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -36,14 +36,14 @@ class ReviewType extends DefaultType
             ]);
         }
         $builder
-            ->add('rating', NumberType::class, [
+            ->add('rating', RangeType::class, [
                 'required' => true,
-                'html5' => false,
-                // 'input' => 'string',
-                'scale' => 1,
-                // 'attr' => [
-                //     'class' => 'form-control p-2',
-                // ],
+                'attr' => [
+                    'min' => 0,
+                    'max' => 6,
+                    'step' => '0.1',
+                    'list' => 'ratingList',
+                ],
             ])
             ->add('hourSpend', IntegerType::class, [
                 'required' => false,

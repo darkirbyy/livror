@@ -54,10 +54,34 @@
 
           {# Form #}
           {{ form_start(form) }}
+
+          {# Select the game for a new review #}
           {% if form.game is defined %}
             {{ form_row(form.game, { label: 'review.label.game' }) }}
           {% endif %}
-          {{ form_row(form.rating, { label: 'review.label.rating' }) }}
+
+          {# Display the rating range cursor with custom stimulus controller to display the value #}
+          <div class="app-form-row" {{ stimulus_controller('rating-slide', { lazy: false }) }}>
+            {{ form_label(form.rating, 'review.label.rating') }}
+            {# {{ form_help(form.rating, { help_html: true, help: 'review.help.rating' }) }} #}
+            <div class="form-control py-2 d-flex align-items-center">
+              <div class="flex-grow-1 mt-1">
+                {{ form_widget(form.rating, { attr: { 'data-rating-slide-target': 'range' } }) }}
+              </div>
+              <div class="app-rating-display text-end px-2">
+                <span data-rating-slide-target="display" class="fs-5 align-middle">3.0</span>
+                <span class="fa-regular fa-star align-middle"></span>
+              </div>
+            </div>
+            <datalist id="ratingList">
+              {% for rating in range(0, 6, 0.1) %}
+                <option value="{{ rating }}" label="{{ rating }}%"></option>
+              {% endfor %}
+            </datalist>
+            {{ form_errors(form.rating) }}
+          </div>
+
+          {# Others fields : hour spend, first play, and comment #}
           <div class="row">
             <div class="col-12 col-md-6">
               {{ form_row(form.hourSpend, { label: 'review.label.hourSpend' }) }}
@@ -86,6 +110,7 @@
             </div>
           </div>
           {{ form_rest(form) }}
+
           {{ form_end(form) }}
         </div>
       </div>

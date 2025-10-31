@@ -29,6 +29,7 @@ review:
     firstPlay: Lancement
     game: Jeu
   help:
+    rating: Entre 0 et 6
   error:
     game:
       notUnique: Un avis existe déjà pour ce jeu.
