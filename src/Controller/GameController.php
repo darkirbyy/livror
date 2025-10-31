@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Dto\FlashMessage;
 use App\Entity\Main\Game;
 use App\Form\GameType;
 use App\Repository\GameRepository;
@@ -60,8 +61,10 @@ class GameController extends AbstractController
         $form = $this->createForm(GameType::class, $game, ['steamId' => $steamId]);
         $form->handleRequest($request);
 
-        $flashSuccess = ['message' => 'game.index.flash.newGame', 'params' => ['name' => $game->getName()]];
+        $flashSuccess = new FlashMessage('game.index.flash.newGame');
         if ($fm->validateAndPersist($form, $game, $flashSuccess)) {
+            $flashSuccess->setParams(['url' => $this->generateUrl('review_new', ['gameId' => $game->getId()]), 'name' => $game->getName()]);
+
             return $this->redirectToRoute('game_index', [], Response::HTTP_SEE_OTHER);
         }
 
@@ -80,7 +83,7 @@ class GameController extends AbstractController
         $form = $this->createForm(GameType::class, $game, ['steamId' => $steamId]);
         $form->handleRequest($request);
 
-        $flashSuccess = ['message' => 'game.index.flash.updateGame', 'params' => ['name' => $game->getName()]];
+        $flashSuccess = new FlashMessage('game.index.flash.updateGame', ['name' => $game->getName()]);
         if ($fm->validateAndPersist($form, $game, $flashSuccess)) {
             return $this->redirectToRoute('game_index', [], Response::HTTP_SEE_OTHER);
         }
@@ -95,7 +98,7 @@ class GameController extends AbstractController
     #[Route('/{id}/delete', name: 'delete', methods: ['POST'], requirements: ['id' => '\d+'])]
     public function delete(Game $game, FormManager $fm): Response
     {
-        $flashSuccess = ['message' => 'game.index.flash.deleteGame', 'params' => ['name' => $game->getName()]];
+        $flashSuccess = new FlashMessage('game.index.flash.deleteGame', ['name' => $game->getName()]);
         if ($fm->checkTokenAndRemove('delete-game-' . $game->getId(), $game, $flashSuccess)) {
             return $this->redirectToRoute('game_index', [], Response::HTTP_SEE_OTHER);
         }

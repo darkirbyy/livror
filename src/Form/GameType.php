@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Form;
 
+use App\Dto\FlashMessage;
 use App\Entity\Main\Game;
 use App\Enum\SteamSearchStatusEnum;
 use App\Enum\TypePriceEnum;
@@ -96,11 +97,11 @@ class GameType extends DefaultType
                     $this->steamSearch->fetchSteamGame((int) $steamId);
                     if (SteamSearchStatusEnum::OK === $this->steamSearch->getStatus()) {
                         $game = $this->steamSearch->fillGame($game);
-                        $flashBag->add('success', ['message' => 'game.edit.flash.steamSearch.success']);
+                        $flashBag->add('success', new FlashMessage('game.edit.flash.steamSearch.success'));
                     } elseif (SteamSearchStatusEnum::NOT_FOUND === $this->steamSearch->getStatus()) {
                         $steamIdError = $this->trans->trans('game.error.steamId.notFound', [], 'validators');
                     } else {
-                        $flashBag->add('danger', ['message' => 'game.edit.flash.steamSearch.fail']);
+                        $flashBag->add('danger', new FlashMessage('game.edit.flash.steamSearch.fail'));
                     }
                 }
 

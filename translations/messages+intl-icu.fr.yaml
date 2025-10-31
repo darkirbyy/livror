@@ -12,7 +12,7 @@ game:
     button:
       addGame: Ajouter un jeu
     flash:
-      newGame: '{name} a été ajouté !'
+      newGame: '{name} a été ajouté ! Vous pouver maintenant écrire <a class="alert-link" href="{url}">votre avis</a>.'
       updateGame: '{name} a été mise à jour !'
       deleteGame: '{name} a été supprimé !'
     card:
@@ -37,12 +37,12 @@ review:
   index:
     title: Mes avis
     button:
-      addReview: Ajouter un avis
+      addReview: Écrire un avis
     flash:
-      newReview: 'Votre avis sur {name} a été ajouté !'
+      newReview: 'Votre avis sur {name} a été enregistré !'
       updateReview: 'Votre avis sur {name} a été mise à jour !'
       deleteReview: 'Votre avis sur  {name} a été supprimé !'
-      cannotAddReview: Vous avez ajouté un avis pour tous les jeux enregistrés ! Pour écrire un nouvel avis, merci d'ajouter d'abord un <a class="alert-link" href="{url}">nouveau jeu</a>.
+      cannotAddReview: Vous avez écrit un avis pour tous les jeux enregistrés ! Pour écrire un nouvel avis, merci d'ajouter d'abord un <a class="alert-link" href="{url}">nouveau jeu</a>.
     card:
       informations: Informations
       comment: Commentaire
@@ -55,7 +55,7 @@ review:
       firstPlay: Lancement
   edit:
     title:
-      add:  Ajouter un avis
+      add:  Écrire un avis
       update: 'Modifier votre avis sur {name}'
     modalDeleteBody: 'Vous êtes sur le point de supprimer <span class="fw-bold">définitivement</span> votre avis sur {name}. Êtes-vous sûr ?'
 

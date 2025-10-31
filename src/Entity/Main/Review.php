@@ -35,7 +35,7 @@ class Review
     #[ORM\Column(type: 'decimal', precision: 2, scale: 1)]
     #[Assert\NotBlank]
     #[Assert\Range(min: 0, max: 6)]
-    private ?float $rating = null;
+    private ?string $rating = null;
 
     #[ORM\Column(nullable: true)]
     #[Assert\PositiveOrZero]
@@ -110,12 +110,12 @@ class Review
         return $this;
     }
 
-    public function getRating(): ?float
+    public function getRating(): ?string
     {
         return $this->rating;
     }
 
-    public function setRating(?float $rating): static
+    public function setRating(?string $rating): static
     {
         $this->rating = $rating;
 

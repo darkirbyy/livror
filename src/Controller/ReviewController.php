@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Dto\FlashMessage;
 use App\Entity\Main\Review;
 use App\Form\ReviewType;
 use App\Repository\GameRepository;
@@ -27,7 +28,7 @@ class ReviewController extends AbstractController
         $userId = $this->getUser()->getId();
 
         // Parse all the query parameters
-        $sortField = $request->query->getString('sortField', 'rating');
+        $sortField = $request->query->getString('sortField', 'name');
         $sortOrder = $request->query->getString('sortOrder', 'desc');
         $firstResult = $request->query->getInt('firstResult', 0);
         $maxResults = $this->getParameter('app.max_results');
@@ -60,15 +61,16 @@ class ReviewController extends AbstractController
     public function new(GameRepository $gameRepo, Request $request, FormManager $fm): Response
     {
         $userId = $this->getUser()->getId();
+        $gameId = 'GET' == $request->getMethod() ? $request->query->get('gameId') : null;
         if (0 == $gameRepo->countNotCommented($userId)) {
             throw new NotAcceptableHttpException();
         }
 
         $review = new Review();
-        $form = $this->createForm(ReviewType::class, $review, ['newReview' => true, 'userId' => $userId]);
+        $form = $this->createForm(ReviewType::class, $review, ['userId' => $userId, 'gameId' => $gameId]);
         $form->handleRequest($request);
 
-        $flashSuccess = ['message' => 'review.index.flash.newReview', 'params' => ['name' => $review->getGame()?->getName()]];
+        $flashSuccess = new FlashMessage('review.index.flash.newReview', ['name' => $review->getGame()?->getName()]);
         if ($fm->validateAndPersist($form, $review, $flashSuccess)) {
             return $this->redirectToRoute('review_index', [], Response::HTTP_SEE_OTHER);
         }
@@ -88,10 +90,10 @@ class ReviewController extends AbstractController
             throw new AccessDeniedHttpException();
         }
 
-        $form = $this->createForm(ReviewType::class, $review, ['newReview' => false, 'userId' => $userId]);
+        $form = $this->createForm(ReviewType::class, $review);
         $form->handleRequest($request);
 
-        $flashSuccess = ['message' => 'review.index.flash.updateReview', 'params' => ['name' => $review->getGame()->getName()]];
+        $flashSuccess = new FlashMessage('review.index.flash.updateReview', ['name' => $review->getGame()->getName()]);
         if ($fm->validateAndPersist($form, $review, $flashSuccess)) {
             return $this->redirectToRoute('review_index', [], Response::HTTP_SEE_OTHER);
         }
@@ -111,7 +113,7 @@ class ReviewController extends AbstractController
             throw new AccessDeniedHttpException();
         }
 
-        $flashSuccess = ['message' => 'review.index.flash.deleteReview', 'params' => ['name' => $review->getGame()->getName()]];
+        $flashSuccess = new FlashMessage('review.index.flash.deleteReview', ['name' => $review->getGame()->getName()]);
         if ($fm->checkTokenAndRemove('delete-review-' . $review->getId(), $review, $flashSuccess)) {
             return $this->redirectToRoute('review_index', [], Response::HTTP_SEE_OTHER);
         }

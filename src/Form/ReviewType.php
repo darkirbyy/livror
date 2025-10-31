@@ -27,7 +27,7 @@ class ReviewType extends DefaultType
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        if ($options['newReview']) {
+        if ($options['userId']) {
             $builder->add('game', EntityType::class, [
                 'required' => true,
                 'class' => Game::class,
@@ -65,7 +65,7 @@ class ReviewType extends DefaultType
                 $review->setGame($this->gameRepo->find($options['gameId']));
             });
         }
-        if ($options['newReview']) {
+        if ($options['userId']) {
             $builder->addEventListener(FormEvents::SUBMIT, function (FormEvent $event) use ($options) {
                 $review = $event->getData();
                 $review->setUserId($options['userId']);
@@ -77,8 +77,9 @@ class ReviewType extends DefaultType
     {
         parent::configureOptions($resolver);
 
-        $resolver->setRequired(['newReview', 'userId', 'gameId']);
+        $resolver->setRequired(['userId', 'gameId']);
         $resolver->setDefaults([
+            'userId' => null,
             'gameId' => null,
             'data_class' => Review::class,
         ]);

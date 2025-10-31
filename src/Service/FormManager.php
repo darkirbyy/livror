@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Service;
 
+use App\Dto\FlashMessage;
 use Doctrine\DBAL\Exception\ConstraintViolationException;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\FormInterface;
@@ -31,7 +32,7 @@ class FormManager
     /**
      * Validate an entity according to the form and persist it with a custom flash message upon success.
      */
-    public function validateAndPersist(FormInterface $form, object $object, ?array $flashSuccess = null): bool
+    public function validateAndPersist(FormInterface $form, object $object, ?FlashMessage $flashSuccess = null): bool
     {
         if ($form->isSubmitted() && $form->isValid()) {
             return $this->persist($object, $flashSuccess);
@@ -43,14 +44,14 @@ class FormManager
     /**
      * Check the CSRF token and persist the entity with a custom flash message upon success.
      */
-    public function checkTokenAndPersist(string $tokenName, object $object, ?array $flashSuccess = null): bool
+    public function checkTokenAndPersist(string $tokenName, object $object, ?FlashMessage $flashSuccess = null): bool
     {
         $tokenValue = $this->requestStack
             ->getCurrentRequest()
             ->getPayload()
             ->get($tokenName . '_token');
         if (!$this->csrfTokenManager->isTokenValid(new CsrfToken($tokenName, $tokenValue))) {
-            $this->flashBag->add('danger', ['message' => 'form.flash.invalidCsrf']);
+            $this->flashBag->add('danger', new FlashMessage('form.flash.invalidCsrf'));
 
             return false;
         }
@@ -61,14 +62,14 @@ class FormManager
     /**
      * Check the CSRF token and remove the entity with a custom flash message upon success.
      */
-    public function checkTokenAndRemove(string $tokenName, object $object, ?array $flashSuccess = null): bool
+    public function checkTokenAndRemove(string $tokenName, object $object, ?FlashMessage $flashSuccess = null): bool
     {
         $tokenValue = $this->requestStack
             ->getCurrentRequest()
             ->getPayload()
             ->get($tokenName . '_token');
         if (!$this->csrfTokenManager->isTokenValid(new CsrfToken($tokenName, $tokenValue))) {
-            $this->flashBag->add('danger', ['message' => 'form.flash.invalidCsrf']);
+            $this->flashBag->add('danger', new FlashMessage('form.flash.invalidCsrf'));
 
             return false;
         }
@@ -80,7 +81,7 @@ class FormManager
      * Persists an entity into the database, displaying a customizable success flash message upon success.
      * Catches any constraint exception to log it and display a general error flash message otherwise.
      */
-    public function persist(object $object, ?array $flashSuccess = null): bool
+    public function persist(object $object, ?FlashMessage $flashSuccess = null): bool
     {
         try {
             $this->entityManager->persist($object);
@@ -93,7 +94,7 @@ class FormManager
             return true;
         } catch (ConstraintViolationException $e) {
             $message = $this->exceptionManager->handleDatabase($e);
-            $this->flashBag->add('danger', ['message' => $message]);
+            $this->flashBag->add('danger', new FlashMessage($message));
 
             return false;
         }
@@ -103,7 +104,7 @@ class FormManager
      * Removes an entity from the database, displaying a customizable success flash message upon success.
      * Catches any constraint exception to log it and display a general error flash message otherwise.
      */
-    public function remove(object $object, ?array $flashSuccess = null): bool
+    public function remove(object $object, ?FlashMessage $flashSuccess = null): bool
     {
         try {
             $this->entityManager->remove($object);
@@ -116,7 +117,7 @@ class FormManager
             return true;
         } catch (ConstraintViolationException $e) {
             $message = $this->exceptionManager->handleDatabase($e);
-            $this->flashBag->add('danger', ['message' => $message]);
+            $this->flashBag->add('danger', new FlashMessage($message));
 
             return false;
         }
