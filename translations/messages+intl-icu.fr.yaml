@@ -42,6 +42,7 @@ review:
       newReview: 'Votre avis sur {name} a été ajouté !'
       updateReview: 'Votre avis sur {name} a été mise à jour !'
       deleteReview: 'Votre avis sur  {name} a été supprimé !'
+      cannotAddReview: Vous avez ajouté un avis pour tous les jeux enregistrés ! Pour écrire un nouvel avis, merci d'ajouter d'abord un <a class="alert-link" href="{url}">nouveau jeu</a>.
     card:
       informations: Informations
       comment: Commentaire

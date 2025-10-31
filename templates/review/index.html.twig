@@ -21,6 +21,12 @@
         {{ block('flash', 'theme/flash.html.twig') }}
       </div>
 
+      {% if cannotAdd %}
+        <div class="alert alert-secondary" role="alert">
+          {{ 'review.index.flash.cannotAddReview'|trans({ url: path('game_new') })|raw }}
+        </div>
+      {% endif %}
+
       {# Turboframe to refresh only the main section when sorting the results #}
       <turbo-frame id="main-section">
         {# Before the first card : field to sort on the left, button to add new game on the right #}
@@ -57,7 +63,7 @@
 
           {# Button to add a new review #}
           <div class="ms-2">
-            <a href="{{ path('review_new') }}" class="btn btn-primary {{ canAdd == false ? 'disabled' }}" data-turbo-frame="_top">
+            <a href="{{ path('review_new') }}" class="btn btn-primary {{ cannotAdd ? 'disabled' }}" data-turbo-frame="_top">
               <span class="bi bi-plus-square-fill me-md-1"></span>
               <span class="d-none d-md-inline">{{ 'review.index.button.addReview'|trans }}</span>
             </a>

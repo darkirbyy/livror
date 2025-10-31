@@ -44,7 +44,7 @@ class ReviewController extends AbstractController
                 'sortOrder' => $sortOrder,
                 'firstResult' => $firstResult,
             ],
-            'canAdd' => $gameRepo->countNotCommented($userId) > 0,
+            'cannotAdd' => 0 == $gameRepo->countNotCommented($userId),
         ];
 
         // Render only the review list block when the request comes from the JavaScript, otherwise render the whole page
