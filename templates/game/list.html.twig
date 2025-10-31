@@ -27,13 +27,13 @@
           <a class="fs-6 p-1 link-secondary" href="{{ path('game_edit', { id: game.id }) }}" data-turbo-frame="_top"><span class="bi bi-pen ps-1"></span></a>
         </div>
       </div>
-      {# 4 piece of information : player who have written a review, average mark, total hour spend, minimum first play date #}
+      {# 4 piece of information : player who have written a review, average rating, total hour spend, minimum first play date #}
       <div class="col-12 text-center d-flex align-items-center col-md-auto flex-even-1">
         <div class="flex-even-1 py-1 px-2 py-md-2 border-end text-truncate">
           <span class="fa-solid fa-user-group fa-sm"></span> {{ game.reviews is not empty ? game.reviews|length : '-' }}
         </div>
         <div class="flex-even-1 py-1 px-2 py-md-2 border-end text-truncate">
-          <span class="fa-solid fa-star fa-sm"></span> {{ gameIndex.avgMark is not empty ? gameIndex.avgMark : '-' }}
+          <span class="fa-solid fa-star fa-sm"></span> {{ gameIndex.avgRating is not empty ? gameIndex.avgRating : '-' }}
         </div>
         <div class="flex-even-1 py-1 px-2 py-md-2 border-end text-truncate">
           <span class="fa-regular fa-hourglass-half fa-sm"></span>
@@ -115,7 +115,7 @@
                     <span class="ms-1 d-none d-md-inline">{{ review.user.username }}</span>
                   </div>
                   <div class="flex-even-1 py-1 px-2 py-md-2 border-start border-end text-truncate">
-                    <span class="fa-solid fa-star fa-sm"></span> {{ review.mark is not empty ? review.mark : '-' }}
+                    <span class="fa-solid fa-star fa-sm"></span> {{ review.rating is not empty ? review.rating : '-' }}
                   </div>
                   <div class="flex-even-1 py-1 px-2 py-md-2 border-end text-truncate">
                     <span class="fa-regular fa-hourglass-half fa-sm"></span>

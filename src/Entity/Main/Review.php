@@ -32,22 +32,21 @@ class Review
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $dateUpdate = null;
 
-    #[ORM\Column(type: Types::TEXT)]
+    #[ORM\Column(type: 'decimal', precision: 2, scale: 1)]
     #[Assert\NotBlank]
-    private ?string $comment = null;
-
-    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
-    #[Assert\Range(min: '-100 years', max: '+100 years')]
-    private ?\DateTimeInterface $firstPlay = null;
+    #[Assert\Range(min: 0, max: 6)]
+    private ?float $rating = null;
 
     #[ORM\Column(nullable: true)]
     #[Assert\PositiveOrZero]
     private ?int $hourSpend = null;
 
-    #[ORM\Column]
-    #[Assert\NotBlank]
-    #[Assert\Range(min: 0, max: 6)]
-    private ?int $mark = null;
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    #[Assert\Range(min: '-100 years', max: '+100 years')]
+    private ?\DateTimeInterface $firstPlay = null;
+
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $comment = null;
 
     #[ORM\ManyToOne(inversedBy: 'reviews')]
     #[ORM\JoinColumn(nullable: false)]
@@ -111,26 +110,14 @@ class Review
         return $this;
     }
 
-    public function getComment(): ?string
+    public function getRating(): ?float
     {
-        return $this->comment;
+        return $this->rating;
     }
 
-    public function setComment(string $comment): static
+    public function setRating(?float $rating): static
     {
-        $this->comment = $comment;
-
-        return $this;
-    }
-
-    public function getFirstPlay(): ?\DateTimeInterface
-    {
-        return $this->firstPlay;
-    }
-
-    public function setFirstPlay(?\DateTimeInterface $firstPlay): static
-    {
-        $this->firstPlay = $firstPlay;
+        $this->rating = $rating;
 
         return $this;
     }
@@ -147,14 +134,26 @@ class Review
         return $this;
     }
 
-    public function getMark(): ?int
+    public function getFirstPlay(): ?\DateTimeInterface
     {
-        return $this->mark;
+        return $this->firstPlay;
     }
 
-    public function setMark(?int $mark): static
+    public function setFirstPlay(?\DateTimeInterface $firstPlay): static
     {
-        $this->mark = $mark;
+        $this->firstPlay = $firstPlay;
+
+        return $this;
+    }
+
+    public function getComment(): ?string
+    {
+        return $this->comment;
+    }
+
+    public function setComment(?string $comment): static
+    {
+        $this->comment = $comment;
 
         return $this;
     }

@@ -6,7 +6,7 @@
 {% endmacro %}
 
 {% set title = 'review.index.title'|trans %}
-{% set sortFieldPossible = ['name', 'mark', 'hourSpend', 'firstPlay'] %}
+{% set sortFieldPossible = ['name', 'rating', 'hourSpend', 'firstPlay'] %}
 {% set sortOrderButton %}
   <a role="button" class="btn btn-outline-secondary app-btn-border-light" href="{{ _self.get_path(searchParam.sortField, searchParam.sortOrder == 'asc' ? 'desc' : 'asc', 0) }}">
     <span class="bi bi-arrow-{{ searchParam.sortOrder == 'asc' ? 'up' : 'down' }}"></span>

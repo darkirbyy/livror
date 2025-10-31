@@ -8,7 +8,7 @@ use App\Entity\Main\Game;
 
 class GameIndex
 {
-    public function __construct(private Game $game, private ?float $avgMark, private ?int $totHourSpend, private ?string $minFirstPlay)
+    public function __construct(private Game $game, private ?float $avgRating, private ?int $totHourSpend, private ?string $minFirstPlay)
     {
     }
 
@@ -17,9 +17,9 @@ class GameIndex
         return $this->game;
     }
 
-    public function getAvgMark(): ?float
+    public function getAvgRating(): ?float
     {
-        return $this->avgMark;
+        return $this->avgRating;
     }
 
     public function getTotHourSpend(): ?int

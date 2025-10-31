@@ -27,7 +27,7 @@ class ReviewController extends AbstractController
         $userId = $this->getUser()->getId();
 
         // Parse all the query parameters
-        $sortField = $request->query->getString('sortField', 'mark');
+        $sortField = $request->query->getString('sortField', 'rating');
         $sortOrder = $request->query->getString('sortOrder', 'desc');
         $firstResult = $request->query->getInt('firstResult', 0);
         $maxResults = $this->getParameter('app.max_results');

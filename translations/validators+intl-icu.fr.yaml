@@ -24,7 +24,7 @@ review:
   label:
     dateAdd: Date d'ajout
     comment: Commentaire
-    mark: Saucisses
+    rating: Saucisses
     hourSpend: Heures de jeu
     firstPlay: Lancement
     game: Jeu

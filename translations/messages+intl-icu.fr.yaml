@@ -20,7 +20,7 @@ game:
       reviews: Avis
     sort:
       name: Nom
-      avgMark: Saucisses
+      avgRating: Saucisses
       totHourSpend: Heures de jeu
       minFirstPlay: Lancement
   edit:
@@ -49,7 +49,7 @@ review:
       updated: modifié
     sort:
       name: Nom
-      mark: Saucisses
+      rating: Saucisses
       hourSpend: Heures de jeu
       firstPlay: Lancement
   edit:

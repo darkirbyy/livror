@@ -19,7 +19,7 @@ class ReviewRepository extends ServiceEntityRepository
     public function findSortLimit(int $userId, string $sortField, string $sortOrder, int $firstResult, int $maxResults): array
     {
         // Validate the input parameters, as they come from the user
-        $allowedSortFields = ['id' => 'r.id', 'name' => 'g.name', 'mark' => 'r.mark', 'hourSpend' => 'r.hourSpend', 'firstPlay' => 'r.firstPlay'];
+        $allowedSortFields = ['id' => 'r.id', 'name' => 'g.name', 'rating' => 'r.rating', 'hourSpend' => 'r.hourSpend', 'firstPlay' => 'r.firstPlay'];
         if (!array_key_exists($sortField, $allowedSortFields)) {
             throw new \InvalidArgumentException('Invalid field for sorting');
         }

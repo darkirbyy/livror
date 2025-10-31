@@ -20,7 +20,7 @@ class GameRepository extends ServiceEntityRepository
     public function findSortLimit(string $sortField, string $sortOrder, int $firstResult, int $maxResults): array
     {
         // Validate the input parameters, as they come from the user
-        $allowedSortFields = ['id' => 'g.id', 'name' => 'g.name', 'avgMark' => 'AVG(r.mark)', 'totHourSpend' => 'SUM(r.hourSpend)', 'minFirstPlay' => 'MIN(r.firstPlay)'];
+        $allowedSortFields = ['id' => 'g.id', 'name' => 'g.name', 'avgRating' => 'AVG(r.rating)', 'totHourSpend' => 'SUM(r.hourSpend)', 'minFirstPlay' => 'MIN(r.firstPlay)'];
         if (!array_key_exists($sortField, $allowedSortFields)) {
             throw new \InvalidArgumentException('Invalid field for sorting');
         }
@@ -42,7 +42,7 @@ class GameRepository extends ServiceEntityRepository
         $qb = $this->createQueryBuilder('g');
         $qb->leftJoin('g.reviews', 'r')
             ->addSelect()
-            ->select('NEW App\Dto\GameIndex(g, AVG(r.mark), SUM(r.hourSpend), MIN(r.firstPlay))')
+            ->select('NEW App\Dto\GameIndex(g, AVG(r.rating), SUM(r.hourSpend), MIN(r.firstPlay))')
             ->groupBy('g.id')
             ->orderBy($allowedSortFields[$sortField], $allowedSortOrders[$sortOrder])
             ->setFirstResult($firstResult)

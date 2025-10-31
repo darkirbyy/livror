@@ -57,15 +57,15 @@
           {% if form.game is defined %}
             {{ form_row(form.game, { label: 'review.label.game' }) }}
           {% endif %}
+          {{ form_row(form.rating, { label: 'review.label.rating' }) }}
           <div class="row">
-            <div class="col-12 col-md-6">
-              {{ form_row(form.firstPlay, { label: 'review.label.firstPlay' }) }}
-            </div>
             <div class="col-12 col-md-6">
               {{ form_row(form.hourSpend, { label: 'review.label.hourSpend' }) }}
             </div>
+            <div class="col-12 col-md-6">
+              {{ form_row(form.firstPlay, { label: 'review.label.firstPlay' }) }}
+            </div>
           </div>
-          {{ form_row(form.mark, { label: 'review.label.mark' }) }}
           {{ form_row(form.comment, { label: 'review.label.comment' }) }}
 
           {# Buttons to submit, cancel or open the delete modal on right/left for large screen / top/bottom for small screen #}
