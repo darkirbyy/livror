@@ -4,8 +4,7 @@ declare(strict_types=1);
 
 namespace App\Service;
 
-use App\Dto\Main\GameIndex;
-use App\Entity\Account\User;
+use App\Dto\GameIndex;
 use App\Entity\Main\Review;
 use App\Repository\UserRepository;
 

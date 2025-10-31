@@ -18,7 +18,7 @@
     {# Card title bar with the the title on one side, and 3 infos on the other side (or on top of each other on small screen) #}
     <div class="row gx-0 bg-primary-subtle border-bottom text-center">
       {# Actual title with the edit button #}
-      <div class="col-12 border-bottom col-md border-bottom-md-0">
+      <div class="col-12 border-bottom col-md-6 border-bottom-md-0 border-end-md card-max-md-auto">
         <div class="d-flex py-2 px-2 ps-md-3 justify-content-center justify-content-md-start align-items-center">
           <h5 class="mb-0 p-0">
             {{ game.name }}
@@ -26,22 +26,25 @@
           </h5>
         </div>
       </div>
-      {# 3 piece of information : player who have written a review, avg hour spent, avg mark #}
-      <div class="col-12 d-flex align-items-center col-md-auto">
-        {# <div class="flex-even-1 py-1 px-2 py-md-2 d-flex justify-content-center align-items-center flex-even-md-0">
-          <img src=" {{ asset('build/bibi.jpg') }}" class="rounded-circle mx-1 app-avatar-card" alt="TODO" />
-          <img src=" {{ asset('build/bibi.jpg') }}" class="rounded-circle mx-1 app-avatar-card" alt="TODO" />
-          <img src=" {{ asset('build/bibi.jpg') }}" class="rounded-circle mx-1 app-avatar-card" alt="TODO" />
-          <img src=" {{ asset('build/bibi.jpg') }}" class="rounded-circle mx-1 app-avatar-card" alt="TODO" />
-        </div> #}
-        <div class="flex-even-1 py-1 px-2 py-md-2 border-start flex-even-md-0">
+      {# 3 piece of information : player who have written a review, average mark, total hour spend, minimum first play date #}
+      <div class="col-12 d-flex align-items-center col-md-auto flex-even-1">
+        <div class="flex-even-1 py-1 px-2 py-md-2 border-end">
+          {% for review in game.reviews %}
+            {% if review.user is not empty %}
+              <img src="{{ HubUrlGenerator.generateRoot(review.user.avatarPath) }}"
+                class="rounded-circle app-avatar-card"
+                alt="{{ 'aria.avatar'|trans({ name: review.user.username }) }}" />
+            {% endif %}
+          {% endfor %}
+        </div>
+        <div class="flex-even-1 py-1 px-2 py-md-2 border-end">
           <span class="fa-regular fa-star fa-sm"></span> {{ gameIndex.avgMark is not empty ? gameIndex.avgMark : '-' }}
         </div>
-        <div class="flex-even-1 py-1 px-2 py-md-2 border-start flex-even-md-0">
+        <div class="flex-even-1 py-1 px-2 py-md-2 border-end">
           <span class="fa-regular fa-hourglass-half fa-sm"></span>
           {{ gameIndex.totHourSpend is not empty ? gameIndex.totHourSpend ~ 'h' : '-' }}
         </div>
-        <div class="flex-even-1 py-1 px-2 py-md-2 border-start flex-even-md-0">
+        <div class="flex-even-1 py-1 px-2 py-md-2">
           <span class="fa-regular fa-calendar-days fa-sm"></span>
           {{ gameIndex.minFirstPlay is not empty ? gameIndex.minFirstPlay|format_datetime('short', 'none') : '-' }}
         </div>
@@ -70,7 +73,7 @@
             <div class="col-12 px-0 border-bottom">
               <div class="mx-auto">
                 {% if game.imgUrl is not empty %}
-                  <img src="{{ game.imgUrl }}" class="app-card-img-fit" alt="TODO" />
+                  <img src="{{ game.imgUrl }}" class="app-card-img-fit" alt="{{ 'aria.cover'|trans({ name: game.name }) }}" />
                 {% else %}
                   <div class="bi bi-image text-center app-card-img-fit app-card-img-missing bg-body-secondary"></div>
                 {% endif %}

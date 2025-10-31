@@ -10,7 +10,7 @@ game:
   index:
     title: Tous les jeux
     button:
-      addGame: Ajouter un nouveau jeu
+      addGame: Ajouter un jeu
     flash:
       newGame: '{name} a été ajouté !'
       updateGame: '{name} a été mise à jour !'
@@ -25,7 +25,7 @@ game:
       minFirstPlay: Lancement
   edit:
     title:
-      add: Ajouter un nouveau jeu
+      add: Ajouter un jeu
       update: 'Modifier {name}'
     flash:
       steamSearch:
@@ -43,9 +43,9 @@ review:
       updateReview: 'Votre avis sur {name} a été mise à jour !'
       deleteReview: 'Votre avis sur  {name} a été supprimé !'
     card:
+      informations: Informations
       comment: Commentaire
-      stats: Notation
-      added: Ecrit
+      added: Ajouté
       updated: modifié
     sort:
       name: Nom
@@ -109,4 +109,5 @@ aria:
   mainNavigation: Navigation principale
   toggleNavigation: Basculer la navigation
   footer: Pied de page
-  avatar: Avatar
+  avatar: Avatar de {name}
+  cover: Image de couverture de {name}

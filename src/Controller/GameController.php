@@ -55,7 +55,7 @@ class GameController extends AbstractController
     public function new(Request $request, FormManager $fm): Response
     {
         $game = new Game();
-        $steamId = $request->query->get('steamId');
+        $steamId = 'GET' == $request->getMethod() ? $request->query->get('steamId') : null;
 
         $form = $this->createForm(GameType::class, $game, ['steamId' => $steamId]);
         $form->handleRequest($request);
@@ -75,7 +75,7 @@ class GameController extends AbstractController
     #[Route('/{id}/edit', name: 'edit', methods: ['GET', 'POST'], requirements: ['id' => '\d+'])]
     public function edit(Game $game, Request $request, FormManager $fm): Response
     {
-        $steamId = $request->query->get('steamId');
+        $steamId = 'GET' == $request->getMethod() ? $request->query->get('steamId') : null;
 
         $form = $this->createForm(GameType::class, $game, ['steamId' => $steamId]);
         $form->handleRequest($request);

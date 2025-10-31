@@ -42,7 +42,7 @@ class GameRepository extends ServiceEntityRepository
         $qb = $this->createQueryBuilder('g');
         $qb->leftJoin('g.reviews', 'r')
             ->addSelect()
-            ->select('NEW App\Dto\Main\GameIndex(g, AVG(r.mark), SUM(r.hourSpend), MIN(r.firstPlay))')
+            ->select('NEW App\Dto\GameIndex(g, AVG(r.mark), SUM(r.hourSpend), MIN(r.firstPlay))')
             ->groupBy('g.id')
             ->orderBy($allowedSortFields[$sortField], $allowedSortOrders[$sortOrder])
             ->setFirstResult($firstResult)
