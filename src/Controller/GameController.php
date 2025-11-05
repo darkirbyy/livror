@@ -5,15 +5,16 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Dto\FlashMessage;
+use App\Dto\QueryParam;
 use App\Entity\Main\Game;
 use App\Form\GameType;
 use App\Repository\GameRepository;
-use App\Repository\ReviewRepository;
 use App\Service\FormManager;
 use App\Service\UserConnector;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Attribute\MapQueryString;
 use Symfony\Component\Routing\Attribute\Route;
 
 #[Route('/game', name: 'game_')]
@@ -21,36 +22,22 @@ class GameController extends AbstractController
 {
     // List and find games
     #[Route('', name: 'index', methods: ['GET'])]
-    public function index(UserConnector $userConnector, GameRepository $gameRepo, ReviewRepository $reviewRepo, Request $request): Response
+    public function index(#[MapQueryString] QueryParam $queryParam, UserConnector $userConnector, GameRepository $gameRepo, Request $request): Response
     {
         // Fetch all distinct users that have written at least one review
-        $distinctUsers = [];
-        $userConnector->toDistinctUsers($distinctUsers);
-
-        // Parse all the query parameters
-        $sortField = $request->query->getString('sortField', 'name');
-        $sortOrder = $request->query->getString('sortOrder', 'asc');
-        $filterField = 'user';
-        $filterValues = array_map('intval', explode(',', $request->query->getString('filterValues', implode(',', array_keys($distinctUsers)))));
-        $firstResult = $request->query->getInt('firstResult', 0);
-        $maxResults = $this->getParameter('app.max_results');
+        $users = [];
+        $userConnector->toDistinctUsers($users);
 
         // Make the database query and get the corresponding games
-        $gamesIndex = $gameRepo->findSortFilterLimit($sortField, $sortOrder, $filterField, $filterValues, $firstResult, $maxResults);
+        $gamesIndex = $gameRepo->findIndex($queryParam);
         $userConnector->toGamesIndex($gamesIndex);
 
         // Prepare the data for the twig renderer
         $data = [
-            'gamesIndex' => array_slice($gamesIndex, 0, $maxResults), // remove one result as we have fetched one more that configured
-            'hasMore' => count($gamesIndex) > $maxResults, // determine if there is more games to fetch
-            'distinctUsers' => $distinctUsers,
-            'searchParam' => [
-                'sortField' => $sortField,
-                'sortOrder' => $sortOrder,
-                'filterField' => $filterField,
-                'filterValues' => $filterValues,
-                'firstResult' => $firstResult,
-            ],
+            'gamesIndex' => array_slice($gamesIndex, 0, $queryParam->limit), // remove one result as we have fetched one more that configured
+            'hasMore' => count($gamesIndex) > $queryParam->limit, // determine if there is more games to fetch
+            'users' => $users,
+            'queryParam' => $queryParam,
         ];
 
         // Render only the game list block when the request comes from the JavaScript, otherwise render the whole page

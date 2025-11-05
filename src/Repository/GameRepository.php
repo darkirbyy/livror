@@ -4,49 +4,40 @@ declare(strict_types=1);
 
 namespace App\Repository;
 
+use App\Dto\QueryParam;
 use App\Entity\Main\Game;
 use App\Entity\Main\Review;
+use App\Service\QueryParamHelper;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\Persistence\ManagerRegistry;
 
 class GameRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(ManagerRegistry $registry, private QueryParamHelper $queryParamHelper)
     {
         parent::__construct($registry, Game::class);
     }
 
-    public function findSortFilterLimit(string $sortField, string $sortOrder, string $filterField, array $filterValues, int $firstResult, int $maxResults): array
+    public function findIndex(QueryParam $queryParam): array
     {
-        // Validate the input parameters, as they come from the user
-        $allowedSortFields = ['id' => 'g.id', 'name' => 'g.name', 'avgRating' => 'AVG(r.rating)', 'totHourSpend' => 'SUM(r.hourSpend)', 'minFirstPlay' => 'MIN(r.firstPlay)'];
-        if (!array_key_exists($sortField, $allowedSortFields)) {
-            throw new \InvalidArgumentException('Invalid field for sorting');
-        }
+        // Define allowed sort and filter parameters and the conversion to the doctrine field
+        $sortsConversion = ['id' => 'g.id', 'name' => 'g.name', 'avgRating' => 'AVG(ra.rating)', 'totHourSpend' => 'SUM(ra.hourSpend)', 'minFirstPlay' => 'MIN(ra.firstPlay)'];
+        $filtersConversion = ['users' => 'rf.userId'];
 
-        $allowedSortOrders = ['asc' => 'ASC', 'desc' => 'DESC'];
-        if (!array_key_exists($sortOrder, $allowedSortOrders)) {
-            throw new \InvalidArgumentException('Invalid order for sorting');
-        }
+        // Validate and complete the parameters
+        $this->queryParamHelper->defaults($queryParam, ['name' => 'asc'], []);
+        $this->queryParamHelper->validate($queryParam, array_keys($sortsConversion), array_keys($filtersConversion));
 
-        if ($firstResult < 0) {
-            throw new \InvalidArgumentException('Invalid first result offset');
-        }
-
-        if ($maxResults <= 0) {
-            throw new \InvalidArgumentException('Invalid max results limit');
-        }
-
-        // Build the query (fetch one more result to determine is there are more to fetch)
+        // Build the base query (with select, join and group)
         $qb = $this->createQueryBuilder('g');
-        $qb->leftJoin('g.reviews', 'r')
-            ->addSelect()
-            ->select('NEW App\Dto\GameIndex(g, AVG(r.rating), SUM(r.hourSpend), MIN(r.firstPlay))')
-            ->groupBy('g.id')
-            ->orderBy($allowedSortFields[$sortField], $allowedSortOrders[$sortOrder])
-            ->setFirstResult($firstResult)
-            ->setMaxResults($maxResults + 1);
+        $qb->leftJoin('g.reviews', 'ra')
+            ->select('NEW App\Dto\GameIndex(g, AVG(ra.rating), SUM(ra.hourSpend), MIN(ra.firstPlay))')
+            ->groupBy('g.id') // todo : don't work !
+            ->innerJoin('g.reviews', 'rf');
+
+        // Apply the parameters (offset, limit, sorts, filters)
+        $this->queryParamHelper->apply($queryParam, $qb, $sortsConversion, $filtersConversion);
 
         // Execute and fetch the query
         return $qb->getQuery()->getResult();

@@ -55,8 +55,8 @@
 {% endfor %}
 
 {% if hasMore %}
-  <div class="text-center"
-    {{ stimulus_controller('load-more', { url: get_path(searchParam.sortField, searchParam.sortOrder, searchParam.firstResult + env.app.max_results)|trim, lazy: true }) }}>
+  {# {{ stimulus_controller('load-more', { url: get_path(searchParam.sortField, searchParam.sortOrder, searchParam.firstResult + env.app.default_limit)|trim, lazy: true }) }}> #}
+  <div class="text-center">
     <button class="btn btn-outline-secondary" data-load-more-target="button remove">{{ 'form.button.showMore'|trans }}</button>
     <span class="fs-4 text-muted" data-load-more-target="spinner"></span>
   </div>

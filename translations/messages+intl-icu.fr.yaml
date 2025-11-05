@@ -23,6 +23,8 @@ game:
       avgRating: Saucisses
       totHourSpend: Heures de jeu
       minFirstPlay: Lancement
+    filter:
+      users: Joueurs
   edit:
     title:
       add: Ajouter un jeu

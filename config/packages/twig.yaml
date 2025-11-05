@@ -9,7 +9,8 @@ twig:
                 env: '%app.env%'
                 currency: '%app.currency%'
                 locale: '%app.locale%'
-                max_results: '%app.max_results%'
+                default_limit: '%app.default_limit%'
+                max_limit: '%app.max_limit%'
             versioning:
                 version: '%versioning.version%'
                 version_hash: '%versioning.version_hash%'

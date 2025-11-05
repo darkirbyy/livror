@@ -31,7 +31,7 @@ class ReviewController extends AbstractController
         $sortField = $request->query->getString('sortField', 'name');
         $sortOrder = $request->query->getString('sortOrder', 'desc');
         $firstResult = $request->query->getInt('firstResult', 0);
-        $maxResults = $this->getParameter('app.max_results');
+        $maxResults = $this->getParameter('app.default_limit');
 
         // Make the database query and get the corresponding reviews
         $reviews = $reviewRepo->findSortLimit($userId, $sortField, $sortOrder, $firstResult, $maxResults);
