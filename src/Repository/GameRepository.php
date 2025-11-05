@@ -17,7 +17,7 @@ class GameRepository extends ServiceEntityRepository
         parent::__construct($registry, Game::class);
     }
 
-    public function findSortLimit(string $sortField, string $sortOrder, int $firstResult, int $maxResults): array
+    public function findSortFilterLimit(string $sortField, string $sortOrder, string $filterField, array $filterValues, int $firstResult, int $maxResults): array
     {
         // Validate the input parameters, as they come from the user
         $allowedSortFields = ['id' => 'g.id', 'name' => 'g.name', 'avgRating' => 'AVG(r.rating)', 'totHourSpend' => 'SUM(r.hourSpend)', 'minFirstPlay' => 'MIN(r.firstPlay)'];

@@ -49,4 +49,12 @@ class ReviewRepository extends ServiceEntityRepository
         // Execute and fetch the query
         return $qb->getQuery()->getResult();
     }
+
+    public function findDistinctUsersId(): array
+    {
+        $qb = $this->createQueryBuilder('r');
+        $qb->select('r.userId')->distinct();
+
+        return $qb->getQuery()->getSingleColumnResult();
+    }
 }

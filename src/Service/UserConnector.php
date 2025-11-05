@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace App\Service;
 
 use App\Dto\GameIndex;
+use App\Entity\Account\User;
 use App\Entity\Main\Review;
+use App\Repository\ReviewRepository;
 use App\Repository\UserRepository;
 
 /**
@@ -13,7 +15,7 @@ use App\Repository\UserRepository;
  */
 class UserConnector
 {
-    public function __construct(private UserRepository $userRepo)
+    public function __construct(private UserRepository $userRepo, private ReviewRepository $reviewRepo)
     {
     }
 
@@ -28,5 +30,12 @@ class UserConnector
 
         // Plug the user in each of the entity Review
         array_walk($reviews, fn (Review $r) => $r->setUser($users[$r->getUserId()]));
+    }
+
+    public function toDistinctUsers(array &$distinctUsers): void
+    {
+        $distinctUsersId = $this->reviewRepo->findDistinctUsersId();
+        $distinctUsers = $this->userRepo->byUsersId($distinctUsersId);
+        // usort($distinctUsers, fn(User $u1, User $u2) => $u1->getUsername() <=> $u2->getUsername());
     }
 }

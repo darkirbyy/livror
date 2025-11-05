@@ -72,6 +72,8 @@ form:
     cancel: Annuler
     close: Fermer
     sortBy: Trier par
+    filterBy: Filtrer par
+    apply: Appliquer
     showMore: Voir plus
   flash:
     invalidCsrf: Le jeton CSRF est invalide.
