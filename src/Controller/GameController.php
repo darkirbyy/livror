@@ -24,20 +24,21 @@ class GameController extends AbstractController
     #[Route('', name: 'index', methods: ['GET'])]
     public function index(#[MapQueryString] QueryParam $queryParam, UserConnector $userConnector, GameRepository $gameRepo, Request $request): Response
     {
+        // todo : double query for the users, simplify ?
         // Fetch all distinct users that have written at least one review
         $users = [];
         $userConnector->toDistinctUsers($users);
 
-        // Make the database query and get the corresponding games
+        // Make the database query and get the corresponding games, and link the users
         $gamesIndex = $gameRepo->findIndex($queryParam);
         $userConnector->toGamesIndex($gamesIndex);
 
         // Prepare the data for the twig renderer
         $data = [
+            'queryParam' => $queryParam,
+            'users' => $users,
             'gamesIndex' => array_slice($gamesIndex, 0, $queryParam->limit), // remove one result as we have fetched one more that configured
             'hasMore' => count($gamesIndex) > $queryParam->limit, // determine if there is more games to fetch
-            'users' => $users,
-            'queryParam' => $queryParam,
         ];
 
         // Render only the game list block when the request comes from the JavaScript, otherwise render the whole page

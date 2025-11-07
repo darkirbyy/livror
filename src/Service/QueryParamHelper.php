@@ -37,7 +37,7 @@ final readonly class QueryParamHelper
         );
         $queryParam->filters = array_filter(
             $queryParam->filters,
-            fn ($value, $key): bool => in_array($key, $allowedFiltersKeys, true) && preg_match('/^$|^\w+(?:,\w+)*$/', $value),
+            fn ($values, $key): bool => in_array($key, $allowedFiltersKeys, true) && is_array($values) && array_all($values, fn ($value) => ctype_alnum($value)),
             ARRAY_FILTER_USE_BOTH,
         );
     }
@@ -48,8 +48,8 @@ final readonly class QueryParamHelper
             $qb->addOrderBy($sortsConversion[$key], strtoupper($direction));
         }
 
-        foreach ($queryParam->filters as $key => $values) {
-            $qb->andWhere($filtersConversion[$key] . ' IN (:' . $key . ')')->setParameter($key, explode(',', $values));
+        foreach ($queryParam->filter as $key => $values) {
+            $qb->andWhere($filtersConversion[$key] . ' IN (:' . $key . ')')->setParameter($key, $values);
         }
 
         $qb->setMaxResults($queryParam->limit + 1);

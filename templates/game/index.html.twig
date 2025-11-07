@@ -78,11 +78,8 @@
                       {% for user in users|sort((a, b) => a.username <=> b.username) %}
                         <li>
                           <div class="dropdown-item">
-                            <input class="form-check-input"
-                              type="checkbox"
-                              value="{{ user.id }}"
-                              id="{{ filterId ~ user.id }}"
-                              {{ queryParam.filters.users is not defined or user.id in queryParam.filters.users ? 'checked' }} />
+                            {% set checked = queryParam.filters.users is not defined or user.id in queryParam.filters.users ? 'checked' : '' %}
+                            <input class="form-check-input" type="checkbox" value="{{ user.id }}" id="{{ filterId ~ user.id }}" {{ checked }} />
                             <label class="form-check-label w-100" for="{{ filterId ~ user.id }}">
                               <img src="{{ HubUrlGenerator.generateRoot(user.avatarPath) }}"
                                 class="rounded-circle img-fluid app-avatar-card"
