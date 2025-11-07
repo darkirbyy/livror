@@ -1,17 +1,13 @@
 {% extends 'base.html.twig' %}
 
 {# Macro to lighten the code to generate path with query params for the sort #}
-{% macro get_path(sortField, sortOrder, firstResult) %}
-  {{ path(app.current_route, { sortField: sortField, sortOrder: sortOrder, firstResult: firstResult })|raw }}
-{% endmacro %}
+{%- macro get_path(queryParam) -%}
+  {{ path(app.current_route, queryParam|query_param_to_array)|raw }}
+{%- endmacro -%}
 
 {% set title = 'review.index.title'|trans %}
-{% set sortFieldPossible = ['name', 'rating', 'hourSpend', 'firstPlay'] %}
-{% set sortOrderButton %}
-  <a role="button" class="btn btn-outline-secondary app-btn-border-light" href="{{ _self.get_path(searchParam.sortField, searchParam.sortOrder == 'asc' ? 'desc' : 'asc', 0) }}">
-    <span class="bi bi-arrow-{{ searchParam.sortOrder == 'asc' ? 'up' : 'down' }}"></span>
-  </a>
-{% endset %}
+{% set displayedSortsKeys = ['name', 'rating', 'hourSpend', 'firstPlay'] %}
+{% set displayedFiltersKeys = [] %}
 
 {% block main %}
   <section>
@@ -27,46 +23,81 @@
         </div>
       {% endif %}
 
+      {# Button to add a new review #}
+      <div class="mx-auto card-max-auto card-max-md-none pb-3">
+        <a href="{{ path('review_new') }}" class="btn btn-primary {{ cannotAdd ? 'disabled' }}" data-turbo-frame="_top">
+          <span class="bi bi-plus-square-fill me-md-1"></span>
+          <span class="d-none d-md-inline">{{ 'review.index.button.addReview'|trans }}</span>
+        </a>
+      </div>
+
       {# Turboframe to refresh only the main section when sorting the results #}
       <turbo-frame id="main-section">
-        {# Before the first card : field to sort on the left, button to add new game on the right #}
+        {# Before the first card : field to sort on the left, field to filter on the right #}
         <div class="d-flex card-max-auto align-items-center justify-content-between card-max-md-none mx-auto">
           {# Fields to sort on large screen : independant buttons for each possibility + asc/desc button #}
           <div class="d-none d-md-block">
-            <div class="input-group" role="group" aria-labelledby="sortFieldButtons">
-              <label class="input-group-text" id="sortFieldButtons">{{ 'form.button.sortBy'|trans }}</label>
-              {% for newSortField in sortFieldPossible %}
-                <a role="button"
-                  class="btn btn-outline-secondary app-btn-border-light {{ searchParam.sortField == newSortField ? 'active' }}"
-                  href="{{ _self.get_path(newSortField, searchParam.sortOrder, 0) }}">
-                  {{ ('review.index.sort.' ~ newSortField)|trans }}
+            <div class="input-group" role="group" aria-labelledby="input-group-sorts">
+              <label class="input-group-text" id="input-group-sorts">{{ 'form.button.sortBy'|trans }}</label>
+              {% for sortKey in displayedSortsKeys %}
+                {% set url = _self.get_path(queryParam|query_param_change('sorts', { (sortKey): queryParam.sorts|first })) %}
+                <a href="{{ url }}" class="btn btn-outline-secondary app-btn-border-light {{ queryParam.sorts|keys|first == sortKey ? 'active' }}">
+                  {{ ('review.index.sort.' ~ sortKey)|trans }}
                 </a>
               {% endfor %}
-              {{ sortOrderButton }}
+              {% block directionButton %}
+                {% set url = _self.get_path(queryParam|query_param_change('sorts', { (queryParam.sorts|keys|first): (queryParam.sorts|first) == 'asc' ? 'desc' : 'asc' })) %}
+                <a href="{{ url }}" class="btn btn-outline-secondary app-btn-border-light">
+                  <span class="bi bi-arrow-{{ queryParam.sorts|first == 'asc' ? 'up' : 'down' }}"></span>
+                </a>
+              {% endblock %}
             </div>
           </div>
 
           {# Fields to sort on small screen : on select with all possibilities + asc/desc button #}
           <div class="d-md-none">
-            <div class="input-group">
-              <label class="input-group-text" for="sortFieldOptions">{{ 'form.button.sortBy'|trans }}</label>
-              <select class="form-select" id="sortFieldOptions" {{ stimulus_controller('sort-select') }}>
-                {% for newSortField in sortFieldPossible %}
-                  <option value="{{ _self.get_path(newSortField, searchParam.sortOrder, 0) }}" {{ searchParam.sortField == newSortField ? 'selected="selected"' }}>
-                    {{ ('review.index.sort.' ~ newSortField)|trans }}
+            <div class="input-group" role="group" aria-labelledby="input-group-sorts-small">
+              <label class="input-group-text" id="input-group-sorts-small" for="input-group-sorts-small-options">{{ 'form.button.sortBy'|trans }}</label>
+              <select class="form-select" id="input-group-sorts-small-options" {{ stimulus_controller('sort-select') }}>
+                {% for sortKey in displayedSortsKeys %}
+                  {% set url = _self.get_path(queryParam|query_param_change('sorts', { (sortKey): queryParam.sorts|first })) %}
+                  <option value="{{ url }}" {{ (queryParam.sorts|keys|first) == sortKey ? 'selected="selected"' }}>
+                    {{ ('review.index.sort.' ~ sortKey)|trans }}
                   </option>
                 {% endfor %}
               </select>
-              {{ sortOrderButton }}
+              {{ block('directionButton') }}
             </div>
           </div>
 
-          {# Button to add a new review #}
+          {# Fields to filter : dropdown with checkboxes for all possibilities and apply button #}
           <div class="ms-2">
-            <a href="{{ path('review_new') }}" class="btn btn-primary {{ cannotAdd ? 'disabled' }}" data-turbo-frame="_top">
-              <span class="bi bi-plus-square-fill me-md-1"></span>
-              <span class="d-none d-md-inline">{{ 'review.index.button.addReview'|trans }}</span>
-            </a>
+            <div class="input-group" role="group" aria-labelledby="input-group-filters">
+              <label class="input-group-text" id="input-group-filters">{{ 'form.button.filterBy'|trans }}</label>
+              {% for filterKey in displayedFiltersKeys %}
+                {% set filterId = 'dropdown-filter-' ~ filterKey %}
+                <button type="button"
+                  class="btn btn-outline-secondary app-btn-border-light dropdown-toggle app-dropdown-left app-dropdown-smooth"
+                  data-bs-toggle="dropdown"
+                  data-bs-target="#{{ filterId }}"
+                  data-bs-auto-close="outside"
+                  aria-expanded="false"
+                  aria-haspopup="true">
+                  {{ ('review.index.filter.' ~ filterKey)|trans }}
+                </button>
+                {% set url = _self.get_path(queryParam) %}
+                <ul id="{{ filterId }}" class="dropdown-menu dropdown-menu-end" {{ stimulus_controller('filter-apply', { url: url, key: filterKey }) }}>
+                  <li>
+                    {% if filterKey == '' %}
+
+                    {% endif %}
+                    <div class="dropdown-item text-center">
+                      <button class="btn btn-outline-secondary" data-filter-apply-target="button">{{ 'form.button.apply'|trans }}</button>
+                    </div>
+                  </li>
+                </ul>
+              {% endfor %}
+            </div>
           </div>
         </div>
 

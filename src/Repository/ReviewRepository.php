@@ -4,47 +4,35 @@ declare(strict_types=1);
 
 namespace App\Repository;
 
+use App\Dto\QueryParam;
 use App\Entity\Main\Review;
+use App\Service\QueryParamHelper;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\DBAL\ParameterType;
 use Doctrine\Persistence\ManagerRegistry;
 
 class ReviewRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(ManagerRegistry $registry, private QueryParamHelper $queryParamHelper)
     {
         parent::__construct($registry, Review::class);
     }
 
-    public function findSortLimit(int $userId, string $sortField, string $sortOrder, int $firstResult, int $maxResults): array
+    public function findIndex(QueryParam $queryParam, int $userId): array
     {
-        // Validate the input parameters, as they come from the user
-        $allowedSortFields = ['id' => 'r.id', 'name' => 'g.name', 'rating' => 'r.rating', 'hourSpend' => 'r.hourSpend', 'firstPlay' => 'r.firstPlay'];
-        if (!array_key_exists($sortField, $allowedSortFields)) {
-            throw new \InvalidArgumentException('Invalid field for sorting');
-        }
+        // Define allowed sort and filter parameters and the conversion to the doctrine field
+        $sortsConversion = ['name' => 'g.name', 'rating' => 'r.rating', 'hourSpend' => 'r.hourSpend', 'firstPlay' => 'r.firstPlay'];
+        $filtersConversion = [];
 
-        $allowedSortOrders = ['asc' => 'ASC', 'desc' => 'DESC'];
-        if (!array_key_exists($sortOrder, $allowedSortOrders)) {
-            throw new \InvalidArgumentException('Invalid order for sorting');
-        }
+        // Validate and complete the parameters
+        $this->queryParamHelper->defaults($queryParam, ['name' => 'asc'], []);
+        $this->queryParamHelper->validate($queryParam, array_keys($sortsConversion), array_keys($filtersConversion));
 
-        if ($firstResult < 0) {
-            throw new \InvalidArgumentException('Invalid first result offset');
-        }
-
-        if ($maxResults <= 0) {
-            throw new \InvalidArgumentException('Invalid max results limit');
-        }
-
-        // Build the query (fetch one more result to determine is there are more to fetch)
+        // Build the base query (with select, join and group)
         $qb = $this->createQueryBuilder('r');
-        $qb->leftJoin('r.game', 'g')
-            ->where('r.userId = :userId')
-            ->setParameter('userId', $userId, ParameterType::INTEGER)
-            ->orderBy($allowedSortFields[$sortField], $allowedSortOrders[$sortOrder])
-            ->setFirstResult($firstResult)
-            ->setMaxResults($maxResults + 1);
+        $qb->leftJoin('r.game', 'g')->where('r.userId = :userId')->setParameter('userId', $userId);
+
+        // Apply sorts, filters, offset and limit
+        $this->queryParamHelper->apply($queryParam, $qb, $sortsConversion, $filtersConversion);
 
         // Execute and fetch the query
         return $qb->getQuery()->getResult();

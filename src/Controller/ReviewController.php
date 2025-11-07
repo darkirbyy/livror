@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Dto\FlashMessage;
+use App\Dto\QueryParam;
 use App\Entity\Main\Review;
 use App\Form\ReviewType;
 use App\Repository\GameRepository;
@@ -13,6 +14,7 @@ use App\Service\FormManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Attribute\MapQueryString;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotAcceptableHttpException;
 use Symfony\Component\Routing\Attribute\Route;
@@ -22,29 +24,19 @@ class ReviewController extends AbstractController
 {
     // List and find reviews
     #[Route('', name: 'index', methods: ['GET'])]
-    public function index(GameRepository $gameRepo, ReviewRepository $reviewRepo, Request $request): Response
+    public function index(#[MapQueryString] QueryParam $queryParam, GameRepository $gameRepo, ReviewRepository $reviewRepo, Request $request): Response
     {
         // Retrieve the connected user id
         $userId = $this->getUser()->getId();
 
-        // Parse all the query parameters
-        $sortField = $request->query->getString('sortField', 'name');
-        $sortOrder = $request->query->getString('sortOrder', 'desc');
-        $firstResult = $request->query->getInt('firstResult', 0);
-        $maxResults = $this->getParameter('app.default_limit');
-
         // Make the database query and get the corresponding reviews
-        $reviews = $reviewRepo->findSortLimit($userId, $sortField, $sortOrder, $firstResult, $maxResults);
+        $reviews = $reviewRepo->findIndex($queryParam, $userId);
 
         // Prepare the data for the twig renderer
         $data = [
-            'reviews' => array_slice($reviews, 0, $maxResults), // remove on result as we have fetched one more that configured
-            'hasMore' => count($reviews) > $maxResults, // determine if there is more games to fetch
-            'searchParam' => [
-                'sortField' => $sortField,
-                'sortOrder' => $sortOrder,
-                'firstResult' => $firstResult,
-            ],
+            'queryParam' => $queryParam,
+            'reviews' => array_slice($reviews, 0, $queryParam->limit), // remove on result as we have fetched one more that configured
+            'hasMore' => count($reviews) > $queryParam->limit, // determine if there is more games to fetch
             'cannotAdd' => 0 == $gameRepo->countNotCommented($userId),
         ];
 

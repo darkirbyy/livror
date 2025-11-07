@@ -1,7 +1,8 @@
 {% extends 'base.html.twig' %}
 
+{# Macro to lighten the code to generate path with query params for the sort #}
 {%- macro get_path(queryParam) -%}
-  {{ path('game_index', queryParam|query_param_to_array)|raw }}
+  {{ path(app.current_route, queryParam|query_param_to_array)|raw }}
 {%- endmacro -%}
 
 {% set title = 'game.index.title'|trans %}
@@ -49,9 +50,9 @@
 
           {# Fields to sort on small screen : on select with all possibilities + asc/desc button #}
           <div class="d-md-none">
-            <div class="input-group" role="group" aria-labelledby="input-group-sorts">
-              <label class="input-group-text" id="input-group-sorts" for="input-group-sorts-options">{{ 'form.button.sortBy'|trans }}</label>
-              <select class="form-select" id="input-group-sorts-options" {{ stimulus_controller('sort-select') }}>
+            <div class="input-group" role="group" aria-labelledby="input-group-sorts-small">
+              <label class="input-group-text" id="input-group-sorts-small" for="input-group-sorts-small-options">{{ 'form.button.sortBy'|trans }}</label>
+              <select class="form-select" id="input-group-sorts-small-options" {{ stimulus_controller('sort-select') }}>
                 {% for sortKey in displayedSortsKeys %}
                   {% set url = _self.get_path(queryParam|query_param_change('sorts', { (sortKey): queryParam.sorts|first })) %}
                   <option value="{{ url }}" {{ (queryParam.sorts|keys|first) == sortKey ? 'selected="selected"' }}>
@@ -78,7 +79,7 @@
                   aria-haspopup="true">
                   {{ ('game.index.filter.' ~ filterKey)|trans }}
                 </button>
-                {% set url = _self.get_path(queryParam|query_param_change('filters', { })) %}
+                {% set url = _self.get_path(queryParam) %}
                 <ul id="{{ filterId }}" class="dropdown-menu dropdown-menu-end" {{ stimulus_controller('filter-apply', { url: url, key: filterKey }) }}>
                   <li>
                     {% if filterKey == 'users' %}

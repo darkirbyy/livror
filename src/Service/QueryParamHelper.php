@@ -48,7 +48,7 @@ final readonly class QueryParamHelper
             $qb->addOrderBy($sortsConversion[$key], strtoupper($direction));
         }
 
-        foreach ($queryParam->filter as $key => $values) {
+        foreach ($queryParam->filters as $key => $values) {
             $qb->andWhere($filtersConversion[$key] . ' IN (:' . $key . ')')->setParameter($key, $values);
         }
 
