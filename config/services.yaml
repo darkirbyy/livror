@@ -12,6 +12,7 @@ parameters:
     app.default_limit: '%env(int:APP_DEFAULT_LIMIT)%'
     app.max_limit: '%env(int:APP_MAX_LIMIT)%'
     app.html_validation: '%env(bool:APP_HTML_VALIDATION)%'
+    app.index_autoload: '%env(bool:APP_INDEX_AUTOLOAD)%'
     hub.base_url: '%env(string:HUB_BASE_URL)%'
     hub.account_route: '%env(string:HUB_ACCOUNT_ROUTE)%'
 

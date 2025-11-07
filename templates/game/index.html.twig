@@ -1,7 +1,10 @@
 {% extends 'base.html.twig' %}
 
-{% set title = 'game.index.title'|trans %}
+{%- macro get_path(queryParam) -%}
+  {{ path('game_index', queryParam|query_param_to_array)|raw }}
+{%- endmacro -%}
 
+{% set title = 'game.index.title'|trans %}
 {% set displayedSortsKeys = ['name', 'avgRating', 'totHourSpend', 'minFirstPlay'] %}
 {% set displayedFiltersKeys = ['users'] %}
 
@@ -30,14 +33,16 @@
             <div class="input-group" role="group" aria-labelledby="input-group-sorts">
               <label class="input-group-text" id="input-group-sorts">{{ 'form.button.sortBy'|trans }}</label>
               {% for sortKey in displayedSortsKeys %}
-                <button class="btn btn-outline-secondary app-btn-border-light {{ queryParam.sorts|keys|first == sortKey ? 'active' }}" href="">
+                {% set url = _self.get_path(queryParam|query_param_change('sorts', { (sortKey): queryParam.sorts|first })) %}
+                <a href="{{ url }}" class="btn btn-outline-secondary app-btn-border-light {{ queryParam.sorts|keys|first == sortKey ? 'active' }}">
                   {{ ('game.index.sort.' ~ sortKey)|trans }}
-                </button>
+                </a>
               {% endfor %}
               {% block directionButton %}
-                <button class="btn btn-outline-secondary app-btn-border-light">
-                  <span href="" class="bi bi-arrow-{{ queryParam.sorts|first == 'asc' ? 'up' : 'down' }}"></span>
-                </button>
+                {% set url = _self.get_path(queryParam|query_param_change('sorts', { (queryParam.sorts|keys|first): (queryParam.sorts|first) == 'asc' ? 'desc' : 'asc' })) %}
+                <a href="{{ url }}" class="btn btn-outline-secondary app-btn-border-light">
+                  <span class="bi bi-arrow-{{ queryParam.sorts|first == 'asc' ? 'up' : 'down' }}"></span>
+                </a>
               {% endblock %}
             </div>
           </div>
@@ -48,7 +53,8 @@
               <label class="input-group-text" id="input-group-sorts" for="input-group-sorts-options">{{ 'form.button.sortBy'|trans }}</label>
               <select class="form-select" id="input-group-sorts-options" {{ stimulus_controller('sort-select') }}>
                 {% for sortKey in displayedSortsKeys %}
-                  <option value="" {{ queryParam.sorts|keys|first ? 'selected="selected"' }}>
+                  {% set url = _self.get_path(queryParam|query_param_change('sorts', { (sortKey): queryParam.sorts|first })) %}
+                  <option value="{{ url }}" {{ (queryParam.sorts|keys|first) == sortKey ? 'selected="selected"' }}>
                     {{ ('game.index.sort.' ~ sortKey)|trans }}
                   </option>
                 {% endfor %}
@@ -79,9 +85,10 @@
                         <li>
                           <div class="dropdown-item">
                             {% set checked = queryParam.filters.users is not defined or user.id in queryParam.filters.users ? 'checked' : '' %}
-                            <input class="form-check-input" type="checkbox" value="{{ user.id }}" id="{{ filterId ~ user.id }}" {{ checked }} />
-                            <label class="form-check-label w-100" for="{{ filterId ~ user.id }}">
-                              <img src="{{ HubUrlGenerator.generateRoot(user.avatarPath) }}"
+                            {% set filterUserId = filterId ~ '-' ~ user.id %}
+                            <input class="form-check-input" type="checkbox" value="{{ user.id }}" id="{{ filterUserId }}" {{ checked }} />
+                            <label class="form-check-label w-100" for="{{ filterUserId }}">
+                              <img src="{{ user.avatarPath|hub_url_generate_root }}"
                                 class="rounded-circle img-fluid app-avatar-card"
                                 alt="{{ 'aria.avatar'|trans({ name: user.username }) }}" />
                               <span class="ms-1">{{ user.username }}</span>

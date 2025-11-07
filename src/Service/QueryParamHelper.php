@@ -55,4 +55,22 @@ final readonly class QueryParamHelper
         $qb->setMaxResults($queryParam->limit + 1);
         $qb->setFirstResult($queryParam->offset);
     }
+
+    public function change(QueryParam $queryParam, string $property, mixed $value): QueryParam
+    {
+        $queryParamCloned = clone $queryParam;
+        $queryParamCloned->$property = $value;
+
+        return $queryParamCloned;
+    }
+
+    public function toArray(QueryParam $queryParam): array
+    {
+        $urlParam = [];
+        foreach ($queryParam as $property => $value) {
+            $urlParam[$property] = $value;
+        }
+
+        return $urlParam;
+    }
 }

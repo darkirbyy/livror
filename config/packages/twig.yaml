@@ -11,11 +11,11 @@ twig:
                 locale: '%app.locale%'
                 default_limit: '%app.default_limit%'
                 max_limit: '%app.max_limit%'
+                index_autoload: '%app.index_autoload%'
             versioning:
                 version: '%versioning.version%'
                 version_hash: '%versioning.version_hash%'
                 release_date: '%versioning.release_date%'
-        HubUrlGenerator: "@App\\Service\\HubUrlGenerator"
 
 when@test:
     twig:

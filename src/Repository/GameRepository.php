@@ -22,7 +22,7 @@ class GameRepository extends ServiceEntityRepository
     public function findIndex(QueryParam $queryParam): array
     {
         // Define allowed sort and filter parameters and the conversion to the doctrine field
-        $sortsConversion = ['id' => 'g.id', 'name' => 'g.name', 'avgRating' => 'AVG(ra.rating)', 'totHourSpend' => 'SUM(ra.hourSpend)', 'minFirstPlay' => 'MIN(ra.firstPlay)'];
+        $sortsConversion = ['name' => 'g.name', 'avgRating' => 'AVG(ra.rating)', 'totHourSpend' => 'SUM(ra.hourSpend)', 'minFirstPlay' => 'MIN(ra.firstPlay)'];
         $filtersConversion = ['users' => 'rf.userId'];
 
         // Validate and complete the parameters
@@ -37,6 +37,7 @@ class GameRepository extends ServiceEntityRepository
         foreach ($queryParam->sorts as $key => $direction) {
             $qb->addOrderBy($sortsConversion[$key], strtoupper($direction));
         }
+        $qb->addOrderBy('g.id', 'ASC');
 
         // Apply the query param : filters
         // todo : rethink the logic/query
@@ -64,7 +65,8 @@ class GameRepository extends ServiceEntityRepository
         $qb->leftJoin('g.reviews', 'r', Join::WITH, 'r.userId = :userId')
             ->where('r.id IS NULL')
             ->setParameter('userId', $userId)
-            ->orderBy('g.name', 'ASC');
+            ->orderBy('g.name', 'ASC')
+            ->addOrderBy('g.id', 'ASC');
 
         return $qb->getQuery()->getResult();
     }
