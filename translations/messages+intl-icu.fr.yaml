@@ -77,6 +77,7 @@ form:
     filterBy: Filtrer par
     apply: Appliquer
     showMore: Voir plus
+    backToList: Retour à la liste
   flash:
     invalidCsrf: Le jeton CSRF est invalide.
     foreignKey: Impossible de supprimer cet élément tant que d'autres éléments y font référence.
@@ -92,7 +93,7 @@ layout:
   name: Livror
   navbar:
     home: Accueil
-    game: Tous les jeux
+    game: Jeux
     account:
       signIn: Se connecter
       signOut: Se déconnecter

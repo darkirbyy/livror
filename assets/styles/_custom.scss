@@ -23,6 +23,14 @@ legend.col-form-label.required::after {
   color: $primary !important;
 }
 
+.icon-link-right {
+  --bs-icon-link-transform: translateX(0.2rem);
+}
+
+.icon-link-left {
+  --bs-icon-link-transform: translateX(-0.2rem);
+}
+
 ///////////////////////////////////
 // App-specific classes ///////////
 ///////////////////////////////////

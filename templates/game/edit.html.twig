@@ -12,7 +12,7 @@
   {# Modal to confirm delete, if in EDIT mode #}
   {% if game.id is not null %}
     <div class="modal fade" id="delete-modal" tabindex="-1" aria-labelledby="delete-modal-label" aria-hidden="true" role="dialog" loading="lazy">
-      <div class="modal-dialog modal-dialog-centered modal-fullscreen-sm-down">
+      <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
           {# Header with title and dismiss button #}
           <div class="modal-header">
@@ -48,11 +48,18 @@
   <section>
     <div class="container">
       <div class="row">
-        <div class="col-10 offset-1 col-lg-8 offset-lg-2">
+        <div class="col-12 col-md-10 offset-md-1 col-lg-8 offset-lg-2">
           {# Insert the flashes in the same col size as the form #}
           {{ block('flash', 'theme/flash.html.twig') }}
 
-          {# Form #}
+          {# Back link #}
+          <div class="mb-2">
+            <a class="link-secondary icon-link icon-link-hover icon-link-left" href="{{ path('game_index') }}">
+              <span class="bi bi-arrow-left mb-1" aria-hidden="true"></span>
+              {{ 'form.button.backToList'|trans }}
+            </a>
+          </div>
+
           {{ form_start(form) }}
           <div class="row" {{ stimulus_controller('steam-search', { url: path(app.current_route, { id: game.id }), lazy: false }) }}>
             {# Field to write the steam ID and press the search button #}
@@ -102,22 +109,21 @@
           {{ form_row(form.description, { label: 'game.label.description' }) }}
           {{ form_row(form.imgUrl, { label: 'game.label.imgUrl' }) }}
 
-          {# Buttons to submit, cancel or open the delete modal on right/left for large screen / top/bottom for small screen #}
-          <div class="row">
-            {# Left part : submit and cancel #}
-            <div class="col-sm-8 text-sm-start text-center">
+          {# Buttons to submit, or open the delete modal #}
+          <div class="d-flex justify-content-between">
+            {# Left part : submit #}
+            <div>
               {{ form_widget(form.submit, { label: submitButton }) }}
-              <a class="btn btn-outline-secondary ms-2" href="{{ path('game_index') }}">{{ 'form.button.cancel'|trans }}</a>
             </div>
             {# Right part (if in EDIT mode) : open delete modal #}
-            <div class="col-sm-4 text-sm-end text-center mt-2 mt-sm-0">
-              {% if game.id is not null %}
+            {% if game.id is not null %}
+              <div>
                 <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#delete-modal">
                   <span class="bi bi-trash-fill me-1"></span>
                   {{ 'form.button.delete'|trans }}
                 </button>
-              {% endif %}
-            </div>
+              </div>
+            {% endif %}
           </div>
           {{ form_rest(form) }}
           {{ form_end(form) }}
