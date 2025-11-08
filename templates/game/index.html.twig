@@ -2,7 +2,7 @@
 
 {# Macro to lighten the code to generate path with query params for the sort #}
 {%- macro get_path(queryParam) -%}
-  {{ path(app.current_route, queryParam|query_param_to_array)|raw }}
+  {{ path(app.current_route, queryParam|query_param_to_array) }}
 {%- endmacro -%}
 
 {% set title = 'game.index.title'|trans %}
@@ -34,14 +34,14 @@
             <div class="input-group" role="group" aria-labelledby="input-group-sorts">
               <label class="input-group-text" id="input-group-sorts">{{ 'form.button.sortBy'|trans }}</label>
               {% for sortKey in displayedSortsKeys %}
-                {% set url = _self.get_path(queryParam|query_param_change('sorts', { (sortKey): queryParam.sorts|first })) %}
-                <a href="{{ url }}" class="btn btn-outline-secondary app-btn-border-light {{ queryParam.sorts|keys|first == sortKey ? 'active' }}">
+                {% set url = _self.get_path(queryParam|query_param_clone_with('sorts', { (sortKey): queryParam.sorts|first })) %}
+                <a href="{{ url }}" class="btn btn-outline-secondary app-btn-border-light {{ queryParam.sorts|keys|first == sortKey ? 'active' }}" data-turbo-prefetch="false">
                   {{ ('game.index.sort.' ~ sortKey)|trans }}
                 </a>
               {% endfor %}
               {% block directionButton %}
-                {% set url = _self.get_path(queryParam|query_param_change('sorts', { (queryParam.sorts|keys|first): (queryParam.sorts|first) == 'asc' ? 'desc' : 'asc' })) %}
-                <a href="{{ url }}" class="btn btn-outline-secondary app-btn-border-light">
+                {% set url = _self.get_path(queryParam|query_param_clone_with('sorts', { (queryParam.sorts|keys|first): (queryParam.sorts|first) == 'asc' ? 'desc' : 'asc' })) %}
+                <a href="{{ url }}" class="btn btn-outline-secondary app-btn-border-light" data-turbo-prefetch="false">
                   <span class="bi bi-arrow-{{ queryParam.sorts|first == 'asc' ? 'up' : 'down' }}"></span>
                 </a>
               {% endblock %}
@@ -54,7 +54,7 @@
               <label class="input-group-text" id="input-group-sorts-small" for="input-group-sorts-small-options">{{ 'form.button.sortBy'|trans }}</label>
               <select class="form-select" id="input-group-sorts-small-options" {{ stimulus_controller('sort-select') }}>
                 {% for sortKey in displayedSortsKeys %}
-                  {% set url = _self.get_path(queryParam|query_param_change('sorts', { (sortKey): queryParam.sorts|first })) %}
+                  {% set url = _self.get_path(queryParam|query_param_clone_with('sorts', { (sortKey): queryParam.sorts|first })) %}
                   <option value="{{ url }}" {{ (queryParam.sorts|keys|first) == sortKey ? 'selected="selected"' }}>
                     {{ ('game.index.sort.' ~ sortKey)|trans }}
                   </option>

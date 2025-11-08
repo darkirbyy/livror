@@ -6,14 +6,34 @@ namespace App\Service;
 
 use App\Dto\QueryParam;
 use Doctrine\ORM\QueryBuilder;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Service to validate and complete the QueryParam Dto.
  */
 final readonly class QueryParamHelper
 {
-    public function __construct(private int $defaultLimit, private int $maxLimit)
+    public function __construct(private RequestStack $requestStack, private int $defaultLimit, private int $maxLimit)
     {
+    }
+
+    public function load(QueryParam $queryParam, string $sessionKey): void
+    {
+        $isQueryEmpty = array_all((array) $queryParam, fn ($value, $key): bool => is_null($value));
+        $isSessionFull = $this->requestStack->getSession()->has($sessionKey);
+        if ($isQueryEmpty && $isSessionFull) {
+            foreach ($this->requestStack->getSession()->get($sessionKey) as $property => $value) {
+                $queryParam->$property = $value;
+            }
+        }
+    }
+
+    public function save(QueryParam $queryParam, string $sessionKey): void
+    {
+        // todo : optimize : don't save if it comes from session
+        if (!$this->requestStack->getMainRequest()->isXmlHttpRequest()) {
+            $this->requestStack->getSession()->set($sessionKey, $queryParam);
+        }
     }
 
     public function defaults(QueryParam $queryParam, array $defaultSorts, array $defaultFilters): void
@@ -42,7 +62,7 @@ final readonly class QueryParamHelper
         );
     }
 
-    public function apply(QueryParam $queryParam, QueryBuilder $qb, array $sortsConversion, array $filtersConversion): void
+    public function applyToQb(QueryParam $queryParam, QueryBuilder $qb, array $sortsConversion, array $filtersConversion): void
     {
         foreach ($queryParam->sorts as $key => $direction) {
             $qb->addOrderBy($sortsConversion[$key], strtoupper($direction));
@@ -56,7 +76,7 @@ final readonly class QueryParamHelper
         $qb->setFirstResult($queryParam->offset);
     }
 
-    public function change(QueryParam $queryParam, string $property, mixed $value): QueryParam
+    public function cloneWith(QueryParam $queryParam, string $property, mixed $value): QueryParam
     {
         $queryParamCloned = clone $queryParam;
         $queryParamCloned->$property = $value;
@@ -66,11 +86,6 @@ final readonly class QueryParamHelper
 
     public function toArray(QueryParam $queryParam): array
     {
-        $urlParam = [];
-        foreach ($queryParam as $property => $value) {
-            $urlParam[$property] = $value;
-        }
-
-        return $urlParam;
+        return (array) $queryParam;
     }
 }

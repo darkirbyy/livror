@@ -24,15 +24,17 @@ class ReviewRepository extends ServiceEntityRepository
         $filtersConversion = [];
 
         // Validate and complete the parameters
+        $this->queryParamHelper->load($queryParam, 'review-index');
         $this->queryParamHelper->defaults($queryParam, ['name' => 'asc'], []);
         $this->queryParamHelper->validate($queryParam, array_keys($sortsConversion), array_keys($filtersConversion));
+        $this->queryParamHelper->save($queryParam, 'review-index');
 
         // Build the base query (with select, join and group)
         $qb = $this->createQueryBuilder('r');
         $qb->leftJoin('r.game', 'g')->where('r.userId = :userId')->setParameter('userId', $userId);
 
         // Apply sorts, filters, offset and limit
-        $this->queryParamHelper->apply($queryParam, $qb, $sortsConversion, $filtersConversion);
+        $this->queryParamHelper->applyToQb($queryParam, $qb, $sortsConversion, $filtersConversion);
 
         // Execute and fetch the query
         return $qb->getQuery()->getResult();

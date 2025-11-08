@@ -26,8 +26,10 @@ class GameRepository extends ServiceEntityRepository
         $filtersConversion = ['users' => 'rf.userId'];
 
         // Validate and complete the parameters
+        $this->queryParamHelper->load($queryParam, 'game-index');
         $this->queryParamHelper->defaults($queryParam, ['name' => 'asc'], []);
         $this->queryParamHelper->validate($queryParam, array_keys($sortsConversion), array_keys($filtersConversion));
+        $this->queryParamHelper->save($queryParam, 'game-index');
 
         // Build the base query (with select, join and group)
         $qb = $this->createQueryBuilder('g');

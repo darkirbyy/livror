@@ -13,12 +13,13 @@ export default class extends Controller {
   apply() {
     // Parse the url and create the filter key and values from the targets
     const url = new URL(this.urlValue, window.location.origin);
-    const filterKey = 'filters[' + this.keyValue + '][]';
+    const filterKey = 'filters[' + this.keyValue + ']';
     const filterValues = this.checkboxTargets.filter((checkbox) => checkbox.checked).map((checkbox) => checkbox.value);
 
     // Remove the old filter values and add the new ones
-    url.searchParams.delete(filterKey);
-    filterValues.forEach((value) => url.searchParams.append(filterKey, value));
+    const allKeys = [...url.searchParams.keys()];
+    allKeys.filter((key) => key.startsWith(filterKey)).forEach((key) => url.searchParams.delete(key));
+    filterValues.forEach((value, index) => url.searchParams.append(filterKey + '[' + index + ']', value));
 
     // Navigate to the url with the turbo-frame
     Turbo.visit(url.toString(), { frame: 'main-section' });
