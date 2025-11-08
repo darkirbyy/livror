@@ -81,7 +81,7 @@
                 <span class="fa-regular fa-star align-middle"></span>
               </div>
             </div>
-            <datalist id="ratingList" data-rating-slide-target="datalist">
+            <datalist id="rating-list" data-rating-slide-target="datalist">
               {% for rating in range(0, 6, 0.1) %}
                 <option value="{{ rating }}" label="{{ rating|format_number({ fraction_digit: 1 }) }}" />
               {% endfor %}

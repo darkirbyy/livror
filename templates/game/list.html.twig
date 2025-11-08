@@ -2,9 +2,9 @@
 
 {% for gameIndex in gamesIndex %}
   {% set game = gameIndex.game %}
-
+  {% set gameId = 'game-' ~ game.id %}
   {# Each game is displayed on a "card" containing all the data #}
-  <div class="card-max-auto card-max-md-none mx-auto my-3 rounded-3 border overflow-hidden">
+  <div id="{{ gameId }}" class="card-max-auto card-max-md-none mx-auto my-3 rounded-3 border overflow-hidden">
     {# Card title bar with the the title on one side, and 3 infos on the other side (or on top of each other on small screen) #}
     <div class="row gx-0 bg-primary-subtle border-bottom">
       {# Actual title with the edit button #}
@@ -41,7 +41,7 @@
       <div class="col-12 px-0 col-md-6 card-max-md-auto border-bottom border-end-md border-bottom-md-0">
         <div class="mx-auto">
           {# Collapse button for small screen #}
-          {% set collapseId = 'collapseInformations' ~ game.id %}
+          {% set collapseId = gameId ~ 'collapse-informations' %}
           <button class="btn btn-outline-secondary d-flex w-100 justify-content-center align-items-center border-0 border-bottom app-no-border-bottom rounded-0 py-1 my-0 dropdown-toggle app-dropdown-left app-dropdown-smooth d-md-none"
             data-bs-toggle="collapse"
             data-bs-target="#{{ collapseId }}"
@@ -91,7 +91,7 @@
       <div class="col-12 px-0 col-md">
         <div class="mx-auto">
           {# Collapse button for small screen #}
-          {% set collapseId = 'collapseReviews' ~ game.id %}
+          {% set collapseId = gameId ~ 'collapse-reviews' %}
           <button class="btn btn-outline-secondary d-flex w-100 justify-content-center align-items-center border-0 border-bottom app-no-border-bottom rounded-0 py-1 my-0 dropdown-toggle app-dropdown-left app-dropdown-smooth d-md-none"
             data-bs-toggle="collapse"
             data-bs-target="#{{ collapseId }}"

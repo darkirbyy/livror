@@ -1,8 +1,10 @@
 {% from 'theme/macro.html.twig' import path_with_query_param %}
 
 {% for review in reviews %}
+  {% set reviewId = 'review-' ~ review.id %}
+
   {# Each game is displayed on a "card" containing all the data #}
-  <div class="card-max-auto card-max-md-none mx-auto my-3 rounded-3 border overflow-hidden">
+  <div id="{{ reviewId }}" class="card-max-auto card-max-md-none mx-auto my-3 rounded-3 border overflow-hidden">
     {# Card title bar with the the title on one side, and 3 infos on the other side (or on top of each other on small screen) #}
     <div class="row gx-0 bg-primary-subtle border-bottom text-center">
       {# Actual title with the edit button #}

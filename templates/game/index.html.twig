@@ -69,7 +69,7 @@
             <div class="input-group" role="group" aria-labelledby="input-group-filters">
               <label class="input-group-text" id="input-group-filters">{{ 'form.button.filterBy'|trans }}</label>
               {% for filterKey in displayedFiltersKeys %}
-                {% set filterId = 'dropdown-filter-' ~ filterKey %}
+                {% set filterId = 'input-group-filters-' ~ filterKey %}
                 <button type="button"
                   class="btn btn-outline-secondary app-btn-border-light dropdown-toggle app-dropdown-left app-dropdown-smooth"
                   data-bs-toggle="dropdown"

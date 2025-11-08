@@ -42,7 +42,7 @@ class ReviewType extends DefaultType
                     'min' => 0,
                     'max' => 6,
                     'step' => '0.1',
-                    'list' => 'ratingList',
+                    'list' => 'rating-list',
                 ],
             ])
             ->add('hourSpend', IntegerType::class, [

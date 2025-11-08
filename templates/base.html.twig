@@ -32,7 +32,7 @@
 
     {# Skip to content link for screen reader #}
     <div class="ps-3 app-skip-link">
-      <a class="icon-link visually-hidden-focusable" href="#mainContent">{{ 'aria.skipToContent'|trans }}</a>
+      <a class="icon-link visually-hidden-focusable" href="#main-content">{{ 'aria.skipToContent'|trans }}</a>
     </div>
 
     {# The HEADER regroup the navbar and the main title #}
@@ -51,14 +51,14 @@
           <button class="navbar-toggler"
             type="button"
             data-bs-toggle="collapse"
-            data-bs-target="#navbarSupportedContent"
-            aria-controls="navbarSupportedContent"
+            data-bs-target="#navbar-supported-content"
+            aria-controls="navbar-supported-content"
             aria-expanded="false"
             aria-label="{{ 'aria.toggleNavigation'|trans }}">
             <span class="navbar-toggler-icon"></span>
           </button>
           {# Content as two lists : one on the left, the other on the right for lage screen / both on the top of each other for small screen #}
-          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <div class="collapse navbar-collapse" id="navbar-supported-content">
             {# Left part of the navbar #}
             <ul class="navbar-nav me-auto mb-2 mb-md-0">
               <li class="nav-item">
@@ -112,7 +112,7 @@
     </header>
 
     {# The MAIN block must be redefined on each page, including the flash block with the bood wrapper #}
-    <main class="flex-grow-1" role="main" id="mainContent">
+    <main class="flex-grow-1" role="main" id="main-content">
       {% block main %}
         {{ block('flash', 'theme/flash.html.twig') }}
         <div class="text-center">
