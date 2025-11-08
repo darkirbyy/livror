@@ -16,9 +16,9 @@ export default class extends Controller {
     const filterKey = 'filters[' + this.keyValue + ']';
     const filterValues = this.checkboxTargets.filter((checkbox) => checkbox.checked).map((checkbox) => checkbox.value);
 
-    // Remove the old filter values and add the new ones
-    const allKeys = [...url.searchParams.keys()];
-    allKeys.filter((key) => key.startsWith(filterKey)).forEach((key) => url.searchParams.delete(key));
+    // Remove the old filter values (useless as the twig filter already does it) and add the new ones
+    // const allKeys = [...url.searchParams.keys()];
+    // allKeys.filter((key) => key.startsWith(filterKey)).forEach((key) => url.searchParams.delete(key));
     filterValues.forEach((value, index) => url.searchParams.append(filterKey + '[' + index + ']', value));
 
     // Navigate to the url with the turbo-frame

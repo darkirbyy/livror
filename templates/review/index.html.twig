@@ -85,7 +85,7 @@
                   aria-haspopup="true">
                   {{ ('review.index.filter.' ~ filterKey)|trans }}
                 </button>
-                {% set url = _self.get_path(queryParam) %}
+                {% set url = _self.get_path(queryParam|query_param_clone_with('filters', queryParam.filters|filter((value, key) => key != filterKey))) %}
                 <ul id="{{ filterId }}" class="dropdown-menu dropdown-menu-end" {{ stimulus_controller('filter-apply', { url: url, key: filterKey }) }}>
                   <li>
                     {% if filterKey == '' %}

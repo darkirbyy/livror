@@ -34,7 +34,8 @@
             <div class="input-group" role="group" aria-labelledby="input-group-sorts">
               <label class="input-group-text" id="input-group-sorts">{{ 'form.button.sortBy'|trans }}</label>
               {% for sortKey in displayedSortsKeys %}
-                {% set url = _self.get_path(queryParam|query_param_clone_with('sorts', { (sortKey): queryParam.sorts|first })) %}
+                {# todo : optimize : calculate on time the sorts url ! #}
+                {% set url = path_query(queryParam|query_param_clone_with('sorts', { (sortKey): queryParam.sorts|first })) %}
                 <a href="{{ url }}" class="btn btn-outline-secondary app-btn-border-light {{ queryParam.sorts|keys|first == sortKey ? 'active' }}" data-turbo-prefetch="false">
                   {{ ('game.index.sort.' ~ sortKey)|trans }}
                 </a>
@@ -54,7 +55,7 @@
               <label class="input-group-text" id="input-group-sorts-small" for="input-group-sorts-small-options">{{ 'form.button.sortBy'|trans }}</label>
               <select class="form-select" id="input-group-sorts-small-options" {{ stimulus_controller('sort-select') }}>
                 {% for sortKey in displayedSortsKeys %}
-                  {% set url = _self.get_path(queryParam|query_param_clone_with('sorts', { (sortKey): queryParam.sorts|first })) %}
+                  {% set url = path_query(queryParam|query_param_clone_with('sorts', { (sortKey): queryParam.sorts|first })) %}
                   <option value="{{ url }}" {{ (queryParam.sorts|keys|first) == sortKey ? 'selected="selected"' }}>
                     {{ ('game.index.sort.' ~ sortKey)|trans }}
                   </option>
@@ -79,7 +80,7 @@
                   aria-haspopup="true">
                   {{ ('game.index.filter.' ~ filterKey)|trans }}
                 </button>
-                {% set url = _self.get_path(queryParam) %}
+                {% set url = path_query(queryParam|query_param_clone_with('filters', queryParam.filters|filter((value, key) => key != filterKey))) %}
                 <ul id="{{ filterId }}" class="dropdown-menu dropdown-menu-end" {{ stimulus_controller('filter-apply', { url: url, key: filterKey }) }}>
                   <li>
                     {% if filterKey == 'users' %}

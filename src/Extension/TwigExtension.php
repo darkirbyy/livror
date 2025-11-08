@@ -8,15 +8,23 @@ use App\Dto\QueryParam;
 use App\Enum\TypePriceEnum;
 use App\Service\HubUrlGenerator;
 use App\Service\QueryParamHelper;
+use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Extension\AbstractExtension;
 use Twig\Extension\GlobalsInterface;
 use Twig\TwigFilter;
+use Twig\TwigFunction;
 
 class TwigExtension extends AbstractExtension implements GlobalsInterface
 {
-    public function __construct(private TranslatorInterface $trans, private HubUrlGenerator $hubUrlGenerator, private QueryParamHelper $queryParamHelper)
-    {
+    public function __construct(
+        private TranslatorInterface $trans,
+        private RequestStack $requestStack,
+        private UrlGeneratorInterface $urlGenerator,
+        private HubUrlGenerator $hubUrlGenerator,
+        private QueryParamHelper $queryParamHelper,
+    ) {
     }
 
     public function getGlobals(): array
@@ -33,6 +41,11 @@ class TwigExtension extends AbstractExtension implements GlobalsInterface
             new TwigFilter('query_param_clone_with', [$this, 'queryParamCloneWith']),
             new TwigFilter('query_param_to_array', [$this, 'queryParamToArray']),
         ];
+    }
+
+    public function getFunctions(): array
+    {
+        return [new TwigFunction('path_query', [$this, 'pathQuery'])];
     }
 
     // Custom formatter for the full price, to return an empty string in case of an unknown price
@@ -65,5 +78,14 @@ class TwigExtension extends AbstractExtension implements GlobalsInterface
     public function queryParamToArray(QueryParam $queryParam): array
     {
         return $this->queryParamHelper->toArray($queryParam);
+    }
+
+    public function pathQuery($queryParam): string
+    {
+        $params = $this->queryParamHelper->toArray($queryParam);
+        $route = $this->requestStack->getMainRequest()->attributes->get('_route');
+        $url = $this->urlGenerator->generate($route, $params);
+
+        return $url;
     }
 }
