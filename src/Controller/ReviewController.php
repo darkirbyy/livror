@@ -37,7 +37,7 @@ class ReviewController extends AbstractController
             'queryParam' => $queryParam,
             'reviews' => array_slice($reviews, 0, $queryParam->limit), // remove on result as we have fetched one more that configured
             'hasMore' => count($reviews) > $queryParam->limit, // determine if there is more games to fetch
-            'cannotAdd' => 0 == $gameRepo->countNotCommented($userId),
+            'cannotAdd' => 0 == $gameRepo->countWithoutReview($userId),
         ];
 
         // Render only the review list block when the request comes from the JavaScript, otherwise render the whole page
@@ -54,7 +54,7 @@ class ReviewController extends AbstractController
     {
         $userId = $this->getUser()->getId();
         $gameId = 'GET' == $request->getMethod() ? $request->query->get('gameId') : null;
-        if (0 == $gameRepo->countNotCommented($userId)) {
+        if (0 == $gameRepo->countWithoutReview($userId)) {
             throw new NotAcceptableHttpException();
         }
 

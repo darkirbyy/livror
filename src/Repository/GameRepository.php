@@ -59,7 +59,7 @@ class GameRepository extends ServiceEntityRepository
         return $qb->getQuery()->getResult();
     }
 
-    public function findNotCommented(int $userId): array
+    public function findWithoutReview(int $userId): array
     {
         $qb = $this->createQueryBuilder('g');
         $qb->leftJoin('g.reviews', 'r', Join::WITH, 'r.userId = :userId')
@@ -71,7 +71,7 @@ class GameRepository extends ServiceEntityRepository
         return $qb->getQuery()->getResult();
     }
 
-    public function countNotCommented(int $userId): int
+    public function countWithoutReview(int $userId): int
     {
         $qb = $this->createQueryBuilder('g');
         $qb->select('COUNT(g.id)')

@@ -31,7 +31,7 @@ class ReviewType extends DefaultType
             $builder->add('game', EntityType::class, [
                 'required' => true,
                 'class' => Game::class,
-                'choices' => $this->gameRepo->findNotCommented($options['userId']),
+                'choices' => $this->gameRepo->findWithoutReview($options['userId']),
                 'choice_label' => fn (Game $game) => $game->getName(),
             ]);
         }
