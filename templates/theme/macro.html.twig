@@ -1,0 +1,4 @@
+{# Macro to lighten the code to generate path with query params for the sort #}
+{%- macro path_with_query_param(queryParam, raw = false) -%}
+  {% set url = path(app.current_route, queryParam|query_param_to_array) %} {{ raw ? url|raw : url }}
+{%- endmacro -%}

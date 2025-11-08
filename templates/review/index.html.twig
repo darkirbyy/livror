@@ -1,9 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{# Macro to lighten the code to generate path with query params for the sort #}
-{%- macro get_path(queryParam) -%}
-  {{ path(app.current_route, queryParam|query_param_to_array) }}
-{%- endmacro -%}
+{% from 'theme/macro.html.twig' import path_with_query_param %}
 
 {% set title = 'review.index.title'|trans %}
 {% set displayedSortsKeys = ['name', 'rating', 'hourSpend', 'firstPlay'] %}
@@ -40,13 +37,15 @@
             <div class="input-group" role="group" aria-labelledby="input-group-sorts">
               <label class="input-group-text" id="input-group-sorts">{{ 'form.button.sortBy'|trans }}</label>
               {% for sortKey in displayedSortsKeys %}
-                {% set url = _self.get_path(queryParam|query_param_clone_with('sorts', { (sortKey): queryParam.sorts|first })) %}
+                {% set url = path_with_query_param(queryParam|query_param_clone_with('sorts', { (sortKey): queryParam.sorts|first })) %}
                 <a href="{{ url }}" class="btn btn-outline-secondary app-btn-border-light {{ queryParam.sorts|keys|first == sortKey ? 'active' }}" data-turbo-prefetch="false">
                   {{ ('review.index.sort.' ~ sortKey)|trans }}
                 </a>
               {% endfor %}
               {% block directionButton %}
-                {% set url = _self.get_path(queryParam|query_param_clone_with('sorts', { (queryParam.sorts|keys|first): (queryParam.sorts|first) == 'asc' ? 'desc' : 'asc' })) %}
+                {% set url =
+                  path_with_query_param(queryParam|query_param_clone_with('sorts', { (queryParam.sorts|keys|first): (queryParam.sorts|first) == 'asc' ? 'desc' : 'asc' }))
+                %}
                 <a href="{{ url }}" class="btn btn-outline-secondary app-btn-border-light" data-turbo-prefetch="false">
                   <span class="bi bi-arrow-{{ queryParam.sorts|first == 'asc' ? 'up' : 'down' }}"></span>
                 </a>
@@ -60,7 +59,7 @@
               <label class="input-group-text" id="input-group-sorts-small" for="input-group-sorts-small-options">{{ 'form.button.sortBy'|trans }}</label>
               <select class="form-select" id="input-group-sorts-small-options" {{ stimulus_controller('sort-select') }}>
                 {% for sortKey in displayedSortsKeys %}
-                  {% set url = _self.get_path(queryParam|query_param_clone_with('sorts', { (sortKey): queryParam.sorts|first })) %}
+                  {% set url = path_with_query_param(queryParam|query_param_clone_with('sorts', { (sortKey): queryParam.sorts|first })) %}
                   <option value="{{ url }}" {{ (queryParam.sorts|keys|first) == sortKey ? 'selected="selected"' }}>
                     {{ ('review.index.sort.' ~ sortKey)|trans }}
                   </option>
@@ -85,7 +84,7 @@
                   aria-haspopup="true">
                   {{ ('review.index.filter.' ~ filterKey)|trans }}
                 </button>
-                {% set url = _self.get_path(queryParam|query_param_clone_with('filters', queryParam.filters|filter((value, key) => key != filterKey))) %}
+                {% set url = path_with_query_param(queryParam|query_param_clone_with('filters', queryParam.filters|filter((value, key) => key != filterKey)), true) %}
                 <ul id="{{ filterId }}" class="dropdown-menu dropdown-menu-end" {{ stimulus_controller('filter-apply', { url: url, key: filterKey }) }}>
                   <li>
                     {% if filterKey == '' %}

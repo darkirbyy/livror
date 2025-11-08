@@ -1,4 +1,4 @@
-{% from 'game/index.html.twig' import get_path %}
+{% from 'theme/macro.html.twig' import path_with_query_param %}
 
 {% for review in reviews %}
   {# Each game is displayed on a "card" containing all the data #}
@@ -55,7 +55,7 @@
 {% endfor %}
 
 {% if hasMore %}
-  {% set url = get_path(queryParam|query_param_clone_with('offset', queryParam.offset + env.app.default_limit)) %}
+  {% set url = path_with_query_param(queryParam|query_param_clone_with('offset', queryParam.offset + env.app.default_limit), true) %}
   <div class="text-center" {{ stimulus_controller('load-more', { url: url, lazy: env.app.index_autoload }) }}>
     <button class="btn btn-outline-secondary" data-load-more-target="button remove">{{ 'form.button.showMore'|trans }}</button>
     <span class="fs-4 text-muted" data-load-more-target="spinner"></span>
