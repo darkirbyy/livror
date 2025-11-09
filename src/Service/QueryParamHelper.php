@@ -55,6 +55,7 @@ final readonly class QueryParamHelper
             fn ($value, $key): bool => in_array($key, $allowedSortsKeys, true) && in_array($value, ['asc', 'desc'], true),
             ARRAY_FILTER_USE_BOTH,
         );
+        $queryParam->filters = array_map(fn ($values) => '' !== $values ? $values : [], $queryParam->filters);
         $queryParam->filters = array_filter(
             $queryParam->filters,
             fn ($values, $key): bool => in_array($key, $allowedFiltersKeys, true) && is_array($values) && array_all($values, fn ($value) => ctype_alnum($value)),
@@ -86,6 +87,9 @@ final readonly class QueryParamHelper
 
     public function toArray(QueryParam $queryParam): array
     {
-        return (array) $queryParam;
+        $queryParamArray = (array) $queryParam;
+        $queryParamArray['filters'] = array_map(fn ($values) => [] !== $values ? $values : '', $queryParamArray['filters']);
+
+        return $queryParamArray;
     }
 }
