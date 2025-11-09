@@ -30,72 +30,78 @@
 
       {# Turboframe to refresh only the main section when sorting the results #}
       <turbo-frame id="main-section">
-        {# Before the first card : field to sort on the left, field to filter on the right #}
-        <div class="d-flex card-max-auto align-items-center justify-content-between card-max-md-none mx-auto">
-          {# Fields to sort on large screen : independant buttons for each possibility + asc/desc button #}
-          <div class="d-none d-md-block">
-            <div class="input-group" role="group" aria-labelledby="input-group-sorts">
-              <label class="input-group-text" id="input-group-sorts">{{ 'form.button.sortBy'|trans }}</label>
+        {# Before the first card : fields to sort and fields to filter #}
+        <div class="card-max-auto card-max-md-none mx-auto">
+          <div class="d-flex flex-wrap align-items-end justify-content-between gap-2">
+            {# Fields to sort : prepare variables + independant buttons (large screen) or select (small screen) for each possibility + asc/desc button #}
+            <div class="flex-md-fill">
+              {# prepare variables #}
+              {% set direction_asc = (queryParam.sorts|first) == 'asc' %}
+              {% set direction_url = path_with_query_param(queryParam|query_param_clone_with('sorts', { (queryParam.sorts|keys|first): direction_asc ? 'desc' : 'asc' })) %}
+              {% set sorts = [] %}
               {% for sortKey in displayedSortsKeys %}
-                {% set url = path_with_query_param(queryParam|query_param_clone_with('sorts', { (sortKey): queryParam.sorts|first })) %}
-                <a href="{{ url }}" class="btn btn-outline-secondary app-btn-border-light {{ queryParam.sorts|keys|first == sortKey ? 'active' }}" data-turbo-prefetch="false">
-                  {{ ('review.index.sort.' ~ sortKey)|trans }}
-                </a>
+                {% set sort = {
+                  key: sortKey,
+                  url: path_with_query_param(queryParam|query_param_clone_with('sorts', { (sortKey): queryParam.sorts|first })),
+                  active: (queryParam.sorts|keys|first) == sortKey,
+                  label: ('review.index.sort.' ~ sortKey)|trans,
+                } %}
+                {% set sorts = sorts|merge([sort]) %}
               {% endfor %}
-              {% block directionButton %}
-                {% set url =
-                  path_with_query_param(queryParam|query_param_clone_with('sorts', { (queryParam.sorts|keys|first): (queryParam.sorts|first) == 'asc' ? 'desc' : 'asc' }))
-                %}
-                <a href="{{ url }}" class="btn btn-outline-secondary app-btn-border-light" data-turbo-prefetch="false">
-                  <span class="bi bi-arrow-{{ queryParam.sorts|first == 'asc' ? 'up' : 'down' }}"></span>
-                </a>
-              {% endblock %}
-            </div>
-          </div>
-
-          {# Fields to sort on small screen : on select with all possibilities + asc/desc button #}
-          <div class="d-md-none">
-            <div class="input-group" role="group" aria-labelledby="input-group-sorts-small">
-              <label class="input-group-text" id="input-group-sorts-small" for="input-group-sorts-small-options">{{ 'form.button.sortBy'|trans }}</label>
-              <select class="form-select" id="input-group-sorts-small-options" {{ stimulus_controller('sort-select') }}>
-                {% for sortKey in displayedSortsKeys %}
-                  {% set url = path_with_query_param(queryParam|query_param_clone_with('sorts', { (sortKey): queryParam.sorts|first })) %}
-                  <option value="{{ url }}" {{ (queryParam.sorts|keys|first) == sortKey ? 'selected="selected"' }}>
-                    {{ ('review.index.sort.' ~ sortKey)|trans }}
-                  </option>
+              <div class="input-group" role="group" aria-labelledby="input-group-sorts">
+                <label class="input-group-text" id="input-group-sorts">{{ 'form.button.sortBy'|trans }}</label>
+                {# independant buttons (large screen) #}
+                {% for sort in sorts %}
+                  <a href="{{ sort.url }}" class="btn btn-outline-secondary app-btn-border-light d-none d-md-block {{ sort.active ? 'active' }}" data-turbo-prefetch="false">
+                    {{ sort.label }}
+                  </a>
                 {% endfor %}
-              </select>
-              {{ block('directionButton') }}
+                {# select (small screen) #}
+                <select class="form-select d-md-none" {{ stimulus_controller('sort-select') }}>
+                  {% for sort in sorts %}
+                    <option value="{{ sort.url }}" {{ sort.active ? 'selected="selected"' }}>
+                      {{ sort.label }}
+                    </option>
+                  {% endfor %}
+                </select>
+                {# asc/desc button #}
+                <a href="{{ direction_url }}" class="btn btn-outline-secondary app-btn-border-light" data-turbo-prefetch="false">
+                  <span class="bi bi-arrow-{{ direction_asc ? 'up' : 'down' }}"></span>
+                </a>
+              </div>
             </div>
-          </div>
-
-          {# Fields to filter : dropdown with checkboxes for all possibilities and apply button #}
-          <div class="ms-2">
-            <div class="input-group" role="group" aria-labelledby="input-group-filters">
-              <label class="input-group-text" id="input-group-filters">{{ 'form.button.filterBy'|trans }}</label>
-              {% for filterKey in displayedFiltersKeys %}
-                {% set filterId = 'input-group-filters-' ~ filterKey %}
-                <button type="button"
-                  class="btn btn-outline-secondary app-btn-border-light dropdown-toggle app-dropdown-left app-dropdown-smooth"
-                  data-bs-toggle="dropdown"
-                  data-bs-target="#{{ filterId }}"
-                  data-bs-auto-close="outside"
-                  aria-expanded="false"
-                  aria-haspopup="true">
-                  {{ ('review.index.filter.' ~ filterKey)|trans }}
-                </button>
-                {% set url = path_with_query_param(queryParam|query_param_clone_with('filters', queryParam.filters|filter((value, key) => key != filterKey)), true) %}
-                <ul id="{{ filterId }}" class="dropdown-menu dropdown-menu-end" {{ stimulus_controller('filter-apply', { url: url, key: filterKey }) }}>
-                  <li>
+            {# Fields to filter : dropdown with checkboxes for all possibilities and apply button #}
+            <div>
+              <div class="input-group" role="group" aria-labelledby="input-group-filters">
+                <label class="input-group-text" id="input-group-filters">{{ 'form.button.filterBy'|trans }}</label>
+                {% for filterKey in displayedFiltersKeys %}
+                  {% set filterId = 'input-group-filters-' ~ filterKey %}
+                  <button type="button"
+                    class="btn btn-outline-secondary app-btn-border-light dropdown-toggle app-dropdown-left app-dropdown-smooth"
+                    data-bs-toggle="dropdown"
+                    data-bs-target="#{{ filterId }}"
+                    data-bs-auto-close="outside"
+                    aria-expanded="false"
+                    aria-haspopup="true">
+                    {{ ('review.index.filter.' ~ filterKey)|trans }}
+                  </button>
+                  {% set url = path_with_query_param(queryParam|query_param_clone_with('filters', queryParam.filters|filter((value, key) => key != filterKey)), true) %}
+                  <div id="{{ filterId }}" class="dropdown-menu dropdown-menu-end" {{ stimulus_controller('filter-apply', { url: url, key: filterKey }) }}>
                     {% if filterKey == '' %}
 
                     {% endif %}
                     <div class="dropdown-item text-center">
                       <button class="btn btn-outline-secondary" data-filter-apply-target="button">{{ 'form.button.apply'|trans }}</button>
                     </div>
-                  </li>
-                </ul>
-              {% endfor %}
+                  </div>
+                {% endfor %}
+              </div>
+            </div>
+            <div>
+              {% set reinit_url = path_with_query_param(queryParam|query_param_clone_reset) %}
+              <a href="{{ reinit_url }}" class="btn btn-outline-secondary app-btn-border-light" aria-label="{{ 'form.button.reset'|trans }}">
+                <span class="bi bi-arrow-counterclockwise"></span>
+              </a>
             </div>
           </div>
         </div>

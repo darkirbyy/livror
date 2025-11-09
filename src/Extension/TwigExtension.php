@@ -31,6 +31,7 @@ class TwigExtension extends AbstractExtension implements GlobalsInterface
             new TwigFilter('hub_url_generate_root', [$this, 'hubUrlGenerateRoot']),
             new TwigFilter('hub_url_generate_account', [$this, 'hubUrlGenerateAccount']),
             new TwigFilter('query_param_clone_with', [$this, 'queryParamCloneWith']),
+            new TwigFilter('query_param_clone_reset', [$this, 'queryParamCloneReset']),
             new TwigFilter('query_param_to_array', [$this, 'queryParamToArray']),
         ];
     }
@@ -59,6 +60,12 @@ class TwigExtension extends AbstractExtension implements GlobalsInterface
     public function queryParamCloneWith(QueryParam $queryParam, string $property, mixed $value): QueryParam
     {
         return $this->queryParamHelper->cloneWith($queryParam, $property, $value);
+    }
+
+    // Change one queryParam property without modyfiny the original instance
+    public function queryParamCloneReset(QueryParam $queryParam): QueryParam
+    {
+        return $this->queryParamHelper->cloneReset($queryParam);
     }
 
     // Convert a query param object to an array of parameters

@@ -78,6 +78,7 @@ form:
     apply: Appliquer
     showMore: Voir plus
     backToList: Retour à la liste
+    reset: Réinitialiser
   flash:
     invalidCsrf: Le jeton CSRF est invalide.
     foreignKey: Impossible de supprimer cet élément tant que d'autres éléments y font référence.

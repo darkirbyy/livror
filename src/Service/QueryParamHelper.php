@@ -92,10 +92,25 @@ final class QueryParamHelper
         return $queryParamCloned;
     }
 
+    public function cloneReset(QueryParam $queryParam): QueryParam
+    {
+        $queryParamCloned = clone $queryParam;
+        foreach ($queryParamCloned as $property => $value) {
+            if ('offset' == $property) {
+                continue;
+            }
+            $queryParamCloned->$property = null;
+        }
+
+        return $queryParamCloned;
+    }
+
     public function toArray(QueryParam $queryParam): array
     {
         $queryParamArray = (array) $queryParam;
-        $queryParamArray['filters'] = array_map(fn ($values) => [] !== $values ? $values : '', $queryParamArray['filters']);
+        if (isset($queryParamArray['filters'])) {
+            $queryParamArray['filters'] = array_map(fn ($values) => [] !== $values ? $values : '', $queryParamArray['filters']);
+        }
 
         return $queryParamArray;
     }

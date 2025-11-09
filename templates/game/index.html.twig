@@ -25,84 +25,91 @@
       {# Turboframe to refresh only the main section when sorting the results #}
       <turbo-frame id="main-section">
         {# Before the first card : fields to sort and fields to filter #}
-        <div class="d-flex card-max-auto flex-wrap align-items-end justify-content-between card-max-md-none mx-auto gap-2">
-          {# Fields to sort : prepare variables + independant buttons (large screen) or select (small screen) for each possibility + asc/desc button #}
-          {# prepare variables #}
-          {% set direction_asc = (queryParam.sorts|first) == 'asc' %}
-          {% set direction_url = path_with_query_param(queryParam|query_param_clone_with('sorts', { (queryParam.sorts|keys|first): direction_asc ? 'desc' : 'asc' })) %}
-          {% set sorts = [] %}
-          {% for sortKey in displayedSortsKeys %}
-            {% set sort = {
-              key: sortKey,
-              url: path_with_query_param(queryParam|query_param_clone_with('sorts', { (sortKey): queryParam.sorts|first })),
-              active: (queryParam.sorts|keys|first) == sortKey,
-              label: ('game.index.sort.' ~ sortKey)|trans,
-            } %}
-            {% set sorts = sorts|merge([sort]) %}
-          {% endfor %}
-          <div>
-            <div class="input-group" role="group" aria-labelledby="input-group-sorts">
-              <label class="input-group-text" id="input-group-sorts">{{ 'form.button.sortBy'|trans }}</label>
-              {# independant buttons (large screen) #}
-              {% for sort in sorts %}
-                <a href="{{ sort.url }}" class="btn btn-outline-secondary app-btn-border-light d-none d-md-block {{ sort.active ? 'active' }}" data-turbo-prefetch="false">
-                  {{ sort.label }}
-                </a>
+        <div class="card-max-auto card-max-md-none mx-auto">
+          <div class="d-flex flex-wrap align-items-end justify-content-between gap-2">
+            {# Fields to sort : prepare variables + independant buttons (large screen) or select (small screen) for each possibility + asc/desc button #}
+            <div class="flex-md-fill">
+              {# prepare variables #}
+              {% set direction_asc = (queryParam.sorts|first) == 'asc' %}
+              {% set direction_url = path_with_query_param(queryParam|query_param_clone_with('sorts', { (queryParam.sorts|keys|first): direction_asc ? 'desc' : 'asc' })) %}
+              {% set sorts = [] %}
+              {% for sortKey in displayedSortsKeys %}
+                {% set sort = {
+                  key: sortKey,
+                  url: path_with_query_param(queryParam|query_param_clone_with('sorts', { (sortKey): queryParam.sorts|first })),
+                  active: (queryParam.sorts|keys|first) == sortKey,
+                  label: ('game.index.sort.' ~ sortKey)|trans,
+                } %}
+                {% set sorts = sorts|merge([sort]) %}
               {% endfor %}
-              {# select (small screen) #}
-              <select class="form-select d-md-none" id="input-group-sorts-small-options" {{ stimulus_controller('sort-select') }}>
+              <div class="input-group" role="group" aria-labelledby="input-group-sorts">
+                <label class="input-group-text" id="input-group-sorts">{{ 'form.button.sortBy'|trans }}</label>
+                {# independant buttons (large screen) #}
                 {% for sort in sorts %}
-                  <option value="{{ sort.url }}" {{ sort.active ? 'selected="selected"' }}>
+                  <a href="{{ sort.url }}" class="btn btn-outline-secondary app-btn-border-light d-none d-md-block {{ sort.active ? 'active' }}" data-turbo-prefetch="false">
                     {{ sort.label }}
-                  </option>
+                  </a>
                 {% endfor %}
-              </select>
-              {# asc/desc button #}
-              <a href="{{ direction_url }}" class="btn btn-outline-secondary app-btn-border-light" data-turbo-prefetch="false">
-                <span class="bi bi-arrow-{{ direction_asc ? 'up' : 'down' }}"></span>
-              </a>
+                {# select (small screen) #}
+                <select class="form-select d-md-none" {{ stimulus_controller('sort-select') }}>
+                  {% for sort in sorts %}
+                    <option value="{{ sort.url }}" {{ sort.active ? 'selected="selected"' }}>
+                      {{ sort.label }}
+                    </option>
+                  {% endfor %}
+                </select>
+                {# asc/desc button #}
+                <a href="{{ direction_url }}" class="btn btn-outline-secondary app-btn-border-light" data-turbo-prefetch="false">
+                  <span class="bi bi-arrow-{{ direction_asc ? 'up' : 'down' }}"></span>
+                </a>
+              </div>
             </div>
-          </div>
-
-          {# Fields to filter : dropdown with checkboxes for all possibilities and apply button #}
-          <div>
-            <div class="input-group" role="group" aria-labelledby="input-group-filters">
-              <label class="input-group-text" id="input-group-filters">{{ 'form.button.filterBy'|trans }}</label>
-              {% for filterKey in displayedFiltersKeys %}
-                {% set filterId = 'input-group-filters-' ~ filterKey %}
-                <button type="button"
-                  class="btn btn-outline-secondary app-btn-border-light dropdown-toggle app-dropdown-left app-dropdown-smooth"
-                  data-bs-toggle="dropdown"
-                  data-bs-target="#{{ filterId }}"
-                  data-bs-auto-close="outside"
-                  aria-expanded="false"
-                  aria-haspopup="true">
-                  {{ ('game.index.filter.' ~ filterKey)|trans }}
-                </button>
-                {% set url = path_with_query_param(queryParam|query_param_clone_with('filters', queryParam.filters|filter((value, key) => key != filterKey)), true) %}
-                <div id="{{ filterId }}" class="dropdown-menu dropdown-menu-end" {{ stimulus_controller('filter-apply', { url: url, key: filterKey }) }}>
-                  {% if filterKey == 'users' %}
-                    <ul class="p-0 m-0">
-                      {% for user in users|sort((a, b) => a.username <=> b.username) %}
-                        <li class="dropdown-item">
-                          {% set checked = queryParam.filters.users is not defined or user.id in queryParam.filters.users ? 'checked' : '' %}
-                          {% set filterUserId = filterId ~ '-' ~ user.id %}
-                          <input class="form-check-input" type="checkbox" value="{{ user.id }}" id="{{ filterUserId }}" {{ checked }} data-filter-apply-target="checkbox" />
-                          <label class="form-check-label w-100" for="{{ filterUserId }}">
-                            <img src="{{ user.avatarPath|hub_url_generate_root }}"
-                              class="rounded-circle img-fluid app-avatar-card"
-                              alt="{{ 'aria.avatar'|trans({ name: user.username }) }}" />
-                            <span class="ms-1">{{ user.username }}</span>
-                          </label>
-                        </li>
-                      {% endfor %}
-                    </ul>
-                  {% endif %}
-                  <div class="dropdown-item text-center">
-                    <button class="btn btn-outline-secondary" data-filter-apply-target="button">{{ 'form.button.apply'|trans }}</button>
+            {# Fields to filter : dropdown with checkboxes for all possibilities and apply button #}
+            <div>
+              <div class="input-group" role="group" aria-labelledby="input-group-filters">
+                <label class="input-group-text" id="input-group-filters">{{ 'form.button.filterBy'|trans }}</label>
+                {% for filterKey in displayedFiltersKeys %}
+                  {% set filterId = 'input-group-filters-' ~ filterKey %}
+                  <button type="button"
+                    class="btn btn-outline-secondary app-btn-border-light dropdown-toggle app-dropdown-left app-dropdown-smooth"
+                    data-bs-toggle="dropdown"
+                    data-bs-target="#{{ filterId }}"
+                    data-bs-auto-close="outside"
+                    aria-expanded="false"
+                    aria-haspopup="true">
+                    {{ ('game.index.filter.' ~ filterKey)|trans }}
+                  </button>
+                  {% set url = path_with_query_param(queryParam|query_param_clone_with('filters', queryParam.filters|filter((value, key) => key != filterKey)), true) %}
+                  <div id="{{ filterId }}" class="dropdown-menu dropdown-menu-end" {{ stimulus_controller('filter-apply', { url: url, key: filterKey }) }}>
+                    {% if filterKey == 'users' %}
+                      <ul class="p-0 m-0">
+                        {% for user in users|sort((a, b) => a.username <=> b.username) %}
+                          <li class="dropdown-item">
+                            {% set checked = queryParam.filters.users is not defined or user.id in queryParam.filters.users ? 'checked' : '' %}
+                            {% set filterUserId = filterId ~ '-' ~ user.id %}
+                            <input class="form-check-input" type="checkbox" value="{{ user.id }}" id="{{ filterUserId }}" {{ checked }} data-filter-apply-target="checkbox" />
+                            <label class="form-check-label w-100" for="{{ filterUserId }}">
+                              <img src="{{ user.avatarPath|hub_url_generate_root }}"
+                                class="rounded-circle img-fluid app-avatar-card"
+                                alt="{{ 'aria.avatar'|trans({ name: user.username }) }}" />
+                              <span class="ms-1">{{ user.username }}</span>
+                            </label>
+                          </li>
+                        {% endfor %}
+                      </ul>
+                    {% endif %}
+                    <div class="dropdown-item text-center">
+                      <button class="btn btn-outline-secondary" data-filter-apply-target="button">{{ 'form.button.apply'|trans }}</button>
+                    </div>
                   </div>
-                </div>
-              {% endfor %}
+                {% endfor %}
+              </div>
+            </div>
+            <div>
+              {% set reinit_url = path_with_query_param(queryParam|query_param_clone_reset) %}
+              <a href="{{ reinit_url }}" class="btn btn-outline-secondary app-btn-border-light" aria-label="{{ 'form.button.reset'|trans }}">
+                <span class="bi bi-arrow-counterclockwise"></span>
+              </a>
             </div>
           </div>
         </div>
