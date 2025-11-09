@@ -24,48 +24,48 @@
 
       {# Turboframe to refresh only the main section when sorting the results #}
       <turbo-frame id="main-section">
-        {# Before the first card : field to sort on the left, field to filter on the right #}
-        <div class="d-flex card-max-auto align-items-center justify-content-between card-max-md-none mx-auto">
-          {# Fields to sort on large screen : independant buttons for each possibility + asc/desc button #}
-          <div class="d-none d-md-block">
+        {# Before the first card : fields to sort and fields to filter #}
+        <div class="d-flex card-max-auto flex-wrap align-items-end justify-content-between card-max-md-none mx-auto gap-2">
+          {# Fields to sort : prepare variables + independant buttons (large screen) or select (small screen) for each possibility + asc/desc button #}
+          {# prepare variables #}
+          {% set direction_asc = (queryParam.sorts|first) == 'asc' %}
+          {% set direction_url = path_with_query_param(queryParam|query_param_clone_with('sorts', { (queryParam.sorts|keys|first): direction_asc ? 'desc' : 'asc' })) %}
+          {% set sorts = [] %}
+          {% for sortKey in displayedSortsKeys %}
+            {% set sort = {
+              key: sortKey,
+              url: path_with_query_param(queryParam|query_param_clone_with('sorts', { (sortKey): queryParam.sorts|first })),
+              active: (queryParam.sorts|keys|first) == sortKey,
+              label: ('game.index.sort.' ~ sortKey)|trans,
+            } %}
+            {% set sorts = sorts|merge([sort]) %}
+          {% endfor %}
+          <div>
             <div class="input-group" role="group" aria-labelledby="input-group-sorts">
               <label class="input-group-text" id="input-group-sorts">{{ 'form.button.sortBy'|trans }}</label>
-              {% for sortKey in displayedSortsKeys %}
-                {# todo : optimize : calculate on time the sorts url ! #}
-                {% set url = path_with_query_param(queryParam|query_param_clone_with('sorts', { (sortKey): queryParam.sorts|first })) %}
-                <a href="{{ url }}" class="btn btn-outline-secondary app-btn-border-light {{ queryParam.sorts|keys|first == sortKey ? 'active' }}" data-turbo-prefetch="false">
-                  {{ ('game.index.sort.' ~ sortKey)|trans }}
+              {# independant buttons (large screen) #}
+              {% for sort in sorts %}
+                <a href="{{ sort.url }}" class="btn btn-outline-secondary app-btn-border-light d-none d-md-block {{ sort.active ? 'active' }}" data-turbo-prefetch="false">
+                  {{ sort.label }}
                 </a>
               {% endfor %}
-              {% block directionButton %}
-                {% set url =
-                  path_with_query_param(queryParam|query_param_clone_with('sorts', { (queryParam.sorts|keys|first): (queryParam.sorts|first) == 'asc' ? 'desc' : 'asc' }))
-                %}
-                <a href="{{ url }}" class="btn btn-outline-secondary app-btn-border-light" data-turbo-prefetch="false">
-                  <span class="bi bi-arrow-{{ queryParam.sorts|first == 'asc' ? 'up' : 'down' }}"></span>
-                </a>
-              {% endblock %}
-            </div>
-          </div>
-
-          {# Fields to sort on small screen : on select with all possibilities + asc/desc button #}
-          <div class="d-md-none">
-            <div class="input-group" role="group" aria-labelledby="input-group-sorts-small">
-              <label class="input-group-text" id="input-group-sorts-small" for="input-group-sorts-small-options">{{ 'form.button.sortBy'|trans }}</label>
-              <select class="form-select" id="input-group-sorts-small-options" {{ stimulus_controller('sort-select') }}>
-                {% for sortKey in displayedSortsKeys %}
-                  {% set url = path_with_query_param(queryParam|query_param_clone_with('sorts', { (sortKey): queryParam.sorts|first })) %}
-                  <option value="{{ url }}" {{ (queryParam.sorts|keys|first) == sortKey ? 'selected="selected"' }}>
-                    {{ ('game.index.sort.' ~ sortKey)|trans }}
+              {# select (small screen) #}
+              <select class="form-select d-md-none" id="input-group-sorts-small-options" {{ stimulus_controller('sort-select') }}>
+                {% for sort in sorts %}
+                  <option value="{{ sort.url }}" {{ sort.active ? 'selected="selected"' }}>
+                    {{ sort.label }}
                   </option>
                 {% endfor %}
               </select>
-              {{ block('directionButton') }}
+              {# asc/desc button #}
+              <a href="{{ direction_url }}" class="btn btn-outline-secondary app-btn-border-light" data-turbo-prefetch="false">
+                <span class="bi bi-arrow-{{ direction_asc ? 'up' : 'down' }}"></span>
+              </a>
             </div>
           </div>
 
           {# Fields to filter : dropdown with checkboxes for all possibilities and apply button #}
-          <div class="ms-2">
+          <div>
             <div class="input-group" role="group" aria-labelledby="input-group-filters">
               <label class="input-group-text" id="input-group-filters">{{ 'form.button.filterBy'|trans }}</label>
               {% for filterKey in displayedFiltersKeys %}
@@ -80,31 +80,28 @@
                   {{ ('game.index.filter.' ~ filterKey)|trans }}
                 </button>
                 {% set url = path_with_query_param(queryParam|query_param_clone_with('filters', queryParam.filters|filter((value, key) => key != filterKey)), true) %}
-                <ul id="{{ filterId }}" class="dropdown-menu dropdown-menu-end" {{ stimulus_controller('filter-apply', { url: url, key: filterKey }) }}>
-                  <li>
-                    {% if filterKey == 'users' %}
+                <div id="{{ filterId }}" class="dropdown-menu dropdown-menu-end" {{ stimulus_controller('filter-apply', { url: url, key: filterKey }) }}>
+                  {% if filterKey == 'users' %}
+                    <ul class="p-0 m-0">
                       {% for user in users|sort((a, b) => a.username <=> b.username) %}
-                        <li>
-                          <div class="dropdown-item">
-                            {% set checked = queryParam.filters.users is not defined or user.id in queryParam.filters.users ? 'checked' : '' %}
-                            {% set filterUserId = filterId ~ '-' ~ user.id %}
-                            <input class="form-check-input" type="checkbox" value="{{ user.id }}" id="{{ filterUserId }}" {{ checked }} data-filter-apply-target="checkbox" />
-                            <label class="form-check-label w-100" for="{{ filterUserId }}">
-                              <img src="{{ user.avatarPath|hub_url_generate_root }}"
-                                class="rounded-circle img-fluid app-avatar-card"
-                                alt="{{ 'aria.avatar'|trans({ name: user.username }) }}" />
-                              <span class="ms-1">{{ user.username }}</span>
-                            </label>
-                          </div>
+                        <li class="dropdown-item">
+                          {% set checked = queryParam.filters.users is not defined or user.id in queryParam.filters.users ? 'checked' : '' %}
+                          {% set filterUserId = filterId ~ '-' ~ user.id %}
+                          <input class="form-check-input" type="checkbox" value="{{ user.id }}" id="{{ filterUserId }}" {{ checked }} data-filter-apply-target="checkbox" />
+                          <label class="form-check-label w-100" for="{{ filterUserId }}">
+                            <img src="{{ user.avatarPath|hub_url_generate_root }}"
+                              class="rounded-circle img-fluid app-avatar-card"
+                              alt="{{ 'aria.avatar'|trans({ name: user.username }) }}" />
+                            <span class="ms-1">{{ user.username }}</span>
+                          </label>
                         </li>
                       {% endfor %}
-                    {% endif %}
-
-                    <div class="dropdown-item text-center">
-                      <button class="btn btn-outline-secondary" data-filter-apply-target="button">{{ 'form.button.apply'|trans }}</button>
-                    </div>
-                  </li>
-                </ul>
+                    </ul>
+                  {% endif %}
+                  <div class="dropdown-item text-center">
+                    <button class="btn btn-outline-secondary" data-filter-apply-target="button">{{ 'form.button.apply'|trans }}</button>
+                  </div>
+                </div>
               {% endfor %}
             </div>
           </div>

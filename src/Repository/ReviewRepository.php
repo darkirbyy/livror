@@ -33,8 +33,8 @@ class ReviewRepository extends ServiceEntityRepository
         $qb = $this->createQueryBuilder('r');
         $qb->leftJoin('r.game', 'g')->where('r.userId = :userId')->setParameter('userId', $userId);
 
-        // Apply sorts, filters, offset and limit
-        $this->queryParamHelper->applyToQb($queryParam, $qb, $sortsConversion, $filtersConversion);
+        // Apply the query param but filters
+        $this->queryParamHelper->applyButFiltersToQb($queryParam, $qb, $sortsConversion);
 
         // Execute and fetch the query
         return $qb->getQuery()->getResult();

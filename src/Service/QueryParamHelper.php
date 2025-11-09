@@ -11,28 +11,28 @@ use Symfony\Component\HttpFoundation\RequestStack;
 /**
  * Service to validate and complete the QueryParam Dto.
  */
-final readonly class QueryParamHelper
+final class QueryParamHelper
 {
+    private bool $isLoadFromSesion;
+
     public function __construct(private RequestStack $requestStack, private int $defaultLimit, private int $maxLimit)
     {
+        $this->isLoadFromSesion = false;
     }
+
+    // /////////////////////////////////////////////////////
+    // Functions for repository ////////////////////////////
+    // /////////////////////////////////////////////////////
 
     public function load(QueryParam $queryParam, string $sessionKey): void
     {
         $isQueryEmpty = array_all((array) $queryParam, fn ($value, $key): bool => is_null($value));
         $isSessionFull = $this->requestStack->getSession()->has($sessionKey);
         if ($isQueryEmpty && $isSessionFull) {
+            $this->isLoadFromSesion = true;
             foreach ($this->requestStack->getSession()->get($sessionKey) as $property => $value) {
                 $queryParam->$property = $value;
             }
-        }
-    }
-
-    public function save(QueryParam $queryParam, string $sessionKey): void
-    {
-        // todo : optimize : don't save if it comes from session
-        if (!$this->requestStack->getMainRequest()->isXmlHttpRequest()) {
-            $this->requestStack->getSession()->set($sessionKey, $queryParam);
         }
     }
 
@@ -63,19 +63,26 @@ final readonly class QueryParamHelper
         );
     }
 
-    public function applyToQb(QueryParam $queryParam, QueryBuilder $qb, array $sortsConversion, array $filtersConversion): void
+    public function save(QueryParam $queryParam, string $sessionKey): void
+    {
+        if (!$this->isLoadFromSesion && !$this->requestStack->getMainRequest()->isXmlHttpRequest()) {
+            $this->requestStack->getSession()->set($sessionKey, $queryParam);
+        }
+    }
+
+    public function applyButFiltersToQb(QueryParam $queryParam, QueryBuilder $qb, array $sortsConversion): void
     {
         foreach ($queryParam->sorts as $key => $direction) {
             $qb->addOrderBy($sortsConversion[$key], strtoupper($direction));
         }
 
-        foreach ($queryParam->filters as $key => $values) {
-            $qb->andWhere($filtersConversion[$key] . ' IN (:' . $key . ')')->setParameter($key, $values);
-        }
-
         $qb->setMaxResults($queryParam->limit + 1);
         $qb->setFirstResult($queryParam->offset);
     }
+
+    // /////////////////////////////////////////////////////
+    // Functions for twig extensions ///////////////////////
+    // /////////////////////////////////////////////////////
 
     public function cloneWith(QueryParam $queryParam, string $property, mixed $value): QueryParam
     {

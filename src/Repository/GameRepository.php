@@ -35,13 +35,11 @@ class GameRepository extends ServiceEntityRepository
         $qb = $this->createQueryBuilder('g');
         $qb->leftJoin('g.reviews', 'ra')->select('NEW App\Dto\GameIndex(g, AVG(ra.rating), SUM(ra.hourSpend), MIN(ra.firstPlay))')->groupBy('g.id');
 
-        // Apply the query param : sorts
-        foreach ($queryParam->sorts as $key => $direction) {
-            $qb->addOrderBy($sortsConversion[$key], strtoupper($direction));
-        }
+        // Apply alls the query param but filters and add last sort by id
+        $this->queryParamHelper->applyButFiltersToQb($queryParam, $qb, $sortsConversion);
         $qb->addOrderBy('g.id', 'ASC');
 
-        // Apply the query param : filters
+        // Apply the query param filters
         // todo : rethink the logic/query
         // foreach ( as $key => $values) {
         //     $qb->innerJoin('g.reviews', 'rf', Join::WITH, $filtersConversion[$key] . ' IN (:' . $key . ')')->setParameter($key, $values);
@@ -53,9 +51,6 @@ class GameRepository extends ServiceEntityRepository
                            OR EXISTS (SELECT 1 FROM ' . Review::class . ' r1 WHERE r1.game = g AND r1.userId IN (:users))';
             $qb->andWhere($condition)->setParameter('users', $queryParam->filters['users']);
         }
-
-        // Apply the query param : limit and offset
-        $qb->setMaxResults($queryParam->limit + 1)->setFirstResult($queryParam->offset);
 
         // Execute and fetch the query
         return $qb->getQuery()->getResult();
