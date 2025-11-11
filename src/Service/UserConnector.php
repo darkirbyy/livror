@@ -22,7 +22,11 @@ class UserConnector
     {
         // Extract and flatten all reviews of each game
         $reviews = array_merge(...array_map(fn (GameIndex $g) => $g->getGame()->getReviews()->toArray(), $gamesIndex));
+        $this->toReviews($reviews, $users);
+    }
 
+    public function toReviews(array &$reviews, array $users): void
+    {
         // Plug the user in each of the entity Review
         array_walk($reviews, fn (Review $r) => $r->setUser($users[$r->getUserId()]));
     }

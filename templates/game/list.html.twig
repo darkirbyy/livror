@@ -1,20 +1,16 @@
-{% from 'theme/macro.html.twig' import path_with_query_param %}
+{% from 'theme/macro.html.twig' import path_with_query_param, fmt_full_price, game_title, review_body %}
 
 {% for gameIndex in gamesIndex %}
   {% set game = gameIndex.game %}
   {% set gameId = 'game-' ~ game.id %}
+
   {# Each game is displayed on a "card" containing all the data #}
   <div id="{{ gameId }}" class="card-max-auto card-max-md-none mx-auto my-3 rounded-3 border overflow-hidden">
     {# Card title bar with the the title on one side, and 3 infos on the other side (or on top of each other on small screen) #}
     <div class="row gx-0 bg-primary-subtle border-bottom">
       {# Actual title with the edit button #}
       <div class="col-12 border-bottom col-md-6 border-bottom-md-0 border-end-md card-max-md-auto">
-        <div class="text-center text-md-start d-flex py-1 px-1 ps-md-2 justify-content-center justify-content-md-start align-items-center">
-          <h5 class="mb-0 p-1 text-truncate flex-grow-1">
-            {{ game.name }}
-          </h5>
-          <a class="fs-6 p-1 link-secondary" href="{{ path('game_edit', { id: game.id }) }}" data-turbo-frame="_top"><span class="bi bi-pen ps-1"></span></a>
-        </div>
+        {{ game_title(game) }}
       </div>
       {# 4 piece of information : player who have written a review, average rating, total hour spend, minimum first play date #}
       <div class="col-12 text-center d-flex align-items-center col-md-auto flex-even-1">
@@ -67,9 +63,7 @@
             {# All other information #}
             {% set gameData = {
               releaseYear: game.releaseYear,
-              fullPrice: game.fullPrice > 0
-                ? (game.fullPrice / 100)|format_currency(env.app.currency, { decimal_always_shown: true, fraction_digit: 2 })
-                : game.fullPrice|fmt_full_price(env.app.locale),
+              fullPrice: fmt_full_price(game.fullPrice),
               developers: game.developers,
               genres: game.genres,
               description: game.description,
@@ -77,7 +71,7 @@
 
             {% for field, value in gameData %}
               <div class="col-4 py-1 px-1 text-end text-truncate {{ field != 'description' ? 'border-bottom' : '' }}">
-                <span class="fst-italic fs-6 fw-light">{{ ('game.label.' ~ field)|trans({ }, 'validators') }}</span>
+                <span class="fw-light">{{ ('game.label.' ~ field)|trans({ }, 'validators') }}</span>
               </div>
               <div class="col-8 py-1 text-start {{ (field not in ['genres', 'description'] ? 'text-truncate') ~ ' ' ~ (field != 'description' ? 'border-bottom') }}">
                 {{ value|default('-') }}
@@ -104,32 +98,38 @@
 
           {# Reviews content #}
           <div class="row gx-0 p-0 m-0 collapse d-md-flex" id="{{ collapseId }}">
-            {% for review in game.reviews %}
-              {% if review.user is not empty %}
-                <div class="col-12 text-center d-flex bg-secondary-subtle align-items-center border-bottom {{ loop.index0 > 0 ? 'border-top' }} border-bottom-md col-md-auto flex-even-1">
-                  <div class="flex-even-1 py-0 px-2 py-md-1 text-truncate">
-                    <img src="{{ review.user.avatarPath|hub_url_generate_root }}"
-                      class="rounded-circle img-fluid app-avatar-card"
-                      alt="{{ 'aria.avatar'|trans({ name: review.user.username }) }}" />
-                    <span class="ms-1 d-none d-md-inline">{{ review.user.username }}</span>
-                  </div>
-                  <div class="flex-even-1 py-1 px-2 py-md-2 border-start border-end text-truncate">
-                    <span class="fa-solid fa-star fa-sm"></span> {{ review.rating is not empty ? review.rating|format_number({ fraction_digit: 1 }) : '-' }}
-                  </div>
-                  <div class="flex-even-1 py-1 px-2 py-md-2 border-end text-truncate">
-                    <span class="fa-regular fa-hourglass-half fa-sm"></span>
-                    {{ review.hourSpend is not empty ? review.hourSpend ~ 'h' : '-' }}
-                  </div>
-                  <div class="flex-even-1 py-1 px-2 py-md-2 text-truncate">
-                    <span class="fa-regular fa-calendar-days fa-sm"></span>
-                    <span class="small">{{ review.firstPlay is not empty ? review.firstPlay|format_datetime('short', 'none') : '-' }}</span>
-                  </div>
+            {% for review in game.reviews|filter(review => review.user is not empty) %}
+              <div class="col-12 text-center d-flex bg-secondary-subtle align-items-center border-bottom {{ loop.index0 > 0 ? 'border-top' }} border-bottom-md col-md-auto flex-even-1">
+                <div class="flex-even-1 py-0 px-2 py-md-1 text-truncate">
+                  <img src="{{ review.user.avatarPath|hub_url_generate_root }}"
+                    class="rounded-circle img-fluid app-avatar-card"
+                    alt="{{ 'aria.avatar'|trans({ name: review.user.username }) }}" />
+                  <span class="ms-1 d-none d-md-inline">{{ review.user.username }}</span>
                 </div>
-                <div class="col-12 mb-2 py-1 px-2 py-md-2">
-                  {{ review.comment }}
+                <div class="flex-even-1 py-1 px-2 py-md-2 border-start border-end text-truncate">
+                  <span class="fa-solid fa-star fa-sm"></span> {{ review.rating is not empty ? review.rating|format_number({ fraction_digit: 1 }) : '-' }}
                 </div>
-              {% endif %}
+                <div class="flex-even-1 py-1 px-2 py-md-2 border-end text-truncate">
+                  <span class="fa-regular fa-hourglass-half fa-sm"></span>
+                  {{ review.hourSpend is not empty ? review.hourSpend ~ 'h' : '-' }}
+                </div>
+                <div class="flex-even-1 py-1 px-2 py-md-2 text-truncate">
+                  <span class="fa-regular fa-calendar-days fa-sm"></span>
+                  <span class="small">{{ review.firstPlay is not empty ? review.firstPlay|format_datetime('short', 'none') : '-' }}</span>
+                </div>
+              </div>
+              <div class="col-12 mb-2 py-1 px-2 py-md-2">
+                {{ review_body(review) }}
+              </div>
             {% endfor %}
+            {% if not (app.user.id in (game.reviews|map(review => review.userId))) %}
+              <div class="my-2 text-center">
+                <a href="{{ path('review_new', { gameId: game.id }) }}" class="btn btn-primary" data-turbo-frame="_top">
+                  <span class="bi bi-plus-square-fill me-md-1"></span>
+                  {{ 'review.index.button.addReview'|trans }}
+                </a>
+              </div>
+            {% endif %}
           </div>
         </div>
       </div>

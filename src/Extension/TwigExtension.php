@@ -27,7 +27,7 @@ class TwigExtension extends AbstractExtension implements GlobalsInterface
     public function getFilters(): array
     {
         return [
-            new TwigFilter('fmt_full_price', [$this, 'fmtFullPrice']),
+            new TwigFilter('fmt_type_price', [$this, 'fmtTypePrice']),
             new TwigFilter('hub_url_generate_root', [$this, 'hubUrlGenerateRoot']),
             new TwigFilter('hub_url_generate_account', [$this, 'hubUrlGenerateAccount']),
             new TwigFilter('query_param_clone_with', [$this, 'queryParamCloneWith']),
@@ -37,7 +37,7 @@ class TwigExtension extends AbstractExtension implements GlobalsInterface
     }
 
     // Custom formatter for the full price, to return an empty string in case of an unknown price
-    public function fmtFullPrice(?int $fullPrice, string $locale): string
+    public function fmtTypePrice(?int $fullPrice, string $locale): string
     {
         $typePrice = TypePriceEnum::fromPrice($fullPrice);
 

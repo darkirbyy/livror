@@ -1,4 +1,4 @@
-{% from 'theme/macro.html.twig' import path_with_query_param %}
+{% from 'theme/macro.html.twig' import path_with_query_param, game_title, review_body %}
 
 {% for review in reviews %}
   {% set reviewId = 'review-' ~ review.id %}
@@ -9,12 +9,7 @@
     <div class="row gx-0 bg-primary-subtle border-bottom text-center">
       {# Actual title with the edit button #}
       <div class="col-12 border-bottom col-md-6 border-bottom-md-0 border-end-md card-max-md-auto">
-        <div class="d-flex py-2 px-2 ps-md-3 justify-content-center justify-content-md-start align-items-center">
-          <h5 class="mb-0 p-0">
-            {{ review.game.name }}
-            <a class="fs-6 p-0 link-secondary" href="{{ path('game_edit', { id: review.game.id }) }}" data-turbo-frame="_top"><span class="bi bi-pen ps-1"></span></a>
-          </h5>
-        </div>
+        {{ game_title(review.game) }}
       </div>
       {# 3 piece of information : player rating, hour spend, and first play date #}
       <div class="col-12 d-flex align-items-center col-md-auto flex-even-1">
@@ -33,25 +28,8 @@
     </div>
 
     {# Card body in one part : the comment #}
-    <div class="row py-0 g-0 px-0 bg-body-tertiary">
-      <div class="col-12 px-0 col-md">
-        <div class="row p-0 m-0 d-md-flex h-auto h-md-100">
-          <div class="col-12 p-2 d-flex flex-column">
-            <p class="mb-0 flex-grow-1">
-              {{ review.comment|default('-') }}
-            </p>
-            <div class="fst-italic fs-6 fw-light">
-              {% set date_add = review.dateAdd|format_datetime('relative_medium', 'none') %}
-              {% set date_update = review.dateUpdate|format_datetime('relative_medium', 'none') %}
-              {{ 'review.index.card.added'|trans }} : {{ date_add }}
-              {% if date_add != date_update %}
-                ({{ 'review.index.card.updated'|trans }} : {{ date_update }})
-              {% endif %}
-              <a class="fs-6 p-0 link-secondary" href="{{ path('review_edit', { id: review.id }) }}" data-turbo-frame="_top"><span class="bi bi-pen ps-1"></span></a>
-            </div>
-          </div>
-        </div>
-      </div>
+    <div class="p-2 bg-body-tertiary">
+      {{ review_body(review) }}
     </div>
   </div>
 {% endfor %}

@@ -73,7 +73,7 @@
             {# Fields to filter : dropdown with checkboxes for all possibilities and apply button #}
             <div>
               <div class="input-group" role="group" aria-labelledby="input-group-filters">
-                <label class="input-group-text" id="input-group-filters">{{ 'form.button.filterBy'|trans }}</label>
+                {# <label class="input-group-text" id="input-group-filters">{{ 'form.button.filterBy'|trans }}</label> #}
                 {% for filterKey in displayedFiltersKeys %}
                   {% set filterId = 'input-group-filters-' ~ filterKey %}
                   <button type="button"

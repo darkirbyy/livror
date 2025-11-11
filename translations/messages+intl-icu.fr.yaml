@@ -10,7 +10,8 @@ game:
   index:
     title: Tous les jeux
     button:
-      addGame: Ajouter un jeu
+      addGame: Ajouter un nouveau jeu
+      editGame: Editer
     flash:
       newGame: '{name} a été ajouté ! Vous pouver maintenant écrire <a class="alert-link" href="{url}">votre avis</a>.'
       updateGame: '{name} a été mise à jour !'
@@ -40,6 +41,7 @@ review:
     title: Mes avis
     button:
       addReview: Écrire un avis
+      editReview: Editer
     flash:
       newReview: 'Votre avis sur {name} a été enregistré !'
       updateReview: 'Votre avis sur {name} a été mise à jour !'
