@@ -48,7 +48,7 @@ class FormManager
     {
         $tokenValue = $this->requestStack->getCurrentRequest()->getPayload()->get('_token');
         if (!$this->csrfTokenManager->isTokenValid(new CsrfToken($tokenId, $tokenValue))) {
-            $this->flashBag->add('danger', new FlashMessage('form.flash.invalidCsrf'));
+            $this->flashBag->add('livror/danger', new FlashMessage('form.flash.invalidCsrf'));
 
             return false;
         }
@@ -63,7 +63,7 @@ class FormManager
     {
         $tokenValue = $this->requestStack->getCurrentRequest()->getPayload()->get('_token');
         if (!$this->csrfTokenManager->isTokenValid(new CsrfToken($tokenId, $tokenValue))) {
-            $this->flashBag->add('danger', new FlashMessage('form.flash.invalidCsrf'));
+            $this->flashBag->add('livror/danger', new FlashMessage('form.flash.invalidCsrf'));
 
             return false;
         }
@@ -82,13 +82,13 @@ class FormManager
             $this->entityManager->flush();
 
             if (!empty($flashSuccess)) {
-                $this->flashBag->add('success', $flashSuccess);
+                $this->flashBag->add('livror/success', $flashSuccess);
             }
 
             return true;
         } catch (ConstraintViolationException $e) {
             $message = $this->exceptionManager->handleDatabase($e);
-            $this->flashBag->add('danger', new FlashMessage($message));
+            $this->flashBag->add('livror/danger', new FlashMessage($message));
 
             return false;
         }
@@ -105,13 +105,13 @@ class FormManager
             $this->entityManager->flush();
 
             if (!empty($flashSuccess)) {
-                $this->flashBag->add('success', $flashSuccess);
+                $this->flashBag->add('livror/success', $flashSuccess);
             }
 
             return true;
         } catch (ConstraintViolationException $e) {
             $message = $this->exceptionManager->handleDatabase($e);
-            $this->flashBag->add('danger', new FlashMessage($message));
+            $this->flashBag->add('livror/danger', new FlashMessage($message));
 
             return false;
         }

@@ -97,11 +97,11 @@ class GameType extends DefaultType
                     $this->steamSearch->fetchSteamGame((int) $steamId);
                     if (SteamSearchStatusEnum::OK === $this->steamSearch->getStatus()) {
                         $game = $this->steamSearch->fillGame($game);
-                        $flashBag->add('success', new FlashMessage('game.edit.flash.steamSearch.success'));
+                        $flashBag->add('livror/success', new FlashMessage('game.edit.flash.steamSearch.success'));
                     } elseif (SteamSearchStatusEnum::NOT_FOUND === $this->steamSearch->getStatus()) {
                         $steamIdError = $this->trans->trans('game.error.steamId.notFound', [], 'validators');
                     } else {
-                        $flashBag->add('danger', new FlashMessage('game.edit.flash.steamSearch.fail'));
+                        $flashBag->add('livror/danger', new FlashMessage('game.edit.flash.steamSearch.fail'));
                     }
                 }
 
