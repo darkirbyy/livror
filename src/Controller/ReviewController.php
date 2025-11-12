@@ -16,9 +16,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\MapQueryString;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
-use Symfony\Component\HttpKernel\Exception\NotAcceptableHttpException;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/review', name: 'review_')]
 class ReviewController extends AbstractController
@@ -63,7 +62,7 @@ class ReviewController extends AbstractController
         $userId = $this->getUser()->getId();
         $gameId = 'GET' == $request->getMethod() ? $request->query->get('gameId') : null;
         if (0 == $gameRepo->countWithoutReview($userId)) {
-            throw new NotAcceptableHttpException();
+            throw new \RuntimeException('No game available for user ' . $this->getUser()->getUserIdentifier() . '.');
         }
 
         $review = new Review();
@@ -83,13 +82,9 @@ class ReviewController extends AbstractController
 
     // Edit an existing review
     #[Route('/{id}/edit', name: 'edit', methods: ['GET', 'POST'], requirements: ['id' => '\d+'])]
+    #[IsGranted('edit', 'review')]
     public function edit(Review $review, Request $request, FormManager $fm): Response
     {
-        $userId = $this->getUser()->getId();
-        if ($userId !== $review->getUserId()) {
-            throw new AccessDeniedHttpException();
-        }
-
         $form = $this->createForm(ReviewType::class, $review);
         $form->handleRequest($request);
 
@@ -106,13 +101,9 @@ class ReviewController extends AbstractController
 
     // Delete a review
     #[Route('/{id}/delete', name: 'delete', methods: ['POST'], requirements: ['id' => '\d+'])]
+    #[IsGranted('delete', 'review')]
     public function delete(Review $review, FormManager $fm): Response
     {
-        $userId = $this->getUser()->getId();
-        if ($userId !== $review->getUserId()) {
-            throw new AccessDeniedHttpException();
-        }
-
         $flashSuccess = new FlashMessage('review.index.flash.deleteReview', ['name' => $review->getGame()->getName()]);
         if ($fm->checkTokenAndRemove('livror/delete-review', $review, $flashSuccess)) {
             return $this->redirectToRoute('review_index', [], Response::HTTP_SEE_OTHER);
