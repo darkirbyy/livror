@@ -35,8 +35,7 @@
                 {{ 'form.button.delete'|trans }}
               </button>
               <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">{{ 'form.button.cancel'|trans }}</button>
-              {% set token_id = 'delete-review-' ~ review.id %}
-              <input type="hidden" name="{{ token_id ~ '_token' }}" value="{{ csrf_token(token_id) }}" />
+              <input type="hidden" name="_token" value="{{ csrf_token('livror/delete-review') }}" />
             </form>
           </div>
         </div>

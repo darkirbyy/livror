@@ -113,6 +113,13 @@ enum:
     free: Gratuit
     paying: Payant
 
+error:
+  title: Erreur {code}
+  message:
+    notFound: Cette page n'existe pas.
+    forbidden: Cette page n'est pas accessible.
+    other: Le serveur a rencontré un problème, merci de réessayer plus tard.
+
 aria:
   skipToContent: Aller au contenu
   mainNavigation: Navigation principale

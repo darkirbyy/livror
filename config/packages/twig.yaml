@@ -11,6 +11,7 @@ twig:
                 locale: '%app.locale%'
                 default_limit: '%app.default_limit%'
                 max_limit: '%app.max_limit%'
+                enable_prefetch: '%app.enable_prefetch%'
                 index_autoload: '%app.index_autoload%'
             versioning:
                 version: '%versioning.version%'

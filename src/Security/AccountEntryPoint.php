@@ -18,7 +18,7 @@ class AccountEntryPoint implements AuthenticationEntryPointInterface
 
     public function start(Request $request, ?AuthenticationException $authException = null): RedirectResponse
     {
-        $request->getSession()->set('_login_target_path', $request->getUri());
+        $request->getSession()->set('hub/login-target-path', $request->getUri());
 
         return new RedirectResponse($this->hubUrlGenerator->generateAccount('/login'));
     }

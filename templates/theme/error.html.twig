@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% set title = 'error.title'|trans({ code: error_code }) %}
+
+{% block main %}
+  <section>
+    <div class="container">
+      <p class="text-center fs-4">
+        {{ ('error.message.' ~ error_key)|trans }}
+      </p>
+      <p class="text-center">
+        <a href="{{ path('home_index') }}" class="btn btn-outline-primary">Retour à l'accueil</a>
+      </p>
+    </div>
+  </section>
+{% endblock %}

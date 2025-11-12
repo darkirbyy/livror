@@ -114,7 +114,7 @@ class ReviewController extends AbstractController
         }
 
         $flashSuccess = new FlashMessage('review.index.flash.deleteReview', ['name' => $review->getGame()->getName()]);
-        if ($fm->checkTokenAndRemove('delete-review-' . $review->getId(), $review, $flashSuccess)) {
+        if ($fm->checkTokenAndRemove('livror/delete-review', $review, $flashSuccess)) {
             return $this->redirectToRoute('review_index', [], Response::HTTP_SEE_OTHER);
         }
 

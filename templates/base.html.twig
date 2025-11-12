@@ -3,12 +3,19 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    {% if (turbo_force_reload|default(false)) == true %}
+      <meta name="turbo-visit-control" content="reload" />
+    {% endif %}
+    <meta name="turbo-prefetch" content="{{ env.app.enable_prefetch ? 'true' : 'false' }}" />
     {# <meta name="turbo-refresh-method" content="morph" /> #}
     {# <meta name="turbo-refresh-scroll" content="preserve" /> #}
+
     <title>
       {{ title ~ ' - ' ~ ('layout.name'|trans) }}
     </title>
+
     <link rel="icon" href=" {{ asset('build/favicon.png') }}" />
+
     {% block stylesheets %}
       {{ encore_entry_link_tags('app') }}
     {% endblock %}
@@ -90,10 +97,12 @@
                     <a class="dropdown-item" role="menuitem" href="{{ ''|hub_url_generate_account }}" data-turbo-prefetch="false">{{ 'layout.navbar.account.myAccount'|trans }}</a>
                   </li>
                   <li>
+                    {# Disable turbo : we may leave this app on logout #}
                     <a class="dropdown-item text-danger"
                       role="menuitem"
-                      href="{{ '/logout'|hub_url_generate_account({ 'disconnect_user[_token]': csrf_token('logout') }) }}"
-                      data-turbo-prefetch="false">
+                      href="{{ '/logout'|hub_url_generate_account({ 'disconnect_user[_token]': csrf_token('hub/logout') }) }}"
+                      data-turbo-prefetch="false"
+                      data-turbo="false">
                       {{ 'layout.navbar.account.signOut'|trans }}
                     </a>
                   </li>

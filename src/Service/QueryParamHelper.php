@@ -27,10 +27,10 @@ final class QueryParamHelper
     public function load(QueryParam $queryParam, string $sessionKey): void
     {
         $isQueryEmpty = array_all((array) $queryParam, fn ($value, $key): bool => is_null($value));
-        $isSessionFull = $this->requestStack->getSession()->has($sessionKey);
+        $isSessionFull = $this->requestStack->getSession()->has('livror/' . $sessionKey);
         if ($isQueryEmpty && $isSessionFull) {
             $this->isLoadFromSesion = true;
-            foreach ($this->requestStack->getSession()->get($sessionKey) as $property => $value) {
+            foreach ($this->requestStack->getSession()->get('livror/' . $sessionKey) as $property => $value) {
                 $queryParam->$property = $value;
             }
         }
@@ -66,7 +66,7 @@ final class QueryParamHelper
     public function save(QueryParam $queryParam, string $sessionKey): void
     {
         if (!$this->isLoadFromSesion && !$this->requestStack->getMainRequest()->isXmlHttpRequest()) {
-            $this->requestStack->getSession()->set($sessionKey, $queryParam);
+            $this->requestStack->getSession()->set('livror/' . $sessionKey, $queryParam);
         }
     }
 

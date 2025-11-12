@@ -95,7 +95,7 @@ class GameController extends AbstractController
     public function delete(Game $game, FormManager $fm): Response
     {
         $flashSuccess = new FlashMessage('game.index.flash.deleteGame', ['name' => $game->getName()]);
-        if ($fm->checkTokenAndRemove('delete-game-' . $game->getId(), $game, $flashSuccess)) {
+        if ($fm->checkTokenAndRemove('livror/delete-game', $game, $flashSuccess)) {
             return $this->redirectToRoute('game_index', [], Response::HTTP_SEE_OTHER);
         }
 

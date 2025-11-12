@@ -44,13 +44,10 @@ class FormManager
     /**
      * Check the CSRF token and persist the entity with a custom flash message upon success.
      */
-    public function checkTokenAndPersist(string $tokenName, object $object, ?FlashMessage $flashSuccess = null): bool
+    public function checkTokenAndPersist(string $tokenId, object $object, ?FlashMessage $flashSuccess = null): bool
     {
-        $tokenValue = $this->requestStack
-            ->getCurrentRequest()
-            ->getPayload()
-            ->get($tokenName . '_token');
-        if (!$this->csrfTokenManager->isTokenValid(new CsrfToken($tokenName, $tokenValue))) {
+        $tokenValue = $this->requestStack->getCurrentRequest()->getPayload()->get('_token');
+        if (!$this->csrfTokenManager->isTokenValid(new CsrfToken($tokenId, $tokenValue))) {
             $this->flashBag->add('danger', new FlashMessage('form.flash.invalidCsrf'));
 
             return false;
@@ -62,13 +59,10 @@ class FormManager
     /**
      * Check the CSRF token and remove the entity with a custom flash message upon success.
      */
-    public function checkTokenAndRemove(string $tokenName, object $object, ?FlashMessage $flashSuccess = null): bool
+    public function checkTokenAndRemove(string $tokenId, object $object, ?FlashMessage $flashSuccess = null): bool
     {
-        $tokenValue = $this->requestStack
-            ->getCurrentRequest()
-            ->getPayload()
-            ->get($tokenName . '_token');
-        if (!$this->csrfTokenManager->isTokenValid(new CsrfToken($tokenName, $tokenValue))) {
+        $tokenValue = $this->requestStack->getCurrentRequest()->getPayload()->get('_token');
+        if (!$this->csrfTokenManager->isTokenValid(new CsrfToken($tokenId, $tokenValue))) {
             $this->flashBag->add('danger', new FlashMessage('form.flash.invalidCsrf'));
 
             return false;
