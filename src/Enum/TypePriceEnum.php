@@ -9,17 +9,23 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 enum TypePriceEnum: string implements TranslatableInterface
 {
-    case UNKNOWN = 'unknown';
-    case FREE = 'free';
-    case PAYING = 'paying';
+    case UNKNOWN = 'UNKNOWN';
+    case FREE = 'FREE';
+    case PAYING = 'PAYING';
 
     // Implement the TranslatableInterface so that the label are automatically translated in the form
     public function trans(TranslatorInterface $trans, ?string $locale = null): string
     {
+        return $trans->trans('enum.typePrice.' . $this->toTransKey(), locale: $locale);
+    }
+
+    // Convert to key used in the translations yaml
+    public function toTransKey(): string
+    {
         return match ($this) {
-            self::UNKNOWN => $trans->trans('enum.TypePrice.unknown', locale: $locale),
-            self::FREE => $trans->trans('enum.TypePrice.free', locale: $locale),
-            self::PAYING => $trans->trans('enum.TypePrice.paying', locale: $locale),
+            self::UNKNOWN => 'unknown',
+            self::FREE => 'free',
+            self::PAYING => 'paying',
         };
     }
 

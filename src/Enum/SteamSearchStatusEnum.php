@@ -6,8 +6,8 @@ namespace App\Enum;
 
 enum SteamSearchStatusEnum: string
 {
-    case PENDING = 'pending';
-    case OK = 'ok';
-    case NOT_FOUND = 'not_found';
-    case ERROR = 'error';
+    case PENDING = 'PENDING';
+    case OK = 'OK';
+    case NOT_FOUND = 'NOT_FOUND';
+    case ERROR = 'ERROR';
 }

@@ -108,7 +108,7 @@ layout:
     releaseDate: Mise à jour le
 
 enum:
-  TypePrice:
+  typePrice:
     unknown: Inconnu
     free: Gratuit
     paying: Payant
