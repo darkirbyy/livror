@@ -1,7 +1,6 @@
 # see https://symfony.com/doc/current/reference/configuration/framework.html
 framework:
     secret: '%env(APP_SECRET)%'
-    # error_controller: App\Controller\ErrorController::show
     
     # Note that the session will be started ONLY if you read or write from it.
     session: 
@@ -13,14 +12,12 @@ framework:
         cookie_httponly: true
         cookie_path: /
         cookie_lifetime: 0 # until browser is closed
-
-    form:
-        csrf_protection:
-            token_id: livror/submit
             
     csrf_protection:
+        check_header: true
         stateless_token_ids:
             - livror/submit
+            - livror/delete
 
 when@test:
     framework:

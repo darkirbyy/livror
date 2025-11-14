@@ -35,7 +35,7 @@
                 {{ 'form.button.delete'|trans }}
               </button>
               <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">{{ 'form.button.cancel'|trans }}</button>
-              <input type="hidden" name="_token" value="{{ csrf_token('livror/delete-game') }}" />
+              <input type="hidden" name="_token" data-controller="csrf-protection" value="csrf-token" />
             </form>
           </div>
         </div>
