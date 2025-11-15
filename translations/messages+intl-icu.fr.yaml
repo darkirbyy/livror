@@ -50,7 +50,7 @@ review:
     card:
       informations: Informations
       comment: Commentaire
-      added: Ajouté
+      added: Écrit
       updated: modifié
     sort:
       name: Nom

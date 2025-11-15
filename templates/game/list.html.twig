@@ -105,7 +105,7 @@
           {# Reviews content #}
           <div class="row gx-0 p-0 m-0 collapse d-md-flex" id="{{ collapseId }}">
             {% for review in game.reviews|filter(review => review.user is not empty) %}
-              <div class="col-12 text-center d-flex bg-secondary-subtle align-items-center border-bottom {{ loop.index0 > 0 ? 'border-top' }} border-bottom-md col-md-auto flex-even-1">
+              <div class="col-12 text-center d-flex bg-secondary-subtle align-items-center border-bottom {{ loop.index0 > 0 ? 'border-top' }} col-md-auto flex-even-1">
                 <div class="flex-even-1 py-0 px-2 py-md-1 text-truncate">
                   <img src="{{ review.user.avatarPath|hub_url_generate_root }}"
                     class="rounded-circle img-fluid app-avatar-card"
@@ -128,7 +128,7 @@
                   <span class="small">{{ review.firstPlay is not empty ? review.firstPlay|format_datetime('short', 'none') : '-' }}</span>
                 </div>
               </div>
-              <div class="col-12 mb-2 py-1 px-2 py-md-2">
+              <div class="col-12 mb-2 py-1 px-2">
                 {{ review_body(review) }}
               </div>
             {% endfor %}

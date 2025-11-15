@@ -11,7 +11,7 @@ export default class extends Controller {
 
   change(newValue) {
     const newOption = [...this.datalistTarget.children].find((option) => {
-      return option.getAttribute('value') == newValue;
+      return parseFloat(option.getAttribute('value')) == parseFloat(newValue);
     });
     this.displayTarget.innerText = newOption.getAttribute('label');
   }

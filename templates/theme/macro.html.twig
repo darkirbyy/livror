@@ -3,6 +3,7 @@
   {% set url = path(app.current_route, queryParam|query_param_to_array) %} {{ raw ? url|raw : url }}
 {%- endmacro -%}
 
+{# Macro to display the price : type if 0 or null, value with local formatting otherwise #}
 {%- macro fmt_full_price(fullPrice) -%}
   {{ fullPrice > 0 ? (fullPrice / 100)|format_currency(env.app.currency, { decimal_always_shown: true, fraction_digit: 2 }) : fullPrice|fmt_type_price(env.app.locale) }}
 {%- endmacro -%}
@@ -15,33 +16,31 @@
     </h5>
     <a class="btn btn-sm btn-outline-secondary" href="{{ path('game_edit', { id: game.id }) }}" aria-label="{{ 'game.index.button.editGame'|trans }}" data-turbo-frame="_top">
       <span class="bi bi-pen" aria-hidden="true"></span>
-      <span class="d-none d-md-inline">{{ 'game.index.button.editGame'|trans }}</span>
     </a>
   </div>
 {%- endmacro -%}
 
+{# Macro to display the body of a review (button to edit, date added, comment) #}
 {% macro review_body(review) %}
-  <div class="d-flex justify-content-between gap-2">
-    <div class="small fw-light">
-      {% set date_add = review.dateAdd|format_datetime('relative_medium', 'none') %}
-      {% set date_update = review.dateUpdate|format_datetime('relative_medium', 'none') %}
-      {{ 'review.index.card.added'|trans }} : {{ date_add }}
-      {% if date_add != date_update %}
-        ({{ 'review.index.card.updated'|trans }} : {{ date_update }})
-      {% endif %}
+  {% if review.user.id == app.user.id %}
+    <div class="float-end">
+      <a class="btn btn-sm btn-outline-secondary"
+        href="{{ path('review_edit', { id: review.id }) }}"
+        aria-label="{{ 'review.index.button.editReview'|trans }}"
+        data-turbo-frame="_top">
+        <span class="bi bi-pen" aria-hidden="true"></span>
+        <span class="d-none d-md-inline">{{ 'review.index.button.editReview'|trans }}</span>
+      </a>
     </div>
-    {% if review.user.id == app.user.id %}
-      <div>
-        <a class="btn btn-sm btn-outline-secondary"
-          href="{{ path('review_edit', { id: review.id }) }}"
-          aria-label="{{ 'review.index.button.editReview'|trans }}"
-          data-turbo-frame="_top">
-          <span class="bi bi-pen" aria-hidden="true"></span>
-          <span class="d-none d-md-inline">{{ 'review.index.button.editReview'|trans }}</span>
-        </a>
-      </div>
+  {% endif %}
+  <span class="small fw-light">
+    {% set date_add = review.dateAdd|format_datetime('relative_medium', 'none') %}
+    {% set date_update = review.dateUpdate|format_datetime('relative_medium', 'none') %}
+    {{ 'review.index.card.added'|trans }} : {{ date_add }}
+    {% if date_add != date_update %}
+      ({{ 'review.index.card.updated'|trans }} : {{ date_update }})
     {% endif %}
-  </div>
+  </span>
   <p class="m-0">
     Commentaire : {{ review.comment|default('-') }}
   </p>
