@@ -88,7 +88,7 @@
                   <div id="{{ filterId }}" class="dropdown-menu dropdown-menu-end" {{ stimulus_controller('filter-apply', { url: url, key: filterKey }) }}>
                     {% if filterKey == 'users' %}
                       <ul class="p-0 m-0">
-                        {% for user in users|sort((a, b) => a.username <=> b.username) %}
+                        {% for user in users|filter(u => u is not null)|sort((a, b) => a.username <=> b.username) %}
                           <li class="dropdown-item">
                             {% set checked = queryParam.filters.users is not defined or user.id in queryParam.filters.users ? 'checked' : '' %}
                             {% set filterUserId = filterId ~ '-' ~ user.id %}

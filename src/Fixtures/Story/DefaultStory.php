@@ -11,6 +11,6 @@ final class DefaultStory extends Story
 {
     public function build(): void
     {
-        GameFactory::createMany(2);
+        GameFactory::createMany(10);
     }
 }
