@@ -22,8 +22,8 @@
 
       {# Button to add a new review #}
       <div class="mx-auto card-max-auto card-max-md-none pb-3">
-        <a href="{{ path('review_new') }}" class="btn btn-primary {{ cannotAdd ? 'disabled' }}" data-turbo-frame="_top">
-          <span class="bi bi-plus-square-fill me-md-1"></span>
+        <a href="{{ path('review_new') }}" class="btn btn-primary {{ cannotAdd ? 'disabled' }}" data-turbo-frame="_top" aria-label="{{ 'review.index.button.addReview'|trans }}">
+          <span class="bi bi-plus-square-fill me-md-1" aria-hidden="true"></span>
           <span class="d-none d-md-inline">{{ 'review.index.button.addReview'|trans }}</span>
         </a>
       </div>
@@ -36,8 +36,10 @@
             {# Fields to sort : prepare variables + independant buttons (large screen) or select (small screen) for each possibility + asc/desc button #}
             <div class="flex-md-fill">
               {# prepare variables #}
-              {% set direction_asc = (queryParam.sorts|first) == 'asc' %}
-              {% set direction_url = path_with_query_param(queryParam|query_param_clone_with('sorts', { (queryParam.sorts|keys|first): direction_asc ? 'desc' : 'asc' })) %}
+              {% set direction_way = queryParam.sorts|first %}
+              {% set direction_url =
+                path_with_query_param(queryParam|query_param_clone_with('sorts', { (queryParam.sorts|keys|first): direction_way == 'asc' ? 'desc' : 'asc' }))
+              %}
               {% set sorts = [] %}
               {% for sortKey in displayedSortsKeys %}
                 {% set sort = {
@@ -65,15 +67,18 @@
                   {% endfor %}
                 </select>
                 {# asc/desc button #}
-                <a href="{{ direction_url }}" class="btn btn-outline-secondary app-btn-border-light" data-turbo-prefetch="false">
-                  <span class="bi bi-arrow-{{ direction_asc ? 'up' : 'down' }}"></span>
+                <a href="{{ direction_url }}"
+                  class="btn btn-outline-secondary app-btn-border-light"
+                  aria-label="{{ ('aria.order.' ~ direction_way)|trans }}"
+                  data-turbo-prefetch="false">
+                  <span class="bi bi-arrow-{{ direction_way == 'asc' ? 'up' : 'down' }}" aria-hidden="true"></span>
                 </a>
               </div>
             </div>
             {# Fields to filter : dropdown with checkboxes for all possibilities and apply button #}
-            <div>
+            <div class="d-none">
               <div class="input-group" role="group" aria-labelledby="input-group-filters">
-                {# <label class="input-group-text" id="input-group-filters">{{ 'form.button.filterBy'|trans }}</label> #}
+                <label class="input-group-text" id="input-group-filters">{{ 'form.button.filterBy'|trans }}</label>
                 {% for filterKey in displayedFiltersKeys %}
                   {% set filterId = 'input-group-filters-' ~ filterKey %}
                   <button type="button"
@@ -100,7 +105,7 @@
             <div>
               {% set reinit_url = path_with_query_param(queryParam|query_param_clone_reset) %}
               <a href="{{ reinit_url }}" class="btn btn-outline-secondary app-btn-border-light" aria-label="{{ 'form.button.reset'|trans }}">
-                <span class="bi bi-arrow-counterclockwise"></span>
+                <span class="bi bi-arrow-counterclockwise" aria-hidden="true"></span>
               </a>
             </div>
           </div>

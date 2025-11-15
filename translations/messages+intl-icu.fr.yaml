@@ -127,3 +127,6 @@ aria:
   footer: Pied de page
   avatar: Avatar de {name}
   cover: Image de couverture de {name}
+  order:
+    asc: Ordre croissant
+    desc: Ordre décroissant

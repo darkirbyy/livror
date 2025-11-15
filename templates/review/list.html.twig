@@ -14,14 +14,18 @@
       {# 3 piece of information : player rating, hour spend, and first play date #}
       <div class="col-12 d-flex align-items-center col-md-auto flex-even-1">
         <div class="flex-even-1 py-1 px-2 py-md-2 border-end text-truncate">
-          <span class="fa-solid fa-star fa-sm"></span> {{ review.rating is not empty ? review.rating|format_number({ fraction_digit: 1 }) : '-' }}
+          <span class="fa-solid fa-star fa-sm" aria-hidden="true"></span>
+          <span class="visually-hidden">{{ 'review.label.rating'|trans({ }, 'validators') }} :</span>
+          {{ review.rating is not empty ? review.rating|format_number({ fraction_digit: 1 }) : '-' }}
         </div>
         <div class="flex-even-1 py-1 px-2 py-md-2 border-end text-truncate">
-          <span class="fa-regular fa-hourglass-half fa-sm"></span>
+          <span class="fa-regular fa-hourglass-half fa-sm" aria-hidden="true"></span>
+          <span class="visually-hidden">{{ 'review.label.hourSpend'|trans({ }, 'validators') }} :</span>
           {{ review.hourSpend is not empty ? review.hourSpend ~ 'h' : '-' }}
         </div>
         <div class="flex-even-1 py-1 px-2 py-md-2 text-truncate">
-          <span class="fa-regular fa-calendar-days fa-sm"></span>
+          <span class="fa-regular fa-calendar-days fa-sm" aria-hidden="true"></span>
+          <span class="visually-hidden">{{ 'review.label.firstPlay'|trans({ }, 'validators') }} :</span>
           <span class="small">{{ review.firstPlay is not empty ? review.firstPlay|format_datetime('short', 'none') : '-' }}</span>
         </div>
       </div>

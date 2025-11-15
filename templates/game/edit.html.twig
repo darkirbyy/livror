@@ -31,7 +31,7 @@
           <div class="modal-footer">
             <form action="{{ path('game_delete', { id: game.id }) }}" method="post">
               <button type="submit" class="btn btn-danger">
-                <span class="bi bi-trash-fill me-1"></span>
+                <span class="bi bi-trash-fill me-1" aria-hidden="true"></span>
                 {{ 'form.button.delete'|trans }}
               </button>
               <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">{{ 'form.button.cancel'|trans }}</button>
@@ -59,7 +59,9 @@
             </a>
           </div>
 
+          {# Form #}
           {{ form_start(form) }}
+
           <div class="row" {{ stimulus_controller('steam-search', { url: path(app.current_route, { id: game.id }), lazy: false }) }}>
             {# Field to write the steam ID and press the search button #}
             <div class="col app-form-row">
@@ -68,8 +70,8 @@
               <div class="input-group">
                 {{ form_widget(form.steamId, { attr: { 'data-steam-search-target': 'input' } }) }}
                 <button data-steam-search-target="button" class="btn btn-outline-secondary" aria-label="{{ 'form.button.search'|trans }}">
-                  <span data-steam-search-target="remove" class="bi bi-steam"></span>
-                  <span data-steam-search-target="spinner"></span>
+                  <span data-steam-search-target="remove" class="bi bi-steam" aria-hidden="true"></span>
+                  <span data-steam-search-target="spinner" aria-hidden="true"></span>
                   <span class="d-none d-sm-inline ms-sm-1">{{ 'form.button.search'|trans }}</span>
                 </button>
               </div>
@@ -118,7 +120,7 @@
             {% if game.id is not null %}
               <div>
                 <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#delete-modal">
-                  <span class="bi bi-trash-fill me-1"></span>
+                  <span class="bi bi-trash-fill me-1" aria-hidden="true"></span>
                   {{ 'form.button.delete'|trans }}
                 </button>
               </div>
