@@ -3,6 +3,7 @@
 namespace App\Fixtures\Factory;
 
 use App\Entity\Main\Game;
+use App\Tests\Mock\DataMock;
 use Zenstruck\Foundry\Persistence\PersistentProxyObjectFactory;
 
 final class GameFactory extends PersistentProxyObjectFactory
@@ -27,6 +28,7 @@ final class GameFactory extends PersistentProxyObjectFactory
         $defaults['fullPrice'] = self::faker()->randomElement([null, 0, self::faker()->numberBetween(99, 6999)]);
         $defaults['genres'] = implode(', ', array_map('mb_ucfirst', self::faker()->words(self::faker()->numberBetween(1, 6))));
         $defaults['description'] = self::faker()->paragraph(self::faker()->numberBetween(2, 5));
+        $defaults['imgUrl'] = 'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/' . self::faker()->randomElement(DataMock::$steamAppsId) . '/header.jpg';
 
         return $defaults;
     }

@@ -58,7 +58,10 @@ Stop all the services with `symfony server:stop`.
 
 To increment the version, use `symfony console bizkit:versioning:increment`.
 
-By default in dev environment, the HTTP request to Steam API is mocked with dummy data. To prevent this, comment the line `when@dev: *test` in `config/services.yaml`.
+In dev environment :
+
+- To mock the HTTP request to Steam API with dummy data, uncomment the line `when@dev: *test` in `config/services.yaml`.
+- To generate fake random data, use the Foundry Default Story with `symfony console doctrine:fixtures:load`. :warning: It will purge the database !
 
 ## Deploy
 
