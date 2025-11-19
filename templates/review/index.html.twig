@@ -14,12 +14,12 @@
         {{ block('flash', 'theme/flash.html.twig') }}
       </div>
 
-      {# {% if cannotAdd %} #}
-      <div class="alert alert-secondary" role="alert">
-        {% set url = path('game_new', { backpath: path(app.current_route)|raw }) %}
-        {{ 'review.index.flash.cannotAddReview'|trans({ url: url })|raw }}
-      </div>
-      {# {% endif %} #}
+      {% if cannotAdd %}
+        <div class="alert alert-secondary" role="alert">
+          {% set url = path('game_new', { backpath: path(app.current_route) }) %}
+          {{ 'review.index.flash.cannotAddReview'|trans({ url: url })|raw }}
+        </div>
+      {% endif %}
 
       {# Button to add a new review #}
       <div class="mx-auto card-max-auto card-max-md-none pb-3">
@@ -92,7 +92,7 @@
                     {{ ('review.index.filter.' ~ filterKey)|trans }}
                   </button>
                   {% set new_param = { offset: 0, limit: env.app.default_limit, filters: queryParam.filters|filter((value, key) => key != filterKey) } %}
-                  {% set url = path_with_query_param(queryParam|clone_with(new_param), null, true) %}
+                  {% set url = path_with_query_param(queryParam|clone_with(new_param)) %}
                   <div id="{{ filterId }}" class="dropdown-menu dropdown-menu-end" {{ stimulus_controller('filter-apply', { url: url, key: filterKey }) }}>
                     {% if filterKey == '' %}
 

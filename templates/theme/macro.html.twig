@@ -1,6 +1,6 @@
 {# Macro to lighten the code to generate path with query params for the sort #}
-{%- macro path_with_query_param(queryParam, anchor = null, raw = false) -%}
-  {%- set url = path(app.current_route, queryParam|to_array|merge({ anchor: anchor })) -%} {{ raw ? url|raw : url }}
+{%- macro path_with_query_param(queryParam, anchor = null) -%}
+  {{- path(app.current_route, queryParam|to_array|merge({ anchor: anchor }))|raw -}}
 {%- endmacro -%}
 
 {# Macro to display the price : type if 0 or null, value with local formatting otherwise #}

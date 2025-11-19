@@ -10,7 +10,7 @@
     <div class="row gx-0 bg-primary-subtle border-bottom">
       {# Actual title with the edit button #}
       <div class="col-12 border-bottom col-md-6 border-bottom-md-0 border-end-md card-max-md-auto">
-        {% set backpath = path_with_query_param(queryParam|clone_with({ offset: 0, limit: queryParam.limit + queryParam.offset }), 'game-' ~ game.id, true) %}
+        {% set backpath = path_with_query_param(queryParam|clone_with({ offset: 0, limit: queryParam.limit + queryParam.offset }), 'game-' ~ game.id) %}
         {{ game_title(game, backpath) }}
       </div>
       {# 4 piece of information : player who have written a review, average rating, total hour spend, minimum first play date #}
@@ -150,8 +150,7 @@
 
 {% if hasMore %}
   {% set new_param = { offset: queryParam.offset + queryParam.limit, limit: env.app.default_limit } %}
-  {% set url = path_with_query_param(queryParam|clone_with(new_param), null, true) %}
-  {{ dump(url) }}
+  {% set url = path_with_query_param(queryParam|clone_with(new_param)) %}
   <div class="text-center" {{ stimulus_controller('load-more', { url: url, lazy: env.app.index_autoload }) }}>
     <button class="btn btn-outline-secondary" data-load-more-target="button remove">{{ 'form.button.showMore'|trans }}</button>
     <span class="fs-4 text-muted" data-load-more-target="spinner"></span>

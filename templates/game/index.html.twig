@@ -24,7 +24,6 @@
 
       {# Turboframe to refresh only the main section when sorting the results #}
       <turbo-frame id="main-section">
-        {{ dump(queryParam) }}
         {# Before the first card : fields to sort and fields to filter #}
         <div class="card-max-auto card-max-md-none mx-auto">
           <div class="d-flex flex-wrap align-items-end justify-content-between gap-2">
@@ -86,7 +85,7 @@
                     {{ ('game.index.filter.' ~ filterKey)|trans }}
                   </button>
                   {% set new_param = { offset: 0, limit: env.app.default_limit, filters: queryParam.filters|filter((value, key) => key != filterKey) } %}
-                  {% set url = path_with_query_param(queryParam|clone_with(new_param), null, true) %}
+                  {% set url = path_with_query_param(queryParam|clone_with(new_param)) %}
                   <div id="{{ filterId }}" class="dropdown-menu dropdown-menu-end" {{ stimulus_controller('filter-apply', { url: url, key: filterKey }) }}>
                     {% if filterKey == 'users' %}
                       <ul class="p-0 m-0">

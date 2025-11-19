@@ -13,6 +13,6 @@ document.addEventListener("turbo:load", function() {
   const params = new URLSearchParams(window.location.search);
   if (params.get('anchor')) {
     const element = document.getElementById(params.get('anchor'));
-    if (element) element.scrollIntoView();
+    if (element) element.scrollIntoView({behavior: 'instant'});
   }
 });
