@@ -1,6 +1,6 @@
 {# Macro to lighten the code to generate path with query params for the sort #}
-{%- macro path_with_query_param(queryParam, raw = false) -%}
-  {%- set url = path(app.current_route, queryParam|to_array) -%} {{ raw ? url|raw : url }}
+{%- macro path_with_query_param(queryParam, anchor = null, raw = false) -%}
+  {%- set url = path(app.current_route, queryParam|to_array|merge({ anchor: anchor })) -%} {{ raw ? url|raw : url }}
 {%- endmacro -%}
 
 {# Macro to display the price : type if 0 or null, value with local formatting otherwise #}
@@ -9,12 +9,12 @@
 {%- endmacro -%}
 
 {# Macro to display the title of the game in the game and review index #}
-{%- macro game_title(game) -%}
+{%- macro game_title(game, backpath = null) -%}
   <div class="text-center text-md-start d-flex p-1 ps-md-2 justify-content-center justify-content-md-start align-items-center">
     <h5 class="mb-0 p-1 text-truncate flex-grow-1">
       {{ game.name }}
     </h5>
-    {% set url = path('game_edit', { id: game.id }) %}
+    {% set url = path('game_edit', { id: game.id, backpath: backpath }) %}
     <a href="{{ url }}" class="btn btn-sm btn-outline-secondary" aria-label="{{ 'game.index.button.editGame'|trans }}" data-turbo-frame="_top">
       <span class="bi bi-pen" aria-hidden="true"></span>
     </a>

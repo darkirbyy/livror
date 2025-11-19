@@ -9,6 +9,7 @@ use App\Dto\QueryParam;
 use App\Entity\Main\Game;
 use App\Form\GameType;
 use App\Repository\GameRepository;
+use App\Service\BackpathUrlGenerator;
 use App\Service\FormManager;
 use App\Service\UserConnector;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -72,7 +73,7 @@ class GameController extends AbstractController
 
     // Edit an existing game
     #[Route('/{id}/edit', name: 'edit', methods: ['GET', 'POST'], requirements: ['id' => '\d+'])]
-    public function edit(Game $game, Request $request, FormManager $fm): Response
+    public function edit(Game $game, Request $request, FormManager $fm, BackpathUrlGenerator $backpathUrlGenerator): Response
     {
         $steamId = 'GET' == $request->getMethod() ? $request->query->get('steamId') : null;
 
@@ -81,7 +82,7 @@ class GameController extends AbstractController
 
         $flashSuccess = new FlashMessage('game.index.flash.updateGame', ['name' => $game->getName()]);
         if ($fm->validateAndPersist($form, $game, $flashSuccess)) {
-            return $this->redirectToRoute('game_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirect($backpathUrlGenerator->generate($this->generateUrl('game_index')), Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('game/edit.html.twig', [

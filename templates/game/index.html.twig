@@ -86,7 +86,7 @@
                     {{ ('game.index.filter.' ~ filterKey)|trans }}
                   </button>
                   {% set new_param = { offset: 0, limit: env.app.default_limit, filters: queryParam.filters|filter((value, key) => key != filterKey) } %}
-                  {% set url = path_with_query_param(queryParam|clone_with(new_param), true) %}
+                  {% set url = path_with_query_param(queryParam|clone_with(new_param), null, true) %}
                   <div id="{{ filterId }}" class="dropdown-menu dropdown-menu-end" {{ stimulus_controller('filter-apply', { url: url, key: filterKey }) }}>
                     {% if filterKey == 'users' %}
                       <ul class="p-0 m-0">

@@ -6,6 +6,7 @@ namespace App\Extension;
 
 use App\Dto\QueryParam;
 use App\Enum\TypePriceEnum;
+use App\Service\BackpathUrlGenerator;
 use App\Service\HubUrlGenerator;
 use App\Service\QueryParamHelper;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -15,8 +16,12 @@ use Twig\TwigFilter;
 
 class TwigExtension extends AbstractExtension implements GlobalsInterface
 {
-    public function __construct(private TranslatorInterface $trans, private HubUrlGenerator $hubUrlGenerator, private QueryParamHelper $queryParamHelper)
-    {
+    public function __construct(
+        private TranslatorInterface $trans,
+        private HubUrlGenerator $hubUrlGenerator,
+        private BackpathUrlGenerator $backpathUrlGenerator,
+        private QueryParamHelper $queryParamHelper,
+    ) {
     }
 
     public function getGlobals(): array
@@ -33,6 +38,7 @@ class TwigExtension extends AbstractExtension implements GlobalsInterface
             new TwigFilter('clone_with', [$this, 'queryParamCloneWith']),
             new TwigFilter('clone_reset', [$this, 'queryParamCloneReset']),
             new TwigFilter('to_array', [$this, 'queryParamToArray']),
+            new TwigFilter('generate_backpath', [$this, 'backpathUrlGenerate']),
         ];
     }
 
@@ -54,6 +60,12 @@ class TwigExtension extends AbstractExtension implements GlobalsInterface
     public function hubUrlGenerateAccount(string $route, array $parameters = []): string
     {
         return $this->hubUrlGenerator->generateAccount($route, $parameters);
+    }
+
+    // Generate the backpath if exists and valid, keep the given path otherwise
+    public function backpathUrlGenerate(string $defaultRoute): string
+    {
+        return $this->backpathUrlGenerator->generate($defaultRoute);
     }
 
     // Change one queryParam property without modyfiny the original instance
