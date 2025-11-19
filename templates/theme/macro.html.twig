@@ -22,11 +22,11 @@
 {%- endmacro -%}
 
 {# Macro to display the body of a review (button to edit, date added, comment) #}
-{% macro review_body(review) %}
+{% macro review_body(review, backpath = null) %}
   {% if review.user.id == app.user.id %}
     <div class="float-end">
       <a class="btn btn-sm btn-outline-secondary"
-        href="{{ path('review_edit', { id: review.id }) }}"
+        href="{{ path('review_edit', { id: review.id, backpath: backpath }) }}"
         aria-label="{{ 'review.index.button.editReview'|trans }}"
         data-turbo-frame="_top">
         <span class="bi bi-pen" aria-hidden="true"></span>

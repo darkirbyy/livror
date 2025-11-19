@@ -2,6 +2,7 @@
 
 {% for review in reviews %}
   {% set reviewId = 'review-' ~ review.id %}
+  {% set backpath = path_with_query_param(queryParam|clone_with({ offset: 0, limit: queryParam.limit + queryParam.offset }), 'review-' ~ review.id) %}
 
   {# Each game is displayed on a "card" containing all the data #}
   <div id="{{ reviewId }}" class="card-max-auto card-max-md-none mx-auto my-3 rounded-3 border overflow-hidden">
@@ -9,7 +10,6 @@
     <div class="row gx-0 bg-primary-subtle border-bottom text-center">
       {# Actual title with the edit button #}
       <div class="col-12 border-bottom col-md-6 border-bottom-md-0 border-end-md card-max-md-auto">
-        {% set backpath = path_with_query_param(queryParam|clone_with({ offset: 0, limit: queryParam.limit + queryParam.offset }), 'review-' ~ review.id) %}
         {{ game_title(review.game, backpath) }}
       </div>
       {# 3 piece of information : player rating, hour spend, and first play date #}
@@ -34,7 +34,7 @@
 
     {# Card body in one part : the comment #}
     <div class="px-2 py-1 bg-body-tertiary">
-      {{ review_body(review) }}
+      {{ review_body(review, backpath) }}
     </div>
   </div>
 {% endfor %}

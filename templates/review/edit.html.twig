@@ -53,7 +53,7 @@
 
           {# Back link #}
           <div class="mb-2">
-            <a class="link-secondary icon-link icon-link-hover icon-link-left" href="{{ path('review_index') }}">
+            <a class="link-secondary icon-link icon-link-hover icon-link-left" href="{{ path('review_index')|generate_backpath }}">
               <span class="bi bi-arrow-left mb-1" aria-hidden="true"></span>
               {{ 'form.button.backToList'|trans }}
             </a>

@@ -3,6 +3,7 @@
 {% for gameIndex in gamesIndex %}
   {% set game = gameIndex.game %}
   {% set gameId = 'game-' ~ game.id %}
+  {% set backpath = path_with_query_param(queryParam|clone_with({ offset: 0, limit: queryParam.limit + queryParam.offset }), 'game-' ~ game.id) %}
 
   {# Each game is displayed on a "card" containing all the data #}
   <div id="{{ gameId }}" class="card-max-auto card-max-md-none mx-auto my-3 rounded-3 border overflow-hidden">
@@ -10,7 +11,6 @@
     <div class="row gx-0 bg-primary-subtle border-bottom">
       {# Actual title with the edit button #}
       <div class="col-12 border-bottom col-md-6 border-bottom-md-0 border-end-md card-max-md-auto">
-        {% set backpath = path_with_query_param(queryParam|clone_with({ offset: 0, limit: queryParam.limit + queryParam.offset }), 'game-' ~ game.id) %}
         {{ game_title(game, backpath) }}
       </div>
       {# 4 piece of information : player who have written a review, average rating, total hour spend, minimum first play date #}
@@ -130,12 +130,12 @@
                 </div>
               </div>
               <div class="col-12 mb-2 py-1 px-2">
-                {{ review_body(review) }}
+                {{ review_body(review, backpath) }}
               </div>
             {% endfor %}
             {% if not (app.user.id in (game.reviews|map(review => review.userId))) %}
               <div class="my-2 text-center">
-                <a href="{{ path('review_new', { gameId: game.id }) }}" class="btn btn-primary" data-turbo-frame="_top">
+                <a href="{{ path('review_new', { gameId: game.id, backpath: backpath }) }}" class="btn btn-primary" data-turbo-frame="_top">
                   <span class="bi bi-plus-square-fill me-md-1" aria-hidden="true"></span>
                   {{ 'review.index.button.addReview'|trans }}
                 </a>

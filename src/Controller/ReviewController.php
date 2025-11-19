@@ -10,6 +10,7 @@ use App\Entity\Main\Review;
 use App\Form\ReviewType;
 use App\Repository\GameRepository;
 use App\Repository\ReviewRepository;
+use App\Service\BackpathUrlGenerator;
 use App\Service\FormManager;
 use App\Service\UserConnector;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -57,7 +58,7 @@ class ReviewController extends AbstractController
 
     // Add new review
     #[Route('/new', name: 'new', methods: ['GET', 'POST'])]
-    public function new(GameRepository $gameRepo, Request $request, FormManager $fm): Response
+    public function new(GameRepository $gameRepo, Request $request, FormManager $fm, BackpathUrlGenerator $backpathUrlGenerator): Response
     {
         $userId = $this->getUser()->getId();
         $gameId = 'GET' == $request->getMethod() ? $request->query->get('gameId') : null;
@@ -71,7 +72,7 @@ class ReviewController extends AbstractController
 
         $flashSuccess = new FlashMessage('review.index.flash.newReview', ['name' => $review->getGame()?->getName()]);
         if ($fm->validateAndPersist($form, $review, $flashSuccess)) {
-            return $this->redirectToRoute('review_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirect($backpathUrlGenerator->generate($this->generateUrl('review_index')), Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('review/edit.html.twig', [
@@ -83,14 +84,14 @@ class ReviewController extends AbstractController
     // Edit an existing review
     #[Route('/{id}/edit', name: 'edit', methods: ['GET', 'POST'], requirements: ['id' => '\d+'])]
     #[IsGranted('edit', 'review')]
-    public function edit(Review $review, Request $request, FormManager $fm): Response
+    public function edit(Review $review, Request $request, FormManager $fm, BackpathUrlGenerator $backpathUrlGenerator): Response
     {
         $form = $this->createForm(ReviewType::class, $review);
         $form->handleRequest($request);
 
         $flashSuccess = new FlashMessage('review.index.flash.updateReview', ['name' => $review->getGame()->getName()]);
         if ($fm->validateAndPersist($form, $review, $flashSuccess)) {
-            return $this->redirectToRoute('review_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirect($backpathUrlGenerator->generate($this->generateUrl('review_index')), Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('review/edit.html.twig', [
