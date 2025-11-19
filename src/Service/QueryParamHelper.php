@@ -38,6 +38,10 @@ final class QueryParamHelper
 
     public function defaults(QueryParam $queryParam, array $defaultSorts, array $defaultFilters): void
     {
+        if ($this->isLoadFromSesion) {
+            return;
+        }
+
         $queryParam->offset ??= 0;
         $queryParam->limit ??= $this->defaultLimit;
         $queryParam->sorts ??= $defaultSorts;
@@ -46,6 +50,10 @@ final class QueryParamHelper
 
     public function validate(QueryParam $queryParam, array $allowedSortsKeys, array $allowedFiltersKeys): void
     {
+        if ($this->isLoadFromSesion) {
+            return;
+        }
+
         $queryParam->offset = filter_var($queryParam->offset, FILTER_VALIDATE_INT, ['options' => ['default' => 0, 'min_range' => 0]]);
         $queryParam->limit = filter_var($queryParam->limit, FILTER_VALIDATE_INT, [
             'options' => ['default' => $this->defaultLimit, 'min_range' => 1, 'max_range' => $this->maxLimit],
@@ -65,9 +73,14 @@ final class QueryParamHelper
 
     public function save(QueryParam $queryParam, string $sessionKey): void
     {
-        if (!$this->isLoadFromSesion && !$this->requestStack->getMainRequest()->isXmlHttpRequest()) {
-            $this->requestStack->getSession()->set('livror/' . $sessionKey, $queryParam);
+        if ($this->isLoadFromSesion || $this->requestStack->getMainRequest()->isXmlHttpRequest()) {
+            return;
         }
+
+        $queryParamCloned = clone $queryParam;
+        $queryParamCloned->offset = 0;
+        $queryParamCloned->limit = $this->defaultLimit;
+        $this->requestStack->getSession()->set('livror/' . $sessionKey, $queryParamCloned);
     }
 
     public function applyButFiltersToQb(QueryParam $queryParam, QueryBuilder $qb, array $sortsConversion): void
@@ -84,10 +97,12 @@ final class QueryParamHelper
     // Functions for twig extensions ///////////////////////
     // /////////////////////////////////////////////////////
 
-    public function cloneWith(QueryParam $queryParam, string $property, mixed $value): QueryParam
+    public function cloneWith(QueryParam $queryParam, array $newParam): QueryParam
     {
         $queryParamCloned = clone $queryParam;
-        $queryParamCloned->$property = $value;
+        foreach ($newParam as $property => $value) {
+            $queryParamCloned->$property = $value;
+        }
 
         return $queryParamCloned;
     }

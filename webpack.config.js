@@ -85,6 +85,7 @@ Encore
 
     // add https support (port option useless as the manifest will not be updated accordingly)
     .configureDevServerOptions(options => {
+        options.allowedHosts = 'all';
         options.liveReload = true;
         options.static = {
             watch: false

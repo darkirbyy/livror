@@ -16,7 +16,8 @@
 
       {% if cannotAdd %}
         <div class="alert alert-secondary" role="alert">
-          {{ 'review.index.flash.cannotAddReview'|trans({ url: path('game_new') })|raw }}
+          {% set url = path('game_new') %}
+          {{ 'review.index.flash.cannotAddReview'|trans({ url: url })|raw }}
         </div>
       {% endif %}
 
@@ -37,14 +38,14 @@
             <div class="flex-md-fill">
               {# prepare variables #}
               {% set direction_way = queryParam.sorts|first %}
-              {% set direction_url =
-                path_with_query_param(queryParam|query_param_clone_with('sorts', { (queryParam.sorts|keys|first): direction_way == 'asc' ? 'desc' : 'asc' }))
-              %}
+              {% set new_param = { offset: 0, limit: env.app.default_limit, sorts: { (queryParam.sorts|keys|first): direction_way == 'asc' ? 'desc' : 'asc' } } %}
+              {% set direction_url = path_with_query_param(queryParam|clone_with(new_param)) %}
               {% set sorts = [] %}
               {% for sortKey in displayedSortsKeys %}
+                {% set new_param = { offset: 0, limit: env.app.default_limit, sorts: { (sortKey): queryParam.sorts|first } } %}
                 {% set sort = {
                   key: sortKey,
-                  url: path_with_query_param(queryParam|query_param_clone_with('sorts', { (sortKey): queryParam.sorts|first })),
+                  url: path_with_query_param(queryParam|clone_with(new_param)),
                   active: (queryParam.sorts|keys|first) == sortKey,
                   label: ('review.index.sort.' ~ sortKey)|trans,
                 } %}
@@ -90,7 +91,8 @@
                     aria-haspopup="true">
                     {{ ('review.index.filter.' ~ filterKey)|trans }}
                   </button>
-                  {% set url = path_with_query_param(queryParam|query_param_clone_with('filters', queryParam.filters|filter((value, key) => key != filterKey)), true) %}
+                  {% set new_param = { offset: 0, limit: env.app.default_limit, filters: queryParam.filters|filter((value, key) => key != filterKey) } %}
+                  {% set url = path_with_query_param(queryParam|clone_with(new_param), true) %}
                   <div id="{{ filterId }}" class="dropdown-menu dropdown-menu-end" {{ stimulus_controller('filter-apply', { url: url, key: filterKey }) }}>
                     {% if filterKey == '' %}
 
@@ -103,7 +105,7 @@
               </div>
             </div>
             <div>
-              {% set reinit_url = path_with_query_param(queryParam|query_param_clone_reset) %}
+              {% set reinit_url = path_with_query_param(queryParam|clone_reset) %}
               <a href="{{ reinit_url }}" class="btn btn-outline-secondary app-btn-border-light" aria-label="{{ 'form.button.reset'|trans }}">
                 <span class="bi bi-arrow-counterclockwise" aria-hidden="true"></span>
               </a>

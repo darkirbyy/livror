@@ -24,6 +24,7 @@
 
       {# Turboframe to refresh only the main section when sorting the results #}
       <turbo-frame id="main-section">
+        {{ dump(queryParam) }}
         {# Before the first card : fields to sort and fields to filter #}
         <div class="card-max-auto card-max-md-none mx-auto">
           <div class="d-flex flex-wrap align-items-end justify-content-between gap-2">
@@ -31,14 +32,14 @@
             <div class="flex-md-fill">
               {# prepare variables #}
               {% set direction_way = queryParam.sorts|first %}
-              {% set direction_url =
-                path_with_query_param(queryParam|query_param_clone_with('sorts', { (queryParam.sorts|keys|first): direction_way == 'asc' ? 'desc' : 'asc' }))
-              %}
+              {% set new_param = { offset: 0, limit: env.app.default_limit, sorts: { (queryParam.sorts|keys|first): direction_way == 'asc' ? 'desc' : 'asc' } } %}
+              {% set direction_url = path_with_query_param(queryParam|clone_with(new_param)) %}
               {% set sorts = [] %}
               {% for sortKey in displayedSortsKeys %}
+                {% set new_param = { offset: 0, limit: env.app.default_limit, sorts: { (sortKey): queryParam.sorts|first } } %}
                 {% set sort = {
                   key: sortKey,
-                  url: path_with_query_param(queryParam|query_param_clone_with('sorts', { (sortKey): queryParam.sorts|first })),
+                  url: path_with_query_param(queryParam|clone_with(new_param)),
                   active: (queryParam.sorts|keys|first) == sortKey,
                   label: ('game.index.sort.' ~ sortKey)|trans,
                 } %}
@@ -84,7 +85,8 @@
                     aria-haspopup="true">
                     {{ ('game.index.filter.' ~ filterKey)|trans }}
                   </button>
-                  {% set url = path_with_query_param(queryParam|query_param_clone_with('filters', queryParam.filters|filter((value, key) => key != filterKey)), true) %}
+                  {% set new_param = { offset: 0, limit: env.app.default_limit, filters: queryParam.filters|filter((value, key) => key != filterKey) } %}
+                  {% set url = path_with_query_param(queryParam|clone_with(new_param), true) %}
                   <div id="{{ filterId }}" class="dropdown-menu dropdown-menu-end" {{ stimulus_controller('filter-apply', { url: url, key: filterKey }) }}>
                     {% if filterKey == 'users' %}
                       <ul class="p-0 m-0">
@@ -94,7 +96,7 @@
                             {% set filterUserId = filterId ~ '-' ~ user.id %}
                             <input class="form-check-input" type="checkbox" value="{{ user.id }}" id="{{ filterUserId }}" {{ checked }} data-filter-apply-target="checkbox" />
                             <label class="form-check-label w-100" for="{{ filterUserId }}">
-                              <img src="{{ user.avatarPath|hub_url_generate_root }}"
+                              <img src="{{ user.avatarPath|generate_root }}"
                                 class="rounded-circle img-fluid app-avatar-card"
                                 alt="{{ 'aria.avatar'|trans({ name: user.username }) }}" />
                               <span class="ms-1">{{ user.username }}</span>
@@ -111,7 +113,7 @@
               </div>
             </div>
             <div>
-              {% set reinit_url = path_with_query_param(queryParam|query_param_clone_reset) %}
+              {% set reinit_url = path_with_query_param(queryParam|clone_reset) %}
               <a href="{{ reinit_url }}" class="btn btn-outline-secondary app-btn-border-light" aria-label="{{ 'form.button.reset'|trans }}">
                 <span class="bi bi-arrow-counterclockwise" aria-hidden="true"></span>
               </a>

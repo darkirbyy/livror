@@ -86,21 +86,17 @@
                   aria-haspopup="true"
                   {{ currentRoute starts with 'review' ? 'aria-current="page" aria-selected="true"' }}>
                   <span class="me-1">{{ app.user.username }}</span>
-                  <img src="{{ app.user.avatarPath|hub_url_generate_root }}"
-                    class="img-fluid ms-1 app-avatar-navbar"
-                    alt="{{ 'aria.avatar'|trans({ name: app.user.username }) }}" />
+                  <img src="{{ app.user.avatarPath|generate_root }}" class="img-fluid ms-1 app-avatar-navbar" alt="{{ 'aria.avatar'|trans({ name: app.user.username }) }}" />
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end" role="menu">
                   <li><a class="dropdown-item" role="menuitem" href="{{ path('review_index') }}">{{ 'layout.navbar.account.myReviews'|trans }}</a></li>
                   <li><hr class="dropdown-divider" /></li>
-                  <li>
-                    <a class="dropdown-item" role="menuitem" href="{{ ''|hub_url_generate_account }}" data-turbo-prefetch="false">{{ 'layout.navbar.account.myAccount'|trans }}</a>
-                  </li>
+                  <li><a class="dropdown-item" role="menuitem" href="{{ ''|generate_account }}" data-turbo-prefetch="false">{{ 'layout.navbar.account.myAccount'|trans }}</a></li>
                   <li>
                     {# Disable turbo : we may leave this app on logout #}
                     <a class="dropdown-item text-danger"
                       role="menuitem"
-                      href="{{ '/logout'|hub_url_generate_account({ 'disconnect_user[_token]': csrf_token('hub/logout') }) }}"
+                      href="{{ '/logout'|generate_account({ 'disconnect_user[_token]': csrf_token('hub/logout') }) }}"
                       data-turbo-prefetch="false"
                       data-turbo="false">
                       {{ 'layout.navbar.account.signOut'|trans }}

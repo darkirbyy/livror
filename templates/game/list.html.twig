@@ -107,7 +107,7 @@
             {% for review in game.reviews|filter(review => review.user is not empty) %}
               <div class="col-12 text-center d-flex bg-secondary-subtle align-items-center border-bottom {{ loop.index0 > 0 ? 'border-top' }} col-md-auto flex-even-1">
                 <div class="flex-even-1 py-0 px-2 py-md-1 text-truncate">
-                  <img src="{{ review.user.avatarPath|hub_url_generate_root }}"
+                  <img src="{{ review.user.avatarPath|generate_root }}"
                     class="rounded-circle img-fluid app-avatar-card"
                     alt="{{ 'aria.avatar'|trans({ name: review.user.username }) }}" />
                   <span class="ms-1 d-none d-md-inline">{{ review.user.username }}</span>
@@ -148,7 +148,9 @@
 {% endfor %}
 
 {% if hasMore %}
-  {% set url = path_with_query_param(queryParam|query_param_clone_with('offset', queryParam.offset + env.app.default_limit), true) %}
+  {% set new_param = { offset: queryParam.offset + queryParam.limit, limit: env.app.default_limit } %}
+  {% set url = path_with_query_param(queryParam|clone_with(new_param), true) %}
+  {{ dump(url) }}
   <div class="text-center" {{ stimulus_controller('load-more', { url: url, lazy: env.app.index_autoload }) }}>
     <button class="btn btn-outline-secondary" data-load-more-target="button remove">{{ 'form.button.showMore'|trans }}</button>
     <span class="fs-4 text-muted" data-load-more-target="spinner"></span>
