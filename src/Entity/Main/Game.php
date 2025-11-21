@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Entity\Main;
 
+use App\Enum\TypeGameEnum;
 use App\Repository\GameRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -46,6 +47,11 @@ class Game
     #[Assert\NotBlank]
     private ?string $name = null;
 
+    #[ORM\Column(enumType: TypeGameEnum::class)]
+    #[Assert\Type(TypeGameEnum::class)]
+    #[Assert\NotBlank]
+    private ?TypeGameEnum $typeGame = null;
+
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $developers = null;
 
@@ -77,6 +83,7 @@ class Game
     public function __construct()
     {
         $this->reviews = new ArrayCollection();
+        $this->typeGame = TypeGameEnum::GAME;
     }
 
     // /////////////////////////////////////////////////////
@@ -187,6 +194,18 @@ class Game
     public function setName(?string $name): static
     {
         $this->name = $name;
+
+        return $this;
+    }
+
+    public function getTypeGame(): ?TypeGameEnum
+    {
+        return $this->typeGame;
+    }
+
+    public function setTypeGame(?TypeGameEnum $typeGame): static
+    {
+        $this->typeGame = $typeGame;
 
         return $this;
     }

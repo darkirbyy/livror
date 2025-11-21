@@ -22,6 +22,18 @@
       {# Turboframe to refresh only the main section when sorting the results #}
       <turbo-frame id="main-section">
         {# Prepare the filters content #}
+        {% set filterContentTypeGame %}
+          <ul class="p-0 m-0">
+            {% for typeGame in enum('App\\Enum\\TypeGameEnum').cases %}
+              <li class="dropdown-item">
+                {% set checked = queryParam.filters.typeGame is not defined or typeGame.value in queryParam.filters.typeGame ? 'checked' : '' %}
+                {% set filtersTypeGameId = 'filters-type-game-' ~ (typeGame.value|lower) %}
+                <input class="form-check-input" type="checkbox" value="{{ typeGame.value }}" id="{{ filtersTypeGameId }}" {{ checked }} data-filter-apply-target="checkbox" />
+                <label class="form-check-label w-100" for="{{ filtersTypeGameId }}">{{ typeGame|trans }}</label>
+              </li>
+            {% endfor %}
+          </ul>
+        {% endset %}
         {% set filterContentUsers %}
           <ul class="p-0 m-0">
             {% for user in users|filter(u => u is not null)|sort((a, b) => a.username <=> b.username) %}
@@ -49,7 +61,14 @@
           </ul>
         {% endset %}
         {# Include the buttons to sort, filter and reset #}
-        {{ index_buttons(queryParam, 'game', ['name', 'avgRating', 'totHourSpend', 'minFirstPlay'], { users: filterContentUsers, withoutReview: filterContentWithoutReview }) }}
+        {{
+          index_buttons(
+            queryParam,
+            'game',
+            ['name', 'avgRating', 'totHourSpend', 'minFirstPlay'],
+            { typeGame: filterContentTypeGame, users: filterContentUsers, withoutReview: filterContentWithoutReview },
+          )
+        }}
 
         {# Include the template to render the card of each game + show more button #}
         {{ include('game/list.html.twig') }}

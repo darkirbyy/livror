@@ -25,6 +25,7 @@ game:
       totHourSpend: Heures de jeu
       minFirstPlay: Lancement
     filter:
+      typeGame: Type
       users: Joueurs
       withoutReview: Avis
   edit:
@@ -98,7 +99,7 @@ layout:
   name: Livror
   navbar:
     home: Accueil
-    game: Jeux
+    game: Tous les jeux
     account:
       signIn: Se connecter
       signOut: Se déconnecter
@@ -114,6 +115,11 @@ enum:
     unknown: Inconnu
     free: Gratuit
     paying: Payant
+  typeGame:
+    game: Jeu complet
+    dlc: DLC
+    demo: Démo
+    other: Autre
 
 error:
   title: Erreur {code}

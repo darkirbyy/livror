@@ -69,6 +69,7 @@
 
             {# All other information #}
             {% set gameData = {
+              typeGame: game.typeGame|trans,
               releaseYear: game.releaseYear,
               fullPrice: fmt_full_price(game.fullPrice),
               developers: game.developers,

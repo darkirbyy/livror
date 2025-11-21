@@ -6,6 +6,7 @@ namespace App\Service;
 
 use App\Entity\Main\Game;
 use App\Enum\SteamSearchStatusEnum;
+use App\Enum\TypeGameEnum;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class SteamSearchManager
@@ -69,6 +70,9 @@ class SteamSearchManager
 
         // Managing name : empty string is not present in the response
         $game->setName($this->data['name'] ?? '');
+
+        // Managing type of game : use other as defautlt value
+        $game->setTypeGame(TypeGameEnum::fromSteam($this->data['type'] ?? ''));
 
         // Managing release year : use a regex to find 4 consecutive digits in the response, null otherwise
         $releaseDate = $this->data['release_date']['date'] ?? null;

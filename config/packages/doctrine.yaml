@@ -5,6 +5,7 @@ doctrine:
                 url: '%env(resolve:DATABASE_URL)%'
                 profiling_collect_backtrace: '%kernel.debug%'
                 use_savepoints: true
+                schema_filter: '~^(?!messenger_messages)~'
             account:
                 url: '%env(resolve:HUB_DATABASE_URL)%'
                 profiling_collect_backtrace: '%kernel.debug%'

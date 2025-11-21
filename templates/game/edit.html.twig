@@ -42,11 +42,12 @@
           </div>
 
           {# Fields name and releaseYear next to each other on large screen #}
+          {{ form_row(form.name, { label: 'game.label.name' }) }}
           <div class="row">
-            <div class="col-12 col-md-8">
-              {{ form_row(form.name, { label: 'game.label.name' }) }}
+            <div class="col">
+              {{ form_row(form.typeGame, { label: 'game.label.typeGame', label_attr: { class: '' } }) }}
             </div>
-            <div class="col-12 col-md-4">
+            <div class="col">
               {{ form_row(form.releaseYear, { label: 'game.label.releaseYear' }) }}
             </div>
           </div>

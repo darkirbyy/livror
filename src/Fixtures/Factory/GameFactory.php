@@ -3,6 +3,7 @@
 namespace App\Fixtures\Factory;
 
 use App\Entity\Main\Game;
+use App\Enum\TypeGameEnum;
 use App\Tests\Mock\DataMock;
 use Zenstruck\Foundry\Persistence\PersistentProxyObjectFactory;
 
@@ -23,6 +24,7 @@ final class GameFactory extends PersistentProxyObjectFactory
         $defaults['dateAdd'] = self::faker()->dateTimeBetween('-6 months', '-1 day');
         $defaults['dateUpdate'] = clone $defaults['dateAdd'];
         $defaults['name'] = mb_ucfirst(self::faker()->unique()->words(self::faker()->numberBetween(1, 5), true));
+        $defaults['typeGame'] = self::faker()->randomElement(TypeGameEnum::cases());
         $defaults['developers'] = mb_ucfirst(self::faker()->word());
         $defaults['releaseYear'] = self::faker()->numberBetween(1990, date('Y') - 1);
         $defaults['fullPrice'] = self::faker()->randomElement([null, 0, self::faker()->numberBetween(99, 6999)]);

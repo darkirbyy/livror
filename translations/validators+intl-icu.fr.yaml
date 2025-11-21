@@ -2,6 +2,7 @@ game:
   label:
     steamId: ID Steam
     name: Nom
+    typeGame: Type
     releaseYear: Année de parution
     fullPrice: Prix de vente
     developers: Editeur(s)

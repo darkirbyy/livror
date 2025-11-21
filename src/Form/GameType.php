@@ -7,6 +7,7 @@ namespace App\Form;
 use App\Dto\FlashMessage;
 use App\Entity\Main\Game;
 use App\Enum\SteamSearchStatusEnum;
+use App\Enum\TypeGameEnum;
 use App\Enum\TypePriceEnum;
 use App\Service\SteamSearchManager;
 use Symfony\Component\Form\Extension\Core\Type\EnumType;
@@ -44,6 +45,12 @@ class GameType extends DefaultType
             ])
             ->add('name', TextType::class, [
                 'required' => true,
+            ])
+            ->add('typeGame', EnumType::class, [
+                'required' => true,
+                'class' => TypeGameEnum::class,
+                'expanded' => false,
+                'multiple' => false,
             ])
             ->add('developers', TextType::class, [
                 'required' => false,
