@@ -27,9 +27,9 @@
             {% for user in users|filter(u => u is not null)|sort((a, b) => a.username <=> b.username) %}
               <li class="dropdown-item">
                 {% set checked = queryParam.filters.users is not defined or user.id in queryParam.filters.users ? 'checked' : '' %}
-                {% set filterUserId = 'filters-users-' ~ user.id %}
-                <input class="form-check-input" type="checkbox" value="{{ user.id }}" id="{{ filterUserId }}" {{ checked }} data-filter-apply-target="checkbox" />
-                <label class="form-check-label w-100" for="{{ filterUserId }}">
+                {% set filtersUserId = 'filters-users-' ~ user.id %}
+                <input class="form-check-input" type="checkbox" value="{{ user.id }}" id="{{ filtersUserId }}" {{ checked }} data-filter-apply-target="checkbox" />
+                <label class="form-check-label w-100" for="{{ filtersUserId }}">
                   <img src="{{ user.avatarPath|generate_root }}" class="rounded-circle img-fluid app-avatar-card" alt="{{ 'aria.avatar'|trans({ name: user.username }) }}" />
                   <span class="ms-1">{{ user.username }}</span>
                 </label>
@@ -37,8 +37,19 @@
             {% endfor %}
           </ul>
         {% endset %}
+
+        {% set filterContentWithoutReview %}
+          <ul class="p-0 m-0">
+            <li class="dropdown-item">
+              {% set checked = queryParam.filters.withoutReview is defined and queryParam.filters.withoutReview is not empty ? 'checked' : '' %}
+              {% set filtersWithoutReviewId = 'filters-without-review' %}
+              <input class="form-check-input" type="checkbox" value="1" id="{{ filtersWithoutReviewId }}" {{ checked }} data-filter-apply-target="checkbox" />
+              <label class="form-check-label w-100" for="{{ filtersWithoutReviewId }}">Afficher les jeux sans avis</label>
+            </li>
+          </ul>
+        {% endset %}
         {# Include the buttons to sort, filter and reset #}
-        {{ index_buttons(queryParam, 'game', ['name', 'avgRating', 'totHourSpend', 'minFirstPlay'], ['users'], { users: filterContentUsers }) }}
+        {{ index_buttons(queryParam, 'game', ['name', 'avgRating', 'totHourSpend', 'minFirstPlay'], { users: filterContentUsers, withoutReview: filterContentWithoutReview }) }}
 
         {# Include the template to render the card of each game + show more button #}
         {{ include('game/list.html.twig') }}

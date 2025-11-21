@@ -26,6 +26,7 @@ game:
       minFirstPlay: Lancement
     filter:
       users: Joueurs
+      withoutReview: Avis
   edit:
     title:
       add: Ajouter un jeu

@@ -23,11 +23,11 @@ class GameRepository extends ServiceEntityRepository
     {
         // Define allowed sort and filter parameters and the conversion to the doctrine field
         $sortsConversion = ['name' => 'g.name', 'avgRating' => 'AVG(ra.rating)', 'totHourSpend' => 'SUM(ra.hourSpend)', 'minFirstPlay' => 'MIN(ra.firstPlay)'];
-        $filtersConversion = ['users' => 'rf.userId'];
+        $filtersConversion = ['users' => 'rf.userId', 'withoutReview' => 'todo'];
 
         // Validate and complete the parameters
         $this->queryParamHelper->load($queryParam, 'game-index');
-        $this->queryParamHelper->defaults($queryParam, ['name' => 'asc'], []);
+        $this->queryParamHelper->defaults($queryParam, ['name' => 'asc'], ['withoutReview' => []]);
         $this->queryParamHelper->validate($queryParam, array_keys($sortsConversion), array_keys($filtersConversion));
         $this->queryParamHelper->save($queryParam, 'game-index');
 
@@ -39,17 +39,13 @@ class GameRepository extends ServiceEntityRepository
         $this->queryParamHelper->applyButFiltersToQb($queryParam, $qb, $sortsConversion);
         $qb->addOrderBy('g.id', 'ASC');
 
-        // Apply the query param filters
-        // todo : rethink the logic/query
-        // foreach ( as $key => $values) {
-        //     $qb->innerJoin('g.reviews', 'rf', Join::WITH, $filtersConversion[$key] . ' IN (:' . $key . ')')->setParameter($key, $values);
-        // }
-
         if (array_key_exists('users', $queryParam->filters)) {
-            // prettier-ignore
-            $condition = 'NOT EXISTS (SELECT 1 FROM ' . Review::class . ' r0 WHERE r0.game = g)
-                           OR EXISTS (SELECT 1 FROM ' . Review::class . ' r1 WHERE r1.game = g AND r1.userId IN (:users))';
+            $condition = 'EXISTS (SELECT 1 FROM ' . Review::class . ' r1 WHERE r1.game = g AND r1.userId IN (:users))';
             $qb->andWhere($condition)->setParameter('users', $queryParam->filters['users']);
+        }
+        if (array_key_exists('withoutReview', $queryParam->filters) && !empty($queryParam->filters['withoutReview'])) {
+            $condition = 'NOT EXISTS (SELECT 1 FROM ' . Review::class . ' r0 WHERE r0.game = g)';
+            $qb->orWhere($condition);
         }
 
         // Execute and fetch the query

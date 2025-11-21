@@ -71,7 +71,7 @@
   </div>
 {% endmacro %}
 
-{% macro index_buttons(queryParam, entityKey, displayedSortsKeys, displayedFiltersKeys, filterContent) %}
+{% macro index_buttons(queryParam, entityKey, displayedSortsKeys, filterContent) %}
   <div class="card-max-auto card-max-md-none mx-auto">
     <div class="d-flex flex-wrap align-items-end justify-content-between gap-2">
       {# Fields to sort : prepare variables + independant buttons (large screen) or select (small screen) for each possibility + asc/desc button #}
@@ -114,15 +114,15 @@
         </div>
       </div>
       {# Fields to filter : dropdown with checkboxes for all possibilities and apply button #}
-      <div class="{{ displayedFiltersKeys is empty ? 'd-none' }}">
+      <div class="{{ filterContent|keys is empty ? 'd-none' }}">
         <div class="input-group" role="group" aria-labelledby="input-group-filters">
           <label class="input-group-text" id="input-group-filters">{{ 'form.button.filterBy'|trans }}</label>
-          {% for filterKey in displayedFiltersKeys %}
-            {% set filterId = 'filters-' ~ filterKey %}
+          {% for filterKey in filterContent|keys %}
+            {% set filtersId = 'filters-' ~ filterKey %}
             <button type="button"
               class="btn btn-outline-secondary app-btn-border-light dropdown-toggle app-dropdown-left app-dropdown-smooth"
               data-bs-toggle="dropdown"
-              data-bs-target="#{{ filterId }}"
+              data-bs-target="#{{ filtersId }}"
               data-bs-auto-close="outside"
               aria-expanded="false"
               aria-haspopup="true">
@@ -130,10 +130,10 @@
             </button>
             {% set new_param = { offset: 0, limit: env.app.default_limit, filters: queryParam.filters|filter((value, key) => key != filterKey) } %}
             {% set url = _self.path_with_query_param(queryParam|clone_with(new_param)) %}
-            <div id="{{ filterId }}" class="dropdown-menu dropdown-menu-end" {{ stimulus_controller('filter-apply', { url: url, key: filterKey }) }}>
+            <div id="{{ filtersId }}" class="dropdown-menu dropdown-menu-end" {{ stimulus_controller('filter-apply', { url: url, key: filterKey }) }}>
               {{ attribute(filterContent, filterKey) }}
               <div class="dropdown-item text-center">
-                <button class="btn btn-outline-secondary" data-filter-apply-target="button">{{ 'form.button.apply'|trans }}</button>
+                <button class="btn btn-sm btn-outline-secondary" data-filter-apply-target="button">{{ 'form.button.apply'|trans }}</button>
               </div>
             </div>
           {% endfor %}
