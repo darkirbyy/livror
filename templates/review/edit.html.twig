@@ -1,46 +1,13 @@
 {% extends 'base.html.twig' %}
+{% from 'theme/macro.html.twig' import backlink, form_modal, form_buttons %}
 
-{% if review.id is not null %}
-  {% set title = 'review.edit.title.update'|trans({ '{name}': review.game.name }) %}
-  {% set submitButton = 'form.button.update' %}
-{% else %}
-  {% set title = 'review.edit.title.add'|trans %}
-  {% set submitButton = 'form.button.add' %}
-{% endif %}
+{% set isEditMode = review.id is not null %}
+{% set title = isEditMode ? 'review.edit.title.update'|trans({ '{name}': review.game.name }) : 'review.edit.title.add'|trans %}
 
 {% block main %}
   {# Modal to confirm delete, if in EDIT mode #}
-  {% if review.id is not null %}
-    <div class="modal fade" id="delete-modal" tabindex="-1" aria-labelledby="delete-modal-label" aria-hidden="true" role="dialog" loading="lazy">
-      <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-          {# Header with title and dismiss button #}
-          <div class="modal-header">
-            <h1 class="modal-title fs-5" id="delete-modal-label">
-              {{ 'modal.title.delete'|trans }}
-            </h1>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ 'form.button.close'|trans }}"></button>
-          </div>
-
-          {# Body with message #}
-          <div class="modal-body">
-            {{ 'review.edit.modalDeleteBody'|trans({ '{name}': review.game.name })|raw }}
-          </div>
-
-          {# Footer with cancel or confirm buttons #}
-          <div class="modal-footer">
-            <form action="{{ path('review_delete', { id: review.id }) }}" method="post">
-              <button type="submit" class="btn btn-danger">
-                <span class="bi bi-trash-fill me-1" aria-hidden="true"></span>
-                {{ 'form.button.delete'|trans }}
-              </button>
-              <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">{{ 'form.button.cancel'|trans }}</button>
-              <input type="hidden" name="_token" data-controller="csrf-protection" value="csrf-token" />
-            </form>
-          </div>
-        </div>
-      </div>
-    </div>
+  {% if isEditMode %}
+    {{ form_modal('review.edit.modalDeleteBody'|trans({ '{name}': review.game.name }), path('review_delete', { id: review.id })) }}
   {% endif %}
 
   {# Actual content with flashes and form #}
@@ -52,14 +19,9 @@
           {{ block('flash', 'theme/flash.html.twig') }}
 
           {# Back link #}
-          <div class="mb-2">
-            <a class="link-secondary icon-link icon-link-hover icon-link-left" href="{{ path('review_index')|generate_backpath }}">
-              <span class="bi bi-arrow-left mb-1" aria-hidden="true"></span>
-              {{ 'form.button.backToList'|trans }}
-            </a>
-          </div>
+          {{ backlink(path('review_index')) }}
 
-          {# Form #}
+          {# Form start #}
           {{ form_start(form) }}
 
           {# Select the game for a new review #}
@@ -100,23 +62,8 @@
           {{ form_row(form.comment, { label: 'review.label.comment' }) }}
 
           {# Buttons to submit, or open the delete modal #}
-          <div class="d-flex justify-content-between">
-            {# Left part : submit #}
-            <div>
-              {{ form_widget(form.submit, { label: submitButton }) }}
-            </div>
-            {# Right part (if in EDIT mode) : open delete modal #}
-            {% if review.id is not null %}
-              <div>
-                <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#delete-modal">
-                  <span class="bi bi-trash-fill me-1" aria-hidden="true"></span>
-                  {{ 'form.button.delete'|trans }}
-                </button>
-              </div>
-            {% endif %}
-          </div>
+          {{ form_buttons(form, isEditMode) }}
           {{ form_rest(form) }}
-
           {{ form_end(form) }}
         </div>
       </div>

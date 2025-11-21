@@ -1,4 +1,4 @@
-{# Macro to lighten the code to generate path with query params for the sort #}
+{# Macro to lighten the code to generate path with query params #}
 {%- macro path_with_query_param(queryParam, anchor = null) -%}
   {{- path(app.current_route, queryParam|to_array|merge({ anchor: anchor }))|raw -}}
 {%- endmacro -%}
@@ -7,6 +7,68 @@
 {%- macro fmt_full_price(fullPrice) -%}
   {{ fullPrice > 0 ? (fullPrice / 100)|format_currency(env.app.currency, { decimal_always_shown: true, fraction_digit: 2 }) : fullPrice|fmt_type_price(env.app.locale) }}
 {%- endmacro -%}
+
+{# Macro to create a backlink #}
+{% macro backlink(path) %}
+  <div class="mb-2">
+    <a class="link-secondary icon-link icon-link-hover icon-link-left" href="{{ path|generate_backpath }}">
+      <span class="bi bi-arrow-left mb-1" aria-hidden="true"></span>
+      {{ 'form.button.backToList'|trans }}
+    </a>
+  </div>
+{% endmacro %}
+
+{# Macro to prepare the delete modal in the form #}
+{% macro form_modal(body, path) %}
+  <div class="modal fade" id="delete-modal" tabindex="-1" aria-labelledby="delete-modal-label" aria-hidden="true" role="dialog" loading="lazy">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        {# Header with title and dismiss button #}
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="delete-modal-label">
+            {{ 'modal.title.delete'|trans }}
+          </h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ 'form.button.close'|trans }}"></button>
+        </div>
+
+        {# Body with message #}
+        <div class="modal-body">
+          {{ body|raw }}
+        </div>
+
+        {# Footer with cancel or confirm buttons #}
+        <div class="modal-footer">
+          <form action="{{ path }}" method="post">
+            <button type="submit" class="btn btn-danger">
+              <span class="bi bi-trash-fill me-1" aria-hidden="true"></span>
+              {{ 'form.button.delete'|trans }}
+            </button>
+            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">{{ 'form.button.cancel'|trans }}</button>
+            <input type="hidden" name="_token" data-controller="csrf-protection" value="csrf-token" />
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endmacro %}
+
+{% macro form_buttons(form, isEditMode) %}
+  <div class="d-flex justify-content-between">
+    {# Left part : submit #}
+    <div>
+      {{ form_widget(form.submit, { label: isEditMode ? 'form.button.update' : 'form.button.add' }) }}
+    </div>
+    {# Right part (if in EDIT mode) : open delete modal #}
+    {% if isEditMode %}
+      <div>
+        <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#delete-modal">
+          <span class="bi bi-trash-fill me-1" aria-hidden="true"></span>
+          {{ 'form.button.delete'|trans }}
+        </button>
+      </div>
+    {% endif %}
+  </div>
+{% endmacro %}
 
 {# Macro to display the title of the game in the game and review index #}
 {%- macro game_title(game, backpath = null) -%}
@@ -43,7 +105,7 @@
     {% endif %}
   </span>
   <p class="m-0">
-    Commentaire : {{ review.comment|default('-') }}
+    {{ review.comment|default('-') }}
   </p>
   {# <p class="m-0">
     Documents joints : à venir...
