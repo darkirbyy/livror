@@ -50,6 +50,7 @@ review:
     card:
       informations: Informations
       comment: Commentaire
+      noComment: Pas de commentaire
       added: Écrit
       updated: modifié
     sort:

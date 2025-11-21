@@ -1,4 +1,4 @@
-{% from 'theme/macro.html.twig' import path_with_query_param, fmt_full_price, game_title, review_body %}
+{% from 'theme/macro.html.twig' import path_with_query_param, fmt_full_price, game_title, review_body, more_button %}
 
 {% for gameIndex in gamesIndex %}
   {% set game = gameIndex.game %}
@@ -149,10 +149,5 @@
 {% endfor %}
 
 {% if hasMore %}
-  {% set new_param = { offset: queryParam.offset + queryParam.limit, limit: env.app.default_limit } %}
-  {% set url = path_with_query_param(queryParam|clone_with(new_param)) %}
-  <div class="text-center" {{ stimulus_controller('load-more', { url: url, lazy: env.app.index_autoload }) }}>
-    <button class="btn btn-outline-secondary" data-load-more-target="button remove">{{ 'form.button.showMore'|trans }}</button>
-    <span class="fs-4 text-muted" data-load-more-target="spinner"></span>
-  </div>
+  {{ more_button(queryParam) }}
 {% endif %}
