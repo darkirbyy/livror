@@ -41,6 +41,11 @@ services:
             $htmlValidation: '%app.html_validation%'
             $currency: '%app.currency%'
 
+    App\Service\SteamScrapCommand:
+        tags: ['console.command']
+        arguments:
+            $timeout: '%app.request_timeout%'
+
     App\Service\SteamSearchManager:
         arguments:
             $timeout: '%app.request_timeout%'

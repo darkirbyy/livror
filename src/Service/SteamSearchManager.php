@@ -18,9 +18,9 @@ class SteamSearchManager
     public function __construct(
         private ExceptionManager $exceptionManager,
         private HttpClientInterface $client,
-        public int $timeout,
-        public string $locale,
-        public string $currency,
+        private int $timeout,
+        private string $locale,
+        private string $currency,
     ) {
     }
 
