@@ -19,36 +19,34 @@ final class ApiMock extends MockHttpClient
 
     private function handleRequests(string $method, string $url): MockResponse
     {
-        $queryString = parse_url($url, PHP_URL_QUERY);
+        $queryString = parse_url($url, PHP_URL_QUERY) ?? '';
         parse_str($queryString, $query);
 
-        if ('GET' === $method && str_starts_with($url, 'https://store.steampowered.com/api/appdetails')) {
-            if (!isset($query['appids'])) {
-                throw new \UnexpectedValueException("Missing appids parameter in URL: $url");
-            }
-
-            return $this->getAppDetailsMock($query['appids']);
+        if ('GET' === $method && str_starts_with($url, 'https://api.steampowered.com/ISteamApps/GetAppList/v2')) {
+            return $this->getAppsListV1Mock();
         } elseif ('GET' === $method && str_starts_with($url, 'https://api.steampowered.com/IStoreService/GetAppList/v1')) {
             if (!isset($query['last_appid'])) {
                 throw new \UnexpectedValueException("Missing last_appid and/or if_modified_since parameter in URL: $url");
             }
 
-            return $this->getAppsListMock($query['last_appid'], $query['if_modified_since'] ?? null);
+            return $this->getAppsListV2Mock($query['last_appid'], $query['if_modified_since'] ?? null);
+        } elseif ('GET' === $method && str_starts_with($url, 'https://store.steampowered.com/api/appdetails')) {
+            if (!isset($query['appids'])) {
+                throw new \UnexpectedValueException("Missing appids parameter in URL: $url");
+            }
+
+            return $this->getAppDetailsMock($query['appids']);
         }
 
         throw new \UnexpectedValueException("Mock not implemented: $method/$url");
     }
 
-    private function getAppDetailsMock(string $appId): mixed
+    private function getAppsListV1Mock(): mixed
     {
-        $appId = intval($appId);
-        $data = DataMock::$appDetails;
-        $body = array_key_exists($appId, $data) ? $data[$appId] : ['success' => false];
-
-        return $this->generateMockResponse([$appId => $body]);
+        return $this->generateMockResponse(['applist' => ['apps' => DataMock::$appsListTruncate]]);
     }
 
-    private function getAppsListMock(string $lastAppid, ?string $ifModifiedSince): mixed
+    private function getAppsListV2Mock(string $lastAppid, ?string $ifModifiedSince): mixed
     {
         if (is_null($ifModifiedSince)) {
             $apps = array_filter(DataMock::$appsListTruncate, fn (array $app) => $app['appid'] > intval($lastAppid));
@@ -69,6 +67,15 @@ final class ApiMock extends MockHttpClient
         }
 
         return $this->generateMockResponse(['response' => $body]);
+    }
+
+    private function getAppDetailsMock(string $appId): mixed
+    {
+        $appId = intval($appId);
+        $data = DataMock::$appDetails;
+        $body = array_key_exists($appId, $data) ? $data[$appId] : ['success' => false];
+
+        return $this->generateMockResponse([$appId => $body]);
     }
 
     private function generateMockResponse(mixed $body): MockResponse
