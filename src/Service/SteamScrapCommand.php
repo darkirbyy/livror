@@ -17,6 +17,7 @@ class SteamScrapCommand
     private OutputInterface $output;
     private Connection $connection;
     private int $batchSize;
+    private float $prevTime;
 
     public function __construct(private int $timeout, private EntityManagerInterface $entityManager)
     {
@@ -27,25 +28,27 @@ class SteamScrapCommand
         $this->connection = $this->entityManager->getConnection();
         $this->output = $output;
         $this->batchSize = 10000;
+        $this->prevTime = microtime(true);
 
         try {
             $this->output->write('Starting transaction...');
             $this->connection->beginTransaction();
-            $this->output->writeln(' Done.');
+            $this->writeTime();
 
             $this->output->write('Downloading the steam apps lists...');
-            $file = file_get_contents('/home/darkirby/temp/steamapps2.txt');
-            $this->output->writeln(' Done.');
+            $file = file_get_contents('/home/darkirby/temp/games_appid.json');
+            $this->writeTime();
 
             $this->output->write('Parsing the response into JSON...');
-            $appList = json_decode($file, true)['applist']['apps'];
-            $this->output->writeln(' Done.');
+            $appList = json_decode($file, true);
+            $this->writeTime();
 
             $this->output->write('Deleting existing data from the table...');
             $this->entityManager->createQuery('DELETE FROM ' . Steam::class)->execute();
-            $this->output->writeln(' Done.');
+            $this->writeTime();
 
-            $this->output->write('Inserting data in batch (' . count($appList) . ' apps found)...');
+            $this->output->writeln('Inserting data in batch (' . count($appList) . ' apps found)...');
+            $prevCount = 0;
             $count = 0;
             foreach ($appList as $app) {
                 if (empty($app['name'])) {
@@ -59,17 +62,21 @@ class SteamScrapCommand
                 $this->entityManager->persist($steam);
 
                 if (0 == $count % $this->batchSize) {
-                    $this->output->write(' ' . $count);
                     $this->entityManager->flush();
                     $this->entityManager->clear();
+                    $this->output->write('  batch ' . $prevCount . ' to ' . $count);
+                    $prevCount = $count + 1;
+                    $this->writeTime(false);
                 }
             }
             $this->entityManager->flush();
-            $this->output->writeln(' ' . $count . ' Done.');
+            $this->output->write('  batch ' . $prevCount . ' to ' . $count);
+            $this->writeTime(false);
+            $this->output->writeln('  Done.');
 
             $this->output->write('Committing transaction...');
             $this->connection->commit();
-            $this->output->writeln(' Done.');
+            $this->writeTime();
 
             return Command::SUCCESS;
         } catch (\Exception $e) {
@@ -79,5 +86,13 @@ class SteamScrapCommand
 
             return Command::FAILURE;
         }
+    }
+
+    private function writeTime(bool $withDone = true): void
+    {
+        $nextTime = microtime(true);
+        $interval = round($nextTime - $this->prevTime, 2);
+        $this->output->writeln(' (' . $interval . 's)' . ($withDone ? ' Done.' : ''));
+        $this->prevTime = $nextTime;
     }
 }
