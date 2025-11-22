@@ -10,13 +10,11 @@ use Symfony\Component\HttpFoundation\Response;
 
 final class ApiMock extends MockHttpClient
 {
-    private string $baseUri = 'https://store.steampowered.com/api';
-
     public function __construct()
     {
         $callback = \Closure::fromCallable([$this, 'handleRequests']);
 
-        parent::__construct($callback, $this->baseUri);
+        parent::__construct($callback);
     }
 
     private function handleRequests(string $method, string $url): MockResponse
@@ -32,34 +30,50 @@ final class ApiMock extends MockHttpClient
             return $this->getAppDetailsMock($query['appids']);
         } elseif ('GET' === $method && str_starts_with($url, 'https://api.steampowered.com/IStoreService/GetAppList/v1')) {
             if (!isset($query['last_appid'])) {
-                throw new \UnexpectedValueException("Missing last_appid parameter in URL: $url");
+                throw new \UnexpectedValueException("Missing last_appid and/or if_modified_since parameter in URL: $url");
             }
 
-            return $this->getAppsListMock($query['last_appid']);
+            return $this->getAppsListMock($query['last_appid'], $query['if_modified_since'] ?? null);
         }
 
         throw new \UnexpectedValueException("Mock not implemented: $method/$url");
     }
 
-    private function getAppDetailsMock(string $id): mixed
+    private function getAppDetailsMock(string $appId): mixed
     {
+        $appId = intval($appId);
         $data = DataMock::$appDetails;
-        $body = json_encode(array_key_exists($id, $data) ? [$id => $data[$id]] : [$id => ['success' => false]], JSON_THROW_ON_ERROR);
+        $body = array_key_exists($appId, $data) ? $data[$appId] : ['success' => false];
 
-        return $this->generateMockResponse($body);
+        return $this->generateMockResponse([$appId => $body]);
     }
 
-    private function getAppsListMock(string $id): mixed
+    private function getAppsListMock(string $lastAppid, ?string $ifModifiedSince): mixed
     {
-        $data = DataMock::$appsList;
-        $body = array_key_exists($id, $data) ? $data[$id] : '{"response":{}}';
+        if (is_null($ifModifiedSince)) {
+            $apps = array_filter(DataMock::$appsListTruncate, fn (array $app) => $app['appid'] > intval($lastAppid));
+        } else {
+            $apps = array_filter(DataMock::$appsListUpdate, fn (array $app) => $app['appid'] > intval($lastAppid) && $app['last_modified'] > intval($ifModifiedSince));
+        }
 
-        return $this->generateMockResponse($body);
+        $appsCount = count($apps);
+        $apps = array_slice($apps, 0, 5);
+
+        $body = [];
+        if (!empty($apps)) {
+            $body['apps'] = $apps;
+            if ($appsCount > 5) {
+                $body['have_more_results'] = true;
+                $body['last_appid'] = $apps[4]['appid'];
+            }
+        }
+
+        return $this->generateMockResponse(['response' => $body]);
     }
 
     private function generateMockResponse(mixed $body): MockResponse
     {
-        return new MockResponse($body, [
+        return new MockResponse(json_encode($body, JSON_THROW_ON_ERROR), [
             'http_code' => Response::HTTP_OK,
             'response_headers' => [
                 'content-type' => 'application/json',

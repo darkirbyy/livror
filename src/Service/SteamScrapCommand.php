@@ -7,13 +7,14 @@ namespace App\Service;
 use App\Entity\Main\Steam;
 use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
-#[AsCommand(name: 'steam:scrap', description: 'Retrieve all games from steam and put them in the steam table for autocompletion.')]
-class SteamScrapCommand
+class SteamScrapCommand extends Command
 {
     private OutputInterface $output;
     private Connection $connection;
@@ -26,54 +27,95 @@ class SteamScrapCommand
         private EntityManagerInterface $entityManager,
         private HttpClientInterface $client,
     ) {
+        parent::__construct('steam:scrap');
     }
 
-    public function __invoke(OutputInterface $output): int
+    protected function configure(): void
+    {
+        $this->setDescription('Retrieve all games from steam and put them in the steam table for autocompletion.')
+            ->addArgument('mode', InputArgument::REQUIRED, 'truncate = reset and insert all games | update = update games if present, insert otherwised')
+            ->addOption('since', 's', InputOption::VALUE_REQUIRED, 'with update mode, only update games modified since this date', 0);
+    }
+
+    public function __invoke(OutputInterface $output, InputInterface $input): int
     {
         $this->connection = $this->entityManager->getConnection();
         $this->output = $output;
         $this->prevTime = microtime(true);
 
+        $mode = $input->getArgument('mode');
+        if (!in_array($mode, ['truncate', 'update'])) {
+            $this->output->writeln('The mode argument must be either truncate or update.');
+
+            return Command::INVALID;
+        }
+
+        $since = intval($input->getOption('since'));
+        $since = 'update' == $mode ? $since : null;
+        if ($since < 0 || $since > time()) {
+            $this->output->writeln('The --since option must be between 0 and the current timestamp.');
+
+            return Command::INVALID;
+        }
+
         try {
             $this->output->write('Starting transaction...');
             $this->connection->beginTransaction();
-            $this->writeDone();
-
-            $this->output->write('Deleting existing data from the table...');
             $tableName = $this->entityManager->getClassMetadata(Steam::class)->getTableName();
-            $this->connection->executeStatement('DELETE FROM ' . $tableName . '');
             $this->writeDone();
 
-            $this->output->write('Preparing insert statement...');
-            $stmt = $this->connection->prepare('INSERT INTO ' . $tableName . ' (id, name) VALUES (:id, :name)');
+            if ('truncate' == $mode) {
+                $this->output->write('Deleting existing data from the table...');
+                $this->connection->executeStatement('DELETE FROM ' . $tableName . '');
+                $this->writeDone();
+            }
+
+            $this->output->write('Preparing insert statements...');
+            $stmtInsert = $this->connection->prepare('INSERT INTO ' . $tableName . ' (id, name) VALUES (:id, :name)');
             $this->writeDone();
 
-            $this->output->writeln('Inserting all apps...');
-            $query = ['key' => $this->steamApiKey, 'max_results' => $this->batchSize, 'include_dlc' => true, 'last_appid' => 0];
+            if ('update' == $mode) {
+                $this->output->write('Preparing update statements and retrieving knowned ids...');
+                $stmtUpdate = $this->connection->prepare('UPDATE ' . $tableName . ' SET name = :name WHERE id = :id');
+                $knownedIds = $this->connection->executeQuery('SELECT id FROM ' . $tableName)->fetchAllAssociativeIndexed();
+                $knownedIds = array_keys($knownedIds);
+                $this->writeDone();
+            }
+
+            $this->output->writeln('Inserting and updating all apps...');
+            $query = ['key' => $this->steamApiKey, 'max_results' => $this->batchSize, 'if_modified_since' => $since, 'include_dlc' => true, 'last_appid' => 0];
             $options = ['max_duration' => $this->requestTimeout];
-            $batch = 0;
-            $count = 0;
+            $countBatch = 0;
+            $countInsert = 0;
+            $countUpdate = 0;
             do {
-                ++$batch;
-                $this->output->write('  Batch ' . $batch . ' : Query...');
+                ++$countBatch;
+                $this->output->write('  Batch ' . $countBatch . ' : steam query...');
                 $response = $this->client->request('GET', 'https://api.steampowered.com/IStoreService/GetAppList/v1/?' . http_build_query($query), $options);
                 $response = $response->toArray()['response'];
                 $this->writeOk();
 
-                $this->output->write(' Insert...');
+                $this->output->write('database queries...');
                 foreach ($response['apps'] as $app) {
                     if (empty($app['name'])) {
                         continue;
                     }
-                    ++$count;
-                    $stmt->executeStatement([':id' => $app['appid'], ':name' => mb_substr($app['name'], 0, 255)]);
+
+                    $params = [':id' => $app['appid'], ':name' => mb_substr($app['name'], 0, 255)];
+                    if ('update' == $mode && in_array($app['appid'], $knownedIds)) {
+                        $stmtUpdate->executeStatement($params);
+                        ++$countUpdate;
+                    } else {
+                        $stmtInsert->executeStatement($params);
+                        ++$countInsert;
+                    }
                 }
                 $this->writeOk();
                 $this->output->writeln('');
 
                 $query['last_appid'] = $response['last_appid'] ?? 0;
             } while (!empty($response['have_more_results']));
-            $this->output->writeln('  Total : ' . $count . ' apps inserted, Done.');
+            $this->output->writeln('  Total : ' . $countInsert . ' apps inserted, ' . $countUpdate . ' apps updated. Done.');
 
             $this->output->write('Committing transaction...');
             $this->connection->commit();
