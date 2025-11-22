@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace App\Service;
 
+use App\Entity\Main\Steam;
+use Doctrine\DBAL\Connection;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -12,35 +15,69 @@ use Symfony\Component\Console\Output\OutputInterface;
 class SteamScrapCommand
 {
     private OutputInterface $output;
+    private Connection $connection;
+    private int $batchSize;
 
-    public function __construct(private int $timeout)
+    public function __construct(private int $timeout, private EntityManagerInterface $entityManager)
     {
     }
 
     public function __invoke(OutputInterface $output): int
     {
+        $this->connection = $this->entityManager->getConnection();
         $this->output = $output;
+        $this->batchSize = 10000;
 
-        $output->write('Downloading the steam apps lists...');
-        $file = file_get_contents('/home/darkirby/temp/steamapps.txt');
-        $this->checkCondition(empty($file));
+        try {
+            $this->output->write('Starting transaction...');
+            $this->connection->beginTransaction();
+            $this->output->writeln(' Done.');
 
-        $output->write('Parsing the response into JSON...');
-        $list = json_decode($file, true);
-        $this->checkCondition(false === $list || !isset($list['applist']['apps']));
+            $this->output->write('Downloading the steam apps lists...');
+            $file = file_get_contents('/home/darkirby/temp/steamapps2.txt');
+            $this->output->writeln(' Done.');
 
-        $output->write('Test :' . $list['applist']['apps']['226912']['name']);
+            $this->output->write('Parsing the response into JSON...');
+            $appList = json_decode($file, true)['applist']['apps'];
+            $this->output->writeln(' Done.');
 
-        return Command::SUCCESS;
-    }
+            $this->output->write('Deleting existing data from the table...');
+            $this->entityManager->createQuery('DELETE FROM ' . Steam::class)->execute();
+            $this->output->writeln(' Done.');
 
-    private function checkCondition(bool $condition)
-    {
-        if ($condition) {
+            $this->output->write('Inserting data in batch (' . count($appList) . ' apps found)...');
+            $count = 0;
+            foreach ($appList as $app) {
+                if (empty($app['name'])) {
+                    continue;
+                }
+
+                ++$count;
+                $steam = (new Steam())
+                    ->setId($app['appid'])
+                    ->setName(mb_substr($app['name'], 0, 255));
+                $this->entityManager->persist($steam);
+
+                if (0 == $count % $this->batchSize) {
+                    $this->output->write(' ' . $count);
+                    $this->entityManager->flush();
+                    $this->entityManager->clear();
+                }
+            }
+            $this->entityManager->flush();
+            $this->output->writeln(' ' . $count . ' Done.');
+
+            $this->output->write('Committing transaction...');
+            $this->connection->commit();
+            $this->output->writeln(' Done.');
+
+            return Command::SUCCESS;
+        } catch (\Exception $e) {
+            $this->connection->rollBack();
             $this->output->writeln(' Failed.');
+            $this->output->write($e->getMessage());
 
             return Command::FAILURE;
         }
-        $this->output->writeln(' Done.');
     }
 }
