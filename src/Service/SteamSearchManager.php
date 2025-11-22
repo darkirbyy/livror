@@ -18,7 +18,7 @@ class SteamSearchManager
     public function __construct(
         private ExceptionManager $exceptionManager,
         private HttpClientInterface $client,
-        private int $timeout,
+        private int $requestTimeout,
         private string $locale,
         private string $currency,
     ) {
@@ -29,7 +29,7 @@ class SteamSearchManager
         try {
             // Make the call to the external steam API, in the locale of the application
             $response = $this->client->request('GET', 'https://store.steampowered.com/api/appdetails?appids=' . $id, [
-                'max_duration' => $this->timeout,
+                'max_duration' => $this->requestTimeout,
                 'headers' => [
                     'Accept-Language' => str_replace('_', '-', $this->locale) . ';q=0.5',
                 ],

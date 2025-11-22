@@ -21,36 +21,49 @@ final class ApiMock extends MockHttpClient
 
     private function handleRequests(string $method, string $url): MockResponse
     {
-        if ('GET' === $method && str_starts_with($url, $this->baseUri . '/appdetails?appids=')) {
-            $query = parse_url($url, PHP_URL_QUERY);
-            parse_str($query, $params);
+        $queryString = parse_url($url, PHP_URL_QUERY);
+        parse_str($queryString, $query);
 
-            if (isset($params['appids'])) {
-                $id = $params['appids'];
-
-                return $this->getAppDetailsMock($id);
+        if ('GET' === $method && str_starts_with($url, 'https://store.steampowered.com/api/appdetails')) {
+            if (!isset($query['appids'])) {
+                throw new \UnexpectedValueException("Missing appids parameter in URL: $url");
             }
 
-            throw new \UnexpectedValueException("Missing appids parameter in URL: $url");
+            return $this->getAppDetailsMock($query['appids']);
+        } elseif ('GET' === $method && str_starts_with($url, 'https://api.steampowered.com/IStoreService/GetAppList/v1')) {
+            if (!isset($query['last_appid'])) {
+                throw new \UnexpectedValueException("Missing last_appid parameter in URL: $url");
+            }
+
+            return $this->getAppsListMock($query['last_appid']);
         }
 
         throw new \UnexpectedValueException("Mock not implemented: $method/$url");
     }
 
-    private function generateMockResponse(mixed $data): MockResponse
+    private function getAppDetailsMock(string $id): mixed
     {
-        return new MockResponse(json_encode($data, JSON_THROW_ON_ERROR), [
+        $data = DataMock::$appDetails;
+        $body = json_encode(array_key_exists($id, $data) ? [$id => $data[$id]] : [$id => ['success' => false]], JSON_THROW_ON_ERROR);
+
+        return $this->generateMockResponse($body);
+    }
+
+    private function getAppsListMock(string $id): mixed
+    {
+        $data = DataMock::$appsList;
+        $body = array_key_exists($id, $data) ? $data[$id] : '{"response":{}}';
+
+        return $this->generateMockResponse($body);
+    }
+
+    private function generateMockResponse(mixed $body): MockResponse
+    {
+        return new MockResponse($body, [
             'http_code' => Response::HTTP_OK,
             'response_headers' => [
                 'content-type' => 'application/json',
             ],
         ]);
-    }
-
-    private function getAppDetailsMock(string $id): mixed
-    {
-        $data = DataMock::$steamApps;
-
-        return $this->generateMockResponse(array_key_exists($id, $data) ? [$id => $data[$id]] : [$id => ['success' => false]]);
     }
 }

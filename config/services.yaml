@@ -9,6 +9,8 @@ parameters:
     app.currency: '%env(string:APP_CURRENCY)%'
     app.locale: '%env(string:APP_LOCALE)%'
     app.request_timeout: '%env(int:APP_REQUEST_TIMEOUT)%'
+    app.batch_size: '%env(int:APP_BATCH_SIZE)%'
+    app.steam_api_key: '%env(string:APP_STEAM_API_KEY)%'
     app.default_limit: '%env(int:APP_DEFAULT_LIMIT)%'
     app.max_limit: '%env(int:APP_MAX_LIMIT)%'
     app.html_validation: '%env(bool:APP_HTML_VALIDATION)%'
@@ -44,11 +46,13 @@ services:
     App\Service\SteamScrapCommand:
         tags: ['console.command']
         arguments:
-            $timeout: '%app.request_timeout%'
+            $requestTimeout: '%app.request_timeout%'
+            $batchSize: '%app.batch_size%'
+            $steamApiKey: '%app.steam_api_key%'
 
     App\Service\SteamSearchManager:
         arguments:
-            $timeout: '%app.request_timeout%'
+            $requestTimeout: '%app.request_timeout%'
             $locale: '%app.locale%'
             $currency: '%app.currency%'
 
