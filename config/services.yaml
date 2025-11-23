@@ -13,6 +13,8 @@ parameters:
     app.steam_api_key: '%env(string:APP_STEAM_API_KEY)%'
     app.default_limit: '%env(int:APP_DEFAULT_LIMIT)%'
     app.max_limit: '%env(int:APP_MAX_LIMIT)%'
+    app.autocompletion_limit: '%env(int:APP_AUTOCOMPLETION_LIMIT)%'
+    app.autocompletion_min_length: '%env(int:APP_AUTOCOMPLETION_MIN_LENGTH)%'
     app.html_validation: '%env(bool:APP_HTML_VALIDATION)%'
     app.enable_prefetch: '%env(bool:APP_ENABLE_PREFETCH)%'
     app.enable_autoload: '%env(bool:APP_ENABLE_AUTOLOAD)%'
@@ -58,7 +60,8 @@ services:
 
     App\Service\AutocompletionManager:
         arguments:
-            $defaultLimit: '%app.default_limit%'
+            $autocompletionLimit: '%app.autocompletion_limit%'
+            $autocompletionMinLength: '%app.autocompletion_min_length%'
 
     App\Service\SteamSearchManager:
         arguments:

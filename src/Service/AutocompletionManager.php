@@ -10,15 +10,20 @@ use Symfony\Bundle\SecurityBundle\Security;
 
 class AutocompletionManager
 {
-    public function __construct(private int $defaultLimit, private Security $security, private SteamRepository $steamRepo, private GameRepository $gameRepo)
-    {
+    public function __construct(
+        private int $autocompletionLimit,
+        private int $autocompletionMinLength,
+        private Security $security,
+        private SteamRepository $steamRepo,
+        private GameRepository $gameRepo,
+    ) {
     }
 
     public function fromSteam(?string $search): mixed
     {
         $pattern = $this->sanitizeSearch($search);
 
-        return strlen($pattern) >= 3 ? $this->steamRepo->findPattern($pattern, $this->defaultLimit) : [];
+        return strlen($pattern) >= $this->autocompletionMinLength ? $this->steamRepo->findPattern($pattern, $this->autocompletionLimit) : [];
     }
 
     public function fromGame(?string $search): array
@@ -26,7 +31,7 @@ class AutocompletionManager
         $pattern = $this->sanitizeSearch($search);
         $userId = $this->security->getUser()->getId();
 
-        return strlen($pattern) >= 3 ? $this->gameRepo->findPatternWithoutReview($userId, $pattern, $this->defaultLimit) : [];
+        return strlen($pattern) >= $this->autocompletionMinLength ? $this->gameRepo->findPatternWithoutReview($userId, $pattern, $this->autocompletionLimit) : [];
     }
 
     public function sanitizeSearch(?string $search): string
