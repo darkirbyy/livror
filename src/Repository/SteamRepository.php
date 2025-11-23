@@ -14,4 +14,17 @@ class SteamRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Steam::class);
     }
+
+    public function findPattern(string $pattern, int $limit): mixed
+    {
+        $qb = $this->createQueryBuilder('s');
+        $qb->addSelect('MATCH_AGAINST(s.name, :pattern) as HIDDEN relevance')
+            ->where('MATCH_AGAINST(s.name, :pattern) > 0')
+            ->setParameter('pattern', $pattern)
+            ->orderBy('relevance', 'DESC')
+            ->addOrderBy('s.name', 'ASC')
+            ->setMaxResults($limit);
+
+        return $qb->getQuery()->getResult();
+    }
 }

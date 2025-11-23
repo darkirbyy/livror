@@ -12,7 +12,7 @@ twig:
                 default_limit: '%app.default_limit%'
                 max_limit: '%app.max_limit%'
                 enable_prefetch: '%app.enable_prefetch%'
-                index_autoload: '%app.index_autoload%'
+                enable_autoload: '%app.enable_autoload%'
             versioning:
                 version: '%versioning.version%'
                 version_hash: '%versioning.version_hash%'

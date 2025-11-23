@@ -6,7 +6,6 @@ namespace App\Repository;
 
 use App\Dto\QueryParam;
 use App\Entity\Main\Game;
-use App\Entity\Main\Review;
 use App\Enum\TypeGameEnum;
 use App\Service\QueryParamHelper;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -67,6 +66,22 @@ class GameRepository extends ServiceEntityRepository
         }
 
         // Execute and fetch the query
+        return $qb->getQuery()->getResult();
+    }
+
+    public function findPatternWithoutReview(int $userId, string $pattern, int $limit): array
+    {
+        $qb = $this->createQueryBuilder('g');
+        $qb->leftJoin('g.reviews', 'r', Join::WITH, 'r.userId = :userId')
+            ->where('r.id IS NULL')
+            ->setParameter('userId', $userId)
+            ->addSelect('MATCH_AGAINST(g.name, :pattern) as HIDDEN relevance')
+            ->andWhere('MATCH_AGAINST(g.name, :pattern) > 0')
+            ->setParameter('pattern', $pattern)
+            ->orderBy('relevance', 'DESC')
+            ->addOrderBy('g.name', 'ASC')
+            ->setMaxResults($limit);
+
         return $qb->getQuery()->getResult();
     }
 

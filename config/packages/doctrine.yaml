@@ -32,6 +32,9 @@ doctrine:
                         dir: '%kernel.project_dir%/src/Entity/Main'
                         prefix: 'App\Entity\Main'
                         alias: Main
+                dql:
+                    string_functions:
+                        MATCH_AGAINST: App\Extension\MatchAgainstExtension
             account:
                 connection: account
                 validate_xml_mapping: true

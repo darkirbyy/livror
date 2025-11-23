@@ -201,7 +201,7 @@
 {% macro more_button(queryParam) %}
   {% set new_param = { offset: queryParam.offset + queryParam.limit, limit: env.app.default_limit } %}
   {% set url = _self.path_with_query_param(queryParam|clone_with(new_param)) %}
-  <div class="text-center" {{ stimulus_controller('load-more', { url: url, lazy: env.app.index_autoload }) }}>
+  <div class="text-center" {{ stimulus_controller('load-more', { url: url, lazy: env.app.enable_autoload }) }}>
     <button class="btn btn-outline-secondary" data-load-more-target="button remove">{{ 'form.button.showMore'|trans }}</button>
     <span class="fs-4 text-muted" data-load-more-target="spinner"></span>
   </div>

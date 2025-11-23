@@ -15,7 +15,7 @@ parameters:
     app.max_limit: '%env(int:APP_MAX_LIMIT)%'
     app.html_validation: '%env(bool:APP_HTML_VALIDATION)%'
     app.enable_prefetch: '%env(bool:APP_ENABLE_PREFETCH)%'
-    app.index_autoload: '%env(bool:APP_INDEX_AUTOLOAD)%'
+    app.enable_autoload: '%env(bool:APP_ENABLE_AUTOLOAD)%'
     hub.base_url: '%env(string:HUB_BASE_URL)%'
     hub.account_route: '%env(string:HUB_ACCOUNT_ROUTE)%'
 
@@ -55,6 +55,10 @@ services:
             $requestTimeout: '%app.request_timeout%'
             $batchSize: '%app.batch_size%'
             $steamApiKey: '%app.steam_api_key%'
+
+    App\Service\AutocompletionManager:
+        arguments:
+            $defaultLimit: '%app.default_limit%'
 
     App\Service\SteamSearchManager:
         arguments:

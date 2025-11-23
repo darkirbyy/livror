@@ -57,7 +57,7 @@ class SteamScrapV1Command extends Command
                 if (empty($app['name'])) {
                     continue;
                 }
-                $params = [':id' => $app['appid'], ':name' => mb_substr($app['name'], 0, 255)];
+                $params = ['id' => $app['appid'], 'name' => mb_substr($app['name'], 0, 255)];
                 $stmtInsert->executeStatement($params);
                 ++$countInsert;
                 if (0 == $countInsert % $this->batchSize) {

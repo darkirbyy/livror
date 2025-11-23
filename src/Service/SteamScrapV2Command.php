@@ -108,7 +108,7 @@ class SteamScrapV2Command extends Command
                         continue;
                     }
 
-                    $params = [':id' => $app['appid'], ':name' => mb_substr($app['name'], 0, 255)];
+                    $params = ['id' => $app['appid'], 'name' => mb_substr($app['name'], 0, 255)];
                     if ('update' == $mode && in_array($app['appid'], $knownedIds)) {
                         $stmtUpdate->executeStatement($params);
                         ++$countUpdate;
