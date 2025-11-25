@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Service;
 
+use App\Entity\Main\Steam;
 use App\Repository\GameRepository;
 use App\Repository\SteamRepository;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -19,11 +20,16 @@ class AutocompletionManager
     ) {
     }
 
-    public function fromSteam(?string $search): mixed
+    public function fromSteam(?string $search): array
     {
+        // Sanitize the user input
         $pattern = $this->sanitizeSearch($search);
 
-        return strlen($pattern) >= $this->autocompletionMinLength ? $this->steamRepo->findPattern($pattern, $this->autocompletionLimit) : [];
+        // Query the database and return the data as an array formatted for tomselect
+        $result = strlen($pattern) >= $this->autocompletionMinLength ? $this->steamRepo->findPattern($pattern, $this->autocompletionLimit) : [];
+        $data = array_map(fn (Steam $s) => ['value' => $s->getId(), 'text' => $s->getName() . ' <small>[' . $s->getId() . ']</small>'], $result);
+
+        return $data;
     }
 
     public function fromGame(?string $search): array

@@ -90,6 +90,9 @@ form:
     notNull: Impossible d'ajouter ou de modifier cet élément car certains champs requis sont vides.
     unique: Impossible d'ajouter ou de modifier cet élément car certains champs doivent être uniques.
     other: Erreur lors de l'ajout, de la modification ou de la suppression de cet élément.
+  autocomplete:
+    placeholder: Taper les premières lettres du jeu
+    noResults: Aucun résultat
 
 modal:
   title:

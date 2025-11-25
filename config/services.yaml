@@ -33,6 +33,7 @@ services:
         resource: '../src/'
 
     Symfony\Component\Dotenv\Command\DotenvDumpCommand: ~
+    Symfony\UX\StimulusBundle\Helper\StimulusHelper: '@stimulus.helper'
     
     App\Form\:
         resource: '../src/Form'

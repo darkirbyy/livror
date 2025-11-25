@@ -30,7 +30,8 @@
               {{ form_label(form.steamId, 'game.label.steamId') }}
               {{ form_help(form.steamId, { help_html: true, help: 'game.help.steamId' }) }}
               <div class="input-group">
-                {{ form_widget(form.steamId, { attr: { 'data-steam-search-target': 'input' } }) }}
+                {% set autocomplete = prepare_autocomplete('game_autocomplete') %}
+                {{ form_widget(form.steamId, { attr: { 'data-steam-search-target': 'input' }|merge(autocomplete) }) }}
                 <button data-steam-search-target="button" class="btn btn-outline-secondary" aria-label="{{ 'form.button.search'|trans }}">
                   <span data-steam-search-target="remove" class="bi bi-steam" aria-hidden="true"></span>
                   <span data-steam-search-target="spinner" aria-hidden="true"></span>
