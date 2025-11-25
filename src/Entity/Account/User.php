@@ -45,12 +45,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function __serialize(): array
     {
-        return [
+        $data = [
             'id' => $this->getId(),
             'username' => $this->getUsername(),
-            'password' => $this->getPassword(),
+            'password' => hash('crc32c', $this->getPassword()),
             'roles' => $this->getRoles(),
         ];
+
+        return $data;
     }
 
     public function __unserialize(array $data): void
@@ -66,6 +68,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->username;
     }
 
+    #[\Deprecated]
     public function eraseCredentials(): void
     {
     }
