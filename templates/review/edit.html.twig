@@ -26,7 +26,8 @@
 
           {# Select the game for a new review #}
           {% if form.game is defined %}
-            {{ form_row(form.game, { label: 'review.label.game' }) }}
+            {% set autocomplete = prepare_autocomplete('game_autocomplete') %}
+            {{ form_row(form.game, { label: 'review.label.game', attr: { }|merge(autocomplete) }) }}
           {% endif %}
 
           {# Display the rating range cursor with custom stimulus controller to display the value #}
