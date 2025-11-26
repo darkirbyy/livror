@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Service;
 
 use App\Entity\Main\Steam;
-use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -17,7 +16,6 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 class SteamScrapV2Command extends Command
 {
     private OutputInterface $output;
-    private Connection $connection;
     private float $prevTime;
 
     public function __construct(
@@ -87,8 +85,6 @@ class SteamScrapV2Command extends Command
                 'key' => $this->steamApiKey,
                 'max_results' => $this->batchSize,
                 'if_modified_since' => $since,
-                // 'include_dlc' => true,
-                // 'include_software' => true,
                 'last_appid' => 0,
             ];
             $options = ['max_duration' => $this->requestTimeout];

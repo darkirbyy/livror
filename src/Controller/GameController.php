@@ -19,6 +19,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\MapQueryString;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Routing\Requirement\Requirement;
 
 #[Route('/game', name: 'game_')]
 class GameController extends AbstractController
@@ -75,7 +76,7 @@ class GameController extends AbstractController
     }
 
     // Edit an existing game
-    #[Route('/{id}/edit', name: 'edit', methods: ['GET', 'POST'], requirements: ['id' => '\d+'])]
+    #[Route('/{id}/edit', name: 'edit', methods: ['GET', 'POST'], requirements: ['id' => Requirement::DIGITS])]
     public function edit(Game $game, Request $request, FormManager $fm, BackpathUrlGenerator $backpathUrlGenerator): Response
     {
         $steamId = 'GET' == $request->getMethod() ? $request->query->get('steamId') : null;
@@ -95,12 +96,12 @@ class GameController extends AbstractController
     }
 
     // Delete a game
-    #[Route('/{id}/delete', name: 'delete', methods: ['POST'], requirements: ['id' => '\d+'])]
-    public function delete(Game $game, FormManager $fm): Response
+    #[Route('/{id}/delete', name: 'delete', methods: ['POST'], requirements: ['id' => Requirement::DIGITS])]
+    public function delete(Game $game, FormManager $fm, BackpathUrlGenerator $backpathUrlGenerator): Response
     {
         $flashSuccess = new FlashMessage('game.index.flash.deleteGame', ['name' => $game->getName()]);
         if ($fm->checkTokenAndRemove('livror/delete', $game, $flashSuccess)) {
-            return $this->redirectToRoute('game_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirect($backpathUrlGenerator->generate($this->generateUrl('game_index')), Response::HTTP_SEE_OTHER);
         }
 
         return $this->redirectToRoute('game_edit', ['id' => $game->getId()], Response::HTTP_SEE_OTHER);

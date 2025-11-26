@@ -7,7 +7,7 @@
 {% block main %}
   {# Modal to confirm delete, if in EDIT mode #}
   {% if isEditMode %}
-    {{ form_modal('review.edit.modalDeleteBody'|trans({ '{name}': review.game.name }), path('review_delete', { id: review.id })) }}
+    {{ form_modal('review.edit.modalDeleteBody'|trans({ '{name}': review.game.name }), path('review_delete', { id: review.id, backpath: app.request.query.get('backpath') })) }}
   {% endif %}
 
   {# Actual content with flashes and form #}

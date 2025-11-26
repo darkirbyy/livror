@@ -18,6 +18,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\MapQueryString;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Routing\Requirement\Requirement;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/review', name: 'review_')]
@@ -82,7 +83,7 @@ class ReviewController extends AbstractController
     }
 
     // Edit an existing review
-    #[Route('/{id}/edit', name: 'edit', methods: ['GET', 'POST'], requirements: ['id' => '\d+'])]
+    #[Route('/{id}/edit', name: 'edit', methods: ['GET', 'POST'], requirements: ['id' => Requirement::DIGITS])]
     #[IsGranted('edit', 'review')]
     public function edit(Review $review, Request $request, FormManager $fm, BackpathUrlGenerator $backpathUrlGenerator): Response
     {
@@ -101,13 +102,13 @@ class ReviewController extends AbstractController
     }
 
     // Delete a review
-    #[Route('/{id}/delete', name: 'delete', methods: ['POST'], requirements: ['id' => '\d+'])]
+    #[Route('/{id}/delete', name: 'delete', methods: ['POST'], requirements: ['id' => Requirement::DIGITS])]
     #[IsGranted('delete', 'review')]
-    public function delete(Review $review, FormManager $fm): Response
+    public function delete(Review $review, FormManager $fm, BackpathUrlGenerator $backpathUrlGenerator): Response
     {
         $flashSuccess = new FlashMessage('review.index.flash.deleteReview', ['name' => $review->getGame()->getName()]);
         if ($fm->checkTokenAndRemove('livror/delete', $review, $flashSuccess)) {
-            return $this->redirectToRoute('review_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirect($backpathUrlGenerator->generate($this->generateUrl('review_index')), Response::HTTP_SEE_OTHER);
         }
 
         return $this->redirectToRoute('review_edit', ['id' => $review->getId()], Response::HTTP_SEE_OTHER);

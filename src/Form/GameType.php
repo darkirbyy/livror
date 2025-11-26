@@ -94,25 +94,33 @@ class GameType extends DefaultType
 
             $steamId = $options['steamId'];
 
-            if (null != $steamId) {
-                $steamIdError = null;
+            if (is_null($steamId)) {
+                return;
+            }
+
+            $steamIdKeyError = null;
+            if (empty($steamId)) {
+                $steamIdKeyError = 'empty';
+            } else {
                 $flashBag = $this->requestStack->getSession()->getFlashBag();
 
                 if (!\ctype_digit($steamId)) {
-                    $steamIdError = $this->trans->trans('game.error.steamId.invalid', [], 'validators');
+                    $steamIdKeyError = 'invalid';
                 } else {
                     $this->steamSearch->fetchSteamGame((int) $steamId);
                     if (SteamSearchStatusEnum::OK === $this->steamSearch->getStatus()) {
                         $game = $this->steamSearch->fillGame($game);
                         $flashBag->add('livror/success', new FlashMessage('game.edit.flash.steamSearch.success'));
                     } elseif (SteamSearchStatusEnum::NOT_FOUND === $this->steamSearch->getStatus()) {
-                        $steamIdError = $this->trans->trans('game.error.steamId.notFound', [], 'validators');
+                        $steamIdKeyError = 'notFound';
                     } else {
                         $flashBag->add('livror/danger', new FlashMessage('game.edit.flash.steamSearch.fail'));
                     }
                 }
+            }
 
-                null != $steamIdError ? $form->get('steamId')->addError(new FormError($steamIdError)) : null;
+            if (!is_null($steamIdKeyError)) {
+                $form->get('steamId')->addError(new FormError($this->trans->trans('game.error.steamId.' . $steamIdKeyError, [], 'validators')));
             }
         });
 
@@ -126,7 +134,7 @@ class GameType extends DefaultType
             TypePriceEnum::PAYING !== $typePrice ? $form->get('fullPrice')->setData(null) : null;
         });
 
-        // Convert the non-mapped choice-field to a (null or 0) t obe consistent accross the app
+        // Convert the non-mapped choice-field to a (null or 0) to be consistent accross the app
         $builder->addEventListener(FormEvents::SUBMIT, function (FormEvent $event) {
             $game = $event->getData();
             $form = $event->getForm();

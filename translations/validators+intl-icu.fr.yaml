@@ -14,10 +14,11 @@ game:
     totHourSpend : Total d'heures de jeu
     minFirstPlay : Premier lancement
   help:
-    steamId: Si recherche automatique ne fonctionne pas, merci de récupérer l'ID Steam directement sur <a href='https://steamdb.info/' target='_blank'>SteamDB</a>.
+    steamId: Si la recherche automatique ne fonctionne pas, merci de récupérer l'ID Steam sur <a href='https://steamdb.info/' target='_blank'>SteamDB</a>.
     commaSeparated: Séparés par des virgules
   error:
     steamId:
+      empty: L'ID Steam est vide.
       invalid: Un ID Steam doit être composé uniquement de chiffres.
       notFound: L'ID Steam saisi ne correspond à aucun jeu.
     imgUrl:
