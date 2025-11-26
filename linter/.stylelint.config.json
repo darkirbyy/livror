@@ -3,6 +3,7 @@
     "plugins": ["stylelint-scss"],
     "rules": {
         "at-rule-no-unknown": null,
+        "no-descending-specificity": null,
         "color-hex-length": "long",
         "scss/at-rule-no-unknown": true,
         "scss/dollar-variable-empty-line-before": [

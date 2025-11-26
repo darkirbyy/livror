@@ -90,9 +90,16 @@ class TwigExtension
             'preload' => false,
             'tomSelectOptions' => [
                 'create' => false,
+                'openOnFocus' => false,
                 'maxItems' => 1,
+                'optionsAsHtml' => true,
                 'closeAfterSelect' => true,
                 'placeholder' => $this->trans->trans('form.autocomplete.placeholder'),
+                'loadThrottle' => 500,
+                'plugins' => [
+                    'clear_button' => false,
+                    'remove_button' => false,
+                ],
             ],
         ]);
 

@@ -105,12 +105,12 @@ class GameController extends AbstractController
         return $this->redirectToRoute('game_edit', ['id' => $game->getId()], Response::HTTP_SEE_OTHER);
     }
 
-    #[Route('/autocomplete', name: 'autocomplete', methods: ['GET'])]
-    public function autocomplete(Request $request, AutocompletionManager $autocompletionManager): Response
-    {
-        $search = $request->query->get('query');
-        $data = $autocompletionManager->fromSteam($search);
+    // #[Route('/autocomplete', name: 'autocomplete', methods: ['GET'])]
+    // public function autocomplete(Request $request, AutocompletionManager $autocompletionManager): Response
+    // {
+    //     $search = $request->query->get('query');
+    //     $data = $autocompletionManager->fromSteam($search);
 
-        return $this->json(['results' => $data]);
-    }
+    //     return $this->json(['results' => $data]);
+    // }
 }

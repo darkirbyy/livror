@@ -14,7 +14,7 @@ game:
     totHourSpend : Total d'heures de jeu
     minFirstPlay : Premier lancement
   help:
-    steamId: Pour ajouter une démo, chercher l'ID Steam directement sur <a href='https://steamdb.info/' target='_blank'>SteamDB</a>
+    steamId: Si recherche automatique ne fonctionne pas, merci de récupérer l'ID Steam directement sur <a href='https://steamdb.info/' target='_blank'>SteamDB</a>.
     commaSeparated: Séparés par des virgules
   error:
     steamId:
