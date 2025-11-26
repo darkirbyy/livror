@@ -69,7 +69,7 @@ class GameRepository extends ServiceEntityRepository
         return $qb->getQuery()->getResult();
     }
 
-    public function findPatternWithoutReview(int $userId, string $pattern, int $limit): array
+    public function findPatternWithoutReview(string $pattern, int $limit, int $userId): array
     {
         $qb = $this->createQueryBuilder('g');
         $qb->leftJoin('g.reviews', 'r', Join::WITH, 'r.userId = :userId')
@@ -80,6 +80,20 @@ class GameRepository extends ServiceEntityRepository
             ->setParameter('pattern', $pattern)
             ->orderBy('relevance', 'DESC')
             ->addOrderBy('g.name', 'ASC')
+            ->setMaxResults($limit);
+
+        return $qb->getQuery()->getResult();
+    }
+
+    public function findLikeWithoutReview(string $like, int $limit, int $userId): array
+    {
+        $qb = $this->createQueryBuilder('g');
+        $qb->leftJoin('g.reviews', 'r', Join::WITH, 'r.userId = :userId')
+            ->where('r.id IS NULL')
+            ->setParameter('userId', $userId)
+            ->andWhere('g.name LIKE :like')
+            ->setParameter('like', $like)
+            ->orderBy('g.name', 'ASC')
             ->setMaxResults($limit);
 
         return $qb->getQuery()->getResult();

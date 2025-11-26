@@ -87,8 +87,8 @@ class SteamScrapV2Command extends Command
                 'key' => $this->steamApiKey,
                 'max_results' => $this->batchSize,
                 'if_modified_since' => $since,
-                'include_dlc' => true,
-                'include_software' => true,
+                // 'include_dlc' => true,
+                // 'include_software' => true,
                 'last_appid' => 0,
             ];
             $options = ['max_duration' => $this->requestTimeout];

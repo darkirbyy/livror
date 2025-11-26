@@ -59,6 +59,10 @@ services:
             $batchSize: '%app.batch_size%'
             $steamApiKey: '%app.steam_api_key%'
 
+    App\Extension\TwigExtension:
+        arguments:
+            $autocompletionMinLength: '%app.autocompletion_min_length%'
+
     App\Service\AutocompletionManager:
         arguments:
             $autocompletionLimit: '%app.autocompletion_limit%'

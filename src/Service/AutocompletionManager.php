@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Service;
 
+use App\Entity\Main\Game;
 use App\Entity\Main\Steam;
+use App\Enum\SearchModeEnum;
 use App\Repository\GameRepository;
 use App\Repository\SteamRepository;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -20,27 +22,36 @@ class AutocompletionManager
     ) {
     }
 
-    public function fromSteam(?string $search): array
+    public function fromSteam(?string $search, SearchModeEnum $searchMode): array
     {
         // Sanitize the user input
-        $pattern = $this->sanitizeSearch($search);
+        $search = $this->sanitizeSearch($search, $searchMode);
 
         // Query the database and return the data as an array formatted for tomselect
-        $result = strlen($pattern) >= $this->autocompletionMinLength ? $this->steamRepo->findPattern($pattern, $this->autocompletionLimit) : [];
+        $repoMethod = $searchMode->toRepoMethod();
+        $result = strlen($search) >= $this->autocompletionMinLength ? $this->steamRepo->$repoMethod($search, $this->autocompletionLimit) : [];
         $data = array_map(fn (Steam $s) => ['value' => $s->getId(), 'text' => $s->getName() . ' <small>[' . $s->getId() . ']</small>'], $result);
 
         return $data;
     }
 
-    public function fromGame(?string $search): array
+    public function fromGameWithoutReview(?string $search, SearchModeEnum $searchMode): array
     {
-        $pattern = $this->sanitizeSearch($search);
+        // Sanitize the user input
+        $search = $this->sanitizeSearch($search, $searchMode);
+
+        // Get the user id to filter game without review from this user
         $userId = $this->security->getUser()->getId();
 
-        return strlen($pattern) >= $this->autocompletionMinLength ? $this->gameRepo->findPatternWithoutReview($userId, $pattern, $this->autocompletionLimit) : [];
+        // Query the database and return the data as an array formatted for tomselect
+        $repoMethod = $searchMode->toRepoMethod() . 'WithoutReview';
+        $result = strlen($search) >= $this->autocompletionMinLength ? $this->gameRepo->$repoMethod($search, $this->autocompletionLimit, $userId) : [];
+        $data = array_map(fn (Game $g) => ['value' => $g->getId(), 'text' => $g->getName()], $result);
+
+        return $data;
     }
 
-    public function sanitizeSearch(?string $search): string
+    public function sanitizeSearch(?string $search, SearchModeEnum $searchMode): string
     {
         // Return empty string if empty
         if (empty($search)) {
@@ -53,12 +64,18 @@ class AutocompletionManager
         // Remove special characters that can interfer with mariadb fulltext search
         $search = preg_replace('/[^\p{L}\p{N}\s\-]/u', ' ', $search);
 
-        // Identify each word and keep maximum 5 of them
-        $words = array_slice(array_filter(explode(' ', $search), fn ($word) => strlen($word) > 0), 0, 5);
+        // Lower all remaining characters
+        $search = mb_strtolower($search);
 
-        // Surround each word with + and * for mariadb db fulltext boolean mode
-        $pattern = implode('', array_map(fn ($word) => '+' . $word . '*', $words));
+        if (SearchModeEnum::PATTERN == $searchMode) {
+            // Identify each word (max 5) and surround each with + and * for mariadb fulltext boolean mode
+            $words = array_slice(array_filter(explode(' ', $search), fn ($word) => strlen($word) > 0), 0, 5);
+            $search = implode('', array_map(fn ($word) => '+' . $word . '*', $words));
+        } else {
+            // Add % wildcard for mariadb like clause
+            $search = '%' . $search . '%';
+        }
 
-        return $pattern;
+        return $search;
     }
 }

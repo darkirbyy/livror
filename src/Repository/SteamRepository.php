@@ -27,4 +27,12 @@ class SteamRepository extends ServiceEntityRepository
 
         return $qb->getQuery()->getResult();
     }
+
+    public function findLike(string $like, int $limit): mixed
+    {
+        $qb = $this->createQueryBuilder('s');
+        $qb->where('s.name LIKE :like')->setParameter('like', $like)->orderBy('s.name', 'ASC')->setMaxResults($limit);
+
+        return $qb->getQuery()->getResult();
+    }
 }

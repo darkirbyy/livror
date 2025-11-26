@@ -19,6 +19,7 @@ use Twig\Attribute\AsTwigFunction;
 class TwigExtension
 {
     public function __construct(
+        private int $autocompletionMinLength,
         private TranslatorInterface $trans,
         private StimulusHelper $stimulusHelper,
         private UrlGeneratorInterface $urlGenerator,
@@ -86,7 +87,7 @@ class TwigExtension
         $stimulusController->addController('symfony/ux-autocomplete/autocomplete', [
             'url' => $this->urlGenerator->generate($route, $parameters),
             'noResultsFoundText' => $this->trans->trans('form.autocomplete.noResults'),
-            'minCharacters' => 4,
+            'minCharacters' => $this->autocompletionMinLength,
             'preload' => false,
             'tomSelectOptions' => [
                 'create' => false,
