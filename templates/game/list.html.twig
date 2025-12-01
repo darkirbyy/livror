@@ -1,154 +1,160 @@
 {% from 'theme/macro.html.twig' import path_with_query_param, fmt_full_price, game_title, review_body, more_button %}
 
-{% for gameIndex in gamesIndex %}
-  {% set game = gameIndex.game %}
-  {% set gameId = 'game-' ~ game.id %}
-  {% set backpath = path_with_query_param(queryParam|clone_with({ offset: 0, limit: queryParam.limit + queryParam.offset }), 'game-' ~ game.id) %}
+{% if (gamesIndex|length) > 0 %}
+  {% for gameIndex in gamesIndex %}
+    {% set game = gameIndex.game %}
+    {% set gameId = 'game-' ~ game.id %}
+    {% set backpath = path_with_query_param(queryParam|clone_with({ offset: 0, limit: queryParam.limit + queryParam.offset }), 'game-' ~ game.id) %}
 
-  {# Each game is displayed on a "card" containing all the data #}
-  <div id="{{ gameId }}" class="card-max-auto card-max-md-none mx-auto my-3 rounded-3 border overflow-hidden">
-    {# Card title bar with the the title on one side, and 3 infos on the other side (or on top of each other on small screen) #}
-    <div class="row gx-0 bg-primary-subtle border-bottom">
-      {# Actual title with the edit button #}
-      <div class="col-12 border-bottom col-md-6 border-bottom-md-0 border-end-md card-max-md-auto">
-        {{ game_title(game, backpath) }}
+    {# Each game is displayed on a "card" containing all the data #}
+    <div id="{{ gameId }}" class="card-max-auto card-max-md-none mx-auto my-3 rounded-3 border overflow-hidden">
+      {# Card title bar with the the title on one side, and 3 infos on the other side (or on top of each other on small screen) #}
+      <div class="row gx-0 bg-primary-subtle border-bottom">
+        {# Actual title with the edit button #}
+        <div class="col-12 border-bottom col-md-6 border-bottom-md-0 border-end-md card-max-md-auto">
+          {{ game_title(game, backpath) }}
+        </div>
+        {# 4 piece of information : player who have written a review, average rating, total hour spend, minimum first play date #}
+        <div class="col-12 text-center d-flex align-items-center col-md-auto flex-even-1">
+          <div class="flex-even-1 py-1 px-2 py-md-2 border-end text-truncate">
+            <span class="fa-solid fa-user-group fa-sm" aria-hidden="true"></span>
+            <span class="visually-hidden">{{ 'game.label.numUsers'|trans({ }, 'validators') }} :</span>
+            {{ game.reviews is not empty ? game.reviews|length : '-' }}
+          </div>
+          <div class="flex-even-1 py-1 px-2 py-md-2 border-end text-truncate">
+            <span class="fa-solid fa-star fa-sm" aria-hidden="true"></span>
+            <span class="visually-hidden">{{ 'game.label.avgRating'|trans({ }, 'validators') }} :</span>
+            {{ gameIndex.avgRating is not empty ? gameIndex.avgRating|format_number({ fraction_digit: 2 }) : '-' }}
+          </div>
+          <div class="flex-even-1 py-1 px-2 py-md-2 border-end text-truncate">
+            <span class="fa-regular fa-hourglass-half fa-sm" aria-hidden="true"></span>
+            <span class="visually-hidden">{{ 'game.label.totHourSpend'|trans({ }, 'validators') }} :</span>
+            {{ gameIndex.totHourSpend is not empty ? gameIndex.totHourSpend ~ 'h' : '-' }}
+          </div>
+          <div class="flex-even-1 py-1 px-2 py-md-2 text-truncate">
+            <span class="fa-regular fa-calendar-days fa-sm" aria-hidden="true"></span>
+            <span class="visually-hidden">{{ 'game.label.minFirstPlay'|trans({ }, 'validators') }} :</span>
+            <span class="small">{{ gameIndex.minFirstPlay is not empty ? gameIndex.minFirstPlay|format_datetime('short', 'none') : '-' }}</span>
+          </div>
+        </div>
       </div>
-      {# 4 piece of information : player who have written a review, average rating, total hour spend, minimum first play date #}
-      <div class="col-12 text-center d-flex align-items-center col-md-auto flex-even-1">
-        <div class="flex-even-1 py-1 px-2 py-md-2 border-end text-truncate">
-          <span class="fa-solid fa-user-group fa-sm" aria-hidden="true"></span>
-          <span class="visually-hidden">{{ 'game.label.numUsers'|trans({ }, 'validators') }} :</span>
-          {{ game.reviews is not empty ? game.reviews|length : '-' }}
-        </div>
-        <div class="flex-even-1 py-1 px-2 py-md-2 border-end text-truncate">
-          <span class="fa-solid fa-star fa-sm" aria-hidden="true"></span>
-          <span class="visually-hidden">{{ 'game.label.avgRating'|trans({ }, 'validators') }} :</span>
-          {{ gameIndex.avgRating is not empty ? gameIndex.avgRating|format_number({ fraction_digit: 2 }) : '-' }}
-        </div>
-        <div class="flex-even-1 py-1 px-2 py-md-2 border-end text-truncate">
-          <span class="fa-regular fa-hourglass-half fa-sm" aria-hidden="true"></span>
-          <span class="visually-hidden">{{ 'game.label.totHourSpend'|trans({ }, 'validators') }} :</span>
-          {{ gameIndex.totHourSpend is not empty ? gameIndex.totHourSpend ~ 'h' : '-' }}
-        </div>
-        <div class="flex-even-1 py-1 px-2 py-md-2 text-truncate">
-          <span class="fa-regular fa-calendar-days fa-sm" aria-hidden="true"></span>
-          <span class="visually-hidden">{{ 'game.label.minFirstPlay'|trans({ }, 'validators') }} :</span>
-          <span class="small">{{ gameIndex.minFirstPlay is not empty ? gameIndex.minFirstPlay|format_datetime('short', 'none') : '-' }}</span>
-        </div>
-      </div>
-    </div>
 
-    {# Card body divided in two parts : some generic information, and the review of each player #}
-    <div class="row py-0 g-0 px-0 bg-body-tertiary">
-      {# Card body - first part : generic information #}
-      <div class="col-12 px-0 col-md-6 card-max-md-auto border-bottom border-end-md border-bottom-md-0">
-        <div class="mx-auto">
-          {# Collapse button for small screen #}
-          {% set collapseId = gameId ~ 'collapse-informations' %}
-          <button class="btn btn-outline-secondary d-flex w-100 justify-content-center align-items-center border-0 border-bottom app-no-border-bottom rounded-0 py-1 my-0 dropdown-toggle app-dropdown-left app-dropdown-smooth d-md-none"
-            data-bs-toggle="collapse"
-            data-bs-target="#{{ collapseId }}"
-            aria-expanded="false"
-            aria-controls="{{ collapseId }}">
-            <h6 class="m-0 p-0 fs-5">
-              {{ 'game.index.card.informations'|trans }}
-            </h6>
-          </button>
+      {# Card body divided in two parts : some generic information, and the review of each player #}
+      <div class="row py-0 g-0 px-0 bg-body-tertiary">
+        {# Card body - first part : generic information #}
+        <div class="col-12 px-0 col-md-6 card-max-md-auto border-bottom border-end-md border-bottom-md-0">
+          <div class="mx-auto">
+            {# Collapse button for small screen #}
+            {% set collapseId = gameId ~ 'collapse-informations' %}
+            <button class="btn btn-outline-secondary d-flex w-100 justify-content-center align-items-center border-0 border-bottom app-no-border-bottom rounded-0 py-1 my-0 dropdown-toggle app-dropdown-left app-dropdown-smooth d-md-none"
+              data-bs-toggle="collapse"
+              data-bs-target="#{{ collapseId }}"
+              aria-expanded="false"
+              aria-controls="{{ collapseId }}">
+              <h6 class="m-0 p-0 fs-5">
+                {{ 'game.index.card.informations'|trans }}
+              </h6>
+            </button>
 
-          <div class="row p-0 m-0 collapse d-md-flex" id="{{ collapseId }}">
-            {# Image from the URL or a placeholder if empty #}
-            <div class="col-12 px-0 border-bottom">
-              <div class="mx-auto">
-                {% if game.imgUrl is not empty %}
-                  <img src="{{ game.imgUrl }}" class="app-card-img-fit" alt="{{ 'aria.cover'|trans({ name: game.name }) }}" />
-                {% else %}
-                  <div class="bi bi-image text-center app-card-img-fit app-card-img-missing bg-body-secondary" aria-hidden="true"></div>
-                {% endif %}
+            <div class="row p-0 m-0 collapse d-md-flex" id="{{ collapseId }}">
+              {# Image from the URL or a placeholder if empty #}
+              <div class="col-12 px-0 border-bottom">
+                <div class="mx-auto">
+                  {% if game.imgUrl is not empty %}
+                    <img src="{{ game.imgUrl }}" class="app-card-img-fit" alt="{{ 'aria.cover'|trans({ name: game.name }) }}" />
+                  {% else %}
+                    <div class="bi bi-image text-center app-card-img-fit app-card-img-missing bg-body-secondary" aria-hidden="true"></div>
+                  {% endif %}
+                </div>
               </div>
+
+              {# All other information #}
+              {% set gameData = {
+                typeGame: game.typeGame|trans,
+                releaseYear: game.releaseYear,
+                fullPrice: fmt_full_price(game.fullPrice),
+                developers: game.developers,
+                genres: game.genres,
+                description: game.description,
+              } %}
+
+              {% for field, value in gameData %}
+                <div class="col-4 py-1 px-1 text-end text-truncate {{ field != 'description' ? 'border-bottom' : '' }}">
+                  <span class="fw-light">{{ ('game.label.' ~ field)|trans({ }, 'validators') }}</span>
+                </div>
+                <div class="col-8 py-1 text-start {{ (field not in ['genres', 'description'] ? 'text-truncate') ~ ' ' ~ (field != 'description' ? 'border-bottom') }}">
+                  {{ value|default('-') }}
+                </div>
+              {% endfor %}
             </div>
-
-            {# All other information #}
-            {% set gameData = {
-              typeGame: game.typeGame|trans,
-              releaseYear: game.releaseYear,
-              fullPrice: fmt_full_price(game.fullPrice),
-              developers: game.developers,
-              genres: game.genres,
-              description: game.description,
-            } %}
-
-            {% for field, value in gameData %}
-              <div class="col-4 py-1 px-1 text-end text-truncate {{ field != 'description' ? 'border-bottom' : '' }}">
-                <span class="fw-light">{{ ('game.label.' ~ field)|trans({ }, 'validators') }}</span>
-              </div>
-              <div class="col-8 py-1 text-start {{ (field not in ['genres', 'description'] ? 'text-truncate') ~ ' ' ~ (field != 'description' ? 'border-bottom') }}">
-                {{ value|default('-') }}
-              </div>
-            {% endfor %}
           </div>
         </div>
-      </div>
 
-      {# Card body - second part : all reviews #}
-      <div class="col-12 px-0 col-md">
-        <div class="mx-auto">
-          {# Collapse button for small screen #}
-          {% set collapseId = gameId ~ 'collapse-reviews' %}
-          <button class="btn btn-outline-secondary d-flex w-100 justify-content-center align-items-center border-0 border-bottom app-no-border-bottom rounded-0 py-1 my-0 dropdown-toggle app-dropdown-left app-dropdown-smooth d-md-none"
-            data-bs-toggle="collapse"
-            data-bs-target="#{{ collapseId }}"
-            aria-expanded="false"
-            aria-controls="{{ collapseId }}">
-            <h6 class="m-0 p-0 fs-5">
-              {{ 'game.index.card.reviews'|trans }}
-            </h6>
-          </button>
+        {# Card body - second part : all reviews #}
+        <div class="col-12 px-0 col-md">
+          <div class="mx-auto">
+            {# Collapse button for small screen #}
+            {% set collapseId = gameId ~ 'collapse-reviews' %}
+            <button class="btn btn-outline-secondary d-flex w-100 justify-content-center align-items-center border-0 border-bottom app-no-border-bottom rounded-0 py-1 my-0 dropdown-toggle app-dropdown-left app-dropdown-smooth d-md-none"
+              data-bs-toggle="collapse"
+              data-bs-target="#{{ collapseId }}"
+              aria-expanded="false"
+              aria-controls="{{ collapseId }}">
+              <h6 class="m-0 p-0 fs-5">
+                {{ 'game.index.card.reviews'|trans }}
+              </h6>
+            </button>
 
-          {# Reviews content #}
-          <div class="row gx-0 p-0 m-0 collapse d-md-flex" id="{{ collapseId }}">
-            {% for review in game.reviews|filter(review => review.user is not empty) %}
-              <div class="col-12 text-center d-flex bg-secondary-subtle align-items-center border-bottom {{ loop.index0 > 0 ? 'border-top' }} col-md-auto flex-even-1">
-                <div class="flex-even-1 py-0 px-2 py-md-1 text-truncate">
-                  <img src="{{ review.user.avatarPath|generate_root }}"
-                    class="rounded-circle img-fluid app-avatar-card"
-                    alt="{{ 'aria.avatar'|trans({ name: review.user.username }) }}" />
-                  <span class="ms-1 d-none d-md-inline">{{ review.user.username }}</span>
+            {# Reviews content #}
+            <div class="row gx-0 p-0 m-0 collapse d-md-flex" id="{{ collapseId }}">
+              {% for review in game.reviews|filter(review => review.user is not empty) %}
+                <div class="col-12 text-center d-flex bg-secondary-subtle align-items-center border-bottom {{ loop.index0 > 0 ? 'border-top' }} col-md-auto flex-even-1">
+                  <div class="flex-even-1 py-0 px-2 py-md-1 text-truncate">
+                    <img src="{{ review.user.avatarPath|generate_root }}"
+                      class="rounded-circle img-fluid app-avatar-card"
+                      alt="{{ 'aria.avatar'|trans({ name: review.user.username }) }}" />
+                    <span class="ms-1 d-none d-md-inline">{{ review.user.username }}</span>
+                  </div>
+                  <div class="flex-even-1 py-1 px-2 py-md-2 border-start border-end text-truncate">
+                    <span class="fa-solid fa-star fa-sm" aria-hidden="true"></span>
+                    <span class="visually-hidden">{{ 'review.label.rating'|trans({ }, 'validators') }} :</span>
+                    {{ review.rating is not empty ? review.rating|format_number({ fraction_digit: 1 }) : '-' }}
+                  </div>
+                  <div class="flex-even-1 py-1 px-2 py-md-2 border-end text-truncate">
+                    <span class="fa-regular fa-hourglass-half fa-sm" aria-hidden="true"></span>
+                    <span class="visually-hidden">{{ 'review.label.hourSpend'|trans({ }, 'validators') }} :</span>
+                    {{ review.hourSpend is not empty ? review.hourSpend ~ 'h' : '-' }}
+                  </div>
+                  <div class="flex-even-1 py-1 px-2 py-md-2 text-truncate">
+                    <span class="fa-regular fa-calendar-days fa-sm" aria-hidden="true"></span>
+                    <span class="visually-hidden">{{ 'review.label.firstPlay'|trans({ }, 'validators') }} :</span>
+                    <span class="small">{{ review.firstPlay is not empty ? review.firstPlay|format_datetime('short', 'none') : '-' }}</span>
+                  </div>
                 </div>
-                <div class="flex-even-1 py-1 px-2 py-md-2 border-start border-end text-truncate">
-                  <span class="fa-solid fa-star fa-sm" aria-hidden="true"></span>
-                  <span class="visually-hidden">{{ 'review.label.rating'|trans({ }, 'validators') }} :</span>
-                  {{ review.rating is not empty ? review.rating|format_number({ fraction_digit: 1 }) : '-' }}
+                <div class="col-12 mb-2 py-1 px-2">
+                  {{ review_body(review, backpath) }}
                 </div>
-                <div class="flex-even-1 py-1 px-2 py-md-2 border-end text-truncate">
-                  <span class="fa-regular fa-hourglass-half fa-sm" aria-hidden="true"></span>
-                  <span class="visually-hidden">{{ 'review.label.hourSpend'|trans({ }, 'validators') }} :</span>
-                  {{ review.hourSpend is not empty ? review.hourSpend ~ 'h' : '-' }}
+              {% endfor %}
+              {% if not (app.user.id in (game.reviews|map(review => review.userId))) %}
+                <div class="my-2 text-center">
+                  <a href="{{ path('review_new', { gameId: game.id, backpath: backpath }) }}" class="btn btn-primary" data-turbo-frame="_top">
+                    <span class="bi bi-plus-square-fill me-md-1" aria-hidden="true"></span>
+                    {{ 'review.index.button.addReview'|trans }}
+                  </a>
                 </div>
-                <div class="flex-even-1 py-1 px-2 py-md-2 text-truncate">
-                  <span class="fa-regular fa-calendar-days fa-sm" aria-hidden="true"></span>
-                  <span class="visually-hidden">{{ 'review.label.firstPlay'|trans({ }, 'validators') }} :</span>
-                  <span class="small">{{ review.firstPlay is not empty ? review.firstPlay|format_datetime('short', 'none') : '-' }}</span>
-                </div>
-              </div>
-              <div class="col-12 mb-2 py-1 px-2">
-                {{ review_body(review, backpath) }}
-              </div>
-            {% endfor %}
-            {% if not (app.user.id in (game.reviews|map(review => review.userId))) %}
-              <div class="my-2 text-center">
-                <a href="{{ path('review_new', { gameId: game.id, backpath: backpath }) }}" class="btn btn-primary" data-turbo-frame="_top">
-                  <span class="bi bi-plus-square-fill me-md-1" aria-hidden="true"></span>
-                  {{ 'review.index.button.addReview'|trans }}
-                </a>
-              </div>
-            {% endif %}
+              {% endif %}
+            </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
-{% endfor %}
+  {% endfor %}
 
-{% if hasMore %}
-  {{ more_button(queryParam) }}
+  {% if hasMore %}
+    {{ more_button(queryParam) }}
+  {% endif %}
+{% else %}
+  <div class="card-max-auto card-max-md-none my-1 p-2 fs-5 fw-light">
+    {{ 'game.index.notFound'|trans }}
+  </div>
 {% endif %}

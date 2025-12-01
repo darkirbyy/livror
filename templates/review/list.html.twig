@@ -1,44 +1,50 @@
 {% from 'theme/macro.html.twig' import path_with_query_param, game_title, review_body, more_button %}
 
-{% for review in reviews %}
-  {% set reviewId = 'review-' ~ review.id %}
-  {% set backpath = path_with_query_param(queryParam|clone_with({ offset: 0, limit: queryParam.limit + queryParam.offset }), 'review-' ~ review.id) %}
+{% if (reviews|length) > 0 %}
+  {% for review in reviews %}
+    {% set reviewId = 'review-' ~ review.id %}
+    {% set backpath = path_with_query_param(queryParam|clone_with({ offset: 0, limit: queryParam.limit + queryParam.offset }), 'review-' ~ review.id) %}
 
-  {# Each game is displayed on a "card" containing all the data #}
-  <div id="{{ reviewId }}" class="card-max-auto card-max-md-none mx-auto my-3 rounded-3 border overflow-hidden">
-    {# Card title bar with the the title on one side, and 3 infos on the other side (or on top of each other on small screen) #}
-    <div class="row gx-0 bg-primary-subtle border-bottom text-center">
-      {# Actual title with the edit button #}
-      <div class="col-12 border-bottom col-md-6 border-bottom-md-0 border-end-md card-max-md-auto">
-        {{ game_title(review.game, backpath) }}
+    {# Each game is displayed on a "card" containing all the data #}
+    <div id="{{ reviewId }}" class="card-max-auto card-max-md-none mx-auto my-3 rounded-3 border overflow-hidden">
+      {# Card title bar with the the title on one side, and 3 infos on the other side (or on top of each other on small screen) #}
+      <div class="row gx-0 bg-primary-subtle border-bottom text-center">
+        {# Actual title with the edit button #}
+        <div class="col-12 border-bottom col-md-6 border-bottom-md-0 border-end-md card-max-md-auto">
+          {{ game_title(review.game, backpath) }}
+        </div>
+        {# 3 piece of information : player rating, hour spend, and first play date #}
+        <div class="col-12 d-flex align-items-center col-md-auto flex-even-1">
+          <div class="flex-even-1 py-1 px-2 py-md-2 border-end text-truncate">
+            <span class="fa-solid fa-star fa-sm" aria-hidden="true"></span>
+            <span class="visually-hidden">{{ 'review.label.rating'|trans({ }, 'validators') }} :</span>
+            {{ review.rating is not empty ? review.rating|format_number({ fraction_digit: 1 }) : '-' }}
+          </div>
+          <div class="flex-even-1 py-1 px-2 py-md-2 border-end text-truncate">
+            <span class="fa-regular fa-hourglass-half fa-sm" aria-hidden="true"></span>
+            <span class="visually-hidden">{{ 'review.label.hourSpend'|trans({ }, 'validators') }} :</span>
+            {{ review.hourSpend is not empty ? review.hourSpend ~ 'h' : '-' }}
+          </div>
+          <div class="flex-even-1 py-1 px-2 py-md-2 text-truncate">
+            <span class="fa-regular fa-calendar-days fa-sm" aria-hidden="true"></span>
+            <span class="visually-hidden">{{ 'review.label.firstPlay'|trans({ }, 'validators') }} :</span>
+            <span class="small">{{ review.firstPlay is not empty ? review.firstPlay|format_datetime('short', 'none') : '-' }}</span>
+          </div>
+        </div>
       </div>
-      {# 3 piece of information : player rating, hour spend, and first play date #}
-      <div class="col-12 d-flex align-items-center col-md-auto flex-even-1">
-        <div class="flex-even-1 py-1 px-2 py-md-2 border-end text-truncate">
-          <span class="fa-solid fa-star fa-sm" aria-hidden="true"></span>
-          <span class="visually-hidden">{{ 'review.label.rating'|trans({ }, 'validators') }} :</span>
-          {{ review.rating is not empty ? review.rating|format_number({ fraction_digit: 1 }) : '-' }}
-        </div>
-        <div class="flex-even-1 py-1 px-2 py-md-2 border-end text-truncate">
-          <span class="fa-regular fa-hourglass-half fa-sm" aria-hidden="true"></span>
-          <span class="visually-hidden">{{ 'review.label.hourSpend'|trans({ }, 'validators') }} :</span>
-          {{ review.hourSpend is not empty ? review.hourSpend ~ 'h' : '-' }}
-        </div>
-        <div class="flex-even-1 py-1 px-2 py-md-2 text-truncate">
-          <span class="fa-regular fa-calendar-days fa-sm" aria-hidden="true"></span>
-          <span class="visually-hidden">{{ 'review.label.firstPlay'|trans({ }, 'validators') }} :</span>
-          <span class="small">{{ review.firstPlay is not empty ? review.firstPlay|format_datetime('short', 'none') : '-' }}</span>
-        </div>
+
+      {# Card body in one part : the comment #}
+      <div class="px-2 py-1 bg-body-tertiary">
+        {{ review_body(review, backpath) }}
       </div>
     </div>
+  {% endfor %}
 
-    {# Card body in one part : the comment #}
-    <div class="px-2 py-1 bg-body-tertiary">
-      {{ review_body(review, backpath) }}
-    </div>
+  {% if hasMore %}
+    {{ more_button(queryParam) }}
+  {% endif %}
+{% else %}
+  <div class="card-max-auto card-max-md-none my-1 p-2 fs-5 fw-light">
+    {{ 'review.index.notFound'|trans }}
   </div>
-{% endfor %}
-
-{% if hasMore %}
-  {{ more_button(queryParam) }}
 {% endif %}

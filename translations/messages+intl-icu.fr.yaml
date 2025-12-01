@@ -28,6 +28,7 @@ game:
       typeGame: Type
       users: Joueurs
       withoutReview: Avis
+    notFound: Aucun jeu trouvé
   edit:
     title:
       add: Ajouter un jeu
@@ -52,7 +53,7 @@ review:
     card:
       informations: Informations
       comment: Commentaire
-      noComment: Pas de commentaire
+      noComment: Aucun commentaire
       added: Écrit
       updated: modifié
     sort:
@@ -60,6 +61,7 @@ review:
       rating: Saucisses
       hourSpend: Heures de jeu
       firstPlay: Lancement
+    notFound: Aucun avis trouvé
   edit:
     title:
       add:  Écrire un avis
