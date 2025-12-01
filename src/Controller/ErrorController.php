@@ -35,7 +35,6 @@ class ErrorController extends AbstractController
             'error_key' => $errorKey,
         ]);
 
-        // todo : log the error ?
         return new Response($response->getContent(), $statusCode, $response->headers->all());
     }
 }

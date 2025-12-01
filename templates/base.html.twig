@@ -91,7 +91,7 @@
                 <ul class="dropdown-menu dropdown-menu-end" role="menu">
                   <li><a class="dropdown-item" role="menuitem" href="{{ path('review_index') }}">{{ 'layout.navbar.account.myReviews'|trans }}</a></li>
                   <li><hr class="dropdown-divider" /></li>
-                  <li><a class="dropdown-item" role="menuitem" href="{{ ''|generate_account }}" data-turbo-prefetch="false">{{ 'layout.navbar.account.myAccount'|trans }}</a></li>
+                  <li><a class="dropdown-item" role="menuitem" href="{{ path('home_account') }}" data-turbo-prefetch="false">{{ 'layout.navbar.account.myAccount'|trans }}</a></li>
                   <li>
                     {# Disable turbo : we may leave this app on logout #}
                     <a class="dropdown-item text-danger"
