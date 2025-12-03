@@ -19,7 +19,7 @@
       {% endif %}
 
       {# Button to add a new review #}
-      <div class="mx-auto card-max-auto card-max-md-none pb-3">
+      <div class="mx-auto card-max-auto card-max-md-none text-center mt-2 mb-4">
         <a href="{{ path('review_new') }}" class="btn btn-primary {{ cannotAdd ? 'disabled' }}" data-turbo-frame="_top" aria-label="{{ 'review.index.button.addReview'|trans }}">
           <span class="bi bi-plus-square-fill me-md-1" aria-hidden="true"></span>
           <span class="d-none d-md-inline">{{ 'review.index.button.addReview'|trans }}</span>
