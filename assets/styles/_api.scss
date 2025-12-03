@@ -46,14 +46,22 @@ $utilities: map.merge(
       ),
     'flex-even': (
       responsive: true,
-      class: 'flex-even',
       property: flex,
       values: (
-        1: 1 1 0,
-        0: 0 1 auto,
+        fill: 1 1 auto,
+        even: 1 1 0,
       ),
     ),
-
+    'flex-basis': (
+      responsive: true,
+      property: flex-basis,
+      values: 0 auto,
+    ),
+    'flex-grow': (
+      responsive: true,
+      property: flex-grow,
+      values: 0 1 2 3 4,
+    ),
     'card-max': (
       responsive: true,
       class: 'card-max',

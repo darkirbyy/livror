@@ -35,7 +35,7 @@
                 <button data-steam-search-target="button" class="btn btn-outline-secondary" aria-label="{{ 'form.button.search'|trans }}">
                   <span data-steam-search-target="remove" class="bi bi-steam" aria-hidden="true"></span>
                   <span data-steam-search-target="spinner" aria-hidden="true"></span>
-                  <span class="d-none d-sm-inline ms-sm-1">{{ 'form.button.search'|trans }}</span>
+                  <span class="ms-1">{{ 'form.button.search'|trans }}</span>
                 </button>
               </div>
               {{ form_errors(form.steamId) }}
@@ -55,7 +55,7 @@
 
           {# Radio button to choose the type of price, and the price input field, next to each other on large screen #}
           <div class="row align-items-end" {{ stimulus_controller('type-price') }}>
-            <div class="col-12 col-sm-auto pe-sm-0">
+            <div class="col-12 col-md-auto pe-md-0">
               {{
                 form_row(
                   form.typePrice,
@@ -63,7 +63,7 @@
                 )
               }}
             </div>
-            <div class="col-12 col-sm ps-sm-0">
+            <div class="col-12 col-md ps-md-0">
               {{ form_row(form.fullPrice, { label: false, attr: { 'data-type-price-target': 'input', 'aria-labelledby': 'fullPriceLabel' } }) }}
             </div>
           </div>
