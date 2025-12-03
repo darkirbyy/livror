@@ -8,27 +8,65 @@ home:
 
 game:
   index:
-    title: All Games
+    title: All games
     button:
-      sortBy: Sort by
-      showMore: Show more
       addGame: Add a new game
+      editGame: Edit
     flash:
-      newGame: '{name} has been added!'
+      newGame: '{name} has been added! You can now write <a class="alert-link" href="{url}">your review</a>.'
       updateGame: '{name} has been updated!'
       deleteGame: '{name} has been deleted!'
     card:
       informations: Information
       reviews: Reviews
+    sort:
+      name: Name
+      avgRating: Ratings
+      totHourSpend: Playtime
+      minFirstPlay: Launch
+    filter:
+      typeGame: Type
+      users: Players
+      withoutReview: Reviews
+    notFound: No games found
   edit:
     title:
-      add: Add a new game
+      add: Add a game
       update: 'Edit {name}'
     flash:
       steamSearch:
-        success: The form has been filled with data from Steam!
+        success: The form has been filled with Steam data!
         fail: An error occurred while connecting to Steam. Please try again later.
-    modalDeleteBody: 'You are about to permanently <span class="fw-bold">delete</span> {name}, along with all associated reviews. Are you sure?'
+    modalDeleteBody: 'You are about to <span class="fw-bold">permanently</span> delete {name}, along with all associated reviews. Are you sure?'
+
+review:
+  index:
+    title: My reviews
+    button:
+      addReview: Write a review
+      editReview: Edit
+    flash:
+      newReview: 'Your review for {name} has been saved!'
+      updateReview: 'Your review for {name} has been updated!'
+      deleteReview: 'Your review for {name} has been deleted!'
+      cannotAddReview: You have written a review for all registered games! To write a new review, please first add a <a class="alert-link" href="{url}">new game</a>.
+    card:
+      informations: Information
+      comment: Comment
+      noComment: No comment
+      added: Written
+      updated: updated
+    sort:
+      name: Name
+      rating: Ratings
+      hourSpend: Playtime
+      firstPlay: Launch
+    notFound: No reviews found
+  edit:
+    title:
+      add: Write a review
+      update: 'Edit your review for {name}'
+    modalDeleteBody: 'You are about to <span class="fw-bold">permanently</span> delete your review for {name}. Are you sure?'
 
 ##################################
 # Common translations ############
@@ -42,12 +80,21 @@ form:
     search: Search
     cancel: Cancel
     close: Close
+    sortBy: Sort by
+    filterBy: Filter by
+    apply: Apply
+    showMore: Show more
+    backToList: Back to list
+    reset: Reset
   flash:
     invalidCsrf: The CSRF token is invalid.
-    foreignKey: Impossible to delete this element as other elements are referencing it.
-    notNull: Impossible to add or update this element because some fields must are empty.
-    unique: Impossible to add or update this element because some fields must be unique.
-    other: Error when adding, updating or deleting this element.
+    foreignKey: Cannot delete this item while other items reference it.
+    notNull: Cannot add or update this item because some required fields are empty.
+    unique: Cannot add or update this item because some fields must be unique.
+    other: Error while adding, updating, or deleting this item.
+  autocomplete:
+    placeholder: Search for a game
+    noResults: No results
 
 modal:
   title:
@@ -59,8 +106,8 @@ layout:
     home: Home
     game: All games
     account:
-      signIn: Sign In
-      signOut: Sign Out
+      signIn: Sign in
+      signOut: Sign out
       myReviews: My reviews
       myAccount: My account
   footer:
@@ -69,14 +116,30 @@ layout:
     releaseDate: Updated on
 
 enum:
-  TypePrice:
+  typePrice:
     unknown: Unknown
     free: Free
     paying: Paid
+  typeGame:
+    game: Full game
+    dlc: DLC
+    demo: Demo
+    other: Other
+
+error:
+  title: Error {code}
+  message:
+    notFound: This page does not exist.
+    forbidden: This page is not accessible.
+    other: The server encountered a problem, please try again later.
 
 aria:
   skipToContent: Skip to content
   mainNavigation: Main navigation
   toggleNavigation: Toggle navigation
   footer: Footer
-  avatar: Avatar
+  avatar: Avatar of {name}
+  cover: Cover image of {name}
+  order:
+    asc: Ascending order
+    desc: Descending order

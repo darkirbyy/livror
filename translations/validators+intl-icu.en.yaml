@@ -2,21 +2,40 @@ game:
   label:
     steamId: Steam ID
     name: Name
-    releaseYear: Year of Release
-    fullPrice: Full Price
-    developers: Publisher(s)
+    typeGame: Type
+    releaseYear: Release year
+    fullPrice: Retail price
+    developers: Developer(s)
     genres: Genre(s)
     description: Description
     imgUrl: Image URL
+    numUsers: Number of players
+    avgRating: Average rating
+    totHourSpend: Total playtime
+    minFirstPlay: First launch
   help:
-    steamId: To find the Steam ID, go to <a href='https://steamdb.info/' target='_blank'>SteamDB</a>
+    steamId: If automatic search doesn't work, please retrieve the Steam ID from <a href='https://steamdb.info/' target='_blank'>SteamDB</a>.
     commaSeparated: Separated by commas
   error:
     steamId:
-      invalid: A Steam ID must consist of digits only.
+      empty: The Steam ID is empty.
+      invalid: A Steam ID must contain only digits.
       notFound: The entered Steam ID does not match any game.
     imgUrl:
-      notValidExtension: The allowed extensions are jpg, jpeg, png, gif, webp.
+      notValidExtension: Allowed extensions are jpg, jpeg, png, gif, webp.
       notReachable: The URL is not reachable or does not exist.
       notAnImage: The URL is not an image.
 
+review:
+  label:
+    dateAdd: Date added
+    comment: Comment
+    rating: Rating
+    hourSpend: Playtime
+    firstPlay: Launch
+    game: Game
+  help:
+    rating: Between 0 and 6
+  error:
+    game:
+      notUnique: A review already exists for this game.
