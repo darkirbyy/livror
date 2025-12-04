@@ -10,6 +10,10 @@ use App\Enum\SearchModeEnum;
 use App\Repository\GameRepository;
 use App\Repository\SteamRepository;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
+use Symfony\UX\StimulusBundle\Dto\StimulusAttributes;
+use Symfony\UX\StimulusBundle\Helper\StimulusHelper;
 
 class AutocompletionManager
 {
@@ -17,8 +21,11 @@ class AutocompletionManager
         private int $autocompletionLimit,
         private int $autocompletionMinLength,
         private Security $security,
+        private TranslatorInterface $trans,
         private SteamRepository $steamRepo,
         private GameRepository $gameRepo,
+        private StimulusHelper $stimulusHelper,
+        private UrlGeneratorInterface $urlGenerator,
     ) {
     }
 
@@ -51,7 +58,33 @@ class AutocompletionManager
         return $data;
     }
 
-    public function sanitizeSearch(?string $search, SearchModeEnum $searchMode): string
+    public function prepareAttributes(string $route, array $parameters = []): StimulusAttributes
+    {
+        $stimulusController = $this->stimulusHelper->createStimulusAttributes();
+        $stimulusController->addController('symfony/ux-autocomplete/autocomplete', [
+            'url' => $this->urlGenerator->generate($route, $parameters),
+            'noResultsFoundText' => $this->trans->trans('form.autocomplete.noResults'),
+            'minCharacters' => $this->autocompletionMinLength,
+            'preload' => false,
+            'tomSelectOptions' => [
+                'create' => false,
+                'openOnFocus' => false,
+                'maxItems' => 1,
+                'optionsAsHtml' => true,
+                'closeAfterSelect' => true,
+                'placeholder' => $this->trans->trans('form.autocomplete.placeholder'),
+                'loadThrottle' => 500,
+                'plugins' => [
+                    'clear_button' => false,
+                    'remove_button' => false,
+                ],
+            ],
+        ]);
+
+        return $stimulusController;
+    }
+
+    private function sanitizeSearch(?string $search, SearchModeEnum $searchMode): string
     {
         // Return empty string if empty
         if (empty($search)) {

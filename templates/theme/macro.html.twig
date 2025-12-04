@@ -5,7 +5,7 @@
 
 {# Macro to display the price : type if 0 or null, value with local formatting otherwise #}
 {%- macro fmt_full_price(fullPrice) -%}
-  {{ fullPrice > 0 ? (fullPrice / 100)|format_currency(env.app.currency, { decimal_always_shown: true, fraction_digit: 2 }) : fullPrice|fmt_type_price(env.app.locale) }}
+  {{ fullPrice > 0 ? (fullPrice / 100)|format_currency(env.app.currency, { decimal_always_shown: true, fraction_digit: 2 }) : fullPrice|to_type_price|trans }}
 {%- endmacro -%}
 
 {# Macro to create a backlink #}

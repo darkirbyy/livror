@@ -26,7 +26,7 @@
 
           {# Select the game for a new review #}
           {% if form.game is defined %}
-            {% set autocomplete = prepare_autocomplete('game_autocomplete') %}
+            {% set autocomplete = prepare_attributes('game_autocomplete') %}
             {{ form_row(form.game, { label: 'review.label.game', attr: { }|merge(autocomplete) }) }}
           {% endif %}
 

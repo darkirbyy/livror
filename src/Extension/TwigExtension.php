@@ -6,36 +6,31 @@ namespace App\Extension;
 
 use App\Dto\QueryParam;
 use App\Enum\TypePriceEnum;
+use App\Service\AutocompletionManager;
 use App\Service\BackpathUrlGenerator;
 use App\Service\HubUrlGenerator;
 use App\Service\QueryParamHelper;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\UX\StimulusBundle\Dto\StimulusAttributes;
-use Symfony\UX\StimulusBundle\Helper\StimulusHelper;
 use Twig\Attribute\AsTwigFilter;
 use Twig\Attribute\AsTwigFunction;
 
 class TwigExtension
 {
     public function __construct(
-        private int $autocompletionMinLength,
         private TranslatorInterface $trans,
-        private StimulusHelper $stimulusHelper,
-        private UrlGeneratorInterface $urlGenerator,
         private HubUrlGenerator $hubUrlGenerator,
         private BackpathUrlGenerator $backpathUrlGenerator,
         private QueryParamHelper $queryParamHelper,
+        private AutocompletionManager $autocompletionManager,
     ) {
     }
 
-    // Custom formatter for the full price, to return an empty string in case of an unknown price
-    #[AsTwigFilter(name: 'fmt_type_price')]
-    public function fmtTypePrice(?int $fullPrice, string $locale): string
+    // Transform a full price to a type of price
+    #[AsTwigFilter(name: 'to_type_price')]
+    public function fullPriceToTypePrice(?int $fullPrice): TypePriceEnum
     {
-        $typePrice = TypePriceEnum::fromPrice($fullPrice);
-
-        return TypePriceEnum::UNKNOWN != $typePrice ? $typePrice->trans($this->trans, $locale) : '';
+        return TypePriceEnum::fromPrice($fullPrice);
     }
 
     // Add the full url of the hub root path
@@ -80,30 +75,10 @@ class TwigExtension
         return $this->queryParamHelper->toArray($queryParam);
     }
 
-    #[AsTwigFunction(name: 'prepare_autocomplete')]
-    public function prepareAutocomplete(string $route, array $parameters = []): StimulusAttributes
+    // Prepare html attributes for stimulus autocompletion
+    #[AsTwigFunction(name: 'prepare_attributes')]
+    public function autocompletePrepareAttributes(string $route, array $parameters = []): StimulusAttributes
     {
-        $stimulusController = $this->stimulusHelper->createStimulusAttributes();
-        $stimulusController->addController('symfony/ux-autocomplete/autocomplete', [
-            'url' => $this->urlGenerator->generate($route, $parameters),
-            'noResultsFoundText' => $this->trans->trans('form.autocomplete.noResults'),
-            'minCharacters' => $this->autocompletionMinLength,
-            'preload' => false,
-            'tomSelectOptions' => [
-                'create' => false,
-                'openOnFocus' => false,
-                'maxItems' => 1,
-                'optionsAsHtml' => true,
-                'closeAfterSelect' => true,
-                'placeholder' => $this->trans->trans('form.autocomplete.placeholder'),
-                'loadThrottle' => 500,
-                'plugins' => [
-                    'clear_button' => false,
-                    'remove_button' => false,
-                ],
-            ],
-        ]);
-
-        return $stimulusController;
+        return $this->autocompletionManager->prepareAttributes($route, $parameters);
     }
 }
