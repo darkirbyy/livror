@@ -110,6 +110,7 @@ layout:
       signOut: Se déconnecter
       myReviews: Mes avis
       myAccount: Mon compte
+      backToHub: Retour au Hub
   footer:
     madeWith: Réalisé avec
     version: Version
