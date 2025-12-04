@@ -32,7 +32,7 @@ class SteamScrapV2Command extends Command
     protected function configure(): void
     {
         $this->setDescription('Retrieve all games from steam and put them in the steam table for autocompletion (with API key).')
-            ->addArgument('mode', InputArgument::REQUIRED, 'truncate = reset and insert all games | update = update games if present, insert otherwised')
+            ->addArgument('mode', InputArgument::REQUIRED, 'truncate = reset and insert all games | update = upsert games since a given date')
             ->addOption('since', 's', InputOption::VALUE_REQUIRED, 'with update mode, only update games modified since this date', 0);
     }
 
@@ -69,29 +69,16 @@ class SteamScrapV2Command extends Command
                 $this->writeDone();
             }
 
-            $output->write('Preparing insert statements...');
-            $stmtInsert = $connection->prepare('INSERT INTO ' . $tableName . ' (id, name) VALUES (:id, :name)');
+            $output->write('Preparing upsert statements...');
+            $stmtUpsert = $connection->prepare('INSERT INTO ' . $tableName . ' (id, name) VALUES (:id, :name) ON DUPLICATE KEY UPDATE name = VALUES(name)');
             $this->writeDone();
 
-            if ('update' == $mode) {
-                $output->write('Preparing update statements and retrieving knowned ids...');
-                $stmtUpdate = $connection->prepare('UPDATE ' . $tableName . ' SET name = :name WHERE id = :id');
-                $knownedIds = $connection->executeQuery('SELECT id FROM ' . $tableName)->fetchAllAssociativeIndexed();
-                $knownedIds = array_keys($knownedIds);
-                $this->writeDone();
-            }
-
-            $output->writeln('Inserting and updating all apps...');
-            $query = [
-                'key' => $this->steamApiKey,
-                'max_results' => $this->batchSize,
-                'if_modified_since' => $since,
-                'last_appid' => 0,
-            ];
+            $output->writeln('Upserting all apps...');
+            $query = ['key' => $this->steamApiKey, 'max_results' => $this->batchSize, 'if_modified_since' => $since, 'last_appid' => 0];
             $options = ['max_duration' => $this->requestTimeout];
+
             $countBatch = 0;
-            $countInsert = 0;
-            $countUpdate = 0;
+            $countUpsert = 0;
             do {
                 ++$countBatch;
                 $output->write('  Batch ' . $countBatch . ' : steam query...');
@@ -105,24 +92,17 @@ class SteamScrapV2Command extends Command
                         continue;
                     }
 
-                    if ('update' == $mode && in_array($app['appid'], $knownedIds)) {
-                        $stmtUpdate->bindValue('id', $app['appid'], ParameterType::INTEGER);
-                        $stmtUpdate->bindValue('name', mb_substr($app['name'], 0, 255), ParameterType::STRING);
-                        $stmtUpdate->executeStatement();
-                        ++$countUpdate;
-                    } else {
-                        $stmtInsert->bindValue('id', $app['appid'], ParameterType::INTEGER);
-                        $stmtInsert->bindValue('name', mb_substr($app['name'], 0, 255), ParameterType::STRING);
-                        $stmtInsert->executeStatement();
-                        ++$countInsert;
-                    }
+                    $stmtUpsert->bindValue('id', $app['appid'], ParameterType::INTEGER);
+                    $stmtUpsert->bindValue('name', mb_substr($app['name'], 0, 255), ParameterType::STRING);
+                    $stmtUpsert->executeStatement();
+                    ++$countUpsert;
                 }
                 $this->writeOk();
                 $output->writeln('');
 
                 $query['last_appid'] = $response['last_appid'] ?? 0;
             } while (!empty($response['have_more_results']));
-            $output->writeln('  Total : ' . $countInsert . ' apps inserted, ' . $countUpdate . ' apps updated. Done.');
+            $output->writeln('  Total : ' . $countUpsert . ' apps upserted, Done.');
 
             $output->write('Committing transaction...');
             $connection->commit();
