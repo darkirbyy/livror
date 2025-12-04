@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Service;
 
 use App\Entity\Main\Steam;
+use Doctrine\DBAL\ParameterType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -104,12 +105,15 @@ class SteamScrapV2Command extends Command
                         continue;
                     }
 
-                    $params = ['id' => $app['appid'], 'name' => mb_substr($app['name'], 0, 255)];
                     if ('update' == $mode && in_array($app['appid'], $knownedIds)) {
-                        $stmtUpdate->executeStatement($params);
+                        $stmtUpdate->bindValue('id', $app['appid'], ParameterType::INTEGER);
+                        $stmtUpdate->bindValue('name', mb_substr($app['name'], 0, 255), ParameterType::STRING);
+                        $stmtUpdate->executeStatement();
                         ++$countUpdate;
                     } else {
-                        $stmtInsert->executeStatement($params);
+                        $stmtInsert->bindValue('id', $app['appid'], ParameterType::INTEGER);
+                        $stmtInsert->bindValue('name', mb_substr($app['name'], 0, 255), ParameterType::STRING);
+                        $stmtInsert->executeStatement();
                         ++$countInsert;
                     }
                 }

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Service;
 
 use App\Entity\Main\Steam;
+use Doctrine\DBAL\ParameterType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -57,8 +58,10 @@ class SteamScrapV1Command extends Command
                 if (empty($app['name'])) {
                     continue;
                 }
-                $params = ['id' => $app['appid'], 'name' => mb_substr($app['name'], 0, 255)];
-                $stmtInsert->executeStatement($params);
+
+                $stmtInsert->bindValue('id', $app['appid'], ParameterType::INTEGER);
+                $stmtInsert->bindValue('name', mb_substr($app['name'], 0, 255), ParameterType::STRING);
+                $stmtInsert->executeStatement();
                 ++$countInsert;
                 if (0 == $countInsert % $this->batchSize) {
                     $output->write(' ' . $countInsert);
