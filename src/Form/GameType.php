@@ -4,12 +4,10 @@ declare(strict_types=1);
 
 namespace App\Form;
 
-use App\Dto\FlashMessage;
 use App\Entity\Main\Game;
-use App\Enum\SteamSearchStatusEnum;
 use App\Enum\TypeGameEnum;
 use App\Enum\TypePriceEnum;
-use App\Service\SteamSearchManager;
+use App\Service\GameFormHelper;
 use Symfony\Component\Form\Extension\Core\Type\EnumType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
@@ -18,22 +16,14 @@ use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\UrlType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 class GameType extends DefaultType
 {
-    public function __construct(
-        private SteamSearchManager $steamSearch,
-        private TranslatorInterface $trans,
-        private RequestStack $requestStack,
-        protected bool $htmlValidation,
-        private string $currency,
-    ) {
+    public function __construct(protected bool $htmlValidation, private string $currency, private GameFormHelper $gameFormHelper)
+    {
         parent::__construct($htmlValidation);
     }
 
@@ -92,36 +82,7 @@ class GameType extends DefaultType
             $game = $event->getData();
             $form = $event->getForm();
 
-            $steamId = $options['steamId'];
-
-            if (is_null($steamId)) {
-                return;
-            }
-
-            $steamIdKeyError = null;
-            if (empty($steamId)) {
-                $steamIdKeyError = 'empty';
-            } else {
-                $flashBag = $this->requestStack->getSession()->getFlashBag();
-
-                if (!\ctype_digit($steamId)) {
-                    $steamIdKeyError = 'invalid';
-                } else {
-                    $this->steamSearch->fetchSteamGame((int) $steamId);
-                    if (SteamSearchStatusEnum::OK === $this->steamSearch->getStatus()) {
-                        $game = $this->steamSearch->fillGame($game);
-                        $flashBag->add('livror/success', new FlashMessage('game.edit.flash.steamSearch.success'));
-                    } elseif (SteamSearchStatusEnum::NOT_FOUND === $this->steamSearch->getStatus()) {
-                        $steamIdKeyError = 'notFound';
-                    } else {
-                        $flashBag->add('livror/danger', new FlashMessage('game.edit.flash.steamSearch.fail'));
-                    }
-                }
-            }
-
-            if (!is_null($steamIdKeyError)) {
-                $form->get('steamId')->addError(new FormError($this->trans->trans('game.error.steamId.' . $steamIdKeyError, [], 'validators')));
-            }
+            $this->gameFormHelper->process($game, $form, $options['steamId']);
         });
 
         // Convert to price to a type of price for the non-mapped choice field
