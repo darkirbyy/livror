@@ -18,7 +18,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 class Review
 {
     // /////////////////////////////////////////////////////
-    // All fields and their validation constraints ////////
+    // All fields and their validation constraints /////////
     // /////////////////////////////////////////////////////
 
     #[ORM\Id]
@@ -60,7 +60,7 @@ class Review
     private ?User $user = null;
 
     // /////////////////////////////////////////////////////
-    // Custom methods and validation constraints //////////
+    // Custom methods and validation constraints ///////////
     // /////////////////////////////////////////////////////
 
     // Auto fill "dateAdd" and "dateUpdate" date when storing the entity to the database
@@ -78,7 +78,7 @@ class Review
     }
 
     // /////////////////////////////////////////////////////
-    // Doctrine auto-generated getter and setter //////////
+    // Doctrine auto-generated getter and setter ///////////
     // /////////////////////////////////////////////////////
 
     public function getId(): ?int

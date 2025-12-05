@@ -6,14 +6,13 @@ namespace App\Entity\Main;
 
 use App\Enum\TypeGameEnum;
 use App\Repository\GameRepository;
+use App\Validator as AppAssert;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
-use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 #[ORM\Entity(repositoryClass: GameRepository::class)]
 #[ORM\HasLifecycleCallbacks]
@@ -24,7 +23,7 @@ use Symfony\Component\Validator\Context\ExecutionContextInterface;
 class Game
 {
     // /////////////////////////////////////////////////////
-    // All fields and their validation constraints ////////
+    // All fields and their validation constraints /////////
     // /////////////////////////////////////////////////////
 
     #[ORM\Id]
@@ -71,6 +70,7 @@ class Game
 
     #[ORM\Column(length: 2048, nullable: true)]
     #[Assert\Url(requireTld: true)]
+    #[AppAssert\ImageUrl]
     private ?string $imgUrl = null;
 
     /**
@@ -87,45 +87,8 @@ class Game
     }
 
     // /////////////////////////////////////////////////////
-    // Custom methods and validation constraints //////////
+    // Custom methods and validation constraints ///////////
     // /////////////////////////////////////////////////////
-
-    // Custom callback to check that the image URL is a valid one
-    #[Assert\Callback]
-    public function validateImageUrl(ExecutionContextInterface $context): void
-    {
-        // No checks if the field if empty
-        if (empty($this->imgUrl)) {
-            return;
-        }
-
-        // Check image : valid extensions
-        $validExtensions = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
-        $cleanUrl = strtok($this->imgUrl, '?');
-        $extension = strtolower(pathinfo($cleanUrl, PATHINFO_EXTENSION));
-        if (!in_array($extension, $validExtensions, true)) {
-            $context->buildViolation('game.error.imgUrl.notValidExtension')->atPath('imgUrl')->addViolation();
-
-            return;
-        }
-
-        // Check image : is reachable, good status code, no redirect and good Content-Type
-        $httpClient = HttpClient::create();
-        try {
-            $response = $httpClient->request('HEAD', $this->imgUrl, [
-                'timeout' => $_ENV['APP_REQUEST_TIMEOUT'],
-            ]);
-
-            $statusCode = $response->getStatusCode();
-            $redirectCount = $response->getInfo('redirect_count');
-            $contentType = $response->getHeaders()['content-type'][0] ?? null;
-            if (200 !== $statusCode || $redirectCount > 0 || !str_starts_with($contentType, 'image/')) {
-                $context->buildViolation('game.error.imgUrl.notAnImage')->atPath('imgUrl')->addViolation();
-            }
-        } catch (\Exception $e) {
-            $context->buildViolation('game.error.imgUrl.notReachable')->atPath('imgUrl')->addViolation();
-        }
-    }
 
     // Auto fill "dateAdd" and "dateUpdate" date when storing the entity to the database
     #[ORM\PrePersist]
@@ -142,7 +105,7 @@ class Game
     }
 
     // /////////////////////////////////////////////////////
-    // Doctrine auto-generated getter and setter //////////
+    // Doctrine auto-generated getter and setter ///////////
     // /////////////////////////////////////////////////////
 
     public function getId(): ?int

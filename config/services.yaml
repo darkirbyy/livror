@@ -80,6 +80,10 @@ services:
             $defaultLimit: '%app.default_limit%'
             $maxLimit: '%app.max_limit%'
 
+    App\Validator\ImageUrlValidator:
+        arguments:
+            $requestTimeout: '%app.request_timeout%'
+
 when@test: &test
     services:
         App\Tests\Mock\ApiMock:
