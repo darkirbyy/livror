@@ -35,6 +35,17 @@ services:
     Symfony\Component\Dotenv\Command\DotenvDumpCommand: ~
     Symfony\UX\StimulusBundle\Helper\StimulusHelper: '@stimulus.helper'
     
+    App\Command\SteamScrapV1Command:
+        arguments:
+            $requestTimeout: '%app.request_timeout%'
+            $batchSize: '%app.batch_size%'
+
+    App\Command\SteamScrapV2Command:
+        arguments:
+            $requestTimeout: '%app.request_timeout%'
+            $batchSize: '%app.batch_size%'
+            $steamApiKey: '%app.steam_api_key%'
+            
     App\Form\:
         resource: '../src/Form'
         tags: ['form.type']
@@ -46,25 +57,12 @@ services:
             $htmlValidation: '%app.html_validation%'
             $currency: '%app.currency%'
 
-    App\Service\SteamScrapV1Command:
-        tags: ['console.command']
-        arguments:
-            $requestTimeout: '%app.request_timeout%'
-            $batchSize: '%app.batch_size%'
-
-    App\Service\SteamScrapV2Command:
-        tags: ['console.command']
-        arguments:
-            $requestTimeout: '%app.request_timeout%'
-            $batchSize: '%app.batch_size%'
-            $steamApiKey: '%app.steam_api_key%'
-            
     App\Service\AutocompletionManager:
         arguments:
             $autocompletionLimit: '%app.autocompletion_limit%'
             $autocompletionMinLength: '%app.autocompletion_min_length%'
 
-    App\Service\SteamSearchManager:
+    App\Service\SteamSearchHelper:
         arguments:
             $requestTimeout: '%app.request_timeout%'
             $locale: '%app.locale%'

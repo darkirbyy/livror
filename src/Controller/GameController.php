@@ -13,7 +13,7 @@ use App\Repository\GameRepository;
 use App\Service\AutocompletionManager;
 use App\Service\BackpathUrlGenerator;
 use App\Service\FormManager;
-use App\Service\UserConnector;
+use App\Service\UserManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -26,14 +26,14 @@ class GameController extends AbstractController
 {
     // List and find games
     #[Route('', name: 'index', methods: ['GET'])]
-    public function index(#[MapQueryString] QueryParam $queryParam, UserConnector $userConnector, GameRepository $gameRepo, Request $request): Response
+    public function index(#[MapQueryString] QueryParam $queryParam, UserManager $userManager, GameRepository $gameRepo, Request $request): Response
     {
         // Fetch all distinct users that have written at least one review
-        $users = $userConnector->findWithReview();
+        $users = $userManager->findWithReview();
 
         // Make the database query and get the corresponding games, and link the users
         $gamesIndex = $gameRepo->findIndex($queryParam);
-        $userConnector->toGamesIndex($gamesIndex, $users);
+        $userManager->toGamesIndex($gamesIndex, $users);
 
         // Prepare the data for the twig renderer
         $data = [

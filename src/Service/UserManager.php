@@ -12,7 +12,7 @@ use App\Repository\UserRepository;
 /**
  * Service to retrieve and link user object to reviews.
  */
-class UserConnector
+class UserManager
 {
     public function __construct(private UserRepository $userRepo, private ReviewRepository $reviewRepo)
     {

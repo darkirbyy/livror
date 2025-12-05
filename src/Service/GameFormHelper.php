@@ -14,7 +14,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class GameFormHelper
 {
-    public function __construct(private RequestStack $requestStack, private TranslatorInterface $trans, private SteamSearchManager $steamSearchManager)
+    public function __construct(private RequestStack $requestStack, private TranslatorInterface $trans, private SteamSearchHelper $steamSearchHelper)
     {
     }
 
@@ -36,11 +36,11 @@ class GameFormHelper
             return;
         }
 
-        $this->steamSearchManager->fetchSteamGame((int) $steamId);
+        $this->steamSearchHelper->fetchSteamGame((int) $steamId);
 
-        switch ($this->steamSearchManager->getStatus()) {
+        switch ($this->steamSearchHelper->getStatus()) {
             case SteamSearchStatusEnum::OK:
-                $this->steamSearchManager->fillGame($game);
+                $this->steamSearchHelper->fillGame($game);
                 $this->addFlashMessage('success', 'success');
                 break;
 

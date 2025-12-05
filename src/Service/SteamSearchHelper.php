@@ -9,7 +9,7 @@ use App\Enum\SteamSearchStatusEnum;
 use App\Enum\TypeGameEnum;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
-class SteamSearchManager
+class SteamSearchHelper
 {
     private SteamSearchStatusEnum $status = SteamSearchStatusEnum::PENDING;
     private ?int $id = null;

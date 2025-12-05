@@ -12,7 +12,7 @@ use App\Repository\GameRepository;
 use App\Repository\ReviewRepository;
 use App\Service\BackpathUrlGenerator;
 use App\Service\FormManager;
-use App\Service\UserConnector;
+use App\Service\UserManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -26,20 +26,15 @@ class ReviewController extends AbstractController
 {
     // List and find reviews
     #[Route('', name: 'index', methods: ['GET'])]
-    public function index(
-        #[MapQueryString] QueryParam $queryParam,
-        UserConnector $userConnector,
-        GameRepository $gameRepo,
-        ReviewRepository $reviewRepo,
-        Request $request,
-    ): Response {
+    public function index(#[MapQueryString] QueryParam $queryParam, UserManager $userManager, GameRepository $gameRepo, ReviewRepository $reviewRepo, Request $request): Response
+    {
         // Retrieve the connected user
         $user = $this->getUser();
         $userId = $user->getId();
 
         // Make the database query and get the corresponding reviews
         $reviews = $reviewRepo->findIndex($queryParam, $userId);
-        $userConnector->toReviews($reviews, [$userId => $user]);
+        $userManager->toReviews($reviews, [$userId => $user]);
 
         // Prepare the data for the twig renderer
         $data = [

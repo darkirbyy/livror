@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Service;
+namespace App\Command;
 
 use App\Entity\Main\Steam;
 use Doctrine\DBAL\ParameterType;
