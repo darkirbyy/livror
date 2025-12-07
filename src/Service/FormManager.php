@@ -42,21 +42,6 @@ class FormManager
     }
 
     /**
-     * Check the CSRF token and persist the entity with a custom flash message upon success.
-     */
-    public function checkTokenAndPersist(string $tokenId, object $object, ?FlashMessage $flashSuccess = null): bool
-    {
-        $tokenValue = $this->requestStack->getCurrentRequest()->getPayload()->get('_token');
-        if (!$this->csrfTokenManager->isTokenValid(new CsrfToken($tokenId, $tokenValue))) {
-            $this->flashBag->add('livror/danger', new FlashMessage('form.flash.invalidCsrf'));
-
-            return false;
-        }
-
-        return $this->persist($object, $flashSuccess);
-    }
-
-    /**
      * Check the CSRF token and remove the entity with a custom flash message upon success.
      */
     public function checkTokenAndRemove(string $tokenId, object $object, ?FlashMessage $flashSuccess = null): bool
