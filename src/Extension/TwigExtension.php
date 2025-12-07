@@ -10,7 +10,6 @@ use App\Service\AutocompletionManager;
 use App\Service\BackpathUrlGenerator;
 use App\Service\HubUrlGenerator;
 use App\Service\QueryParamHelper;
-use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\UX\StimulusBundle\Dto\StimulusAttributes;
 use Twig\Attribute\AsTwigFilter;
 use Twig\Attribute\AsTwigFunction;
@@ -18,7 +17,6 @@ use Twig\Attribute\AsTwigFunction;
 class TwigExtension
 {
     public function __construct(
-        private TranslatorInterface $trans,
         private HubUrlGenerator $hubUrlGenerator,
         private BackpathUrlGenerator $backpathUrlGenerator,
         private QueryParamHelper $queryParamHelper,
