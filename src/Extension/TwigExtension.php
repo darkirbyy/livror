@@ -6,7 +6,7 @@ namespace App\Extension;
 
 use App\Dto\QueryParam;
 use App\Enum\TypePriceEnum;
-use App\Service\AutocompletionManager;
+use App\Service\AutocompletionHelper;
 use App\Service\BackpathUrlGenerator;
 use App\Service\HubUrlGenerator;
 use App\Service\QueryParamHelper;
@@ -20,7 +20,7 @@ class TwigExtension
         private HubUrlGenerator $hubUrlGenerator,
         private BackpathUrlGenerator $backpathUrlGenerator,
         private QueryParamHelper $queryParamHelper,
-        private AutocompletionManager $autocompletionManager,
+        private AutocompletionHelper $autocompletionHelper,
     ) {
     }
 
@@ -77,6 +77,6 @@ class TwigExtension
     #[AsTwigFunction(name: 'prepare_attributes')]
     public function autocompletePrepareAttributes(string $route, array $parameters = []): StimulusAttributes
     {
-        return $this->autocompletionManager->prepareAttributes($route, $parameters);
+        return $this->autocompletionHelper->prepareAttributes($route, $parameters);
     }
 }
