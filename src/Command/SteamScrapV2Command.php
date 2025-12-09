@@ -84,6 +84,10 @@ class SteamScrapV2Command extends Command
                 $output->write('  Batch ' . $countBatch . ' : steam query...');
                 $response = $this->client->request('GET', 'https://api.steampowered.com/IStoreService/GetAppList/v1/?' . http_build_query($query), $options);
                 $response = $response->toArray()['response'];
+                if (!key_exists('apps', $response)) {
+                    $this->output->writeln(' Empty' . $this->getTime());
+                    break;
+                }
                 $this->writeOk();
 
                 $output->write('database queries...');
