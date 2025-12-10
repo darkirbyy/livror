@@ -26,10 +26,13 @@ class AutocompletionManager
     {
         // Sanitize the user input
         $search = $this->sanitizeSearch($search, $searchMode);
+        if (0 == mb_strlen($search)) {
+            return [];
+        }
 
         // Query the database and return the data as an array formatted for tomselect
         $repoMethod = $searchMode->toRepoMethod();
-        $result = strlen($search) >= $this->autocompletionMinLength ? $this->steamRepo->$repoMethod($search, $this->autocompletionLimit) : [];
+        $result = $this->steamRepo->$repoMethod($search, $this->autocompletionLimit);
         $data = array_map(fn (Steam $s) => ['value' => $s->getId(), 'text' => $s->getName() . ' <small>[' . $s->getId() . ']</small>'], $result);
 
         return $data;
@@ -39,19 +42,20 @@ class AutocompletionManager
     {
         // Sanitize the user input
         $search = $this->sanitizeSearch($search, $searchMode);
-
-        // Get the user id to filter game without review from this user
-        $userId = $this->security->getUser()->getId();
+        if (0 == mb_strlen($search)) {
+            return [];
+        }
 
         // Query the database and return the data as an array formatted for tomselect
+        $userId = $this->security->getUser()->getId();
         $repoMethod = $searchMode->toRepoMethod() . 'WithoutReview';
-        $result = strlen($search) >= $this->autocompletionMinLength ? $this->gameRepo->$repoMethod($search, $this->autocompletionLimit, $userId) : [];
+        $result = $this->gameRepo->$repoMethod($search, $this->autocompletionLimit, $userId);
         $data = array_map(fn (Game $g) => ['value' => $g->getId(), 'text' => $g->getName()], $result);
 
         return $data;
     }
 
-    private function sanitizeSearch(?string $search, SearchModeEnum $searchMode): string
+    public function sanitizeSearch(?string $search, SearchModeEnum $searchMode): string
     {
         // Return empty string if empty
         if (empty($search)) {
@@ -62,10 +66,15 @@ class AutocompletionManager
         $search = trim(preg_replace('/\s+/', ' ', $search));
 
         // Remove special characters that can interfer with mariadb fulltext search
-        $search = preg_replace('/[^\p{L}\p{N}\s\-]/u', ' ', $search);
+        $search = preg_replace('/[^\p{L}\p{N}\s\-]/u', '', $search);
 
         // Lower all remaining characters
         $search = mb_strtolower($search);
+
+        // Return empty string if too short
+        if (mb_strlen($search) < $this->autocompletionMinLength) {
+            return '';
+        }
 
         if (SearchModeEnum::PATTERN == $searchMode) {
             // Identify each word (max 5) and surround each with + and * for mariadb fulltext boolean mode

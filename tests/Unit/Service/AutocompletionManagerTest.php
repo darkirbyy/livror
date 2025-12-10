@@ -1,0 +1,141 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Tests\Unit\Service;
+
+use App\Entity\Account\User;
+use App\Entity\Main\Game;
+use App\Entity\Main\Steam;
+use App\Enum\SearchModeEnum;
+use App\Repository\GameRepository;
+use App\Repository\SteamRepository;
+use App\Service\AutocompletionManager;
+use PHPUnit\Framework\Attributes as PU;
+use PHPUnit\Framework\TestCase;
+use Symfony\Bundle\SecurityBundle\Security;
+
+final class AutocompletionManagerTest extends TestCase
+{
+    private $autocompletionLimit;
+    private $autocompletionMinLength;
+    private $security;
+    private $steamRepo;
+    private $gameRepo;
+
+    private $autocompletionManager;
+
+    public function setUp(): void
+    {
+        $this->autocompletionLimit = 20;
+        $this->autocompletionMinLength = 5;
+        $this->security = $this->createMock(Security::class);
+        $this->steamRepo = $this->createMock(SteamRepository::class);
+        $this->gameRepo = $this->createMock(GameRepository::class);
+
+        $this->autocompletionManager = new AutocompletionManager($this->autocompletionLimit, $this->autocompletionMinLength, $this->security, $this->steamRepo, $this->gameRepo);
+    }
+
+    #[PU\Test]
+    public function fromSteamTooShort(): void
+    {
+        $searchMode = SearchModeEnum::LIKE;
+        $search = 'yes';
+
+        $this->steamRepo->expects($this->never())->method($searchMode->toRepoMethod());
+        $data = $this->autocompletionManager->fromSteam($search, $searchMode);
+        $this->assertSame($data, []);
+    }
+
+    #[PU\Test]
+    #[PU\DataProvider('fromValues')]
+    public function fromSteamOk(?string $search, SearchModeEnum $searchMode, string $expectedSearch): void
+    {
+        $steam1 = $this->createMock(Steam::class);
+        $steam1->expects($this->exactly(2))->method('getId')->willReturn(1);
+        $steam1->expects($this->once())->method('getName')->willReturn('game1');
+        $steam2 = $this->createMock(Steam::class);
+        $steam2->expects($this->exactly(2))->method('getId')->willReturn(2);
+        $steam2->expects($this->once())->method('getName')->willReturn('game2');
+
+        $this->steamRepo
+            ->expects($this->once())
+            ->method($searchMode->toRepoMethod())
+            ->with($expectedSearch, $this->autocompletionLimit)
+            ->willReturn([$steam1, $steam2]);
+        $data = $this->autocompletionManager->fromSteam($search, $searchMode);
+        $this->assertSame(2, count($data));
+        $this->assertArrayHasKey('value', $data[0]);
+        $this->assertArrayHasKey('text', $data[1]);
+    }
+
+    #[PU\Test]
+    public function fromGameWithoutReviewTooShort(): void
+    {
+        $searchMode = SearchModeEnum::LIKE;
+        $search = 'yes';
+
+        $this->gameRepo->expects($this->never())->method($searchMode->toRepoMethod() . 'WithoutReview');
+        $data = $this->autocompletionManager->fromGameWithoutReview($search, $searchMode);
+        $this->assertSame($data, []);
+    }
+
+    #[PU\Test]
+    #[PU\DataProvider('fromValues')]
+    public function fromGameWithoutReviewOk(?string $search, SearchModeEnum $searchMode, string $expectedSearch): void
+    {
+        $game1 = $this->createMock(Game::class);
+        $game1->expects($this->once())->method('getId')->willReturn(1);
+        $game1->expects($this->once())->method('getName')->willReturn('game1');
+        $game2 = $this->createMock(Game::class);
+        $game2->expects($this->once())->method('getId')->willReturn(2);
+        $game2->expects($this->once())->method('getName')->willReturn('game2');
+
+        $userId = 10;
+        $user = $this->createMock(User::class);
+        $user->expects($this->once())->method('getId')->willReturn($userId);
+        $this->security->expects($this->once())->method('getUser')->willReturn($user);
+
+        $this->gameRepo
+            ->expects($this->once())
+            ->method($searchMode->toRepoMethod() . 'WithoutReview')
+            ->with($expectedSearch, $this->autocompletionLimit, $userId)
+            ->willReturn([$game1, $game2]);
+        $data = $this->autocompletionManager->fromGameWithoutReview($search, $searchMode);
+        $this->assertSame(2, count($data));
+        $this->assertArrayHasKey('value', $data[0]);
+        $this->assertArrayHasKey('text', $data[1]);
+    }
+
+    #[PU\Test]
+    #[PU\DataProvider('sanitizeSearchValues')]
+    public function sanitizeSearch(?string $search, SearchModeEnum $searchMode, string $expectedSearch): void
+    {
+        $this->assertSame($expectedSearch, $this->autocompletionManager->sanitizeSearch($search, $searchMode));
+    }
+
+    public static function fromValues(): array
+    {
+        return [
+            'search ok LIKE' => ['welcome', SearchModeEnum::LIKE, '%welcome%'],
+            'search ok PATTERN' => ['welcome', SearchModeEnum::PATTERN, '+welcome*'],
+        ];
+    }
+
+    public static function sanitizeSearchValues(): array
+    {
+        return [
+            'search null' => [null, SearchModeEnum::LIKE, ''],
+            'search empty' => ['', SearchModeEnum::LIKE, ''],
+            'search too short' => ['yes', SearchModeEnum::LIKE, ''],
+            'search too short bis' => [' ye#[s= ', SearchModeEnum::LIKE, ''],
+            'search normal LIKE' => ['welcome', SearchModeEnum::LIKE, '%welcome%'],
+            'search normal PATTERN' => ['welcome', SearchModeEnum::PATTERN, '+welcome*'],
+            'search special LIKE' => [' Welc@Me{ ', SearchModeEnum::LIKE, '%welcme%'],
+            'search special PATTERN' => [' Welc@Me{ ', SearchModeEnum::PATTERN, '+welcme*'],
+            'search multi LIKE' => [' welcome   to  the moon', SearchModeEnum::LIKE, '%welcome to the moon%'],
+            'search multi PATTERN' => [' welcome   to  the moon', SearchModeEnum::PATTERN, '+welcome*+to*+the*+moon*'],
+            'search too much word PATTERN' => ['you are welcome to the moon', SearchModeEnum::PATTERN, '+you*+are*+welcome*+to*+the*'],
+        ];
+    }
+}
