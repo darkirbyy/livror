@@ -26,7 +26,7 @@ class UserManager
      */
     public function plugToGamesIndex(array &$gamesIndex, array $users): void
     {
-        $reviews = array_merge(...array_map(fn (GameIndex $g) => $g->getGame()->getReviews()->toArray(), $gamesIndex));
+        $reviews = array_merge(...array_map(fn (GameIndex $g) => $g->game->getReviews()->toArray(), $gamesIndex));
         $this->plugToReviews($reviews, $users);
     }
 
