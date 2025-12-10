@@ -34,11 +34,11 @@ final class DataMock
     ];
 
     public static array $appsListTruncate = [
-        ['appid' => 1, 'name' => 'Counter-Strike'],
-        ['appid' => 2, 'name' => 'Team Fortress Classic'],
-        ['appid' => 3, 'name' => 'Hollow Knight'],
-        ['appid' => 4, 'name' => 'SUPERVIVE'],
-        ['appid' => 5, 'name' => 'Core Keeper'],
+        ['appid' => 1, 'name' => 'Hollow Knight'],
+        ['appid' => 2, 'name' => 'Core Keeper'],
+        ['appid' => 3, 'name' => 'SUPERVIVE'],
+        ['appid' => 4, 'name' => 'Counter-Strike'],
+        ['appid' => 5, 'name' => 'Team Fortress Classic'],
         ['appid' => 6, 'name' => 'Quake II'],
         ['appid' => 7, 'name' => 'Peggle Extreme'],
         ['appid' => 10, 'name' => 'Brotato'],
@@ -49,7 +49,7 @@ final class DataMock
     ];
 
     public static array $appsListUpdate = [
-        ['appid' => 3, 'name' => 'Hollow Knight - Silksong', 'last_modified' => 50],
+        ['appid' => 1, 'name' => 'Hollow Knight - Silksong', 'last_modified' => 50],
         ['appid' => 4, 'name' => 'PUBG', 'last_modified' => 50],
         ['appid' => 6, 'name' => 'Quake III', 'last_modified' => 10],
         ['appid' => 9, 'name' => 'The Binding Of Isaac', 'last_modified' => 50],

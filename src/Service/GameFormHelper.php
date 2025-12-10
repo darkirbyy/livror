@@ -36,11 +36,12 @@ class GameFormHelper
             return;
         }
 
-        $this->steamSearchHelper->fetchSteamGame((int) $steamId);
+        $id = (int) $steamId;
+        $data = $this->steamSearchHelper->fetchSteamGame($id);
 
         switch ($this->steamSearchHelper->getStatus()) {
             case SteamSearchStatusEnum::OK:
-                $this->steamSearchHelper->fillGame($game);
+                $this->steamSearchHelper->fillGame($game, $id, $data);
                 $this->addFlashMessage('success', 'success');
                 break;
 

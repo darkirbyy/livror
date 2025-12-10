@@ -68,10 +68,11 @@ final class GameFormHelperTest extends TestCase
     public function processSearchOk(string $steamId): void
     {
         $expectedMessage = 'game.edit.flash.steamSearch.success';
+        $data = [];
 
-        $this->steamSearchHelper->expects($this->once())->method('fetchSteamGame')->with($steamId);
+        $this->steamSearchHelper->expects($this->once())->method('fetchSteamGame')->with($steamId)->willReturn($data);
         $this->steamSearchHelper->expects($this->once())->method('getStatus')->willReturn(SteamSearchStatusEnum::OK);
-        $this->steamSearchHelper->expects($this->once())->method('fillGame')->with($this->game);
+        $this->steamSearchHelper->expects($this->once())->method('fillGame')->with($this->game, $steamId, $data);
         $this->requestStack->expects($this->once())->method('getSession')->willReturn($this->session);
 
         $this->gameFormHelper->process($this->game, $this->form, $steamId);
