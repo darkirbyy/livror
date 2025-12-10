@@ -76,7 +76,7 @@ final class GameFormHelperTest extends TestCase
         $this->requestStack->expects($this->once())->method('getSession')->willReturn($this->session);
 
         $this->gameFormHelper->process($this->game, $this->form, $steamId);
-        $this->assertSame($expectedMessage, $this->flashBag->get('livror/success')[0]->getMessage());
+        $this->assertSame($expectedMessage, $this->flashBag->get('livror/success')[0]->message);
     }
 
     #[PU\Test]
@@ -104,7 +104,7 @@ final class GameFormHelperTest extends TestCase
         $this->requestStack->expects($this->once())->method('getSession')->willReturn($this->session);
 
         $this->gameFormHelper->process($this->game, $this->form, $steamId);
-        $this->assertSame($expectedMessage, $this->flashBag->get('livror/danger')[0]->getMessage());
+        $this->assertSame($expectedMessage, $this->flashBag->get('livror/danger')[0]->message);
     }
 
     public static function processNoSearchValues(): array

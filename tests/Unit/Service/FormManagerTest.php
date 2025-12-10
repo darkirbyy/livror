@@ -86,7 +86,7 @@ final class FormManagerTest extends TestCase
         $this->csrfTokenManager->expects($this->once())->method('isTokenValid')->willReturn(false);
 
         $this->assertFalse($this->formManager->checkTokenAndRemove('tokenId', $this->game, null));
-        $this->assertSame('form.flash.invalidCsrf', $this->flashBag->get('livror/danger')[0]->getMessage());
+        $this->assertSame('form.flash.invalidCsrf', $this->flashBag->get('livror/danger')[0]->message);
     }
 
     #[PU\Test]
@@ -98,7 +98,7 @@ final class FormManagerTest extends TestCase
         $this->entityManager->expects($this->once())->method('flush');
 
         $this->assertTrue($this->formManager->persist($this->game, new FlashMessage($successMessage)));
-        $this->assertSame('success', $this->flashBag->get('livror/success')[0]->getMessage());
+        $this->assertSame('success', $this->flashBag->get('livror/success')[0]->message);
     }
 
     #[PU\Test]
@@ -123,7 +123,7 @@ final class FormManagerTest extends TestCase
         $this->exceptionManager->expects($this->once())->method('handleDatabase')->willReturn($errorMessage);
 
         $this->assertFalse($this->formManager->persist($this->game));
-        $this->assertSame($errorMessage, $this->flashBag->get('livror/danger')[0]->getMessage());
+        $this->assertSame($errorMessage, $this->flashBag->get('livror/danger')[0]->message);
     }
 
     #[PU\Test]
@@ -135,7 +135,7 @@ final class FormManagerTest extends TestCase
         $this->entityManager->expects($this->once())->method('flush');
 
         $this->assertTrue($this->formManager->remove($this->game, new FlashMessage($successMessage)));
-        $this->assertSame('success', $this->flashBag->get('livror/success')[0]->getMessage());
+        $this->assertSame('success', $this->flashBag->get('livror/success')[0]->message);
     }
 
     #[PU\Test]
@@ -160,7 +160,7 @@ final class FormManagerTest extends TestCase
         $this->exceptionManager->expects($this->once())->method('handleDatabase')->willReturn($errorMessage);
 
         $this->assertFalse($this->formManager->remove($this->game));
-        $this->assertSame($errorMessage, $this->flashBag->get('livror/danger')[0]->getMessage());
+        $this->assertSame($errorMessage, $this->flashBag->get('livror/danger')[0]->message);
     }
 
     public static function validateAndPersistValidValues(): array

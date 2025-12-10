@@ -64,7 +64,7 @@ class GameController extends AbstractController
         $flashSuccess = new FlashMessage('game.index.flash.newGame');
         if ($fm->validateAndPersist($form, $game, $flashSuccess)) {
             $url = $this->generateUrl('review_new', ['gameId' => $game->getId(), 'backpath' => $this->generateUrl('game_index')]);
-            $flashSuccess->setParams(['url' => $url, 'name' => $game->getName()]);
+            $flashSuccess->params = ['url' => $url, 'name' => $game->getName()];
 
             return $this->redirectToRoute('game_index', [], Response::HTTP_SEE_OTHER);
         }
