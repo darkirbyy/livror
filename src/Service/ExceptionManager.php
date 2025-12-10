@@ -10,9 +10,6 @@ use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Exception;
 use Psr\Log\LoggerInterface;
 
-/**
- * Service to handle exceptions when they are catched (to display + logging).
- */
 class ExceptionManager
 {
     public function __construct(private LoggerInterface $logger)

@@ -33,7 +33,7 @@ class GameController extends AbstractController
 
         // Make the database query and get the corresponding games, and link the users
         $gamesIndex = $gameRepo->findIndex($queryParam);
-        $userManager->toGamesIndex($gamesIndex, $users);
+        $userManager->plugToGamesIndex($gamesIndex, $users);
 
         // Prepare the data for the twig renderer
         $data = [

@@ -8,10 +8,7 @@ use App\Dto\QueryParam;
 use Doctrine\ORM\QueryBuilder;
 use Symfony\Component\HttpFoundation\RequestStack;
 
-/**
- * Service to validate and complete the QueryParam Dto.
- */
-final class QueryParamHelper
+class QueryParamHelper
 {
     private bool $isLoadFromSesion;
 

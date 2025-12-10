@@ -22,6 +22,11 @@ class SteamSearchHelper
     ) {
     }
 
+    /**
+     *  Perform the request on the steam API endpoint, storing the status and return the data if successful.
+     *
+     * @param int $id the requested steamId
+     */
     public function fetchSteamGame(int $id): ?array
     {
         try {
@@ -64,6 +69,14 @@ class SteamSearchHelper
         }
     }
 
+    /**
+     * Use the data returned by the steam API endpoind to fill a Game entity,
+     * raising warning if unable to parse some fields.
+     *
+     * @param Game  $game the Game entity to fill
+     * @param int   $id   the steamId corresponding to the data
+     * @param array $data the sub-array 'data' of the steam response
+     */
     public function fillGame(Game $game, int $id, array $data): void
     {
         $game->setSteamId($id);

@@ -13,9 +13,6 @@ use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Symfony\Component\Security\Csrf\CsrfToken;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 
-/**
- * Service to persist/remove any entity into/from the database, handling the flash messages and logging the errors.
- */
 class FormManager
 {
     private FlashBagInterface $flashBag;

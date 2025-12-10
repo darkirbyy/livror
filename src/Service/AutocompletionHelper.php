@@ -19,6 +19,12 @@ class AutocompletionHelper
     ) {
     }
 
+    /**
+     * Prepare html stimulus for autocompletion.
+     *
+     * @param string $route      endpoint route
+     * @param array  $parameters endpoint parameters
+     */
     public function prepareAttributes(string $route, array $parameters = []): StimulusAttributes
     {
         $stimulusController = $this->stimulusHelper->createStimulusAttributes();

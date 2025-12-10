@@ -34,7 +34,7 @@ class ReviewController extends AbstractController
 
         // Make the database query and get the corresponding reviews
         $reviews = $reviewRepo->findIndex($queryParam, $userId);
-        $userManager->toReviews($reviews, [$userId => $user]);
+        $userManager->plugToReviews($reviews, [$userId => $user]);
 
         // Prepare the data for the twig renderer
         $data = [

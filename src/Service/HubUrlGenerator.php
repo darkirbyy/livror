@@ -10,11 +10,17 @@ class HubUrlGenerator
     {
     }
 
+    /**
+     * Generate a route prefixed by the hub root url.
+     */
     public function generateRoot(string $route)
     {
         return $this->hubBaseUrl . $route;
     }
 
+    /**
+     * Generate a route prefixed by the hub account url, accepting parameters.
+     */
     public function generateAccount(string $route, array $parameters = [])
     {
         $url = $this->hubBaseUrl . $this->hubAccountRoute . $route;

@@ -22,6 +22,9 @@ class AutocompletionManager
     ) {
     }
 
+    /**
+     * Search Steam game in the steam table (must have been populated using the command first).
+     */
     public function fromSteam(?string $search, SearchModeEnum $searchMode): array
     {
         // Sanitize the user input
@@ -38,6 +41,9 @@ class AutocompletionManager
         return $data;
     }
 
+    /**
+     * Search App game in the game table that have not been commented by the current user.
+     */
     public function fromGameWithoutReview(?string $search, SearchModeEnum $searchMode): array
     {
         // Sanitize the user input
@@ -55,6 +61,13 @@ class AutocompletionManager
         return $data;
     }
 
+    /**
+     * Prepare a user input search for mariadb : remove mutliple whitespaces, special characters,
+     * enforce min length and lowercase, then add wildcard depending on the search mode.
+     *
+     * @param string|null    $search     user input search
+     * @param SearchModeEnum $searchMode determine the wildcards added
+     */
     public function sanitizeSearch(?string $search, SearchModeEnum $searchMode): string
     {
         // Return empty string if empty

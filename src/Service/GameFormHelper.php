@@ -18,6 +18,10 @@ class GameFormHelper
     {
     }
 
+    /**
+     * Allow to pre-fill a form (with data class Gam) by filling a Game entity using a steamId
+     * and by adding error/flash depending on the given values and request status.
+     */
     public function process(Game $game, FormInterface $form, ?string $steamId): void
     {
         if (null === $steamId) {
@@ -54,11 +58,17 @@ class GameFormHelper
         }
     }
 
+    /**
+     * Add an error to the form, using the given translation key.
+     */
     private function addFormError(FormInterface $form, string $transKey): void
     {
         $form->get('steamId')->addError(new FormError($this->trans->trans('game.error.steamId.' . $transKey, [], 'validators')));
     }
 
+    /**
+     * Add flash message of given type to the session, using the given translation key.
+     */
     private function addFlashMessage(string $type, string $transKey): void
     {
         $flashBag = $this->requestStack->getSession()->getFlashBag();
