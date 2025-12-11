@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Unit\Service;
 
 use App\Entity\Main\Game;
-use App\Enum\SteamSearchStatusEnum;
+use App\Enum\SteamSearchStatusEnum as Status;
 use App\Service\GameFormHelper;
 use App\Service\SteamSearchHelper;
 use PHPUnit\Framework\Attributes as PU;
@@ -70,8 +70,11 @@ final class GameFormHelperTest extends TestCase
         $expectedMessage = 'game.edit.flash.steamSearch.success';
         $data = [];
 
-        $this->steamSearchHelper->expects($this->once())->method('fetchSteamGame')->with($steamId)->willReturn($data);
-        $this->steamSearchHelper->expects($this->once())->method('getStatus')->willReturn(SteamSearchStatusEnum::OK);
+        $this->steamSearchHelper
+            ->expects($this->once())
+            ->method('fetchSteamGame')
+            ->with($steamId)
+            ->willReturn([Status::OK, $data]);
         $this->steamSearchHelper->expects($this->once())->method('fillGame')->with($this->game, $steamId, $data);
         $this->requestStack->expects($this->once())->method('getSession')->willReturn($this->session);
 
@@ -85,8 +88,11 @@ final class GameFormHelperTest extends TestCase
     {
         $expectedMessage = 'game.error.steamId.notFound';
 
-        $this->steamSearchHelper->expects($this->once())->method('fetchSteamGame')->with($steamId);
-        $this->steamSearchHelper->expects($this->once())->method('getStatus')->willReturn(SteamSearchStatusEnum::NOT_FOUND);
+        $this->steamSearchHelper
+            ->expects($this->once())
+            ->method('fetchSteamGame')
+            ->with($steamId)
+            ->willReturn([Status::NOT_FOUND, []]);
         $this->form->expects($this->once())->method('get')->with('steamId');
         $this->trans->expects($this->once())->method('trans')->with($expectedMessage);
 
@@ -99,8 +105,11 @@ final class GameFormHelperTest extends TestCase
     {
         $expectedMessage = 'game.edit.flash.steamSearch.fail';
 
-        $this->steamSearchHelper->expects($this->once())->method('fetchSteamGame')->with($steamId);
-        $this->steamSearchHelper->expects($this->once())->method('getStatus')->willReturn(SteamSearchStatusEnum::ERROR);
+        $this->steamSearchHelper
+            ->expects($this->once())
+            ->method('fetchSteamGame')
+            ->with($steamId)
+            ->willReturn([Status::ERROR, []]);
         $this->requestStack->expects($this->once())->method('getSession')->willReturn($this->session);
 
         $this->gameFormHelper->process($this->game, $this->form, $steamId);

@@ -11,8 +11,6 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class SteamSearchHelper
 {
-    private SteamSearchStatusEnum $status = SteamSearchStatusEnum::PENDING;
-
     public function __construct(
         private int $requestTimeout,
         private string $locale,
@@ -40,32 +38,26 @@ class SteamSearchHelper
 
             // Error is the status code is not 200
             if (200 !== $response->getStatusCode()) {
-                $this->status = SteamSearchStatusEnum::ERROR;
-
-                return null;
+                return [SteamSearchStatusEnum::ERROR, null];
             }
 
             // Not found is the response does not contain the requested id, or is not labeled "success"
             $content = $response->toArray();
             if (!isset($content[$id]) || !$content[$id]['success']) {
-                $this->status = SteamSearchStatusEnum::NOT_FOUND;
-
-                return null;
+                return [SteamSearchStatusEnum::NOT_FOUND, null];
             }
 
             // Return the data
-            $this->status = SteamSearchStatusEnum::OK;
 
-            return $content[$id]['data'];
+            return [SteamSearchStatusEnum::OK, $content[$id]['data']];
         } catch (\Exception $e) {
             // Catch any other kind of errors
             $this->exceptionManager->handle('warning', 'Error while making steam API call with steamId: {steamId}. Error: {error}', [
                 'steamId' => $id,
                 'error' => $e->getMessage(),
             ]);
-            $this->status = SteamSearchStatusEnum::ERROR;
 
-            return null;
+            return [SteamSearchStatusEnum::ERROR, null];
         }
     }
 
@@ -122,10 +114,5 @@ class SteamSearchHelper
 
         // Managing image URL : null if not present in the response
         $game->setImgUrl($data['header_image'] ?? null);
-    }
-
-    public function getStatus(): SteamSearchStatusEnum
-    {
-        return $this->status;
     }
 }

@@ -44,9 +44,9 @@ final class SteamSearchHelperTest extends TestCase
             ->method('handle')
             ->with('warning', $this->stringContains('API'));
 
-        $data = $this->steamSearchHelper->fetchSteamGame(1);
+        [$status, $data] = $this->steamSearchHelper->fetchSteamGame(1);
 
-        $this->assertSame($expectedStatus, $this->steamSearchHelper->getStatus());
+        $this->assertSame($expectedStatus, $status);
         $this->assertSame(Status::OK == $expectedStatus ? $body[1]['data'] : null, $data);
     }
 
