@@ -34,10 +34,6 @@ class QueryParamHelper
 
     public function defaults(QueryParam $queryParam, array $defaultSorts, array $defaultFilters): void
     {
-        if ($this->isLoadFromSesion) {
-            return;
-        }
-
         $queryParam->offset ??= 0;
         $queryParam->limit ??= $this->defaultLimit;
         $queryParam->sorts ??= $defaultSorts;
@@ -46,10 +42,6 @@ class QueryParamHelper
 
     public function validate(QueryParam $queryParam, array $allowedSortsKeys, array $allowedFiltersKeys): void
     {
-        if ($this->isLoadFromSesion) {
-            return;
-        }
-
         $queryParam->offset = filter_var($queryParam->offset, FILTER_VALIDATE_INT, ['options' => ['default' => 0, 'min_range' => 0]]);
         $queryParam->limit = filter_var($queryParam->limit, FILTER_VALIDATE_INT, [
             'options' => ['default' => $this->defaultLimit, 'min_range' => 1, 'max_range' => $this->maxLimit],

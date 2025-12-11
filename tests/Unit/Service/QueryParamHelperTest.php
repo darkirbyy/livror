@@ -59,6 +59,15 @@ final class QueryParamHelperTest extends TestCase
     }
 
     #[PU\Test]
+    #[PU\DataProvider('validateValues')]
+    public function validate(QueryParam $queryParam, array $allowedSortsKeys, array $allowedFiltersKeys, QueryParam $expectedQueryParam): void
+    {
+        $this->queryParamHelper->validate($queryParam, $allowedSortsKeys, $allowedFiltersKeys);
+
+        $this->assertSame((array) $expectedQueryParam, (array) $queryParam);
+    }
+
+    #[PU\Test]
     #[PU\DataProvider('saveValues')]
     public function saveIsXml(QueryParam $queryParam, string $sessionKey, QueryParam $expectedQueryParam): void
     {
@@ -72,15 +81,6 @@ final class QueryParamHelperTest extends TestCase
         $this->queryParamHelper->save($queryParam, $sessionKey);
 
         $this->assertSame((array) $queryParamCloned, (array) $queryParam);
-    }
-
-    #[PU\Test]
-    #[PU\DataProvider('validateValues')]
-    public function validate(QueryParam $queryParam, array $allowedSortsKeys, array $allowedFiltersKeys, QueryParam $expectedQueryParam): void
-    {
-        $this->queryParamHelper->validate($queryParam, $allowedSortsKeys, $allowedFiltersKeys);
-
-        $this->assertSame((array) $expectedQueryParam, (array) $queryParam);
     }
 
     #[PU\Test]

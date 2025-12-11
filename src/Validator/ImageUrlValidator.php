@@ -39,7 +39,7 @@ class ImageUrlValidator extends ConstraintValidator
 
             $statusCode = $response->getStatusCode();
             $redirectCount = $response->getInfo('redirect_count');
-            $contentType = $response->getHeaders()['content-type'][0] ?? null;
+            $contentType = $response->getHeaders(false)['content-type'][0] ?? null;
 
             if (200 !== $statusCode || $redirectCount > 0 || !str_starts_with($contentType, 'image/')) {
                 $this->context->buildViolation($constraint->notImageMessage)->addViolation();
