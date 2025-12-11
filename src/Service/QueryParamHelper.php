@@ -12,7 +12,7 @@ class QueryParamHelper
 {
     private bool $isLoadFromSesion;
 
-    public function __construct(private RequestStack $requestStack, private int $defaultLimit, private int $maxLimit)
+    public function __construct(private int $defaultLimit, private int $maxLimit, private RequestStack $requestStack)
     {
         $this->isLoadFromSesion = false;
     }
@@ -24,9 +24,8 @@ class QueryParamHelper
     public function load(QueryParam $queryParam, string $sessionKey): void
     {
         $isQueryEmpty = array_all((array) $queryParam, fn ($value, $key): bool => is_null($value));
-        $isSessionFull = $this->requestStack->getSession()->has('livror/' . $sessionKey);
-        if ($isQueryEmpty && $isSessionFull) {
-            $this->isLoadFromSesion = true;
+        $this->isLoadFromSesion = $isQueryEmpty && $this->requestStack->getSession()->has('livror/' . $sessionKey);
+        if ($this->isLoadFromSesion) {
             foreach ($this->requestStack->getSession()->get('livror/' . $sessionKey) as $property => $value) {
                 $queryParam->$property = $value;
             }

@@ -17,8 +17,8 @@ use Symfony\Bundle\SecurityBundle\Security;
 
 final class AutocompletionManagerTest extends TestCase
 {
-    private $autocompletionLimit;
-    private $autocompletionMinLength;
+    private static $autocompletionLimit = 20;
+    private static $autocompletionMinLength = 5;
     private $security;
     private $steamRepo;
     private $gameRepo;
@@ -27,13 +27,11 @@ final class AutocompletionManagerTest extends TestCase
 
     public function setUp(): void
     {
-        $this->autocompletionLimit = 20;
-        $this->autocompletionMinLength = 5;
         $this->security = $this->createMock(Security::class);
         $this->steamRepo = $this->createMock(SteamRepository::class);
         $this->gameRepo = $this->createMock(GameRepository::class);
 
-        $this->autocompletionManager = new AutocompletionManager($this->autocompletionLimit, $this->autocompletionMinLength, $this->security, $this->steamRepo, $this->gameRepo);
+        $this->autocompletionManager = new AutocompletionManager(self::$autocompletionLimit, self::$autocompletionMinLength, $this->security, $this->steamRepo, $this->gameRepo);
     }
 
     #[PU\Test]
@@ -61,7 +59,7 @@ final class AutocompletionManagerTest extends TestCase
         $this->steamRepo
             ->expects($this->once())
             ->method($searchMode->toRepoMethod())
-            ->with($expectedSearch, $this->autocompletionLimit)
+            ->with($expectedSearch, self::$autocompletionLimit)
             ->willReturn([$steam1, $steam2]);
         $data = $this->autocompletionManager->fromSteam($search, $searchMode);
         $this->assertSame(2, count($data));
@@ -99,7 +97,7 @@ final class AutocompletionManagerTest extends TestCase
         $this->gameRepo
             ->expects($this->once())
             ->method($searchMode->toRepoMethod() . 'WithoutReview')
-            ->with($expectedSearch, $this->autocompletionLimit, $userId)
+            ->with($expectedSearch, self::$autocompletionLimit, $userId)
             ->willReturn([$game1, $game2]);
         $data = $this->autocompletionManager->fromGameWithoutReview($search, $searchMode);
         $this->assertSame(2, count($data));

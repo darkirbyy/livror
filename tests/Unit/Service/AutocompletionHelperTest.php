@@ -14,7 +14,7 @@ use Symfony\UX\StimulusBundle\Helper\StimulusHelper;
 
 final class AutocompletionHelperTest extends TestCase
 {
-    private $autocompletionMinLength;
+    private static $autocompletionMinLength = 5;
     private $trans;
     private $stimulusHelper;
     private $urlGenerator;
@@ -23,12 +23,11 @@ final class AutocompletionHelperTest extends TestCase
 
     public function setUp(): void
     {
-        $this->autocompletionMinLength = 5;
         $this->trans = $this->createMock(TranslatorInterface::class);
         $this->stimulusHelper = new StimulusHelper(null);
         $this->urlGenerator = $this->createMock(UrlGeneratorInterface::class);
 
-        $this->autocompletionHelper = new AutocompletionHelper($this->autocompletionMinLength, $this->trans, $this->stimulusHelper, $this->urlGenerator);
+        $this->autocompletionHelper = new AutocompletionHelper(self::$autocompletionMinLength, $this->trans, $this->stimulusHelper, $this->urlGenerator);
     }
 
     #[PU\Test]

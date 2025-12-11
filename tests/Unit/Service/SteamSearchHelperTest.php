@@ -16,7 +16,7 @@ use Symfony\Component\HttpClient\Response\MockResponse;
 
 final class SteamSearchHelperTest extends TestCase
 {
-    private $requestTimeout;
+    private static $requestTimeout = 5;
     private $locale;
     private $currency;
     private $exceptionManager;
@@ -26,13 +26,12 @@ final class SteamSearchHelperTest extends TestCase
 
     public function setUp(): void
     {
-        $this->requestTimeout = 5;
         $this->locale = 'fr_FR';
         $this->currency = 'EUR';
         $this->exceptionManager = $this->createMock(ExceptionManager::class);
         $this->httpClient = new MockHttpClient();
 
-        $this->steamSearchHelper = new SteamSearchHelper($this->requestTimeout, $this->locale, $this->currency, $this->exceptionManager, $this->httpClient);
+        $this->steamSearchHelper = new SteamSearchHelper(self::$requestTimeout, $this->locale, $this->currency, $this->exceptionManager, $this->httpClient);
     }
 
     #[PU\Test]
