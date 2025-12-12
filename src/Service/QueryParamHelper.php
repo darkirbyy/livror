@@ -21,6 +21,9 @@ class QueryParamHelper
     // Functions for repository ////////////////////////////
     // /////////////////////////////////////////////////////
 
+    /**
+     * Load the queryParam from session if the passed queryParam is null (all fields = null) and exists.
+     */
     public function load(QueryParam $queryParam, string $sessionKey): void
     {
         $isQueryEmpty = array_all((array) $queryParam, fn ($value, $key): bool => is_null($value));
@@ -32,6 +35,9 @@ class QueryParamHelper
         }
     }
 
+    /**
+     * Set defaults values so that no field is null afterwards.
+     */
     public function defaults(QueryParam $queryParam, array $defaultSorts, array $defaultFilters): void
     {
         $queryParam->offset ??= 0;
@@ -40,6 +46,14 @@ class QueryParamHelper
         $queryParam->filters ??= $defaultFilters;
     }
 
+    /**
+     * Validate all fields as follow:
+     * - offset : positive int
+     * - limit : positive int between 1 and max_limit (configurable via .env)
+     * - sorts : array, only keep item if the key is valid, and value is 'asc' or 'desc'
+     * - filters : array, only keep item if the key is valid, and value is an array with only alphanum characters
+     *            (empty filters are converted from '' to [])
+     */
     public function validate(QueryParam $queryParam, array $allowedSortsKeys, array $allowedFiltersKeys): void
     {
         $queryParam->offset = filter_var($queryParam->offset, FILTER_VALIDATE_INT, ['options' => ['default' => 0, 'min_range' => 0]]);
@@ -59,6 +73,9 @@ class QueryParamHelper
         );
     }
 
+    /**
+     * Save the queryParam to session (if it does not come from session or a ajax request).
+     */
     public function save(QueryParam $queryParam, string $sessionKey): void
     {
         if ($this->isLoadFromSesion || $this->requestStack->getMainRequest()->isXmlHttpRequest()) {
@@ -71,6 +88,9 @@ class QueryParamHelper
         $this->requestStack->getSession()->set('livror/' . $sessionKey, $queryParamCloned);
     }
 
+    /**
+     * Apply the queryParam fields (excepts filters) to a doctrine QueryBuilder.
+     */
     public function applyButFiltersToQb(QueryParam $queryParam, QueryBuilder $qb, array $sortsConversion): void
     {
         foreach ($queryParam->sorts as $key => $direction) {
@@ -85,6 +105,9 @@ class QueryParamHelper
     // Functions for twig extensions ///////////////////////
     // /////////////////////////////////////////////////////
 
+    /**
+     * Allows to change one or more parameters, without changing the original queryParam.
+     */
     public function cloneWith(QueryParam $queryParam, array $newParam): QueryParam
     {
         $queryParamCloned = clone $queryParam;
@@ -95,6 +118,9 @@ class QueryParamHelper
         return $queryParamCloned;
     }
 
+    /**
+     * Allows to reset all fields but 'offset' to null, without changing the original queryParam.
+     */
     public function cloneReset(QueryParam $queryParam): QueryParam
     {
         $queryParamCloned = clone $queryParam;
@@ -108,6 +134,9 @@ class QueryParamHelper
         return $queryParamCloned;
     }
 
+    /**
+     * Converts the queryParam to an array (empty filters are converted from [] to '').
+     */
     public function toArray(QueryParam $queryParam): array
     {
         $queryParamArray = (array) $queryParam;

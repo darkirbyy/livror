@@ -10,10 +10,10 @@ Small webapp to share reviews of games with my friends, developed while learning
   - **Composer**: >= 2.8 for dependency management
   - **MariaDB**: 11.5 through docker for the database
 - Front-end:
-  - **Node.js**: 22
-  - **npm**: >= 10 for dependency management
+  - **Node.js**: 22.x
+  - **npm**: >= 10.x for dependency management
   - **Sass**: >= 1.82
-  - **Webpack Encore**: 5
+  - **Webpack Encore**: 5.x
 - **git** and **git-flow** for source and version control
 - **GitHub** to share and deploy
 
