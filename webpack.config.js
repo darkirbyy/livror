@@ -73,7 +73,12 @@ Encore
     })
 
     // enables Sass/SCSS support
-    .enableSassLoader()
+    .enableSassLoader(function(options) {
+        options.sassOptions = {
+             quietDeps: true,
+           silenceDeprecations: ['global-builtin', 'import']
+        };
+    })
     .enablePostCssLoader((options) => {
         options.postcssOptions = {
             plugins: {

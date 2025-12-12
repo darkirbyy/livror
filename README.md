@@ -5,15 +5,15 @@ Small webapp to share reviews of games with my friends, developed while learning
 ## Prerequisite
 
 - Back-end:
-  - **Symfony**: 7.1 framework
-  - **PHP**: 8.2 (compatible with Symfony 7.1)
+  - **Symfony**: 7.4 framework
+  - **PHP**: 8.2 (compatible with Symfony 7.4)
   - **Composer**: >= 2.8 for dependency management
   - **MariaDB**: 11.5 through docker for the database
 - Front-end:
-  - **Node.js**: 18.x
-  - **npm**: >= 9.2 for dependency management
+  - **Node.js**: 22
+  - **npm**: >= 10 for dependency management
   - **Sass**: >= 1.82
-  - **Webpack Encore**: 5.0
+  - **Webpack Encore**: 5
 - **git** and **git-flow** for source and version control
 - **GitHub** to share and deploy
 

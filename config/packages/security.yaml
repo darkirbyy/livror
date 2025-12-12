@@ -1,13 +1,14 @@
 security:
     password_hashers:
         Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'
+        
     providers:
         account_user_provider:
             id: App\Security\AccountUserProvider
 
     firewalls:
         dev:
-            pattern: ^/(_(profiler|wdt)|build)/
+            pattern: ^/(_profiler|_wdt|build)/
             security: false
         main:
             pattern: ^/
