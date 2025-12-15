@@ -12,15 +12,14 @@ use PHPUnit\Framework\Attributes as PU;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\HttpFoundation\Session\Flash\FlashBag;
 use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 final class GameFormHelperTest extends TestCase
 {
     private $form;
     private $game;
-    private $flashBag;
     private $session;
 
     private $requestStack;
@@ -31,8 +30,7 @@ final class GameFormHelperTest extends TestCase
 
     public function setUp(): void
     {
-        $this->flashBag = new FlashBag();
-        $this->session = new Session(null, null, $this->flashBag, null);
+        $this->session = new Session(new MockArraySessionStorage());
         $this->form = $this->createMock(FormInterface::class);
         $this->game = $this->createMock(Game::class);
 
@@ -79,7 +77,7 @@ final class GameFormHelperTest extends TestCase
         $this->requestStack->expects($this->once())->method('getSession')->willReturn($this->session);
 
         $this->gameFormHelper->process($this->game, $this->form, $steamId);
-        $this->assertSame($expectedMessage, $this->flashBag->get('livror/success')[0]->message);
+        $this->assertSame($expectedMessage, $this->session->getFlashBag()->get('livror/success')[0]->message);
     }
 
     #[PU\Test]
@@ -113,7 +111,7 @@ final class GameFormHelperTest extends TestCase
         $this->requestStack->expects($this->once())->method('getSession')->willReturn($this->session);
 
         $this->gameFormHelper->process($this->game, $this->form, $steamId);
-        $this->assertSame($expectedMessage, $this->flashBag->get('livror/danger')[0]->message);
+        $this->assertSame($expectedMessage, $this->session->getFlashBag()->get('livror/danger')[0]->message);
     }
 
     public static function processNoSearchValues(): array

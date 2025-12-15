@@ -8,3 +8,7 @@ framework:
             - en
         providers:
 
+when@test:
+    framework:
+        translator:
+            enabled: false

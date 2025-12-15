@@ -15,15 +15,14 @@ use PHPUnit\Framework\TestCase;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\HttpFoundation\Session\Flash\FlashBag;
 use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 
 final class FormManagerTest extends TestCase
 {
     private $driverException;
     private $request;
-    private $flashBag;
     private $session;
     private $game;
     private $form;
@@ -45,8 +44,7 @@ final class FormManagerTest extends TestCase
         };
         $this->driverException = new DriverException($fakeDriver, null);
         $this->request = new Request(content: '{"_token":"tokenValue"}');
-        $this->flashBag = new FlashBag();
-        $this->session = new Session(null, null, $this->flashBag, null);
+        $this->session = new Session(new MockArraySessionStorage());
         $this->game = new class {};
         $this->form = $this->createMock(FormInterface::class);
 
@@ -86,7 +84,7 @@ final class FormManagerTest extends TestCase
         $this->csrfTokenManager->expects($this->once())->method('isTokenValid')->willReturn(false);
 
         $this->assertFalse($this->formManager->checkTokenAndRemove('tokenId', $this->game, null));
-        $this->assertSame('form.flash.invalidCsrf', $this->flashBag->get('livror/danger')[0]->message);
+        $this->assertSame('form.flash.invalidCsrf', $this->session->getFlashBag()->get('livror/danger')[0]->message);
     }
 
     #[PU\Test]
@@ -98,7 +96,7 @@ final class FormManagerTest extends TestCase
         $this->entityManager->expects($this->once())->method('flush');
 
         $this->assertTrue($this->formManager->persist($this->game, new FlashMessage($successMessage)));
-        $this->assertSame('success', $this->flashBag->get('livror/success')[0]->message);
+        $this->assertSame('success', $this->session->getFlashBag()->get('livror/success')[0]->message);
     }
 
     #[PU\Test]
@@ -123,7 +121,7 @@ final class FormManagerTest extends TestCase
         $this->exceptionManager->expects($this->once())->method('handleDatabase')->willReturn($errorMessage);
 
         $this->assertFalse($this->formManager->persist($this->game));
-        $this->assertSame($errorMessage, $this->flashBag->get('livror/danger')[0]->message);
+        $this->assertSame($errorMessage, $this->session->getFlashBag()->get('livror/danger')[0]->message);
     }
 
     #[PU\Test]
@@ -135,7 +133,7 @@ final class FormManagerTest extends TestCase
         $this->entityManager->expects($this->once())->method('flush');
 
         $this->assertTrue($this->formManager->remove($this->game, new FlashMessage($successMessage)));
-        $this->assertSame('success', $this->flashBag->get('livror/success')[0]->message);
+        $this->assertSame('success', $this->session->getFlashBag()->get('livror/success')[0]->message);
     }
 
     #[PU\Test]
@@ -160,7 +158,7 @@ final class FormManagerTest extends TestCase
         $this->exceptionManager->expects($this->once())->method('handleDatabase')->willReturn($errorMessage);
 
         $this->assertFalse($this->formManager->remove($this->game));
-        $this->assertSame($errorMessage, $this->flashBag->get('livror/danger')[0]->message);
+        $this->assertSame($errorMessage, $this->session->getFlashBag()->get('livror/danger')[0]->message);
     }
 
     public static function validateAndPersistValidValues(): array
