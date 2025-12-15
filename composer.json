@@ -96,9 +96,9 @@
         "lint-js": "npm run lint-js-file \"assets/controllers/**/*.js\"",
         "lint-all": ["@lint-php", "@lint-twig", "@lint-scss",  "@lint-js"],
 
-        "tests-unit": "./vendor/bin/phpunit --testsuite unit",
-        "tests-func": "./vendor/bin/phpunit --testsuite func",
-        "tests-all": ["./vendor/bin/phpunit"]
+        "tests-unit": "symfony php bin/phpunit --testsuite unit",
+        "tests-func": "symfony php bin/phpunit --testsuite func",
+        "tests-all": ["symfony php bin/phpunit"]
     },
     "conflict": {
         "symfony/symfony": "*"

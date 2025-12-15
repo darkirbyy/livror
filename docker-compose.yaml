@@ -1,9 +1,12 @@
 services:
   database:
     image: mariadb:11.5
-    container_name: livror-mariadb
+    container_name: ${APP_NAME}-mariadb
     environment:
       - MARIADB_RANDOM_ROOT_PASSWORD=yes
+      - MARIADB_DATABASE=${APP_NAME}_db
+      - MARIADB_USER=${APP_NAME}_user
+      - MARIADB_PASSWORD=${APP_NAME}_password
     healthcheck:
       test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
       timeout: 5s
@@ -13,11 +16,8 @@ services:
       - "${DATABASE_PORT:-3306}:3306"
     volumes:
       - ./docker/db-data:/var/lib/mysql:rw
-      - ./docker-db-init.sql:/docker-entrypoint-initdb.d/init.sql:ro
     networks:
       - app
-    labels:
-        com.symfony.server.service-ignore: true
 
 networks:
   app:

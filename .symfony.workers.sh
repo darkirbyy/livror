@@ -1,6 +1,8 @@
 #!/bin/bash
 
-# Function to find the next available port
+DATABASE_DEFAULT_PORT=3306
+WEBPACK_DEFAULT_PORT=8080
+
 find_next_available_port() {
     local port=$1
     while ss -ltn | awk '{print $4}' | grep -q ":$port$"; do
@@ -9,25 +11,17 @@ find_next_available_port() {
     echo $port
 }
 
-# Find first available webpack port, starting at 8080
-echo "Finding available port..."
-export WEBPACK_PORT=$(find_next_available_port 8080)
+echo "Starting custom workers..."
 
-# Run webpack dev server with the found port
-echo "Starting WebPack dev server on port $WEBPACK_PORT..."
+# Find first available wp port and run webpack dev server with the selected port
+export WEBPACK_PORT=$(find_next_available_port $WEBPACK_DEFAULT_PORT)
+echo "Starting WebPack dev server on port $WEBPACK_PORT"
 ./node_modules/.bin/encore dev-server --hot --port=$WEBPACK_PORT &
 WEBPACK_PID=$!  # Capture the Webpack process PID
 
-# Detect the database port configured in env files
-echo "Getting DATABASE_PORT from .env.local or .env otherwise..."
-DATABASE_URL=$(grep -E '^DATABASE_URL=' .env)
-if [ -f .env.local ]; then
-    DATABASE_URL=$(grep -E '^DATABASE_URL=' .env.local)
-fi
-export DATABASE_PORT=$(echo "$DATABASE_URL" | sed -E 's/.*:([0-9]+).*/\1/')
-
-# Run docker compose with the found port
-echo "Starting MariaDB container on port $DATABASE_PORT..."
+# Find first available db port and run docker compose with the selected port
+export DATABASE_PORT=$(find_next_available_port $DATABASE_DEFAULT_PORT)
+echo "Starting MariaDB container on port $DATABASE_PORT"
 docker compose up -d
 
 # Function to stop processes on exit
