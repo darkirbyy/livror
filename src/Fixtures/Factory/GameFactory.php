@@ -56,4 +56,14 @@ final class GameFactory extends PersistentProxyObjectFactory
             return $defaults;
         });
     }
+
+    public function withTypesGame(array $typesGame): self
+    {
+        return $this->with(function () use ($typesGame) {
+            $defaults = [];
+            $defaults['typeGame'] = self::faker()->randomElement($typesGame);
+
+            return $defaults;
+        });
+    }
 }

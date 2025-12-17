@@ -97,6 +97,7 @@
         "lint-all": ["@lint-php", "@lint-twig", "@lint-scss",  "@lint-js"],
 
         "tests-unit": "symfony php bin/phpunit --testsuite unit",
+        "tests-inte": "symfony php bin/phpunit --testsuite inte",
         "tests-func": "symfony php bin/phpunit --testsuite func",
         "tests-all": ["symfony php bin/phpunit"]
     },

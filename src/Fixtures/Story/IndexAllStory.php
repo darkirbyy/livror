@@ -7,11 +7,9 @@ use App\Entity\Main\Game;
 use App\Entity\Main\Review;
 use App\Fixtures\Factory\GameFactory;
 use Doctrine\Persistence\ManagerRegistry;
-use Zenstruck\Foundry\Attribute\AsFixture;
 use Zenstruck\Foundry\Story;
 
-#[AsFixture(name: 'default')]
-final class DefaultStory extends Story
+final class IndexAllStory extends Story
 {
     public function __construct(private ManagerRegistry $managerRegistry)
     {

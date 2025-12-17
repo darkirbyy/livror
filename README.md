@@ -42,8 +42,8 @@ To lint all files, run `composer lint-all`.
 After cloning the project:
 
 - install the dependencies with `composer install` and `npm install`.
-- copy the `.env.dev` file into a `.env.dev.local` file and customize the values.  
-:information_source: `DATABASE_URL` is not mandatory for dev environment as Symfony will get the correct values from docker.  
+- copy the `.env` file into a `.env.local` file and customize the values.  
+:information_source: `DATABASE_URL` is not mandatory for dev environment as Symfony will get its value from docker.  
 
 To use default git hooks, run `git config core.hooksPath ./githooks`. Current hooks are
 
@@ -61,7 +61,15 @@ To increment the version, use `symfony console bizkit:versioning:increment`.
 In dev environment :
 
 - To mock the HTTP request to Steam API with dummy data, uncomment the line `when@dev: *test` in `config/services.yaml`.
-- To generate fake random data, use the Foundry Default Story with `symfony console doctrine:fixtures:load`. :warning: It will purge the database !
+- To generate fake random data, use the Foundry Default Story with `symfony console doctrine:fixtures:load`.  
+:warning: It will purge the database !
+
+## Test
+
+To start a specific test suite, run `composer tests-[unit|inte|func]`.  
+To start all tests, run `composer tests-all`.
+
+:warning: Tests that require a database connection use a specific database suffixed with `_test`, automatically created when needed. For Symfony to get the `DATABASE_URL` value from docker in test environnement, it's mandatory to run PHPUnit through symfony with `symfony php bin/phpunit`.
 
 ## Deploy
 
