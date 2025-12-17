@@ -25,9 +25,7 @@
       <div class="modal-content">
         {# Header with title and dismiss button #}
         <div class="modal-header">
-          <h1 class="modal-title fs-5" id="delete-modal-label">
-            {{ 'modal.title.delete'|trans }}
-          </h1>
+          <h1 class="modal-title fs-5" id="delete-modal-label">{{ 'modal.title.delete'|trans }}</h1>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ 'form.button.close'|trans }}"></button>
         </div>
 
@@ -44,7 +42,7 @@
               {{ 'form.button.delete'|trans }}
             </button>
             <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">{{ 'form.button.cancel'|trans }}</button>
-            <input type="hidden" name="_token" data-controller="csrf-protection" value="csrf-token" />
+            <input type="hidden" name="_token" data-controller="csrf-protection" value="{{ csrf_token('livror/delete') }}" />
           </form>
         </div>
       </div>
@@ -119,13 +117,15 @@
           <label class="input-group-text" id="input-group-filters">{{ 'form.button.filterBy'|trans }}</label>
           {% for filterKey in filterContent|keys %}
             {% set filtersId = 'filters-' ~ filterKey %}
-            <button type="button"
+            <button
+              type="button"
               class="btn btn-outline-secondary app-btn-border-light dropdown-toggle app-dropdown-left app-dropdown-smooth"
               data-bs-toggle="dropdown"
               data-bs-target="#{{ filtersId }}"
               data-bs-auto-close="outside"
               aria-expanded="false"
-              aria-haspopup="true">
+              aria-haspopup="true"
+            >
               {{ (entityKey ~ '.index.filter.' ~ filterKey)|trans }}
             </button>
             {% set new_param = { offset: 0, limit: env.app.default_limit, filters: queryParam.filters|filter((value, key) => key != filterKey) } %}
@@ -153,9 +153,7 @@
 {# Macro to display the title of the game in the game and review index #}
 {%- macro game_title(game, backpath = null) -%}
   <div class="text-center text-md-start d-flex p-1 ps-md-2 justify-content-center justify-content-md-start align-items-center">
-    <h5 class="mb-0 p-1 text-truncate flex-grow-1">
-      {{ game.name }}
-    </h5>
+    <h5 class="mb-0 p-1 text-truncate flex-grow-1">{{ game.name }}</h5>
     {% set url = path('game_edit', { id: game.id, backpath: backpath }) %}
     <a href="{{ url }}" class="btn btn-sm btn-outline-secondary" aria-label="{{ 'game.index.button.editGame'|trans }}" data-turbo-frame="_top">
       <span class="bi bi-pen" aria-hidden="true"></span>
@@ -167,10 +165,12 @@
 {% macro review_body(review, backpath = null) %}
   {% if review.user.id == app.user.id %}
     <div class="float-end">
-      <a class="btn btn-sm btn-outline-secondary"
+      <a
+        class="btn btn-sm btn-outline-secondary"
         href="{{ path('review_edit', { id: review.id, backpath: backpath }) }}"
         aria-label="{{ 'review.index.button.editReview'|trans }}"
-        data-turbo-frame="_top">
+        data-turbo-frame="_top"
+      >
         <span class="bi bi-pen" aria-hidden="true"></span>
         <span class="d-none d-md-inline">{{ 'review.index.button.editReview'|trans }}</span>
       </a>

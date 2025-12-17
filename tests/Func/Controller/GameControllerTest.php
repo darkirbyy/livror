@@ -7,13 +7,15 @@ namespace App\Tests\Func\Controller;
 use App\Entity\Main\Game;
 use App\Enum\TypeGameEnum;
 use App\Fixtures\Factory\GameFactory;
-use App\Fixtures\Story\IndexAllStory;
-use App\Fixtures\Story\IndexStandardStory;
+use App\Fixtures\Story\GameIndexAllStory;
+use App\Fixtures\Story\GameIndexStandardStory;
+use App\Fixtures\Story\GamePersistStory;
 use App\Repository\UserRepository;
 use App\Tests\Mock\DataMock;
 use PHPUnit\Framework\Attributes as PU;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Zenstruck\Foundry\Attribute\WithStory;
 use Zenstruck\Foundry\Test\Factories;
 use Zenstruck\Foundry\Test\ResetDatabase;
 
@@ -84,87 +86,110 @@ class GameControllerTest extends WebTestCase
     }
 
     #[PU\Test]
-    #[PU\DataProvider('newGetValues')]
-    public function newGet(string $queryString, array $expectedGame): void
+    #[PU\DataProvider('newValues')]
+    #[WithStory(GamePersistStory::class)]
+    public function new(string $queryString, array $expectedGame, array $formOverride, bool $formValid): void
     {
         $crawler = $this->client->request('GET', '/game/new?' . $queryString);
 
-        $submitButtonCrawler = $crawler->filter('button[type=submit]')->first();
-        $form = $submitButtonCrawler->form();
+        $form = $crawler->filter('form[name=game]')->form();
 
         $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('h1', 'game.edit.title');
         $this->assertEquals($expectedGame['name'], $form->get('game[name]')->getValue());
         $this->assertEquals($expectedGame['steam_appid'], $form->get('game[steamId]')->getValue());
-    }
-
-    #[PU\Test]
-    #[PU\DataProvider('newPostValidValues')]
-    public function newPostValid(string $queryString, array $formOverride): void
-    {
-        $crawler = $this->client->request('GET', '/game/new?' . $queryString);
-
-        $submitButtonCrawler = $crawler->filter('button[type=submit]')->first();
-        $form = $submitButtonCrawler->form();
 
         $this->client->submit($form, $formOverride);
 
-        $this->assertResponseRedirects('/game');
+        if ($formValid) {
+            $this->assertResponseRedirects('/game');
+        } else {
+            $this->assertResponseIsUnprocessable();
+        }
     }
 
     #[PU\Test]
-    #[PU\DataProvider('newPostInvalidValues')]
-    public function newPostInvalid(string $queryString, array $formOverride): void
+    #[PU\DataProvider('editValues')]
+    #[WithStory(GamePersistStory::class)]
+    public function edit(string $queryString, array $formOverride, bool $formValid): void
     {
-        GameFactory::createOne(['steamId' => 2, 'name' => 'Core Keeper']);
+        $gameRepo = GameFactory::repository();
+        $game = $gameRepo->first('steamId');
+        $crawler = $this->client->request('GET', '/game/' . $game->getId() . '/edit?' . $queryString);
 
-        $crawler = $this->client->request('GET', '/game/new?' . $queryString);
+        $form = $crawler->filter('form[name=game]')->form();
 
-        $submitButtonCrawler = $crawler->filter('button[type=submit]')->first();
-        $form = $submitButtonCrawler->form();
+        $this->assertResponseIsSuccessful();
+        $this->assertSelectorTextContains('h1', 'game.edit.title');
+        $this->assertEquals($game->getName(), $form->get('game[name]')->getValue());
+        $this->assertEquals($game->getSteamId(), $form->get('game[steamId]')->getValue());
 
-        $postCrawler = $this->client->submit($form, $formOverride);
+        $this->client->submit($form, $formOverride);
 
-        $this->assertResponseIsUnprocessable();
+        if ($formValid) {
+            $this->assertResponseRedirects('/game');
+        } else {
+            $this->assertResponseIsUnprocessable();
+        }
+    }
+
+    #[PU\Test]
+    #[PU\DataProvider('deleteValues')]
+    #[WithStory(GamePersistStory::class)]
+    public function delete(string $tokenName, string $expectedRedirect): void
+    {
+        $gameRepo = GameFactory::repository();
+        $game = $gameRepo->first('steamId');
+
+        $crawler = $this->client->request('GET', '/game/' . $game->getId() . '/edit');
+        $tokenValue = $crawler->filter('div[role=dialog] form input[type=hidden]')->attr('value');
+
+        $crawler = $this->client->request('POST', '/game/' . $game->getId() . '/delete', [$tokenName => $tokenValue]);
+
+        $this->assertResponseRedirects($expectedRedirect);
     }
 
     public static function indexValues(): array
     {
         return [
             'standard' => [
-                IndexStandardStory::class,
+                GameIndexStandardStory::class,
                 '',
                 ['typeGame' => [TypeGameEnum::GAME, TypeGameEnum::DLC]],
                 ['name' => 'ASC'],
                 static::getContainer()->getParameter('app.default_limit'),
             ],
-            'all' => [IndexAllStory::class, 'limit=20&sorts[name]=desc&filters[withoutReview][0]=1', [], ['name' => 'DESC'], 20],
+            'all' => [GameIndexAllStory::class, 'limit=20&sorts[name]=desc&filters[withoutReview][0]=1', [], ['name' => 'DESC'], 20],
         ];
     }
 
-    public static function newGetValues(): array
+    public static function newValues(): array
     {
         return [
-            'steamId null' => ['', ['name' => '', 'steam_appid' => ''], ['game[name]' => 'Half-life 3', 'game[fullPrice]' => 2999]],
-            'steamId valid' => ['steamId=1', DataMock::$appDetails[1]['data'], []],
+            'steamId null, valid fields' => ['', ['name' => '', 'steam_appid' => ''], ['game[name]' => 'Half-life 3', 'game[fullPrice]' => 2999], true],
+            'steamId null, no name' => ['', ['name' => '', 'steam_appid' => ''], ['game[genres]' => 'Multi'], false],
+            'steamId null, duplicate steamId' => ['', ['name' => '', 'steam_appid' => ''], ['game[steamId]' => 1], false],
+            'steamId valid, no change' => ['steamId=1', DataMock::$appDetails[1]['data'], [], true],
+            'steamId valid, invalid fields' => ['steamId=1', DataMock::$appDetails[1]['data'], ['game[releaseYear]' => 'thousand'], false],
+            'steamId valid, duplicate name' => ['steamId=2', DataMock::$appDetails[2]['data'], ['game[name]' => 'Core Keeper'], false],
         ];
     }
 
-    public static function newPostValidValues(): array
+    public static function editValues(): array
     {
         return [
-            'steamId null' => ['', ['game[name]' => 'Half-life 3', 'game[fullPrice]' => 2999]],
-            'steamId valid' => ['steamId=1', []],
+            'steamId null, no change' => ['', [], true],
+            'steamId null, valid fields' => ['', ['game[name]' => 'Half-life 3', 'game[fullPrice]' => 2999], true],
+            'steamId null, invalid fields' => ['', ['game[releaseYear]' => 'thousand'], false],
+            'steamId null, duplicate steamId' => ['', ['game[steamId]' => 5], false],
         ];
     }
 
-    public static function newPostInvalidValues(): array
+    public static function deleteValues(): array
     {
         return [
-            'steamId null, no name' => ['', ['game[genres]' => 'Multi']],
-            'steamId null, duplicate steamId' => ['', ['game[steamId]' => 1]],
-            'steamId valid, invalid fields' => ['steamId=1', ['game[releaseYear]' => 'thousand']],
-            'steamId valid, duplicate name' => ['steamId=2', ['game[name]' => 'Core Keeper']],
+            'valid token' => ['_token', '/game'],
+            'wrong token' => ['_game_token', ''],
         ];
     }
 }

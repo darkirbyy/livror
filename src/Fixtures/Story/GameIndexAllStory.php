@@ -3,13 +3,11 @@
 namespace App\Fixtures\Story;
 
 use App\Entity\Account\User;
-use App\Entity\Main\Game;
-use App\Enum\TypeGameEnum;
 use App\Fixtures\Factory\GameFactory;
 use Doctrine\Persistence\ManagerRegistry;
 use Zenstruck\Foundry\Story;
 
-final class IndexStandardStory extends Story
+final class GameIndexAllStory extends Story
 {
     public function __construct(private ManagerRegistry $managerRegistry)
     {
@@ -21,11 +19,7 @@ final class IndexStandardStory extends Story
         $userRepository = $this->managerRegistry->getManager('account')->getRepository(User::class);
         $usersId = array_map(fn (User $u) => $u->getId(), $userRepository->findAll());
 
-        // Create 20 games with "1" to "number of users" reviews, only of type of game GAME and DLC
-        GameFactory::new()
-            ->withUsersId($usersId, true)
-            ->withTypesGame([TypeGameEnum::GAME, TypeGameEnum::DLC])
-            ->many(20)
-            ->create();
+        // Create 20 games with "0" to "number of users" reviews
+        GameFactory::new()->withUsersId($usersId, false)->many(20)->create();
     }
 }
