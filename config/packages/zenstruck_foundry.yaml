@@ -1,8 +1,8 @@
 when@dev:
-    # See full configuration: https://symfony.com/bundles/ZenstruckFoundryBundle/current/index.html#full-default-bundle-configuration
     zenstruck_foundry:
         faker:
             locale: '%app.locale%'
+            # seed: 5170
         persistence:
             flush_once: true
         make_factory:
@@ -26,7 +26,7 @@ when@test:
     zenstruck_foundry:
         faker:
             locale: '%app.locale%'
-            # seed: 278017
+            # seed: 709584
         persistence:
             flush_once: true
         orm:

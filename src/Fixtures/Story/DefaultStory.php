@@ -29,6 +29,6 @@ final class DefaultStory extends Story
         $usersId = array_map(fn (User $u) => $u->getId(), $userRepository->findAll());
 
         // Create 20 games with "0" to "number of users" reviews
-        GameFactory::new()->withUsersId($usersId)->many(20)->create();
+        GameFactory::new()->withUsersId($usersId, false)->many(20)->create();
     }
 }

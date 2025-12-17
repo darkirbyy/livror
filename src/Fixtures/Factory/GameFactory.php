@@ -21,7 +21,7 @@ final class GameFactory extends PersistentProxyObjectFactory
     protected function defaults(): array|callable
     {
         $defaults = [];
-        $defaults['dateAdd'] = self::faker()->dateTimeBetween('-6 months', '-1 day');
+        $defaults['dateAdd'] = self::faker()->dateTimeBetween('-6 months', '-3 days');
         $defaults['dateUpdate'] = clone $defaults['dateAdd'];
         $defaults['name'] = mb_ucfirst(
             self::faker()
@@ -39,24 +39,19 @@ final class GameFactory extends PersistentProxyObjectFactory
         return $defaults;
     }
 
-    public function withUsersId(array $usersId): self
+    public function withUsersId(array $usersId, bool $atLeastOne): self
     {
-        return $this->with(function () use ($usersId) {
-            $callback = static fn (int $i) => [
-                self::faker()
-                    ->unique(1 == $i)
-                    ->randomElement($usersId),
-            ];
+        return $this->with(function () use ($usersId, $atLeastOne) {
+            $users = self::faker()->randomElements($usersId, self::faker()->numberBetween($atLeastOne ? 1 : 0, count($usersId)), false);
 
             $defaults = [];
-            $defaults['dateAdd'] = self::faker()->dateTimeBetween('-6 months', '-1 day');
+            $defaults['dateAdd'] = self::faker()->dateTimeBetween('-6 months', '-3 days');
             $defaults['dateUpdate'] = clone $defaults['dateAdd'];
             $defaults['releaseYear'] = self::faker()->numberBetween(1990, date('Y') - 1);
             $defaults['reviews'] = ReviewFactory::new()
                 ->withReleaseYear($defaults['releaseYear'])
                 ->withGameDateAdd($defaults['dateAdd'])
-                ->range(0, count($usersId))
-                ->applyStateMethod('withUserId', $callback);
+                ->sequence(array_map(fn ($userId) => ['userId' => $userId], $users));
 
             return $defaults;
         });
