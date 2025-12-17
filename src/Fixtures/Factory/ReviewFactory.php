@@ -20,13 +20,13 @@ final class ReviewFactory extends PersistentProxyObjectFactory
     {
         $defaults = [];
         $defaults['dateAdd'] = self::faker()->dateTimeBetween('-6 months', '-2 days');
-        $defaults['dateUpdate'] = self::faker()
-            ->optional(0.25, $defaults['dateAdd'])
-            ->dateTimeBetween($defaults['dateAdd'], '-1 day');
+        $defaults['dateUpdate'] = self::faker()->boolean(0.75) ? $defaults['dateAdd'] : self::faker()->dateTimeBetween($defaults['dateAdd'], '-1 day');
         $defaults['rating'] = self::faker()->randomFloat(1, 0, 6);
         $defaults['hourSpend'] = self::faker()->optional(0.75)->numberBetween(0, 200);
         $defaults['firstPlay'] = self::faker()->optional(0.75)->dateTimeBetween('-25 years', '-1 day');
-        $defaults['comment'] = self::faker()->optional(0.75)->paragraph(self::faker()->numberBetween(1, 10));
+        $defaults['comment'] = self::faker()
+            ->optional(0.75)
+            ->paragraph(self::faker()->numberBetween(1, 10));
         $defaults['userId'] = self::faker()->numberBetween(0, 10000);
 
         return $defaults;
@@ -49,9 +49,7 @@ final class ReviewFactory extends PersistentProxyObjectFactory
         return $this->with(function () use ($gameDateAdd) {
             $defaults = [];
             $defaults['dateAdd'] = self::faker()->dateTimeBetween($gameDateAdd, '-2 days');
-            $defaults['dateUpdate'] = self::faker()
-                ->optional(0.25, $defaults['dateAdd'])
-                ->dateTimeBetween($defaults['dateAdd'], '-1 day');
+            $defaults['dateUpdate'] = self::faker()->boolean(0.75) ? $defaults['dateAdd'] : self::faker()->dateTimeBetween($defaults['dateAdd'], '-1 day');
 
             return $defaults;
         });
@@ -65,11 +63,5 @@ final class ReviewFactory extends PersistentProxyObjectFactory
 
             return $defaults;
         });
-    }
-
-    protected function initialize(): static
-    {
-        return $this;
-        // ->afterInstantiate(function(Game $game): void {})
     }
 }

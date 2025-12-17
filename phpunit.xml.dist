@@ -47,6 +47,7 @@
         </report>
     </coverage>
     <extensions>
+        <bootstrap class="Zenstruck\Foundry\PHPUnit\FoundryExtension"/>
         <bootstrap class="Symfony\Bridge\PhpUnit\SymfonyExtension">
             <parameter name="clock-mock-namespaces" value="App" />
             <parameter name="dns-mock-namespaces" value="App" />
