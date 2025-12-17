@@ -10,30 +10,15 @@ use App\Fixtures\Factory\GameFactory;
 use App\Fixtures\Story\GameIndexAllStory;
 use App\Fixtures\Story\GameIndexStandardStory;
 use App\Fixtures\Story\GamePersistStory;
-use App\Repository\UserRepository;
 use App\Tests\Mock\DataMock;
 use PHPUnit\Framework\Attributes as PU;
-use Symfony\Bundle\FrameworkBundle\KernelBrowser;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Zenstruck\Foundry\Attribute\WithStory;
-use Zenstruck\Foundry\Test\Factories;
-use Zenstruck\Foundry\Test\ResetDatabase;
 
-class GameControllerTest extends WebTestCase
+class GameControllerTest extends AbstractControllerTest
 {
-    use ResetDatabase;
-    use Factories;
-
-    private KernelBrowser $client;
-
     public function setUp(): void
     {
         parent::setUp();
-        $this->client = static::createClient();
-
-        $userRepository = static::getContainer()->get(UserRepository::class);
-        $user = $userRepository->findOneBy(['username' => 'user1']);
-        $this->client->loginUser($user);
     }
 
     #[PU\Test]
@@ -90,6 +75,9 @@ class GameControllerTest extends WebTestCase
     #[WithStory(GamePersistStory::class)]
     public function new(string $queryString, array $expectedGame, array $formOverride, bool $formValid): void
     {
+        $gameRepo = GameFactory::repository();
+        $previousCount = $gameRepo->count();
+
         $crawler = $this->client->request('GET', '/game/new?' . $queryString);
 
         $form = $crawler->filter('form[name=game]')->form();
@@ -102,8 +90,10 @@ class GameControllerTest extends WebTestCase
         $this->client->submit($form, $formOverride);
 
         if ($formValid) {
+            GameFactory::assert()->count($previousCount + 1);
             $this->assertResponseRedirects('/game');
         } else {
+            GameFactory::assert()->count($previousCount);
             $this->assertResponseIsUnprocessable();
         }
     }
@@ -114,6 +104,7 @@ class GameControllerTest extends WebTestCase
     public function edit(string $queryString, array $formOverride, bool $formValid): void
     {
         $gameRepo = GameFactory::repository();
+        $previousCount = $gameRepo->count();
         $game = $gameRepo->first('steamId');
         $crawler = $this->client->request('GET', '/game/' . $game->getId() . '/edit?' . $queryString);
 
@@ -126,6 +117,7 @@ class GameControllerTest extends WebTestCase
 
         $this->client->submit($form, $formOverride);
 
+        GameFactory::assert()->count($previousCount);
         if ($formValid) {
             $this->assertResponseRedirects('/game');
         } else {
@@ -136,16 +128,21 @@ class GameControllerTest extends WebTestCase
     #[PU\Test]
     #[PU\DataProvider('deleteValues')]
     #[WithStory(GamePersistStory::class)]
-    public function delete(string $tokenName, string $expectedRedirect): void
+    public function delete(bool $validToken, string $expectedRedirect): void
     {
         $gameRepo = GameFactory::repository();
+        $previousCount = $gameRepo->count();
         $game = $gameRepo->first('steamId');
 
         $crawler = $this->client->request('GET', '/game/' . $game->getId() . '/edit');
-        $tokenValue = $crawler->filter('div[role=dialog] form input[type=hidden]')->attr('value');
+        $tokenValue = $validToken ? $crawler->filter('div[role=dialog] form input[type=hidden]')->attr('value') : '';
 
-        $crawler = $this->client->request('POST', '/game/' . $game->getId() . '/delete', [$tokenName => $tokenValue]);
-
+        $crawler = $this->client->request('POST', '/game/' . $game->getId() . '/delete', ['_token' => $tokenValue]);
+        if ($validToken) {
+            GameFactory::assert()->count($previousCount - 1);
+        } else {
+            GameFactory::assert()->count($previousCount);
+        }
         $this->assertResponseRedirects($expectedRedirect);
     }
 
@@ -188,8 +185,8 @@ class GameControllerTest extends WebTestCase
     public static function deleteValues(): array
     {
         return [
-            'valid token' => ['_token', '/game'],
-            'wrong token' => ['_game_token', ''],
+            'valid token' => [true, '/game'],
+            'wrong token' => [false, ''],
         ];
     }
 }

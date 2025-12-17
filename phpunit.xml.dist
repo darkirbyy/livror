@@ -24,6 +24,7 @@
         </testsuite>
         <testsuite name="func">
             <directory>tests/Func</directory>
+            <exclude>tests/Func/Controller/AbstractControllerTest.php</exclude>
         </testsuite>
     </testsuites>
     <source ignoreSuppressionOfDeprecations="true"
