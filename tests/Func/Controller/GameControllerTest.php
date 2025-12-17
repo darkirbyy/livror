@@ -32,7 +32,7 @@ class GameControllerTest extends WebTestCase
         $this->client = static::createClient();
 
         $userRepository = static::getContainer()->get(UserRepository::class);
-        $user = $userRepository->findOneBy(['username' => 'darkirby']);
+        $user = $userRepository->findOneBy(['username' => 'user1']);
         $this->client->loginUser($user);
     }
 

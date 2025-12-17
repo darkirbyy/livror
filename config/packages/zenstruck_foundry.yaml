@@ -29,6 +29,18 @@ when@test:
             # seed: 709584
         persistence:
             flush_once: true
+        global_state:
+            - 'App\Fixtures\Story\TestStory'
         orm:
             reset:
-                mode: migrate
+                connections:
+                    - default
+                    - account
+                entity_managers:
+                    - default
+                    - account
+                mode: schema
+        #         migrations:
+        #             configurations:
+        #                 - '%kernel.project_dir%/migrations'
+

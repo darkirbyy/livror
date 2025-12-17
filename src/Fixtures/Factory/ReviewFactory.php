@@ -7,10 +7,6 @@ use Zenstruck\Foundry\Persistence\PersistentProxyObjectFactory;
 
 final class ReviewFactory extends PersistentProxyObjectFactory
 {
-    public function __construct()
-    {
-    }
-
     public static function class(): string
     {
         return Review::class;

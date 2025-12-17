@@ -52,6 +52,16 @@ when@test:
         dbal:
             # "TEST_TOKEN" is typically set by ParaTest
             dbname_suffix: '_test%env(default::TEST_TOKEN)%'
+        orm:
+            entity_managers:
+                default:
+                    connection: default
+                    mappings:
+                        Account:
+                            is_bundle: false
+                            dir: '%kernel.project_dir%/src/Entity/Account'
+                            prefix: 'App\Entity\Account'
+                            alias: Account
 
 when@prod:
     doctrine:
