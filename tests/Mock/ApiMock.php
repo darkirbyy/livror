@@ -36,9 +36,21 @@ final class ApiMock extends MockHttpClient
             }
 
             return $this->getAppDetailsMock($query['appids']);
+        } elseif ('HEAD' === $method && str_starts_with($url, 'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps')) {
+            return $this->getAppImage();
         }
 
         throw new \UnexpectedValueException("Mock not implemented: $method/$url");
+    }
+
+    private function generateMockResponse(mixed $body): MockResponse
+    {
+        return new MockResponse(json_encode($body, JSON_THROW_ON_ERROR), [
+            'http_code' => Response::HTTP_OK,
+            'response_headers' => [
+                'content-type' => 'application/json',
+            ],
+        ]);
     }
 
     private function getAppsListV1Mock(): mixed
@@ -78,12 +90,12 @@ final class ApiMock extends MockHttpClient
         return $this->generateMockResponse([$appId => $body]);
     }
 
-    private function generateMockResponse(mixed $body): MockResponse
+    private function getAppImage(): mixed
     {
-        return new MockResponse(json_encode($body, JSON_THROW_ON_ERROR), [
+        return new MockResponse('', [
             'http_code' => Response::HTTP_OK,
             'response_headers' => [
-                'content-type' => 'application/json',
+                'content-type' => 'image/jpg',
             ],
         ]);
     }

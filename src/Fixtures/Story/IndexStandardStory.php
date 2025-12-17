@@ -10,7 +10,7 @@ use App\Fixtures\Factory\GameFactory;
 use Doctrine\Persistence\ManagerRegistry;
 use Zenstruck\Foundry\Story;
 
-final class IndexDefaultStory extends Story
+final class IndexStandardStory extends Story
 {
     public function __construct(private ManagerRegistry $managerRegistry)
     {

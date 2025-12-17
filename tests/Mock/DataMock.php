@@ -66,7 +66,7 @@ final class DataMock
             'data' => [
                 'type' => 'game',
                 'name' => 'Hollow Knight: Silksong',
-                'steam_appid' => 1030300,
+                'steam_appid' => 1,
                 'required_age' => 0,
                 'is_free' => false,
                 'controller_support' => 'full',
@@ -161,7 +161,7 @@ final class DataMock
             'data' => [
                 'type' => 'game',
                 'name' => 'Core Keeper',
-                'steam_appid' => 1621690,
+                'steam_appid' => 2,
                 'required_age' => 0,
                 'is_free' => false,
                 'controller_support' => 'full',
@@ -303,7 +303,7 @@ final class DataMock
             'data' => [
                 'type' => 'game',
                 'name' => 'SUPERVIVE',
-                'steam_appid' => 1283700,
+                'steam_appid' => 3,
                 'required_age' => 0,
                 'is_free' => true,
                 'detailed_description' => '<h2 class="bb_tag">SUPERVIVE est une combinaison de BR MOBA et de JEU DE TIR AVEC DES HÉROS.</h2><p class="bb_paragraph"> Venez découvrir gratuitement cette première combinaison mondiale de vitesse, précision, combat, stratégie et jeu d\'équipe.</p><p class="bb_paragraph"><img class="bb_img" src="https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1283700/extras/Steam-Gif-1-v2.gif?t=1732762006" /></p><p class="bb_paragraph"></p><h2 class="bb_tag">CONTENU DU JEU (CETTE LISTE S\'ÉLARGIRA CHAQUE SEMAINE) :</h2><p class="bb_paragraph">* Plongez dans un bac à sable de combat ouvert et débridé où vous devrez sauter, planer, tirer, frapper, rebondir, bombarder et écraser vos ennemis pour être la dernière équipe debout.</p><p class="bb_paragraph">* Modes de jeu multiples : escouades BR (4 joueurs par équipe), duos BR (2 joueurs par équipe), arène (4c4) et modes d\'événements spéciaux.</p><p class="bb_paragraph">* Plus de 16 chasseurs de tempêtes jouables, dont un chasseur pirate en méca-armure, un renard armé d\'un lance-flammes et un anarchiste maîtrisant le pouvoir de la foudre.</p><p class="bb_paragraph"></p><p class="bb_paragraph"><img class="bb_img" src="https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1283700/extras/Steam-Gif-2-v2.gif?t=1732762006" /></p><p class="bb_paragraph">* UN TAS de pouvoirs et d\'équipements à obtenir à chaque partie pour créer le build parfait : bombardez vos ennemis, dégommez-les avec des lasers, remontez le temps ou transformez-vous en arbre (oui, vous avez bien entendu).</p><p class="bb_paragraph">* Un milliard de façons de revenir et de gagner : aucune exclusion n\'est vraiment définitive.</p><p class="bb_paragraph">* Fruit d\'un studio de développeurs vétérans ayant créé parmi les plus grands jeux JcJ au monde, SUPERVIVE continuera d\'évoluer avec vous pendant des années.</p><p class="bb_paragraph"></p><p class="bb_paragraph"><img class="bb_img" src="https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1283700/extras/Steam-Gif-3-v2.gif?t=1732762006" /></p><h2 class="bb_tag"></h2>',
