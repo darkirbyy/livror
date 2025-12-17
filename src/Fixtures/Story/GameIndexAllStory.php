@@ -4,22 +4,15 @@ namespace App\Fixtures\Story;
 
 use App\Entity\Account\User;
 use App\Fixtures\Factory\GameFactory;
-use Doctrine\Persistence\ManagerRegistry;
+use App\Fixtures\Factory\UserFactory;
 use Zenstruck\Foundry\Story;
 
 final class GameIndexAllStory extends Story
 {
-    public function __construct(private ManagerRegistry $managerRegistry)
-    {
-    }
-
     public function build(): void
     {
-        // Fetch the users id available through the account connection
-        $userRepository = $this->managerRegistry->getManager('account')->getRepository(User::class);
-        $usersId = array_map(fn (User $u) => $u->getId(), $userRepository->findAll());
-
         // Create 20 games with "0" to "number of users" reviews
+        $usersId = array_map(fn (User $u) => $u->getId(), UserFactory::all());
         GameFactory::new()->withUsersId($usersId, false)->many(20)->create();
     }
 }

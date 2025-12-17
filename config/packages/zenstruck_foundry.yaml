@@ -31,16 +31,4 @@ when@test:
             flush_once: true
         global_state:
             - 'App\Fixtures\Story\TestStory'
-        orm:
-            reset:
-                connections:
-                    - default
-                    - account
-                entity_managers:
-                    - default
-                    - account
-                mode: schema
-        #         migrations:
-        #             configurations:
-        #                 - '%kernel.project_dir%/migrations'
 
