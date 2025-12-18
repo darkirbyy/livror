@@ -14,6 +14,7 @@ use App\Tests\Mock\DataMock;
 use PHPUnit\Framework\Attributes as PU;
 use Zenstruck\Foundry\Attribute\WithStory;
 
+#[PU\RequiresFunction('databaseAvailable')]
 class GameControllerTest extends AbstractControllerTest
 {
     public function setUp(): void

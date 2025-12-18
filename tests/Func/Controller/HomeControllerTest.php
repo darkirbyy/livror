@@ -8,12 +8,13 @@ use App\Repository\UserRepository;
 use App\Service\HubUrlGenerator;
 use PHPUnit\Framework\Attributes as PU;
 
+#[PU\RequiresFunction('databaseAvailable')]
 class HomeControllerTest extends AbstractControllerTest
 {
     #[PU\Test]
     public function homeNotLoggedIn(): void
     {
-        // diconnect the user by removing the session cookie
+        // disconnect the user by removing the session cookie
         $cookieJar = $this->client->getCookieJar();
         $cookieJar->clear();
 

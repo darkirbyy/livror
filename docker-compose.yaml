@@ -3,10 +3,8 @@ services:
     image: mariadb:11.5
     container_name: ${APP_NAME}-mariadb
     environment:
-      - MARIADB_RANDOM_ROOT_PASSWORD=yes
+      - MARIADB_ROOT_PASSWORD=${APP_NAME}_password
       - MARIADB_DATABASE=${APP_NAME}_db
-      - MARIADB_USER=${APP_NAME}_user
-      - MARIADB_PASSWORD=${APP_NAME}_password
     healthcheck:
       test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
       timeout: 5s

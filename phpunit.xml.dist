@@ -7,7 +7,7 @@
          failOnWarning="true"
          bootstrap="tests/bootstrap.php"
          cacheDirectory="var/cache/phpunit"
-         testdox="true"
+         testdox="false"
 >
     <php>
         <ini name="display_errors" value="1" />
