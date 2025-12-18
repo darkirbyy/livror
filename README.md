@@ -44,6 +44,7 @@ After cloning the project:
 - install the dependencies with `composer install` and `npm install`.
 - copy the `.env` file into a `.env.local` file and customize the values.  
 :information_source: `DATABASE_URL` is not mandatory for dev environment as Symfony will get its value from docker.  
+- execute `symfony console doctrine:migrations:migrate`.
 
 To use default git hooks, run `git config core.hooksPath ./githooks`. Current hooks are
 
