@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "201c2b5800f30bcfa492bf9469f4bcdc",
+    "content-hash": "07ea30d6e0d26b462343111acb7a17ca",
     "packages": [
         {
             "name": "bizkit/versioning-bundle",
@@ -8557,6 +8557,102 @@
                 }
             ],
             "time": "2025-12-03T16:05:42+00:00"
+        },
+        {
+            "name": "esi/phpunit-coverage-check",
+            "version": "2.0.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ericsizemore/phpunit-coverage-check.git",
+                "reference": "0428086b845733eb9d853464911923f78aa6b571"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ericsizemore/phpunit-coverage-check/zipball/0428086b845733eb9d853464911923f78aa6b571",
+                "reference": "0428086b845733eb9d853464911923f78aa6b571",
+                "shasum": ""
+            },
+            "require": {
+                "ext-libxml": "*",
+                "ext-simplexml": "*",
+                "php": "^8.2 <8.5",
+                "symfony/console": "^7.1"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^3.65",
+                "phpstan/extension-installer": "^1.4",
+                "phpstan/phpstan": "^2.0",
+                "phpstan/phpstan-deprecation-rules": "^2.0",
+                "phpstan/phpstan-phpunit": "^2.0",
+                "phpstan/phpstan-strict-rules": "^2.0",
+                "phpunit/phpunit": "^11.4"
+            },
+            "bin": [
+                "coverage-check"
+            ],
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Esi\\CoverageCheck\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Eric Sizemore",
+                    "email": "admin@secondversion.com",
+                    "role": "Developer"
+                },
+                {
+                    "name": "Richard Regeer",
+                    "email": "rich2309@gmail.com",
+                    "role": "Original Developer"
+                }
+            ],
+            "description": "Check the code coverage using the clover report of PHPUnit.",
+            "homepage": "https://github.com/ericsizemore/phpunit-coverage-check",
+            "keywords": [
+                "code-coverage",
+                "code-coverage-checker",
+                "coverage",
+                "coverage-report",
+                "phpunit",
+                "test",
+                "testing",
+                "testing-tools",
+                "unit-testing"
+            ],
+            "support": {
+                "docs": "https://github.com/ericsizemore/phpunit-coverage-check",
+                "forum": "https://github.com/ericsizemore/phpunit-coverage-check/discussions",
+                "issues": "https://github.com/ericsizemore/phpunit-coverage-check/issues",
+                "rss": "https://github.com/ericsizemore/phpunit-coverage-check/releases.atom",
+                "security": "https://github.com/ericsizemore/phpunit-coverage-check/security/policy",
+                "source": "https://github.com/ericsizemore/phpunit-coverage-check/tree/master"
+            },
+            "funding": [
+                {
+                    "url": "https://ko-fi.com/ericsizemore",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/ericsizemore",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/esi/phpunit-coverage-check",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2024-12-03T04:33:39+00:00"
         },
         {
             "name": "evenement/evenement",

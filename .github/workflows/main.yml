@@ -1,5 +1,5 @@
 name: Main Workflow
-run-name: ${{ github.actor }} triggered "Build and Deploy" 🚀
+run-name: ${{ github.actor }} triggered "Test, Build, Deploy" 🚀
 
 on:
   push:
@@ -48,9 +48,9 @@ jobs:
           echo "version_hash=$version_hash" >> $GITHUB_OUTPUT
           echo "release_date=$release_date" >> $GITHUB_OUTPUT
 
-  call-build-deploy:
+  call-test-build-deploy:
     needs: prepare
-    uses: ./.github/workflows/build-deploy.yml
+    uses: ./.github/workflows/test-build-deploy.yml
     secrets: inherit
     with:
       environment: ${{ needs.prepare.outputs.environment }}

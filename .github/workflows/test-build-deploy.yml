@@ -1,5 +1,5 @@
-name: Build and Deploy
-run-name: ${{ github.actor }} triggered "Build-Deploy" of version ${{ inputs.version }} to ${{ inputs.environment }} 🚀
+name: Test, Build, Deploy
+run-name: ${{ github.actor }} triggered "Test, Build, Deploy" of version ${{ inputs.version }} to ${{ inputs.environment }} 🚀
 
 on:
   workflow_call:
@@ -17,6 +17,42 @@ permissions:
   contents: read
 
 jobs:
+  test:
+    runs-on: ubuntu-24.04
+    steps:
+    - name: Checkout code in the runner
+      uses: actions/checkout@v4
+
+    - name: Setup PHP 8.2
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '8.2'
+        coverage: pcov
+
+    - name : Setup MYSQL database
+      run: |
+        echo 'DATABASE_URL="mysql://root:root@127.0.0.1:3306/livror_db"' > .env.test.local
+        sudo systemctl start mysql.service
+
+    - name: Cache composer packages
+      id: composer-cache
+      uses: actions/cache@v4
+      with:
+        path: vendor
+        key: ${{ runner.os }}-php-test-${{ hashFiles('composer.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-php-test-
+
+    - name: Install PHP DEV dependencies
+      run: composer install --no-scripts --no-interaction --no-progress --prefer-dist
+
+    - name: Run all test suites and check coverage
+      run: |
+        php vendor/bin/phpunit 
+        php vendor/bin/coverage-check coverage/clover.xml ${{ vars.SERV_PATH }}
+        coverage=$(php vendor/bin/coverage-check coverage/clover.xml 1 --only-percentage | grep -Eo '[0-9.]+%' | sed 's/%//')
+        echo "coverage=$coverage" >> $GITHUB_OUTPUT
+        
   build:
     runs-on: ubuntu-24.04
     steps:
@@ -33,19 +69,18 @@ jobs:
       uses: actions/cache@v4
       with:
         path: vendor
-        key: ${{ runner.os }}-php-${{ hashFiles('composer.lock') }}
+        key: ${{ runner.os }}-php-build-${{ hashFiles('composer.lock') }}
         restore-keys: |
-          ${{ runner.os }}-php-
+          ${{ runner.os }}-php-build-
 
-    - name: Install PHP dependencies
+    - name: Install PHP NO-DEV dependencies
       run: composer install --no-scripts --no-interaction --no-progress --prefer-dist --no-dev --optimize-autoloader
 
-    - name: Setup Node.js 18.x
+    - name: Setup Node.js 22.x
       uses: actions/setup-node@v4
       with:
-        node-version: 18.x
+        node-version: 22.x
 
-    # USELESS as setup-node already cache the packages ?
     - name: Cache npm packages
       id: npm-cache
       uses: actions/cache@v4
@@ -80,7 +115,7 @@ jobs:
           .env.${{ inputs.environment }}
 
   deploy:
-    needs: build
+    needs: [test,build]
     runs-on: ubuntu-24.04
     environment: ${{ inputs.environment }}
     steps:
@@ -114,3 +149,23 @@ jobs:
           sudo /usr/bin/docker exec -u php-fpm php-fpm upgrade-app ${{ vars.SERV_PATH }}
           sudo /usr/bin/docker restart php-fpm
    
+    - name: Update coverage badge
+      uses: schneegans/dynamic-badges-action@v1.7.0
+      with:
+        auth: ${{ secrets.GIST_KEY }}
+        gistID: 07bb4b086f8e7dea73754e73bc5c1bb2
+        filename: livror-coverage.json
+        label: coverage
+        message: ${{ needs.test.outputs.coverage }}%
+        valColorRange: ${{ needs.test.outputs.coverage }}
+        minColorRange: ${{ vars.MIN_COVERAGE }}
+        maxColorRange: 100
+
+    - name: Update version badge
+      uses: schneegans/dynamic-badges-action@v1.7.0
+      with:
+        auth: ${{ secrets.GIST_KEY }}
+        gistID: 07bb4b086f8e7dea73754e73bc5c1bb2
+        filename: livror-version.json
+        label: version
+        message: ${{ inputs.version }}

@@ -1,5 +1,8 @@
 # Livror
 
+![version](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/darkirbyy/07bb4b086f8e7dea73754e73bc5c1bb2/raw/b5d2f326bb171d4277079f73e56b358b202939c1/livror-version.json)
+![coverage](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/darkirbyy/07bb4b086f8e7dea73754e73bc5c1bb2/raw/7e4891712c6545e83e7b826fc1148e39cacfb137/livror-coverage.json)
+
 Small webapp to share reviews of games with my friends, developed while learning Symfony.
 
 ## Prerequisite
@@ -8,13 +11,14 @@ Small webapp to share reviews of games with my friends, developed while learning
   - **Symfony**: 7.4 framework
   - **PHP**: 8.2 (compatible with Symfony 7.4)
   - **Composer**: >= 2.8 for dependency management
-  - **MariaDB**: 11.5 through docker for the database
+  - **MariaDB**: 11.5 through **docker** for the database
 - Front-end:
   - **Node.js**: 22.x
   - **npm**: >= 10.x for dependency management
   - **Sass**: >= 1.82
   - **Webpack Encore**: 5.x
 - **git** and **git-flow** for source and version control
+- **symfony CLI** for main commands
 - **GitHub** to share and deploy
 
 ## Code quality
@@ -44,6 +48,7 @@ After cloning the project:
 - install the dependencies with `composer install` and `npm install`.
 - copy the `.env` file into a `.env.local` file and customize the values.  
 :information_source: `DATABASE_URL` is not mandatory for dev environment as Symfony will get its value from docker.  
+- start the php/web server along with docker and npm server with `symfony server:start -d`.  
 - execute `symfony console doctrine:migrations:migrate`.
 
 To use default git hooks, run `git config core.hooksPath ./githooks`. Current hooks are
@@ -53,16 +58,9 @@ To use default git hooks, run `git config core.hooksPath ./githooks`. Current ho
 
 ## Dev
 
-Start the php/web server along with docker and npm server with `symfony server:start -d`.  
-Check the logs with `symfony server:logs`.  
-Stop all the services with `symfony server:stop`.
-
 To increment the version, use `symfony console bizkit:versioning:increment`.
-
-In dev environment :
-
-- To mock the HTTP request to Steam API with dummy data, uncomment the line `when@dev: *test` in `config/services.yaml`.
-- To generate fake random data, use the Foundry Default Story with `symfony console doctrine:fixtures:load`.  
+To mock the HTTP request to Steam API with dummy data, uncomment the line `when@dev: *test` in `config/services.yaml`.
+To generate fake random data, use the Foundry Default Story with `symfony console doctrine:fixtures:load`.  
 :warning: It will purge the database !
 
 ## Test
