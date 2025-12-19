@@ -26,6 +26,7 @@ when@test:
             storage_factory_id: session.storage.factory.mock_file
         csrf_protection:
             stateless_token_ids:
+        error_controller: App\Controller\ErrorController::show
 
 when@prod:
     framework:

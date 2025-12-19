@@ -9,6 +9,7 @@ use Symfony\Component\ErrorHandler\Exception\FlattenException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Log\DebugLoggerInterface;
+use Symfony\Component\Routing\Attribute\Route;
 
 /**
  * Controller for managing the error page.
@@ -36,5 +37,11 @@ class ErrorController extends AbstractController
         ]);
 
         return new Response($response->getContent(), $statusCode, $response->headers->all());
+    }
+
+    #[Route('/error/500', name: 'test_500', condition: "'test' === '%kernel.environment%'")]
+    public function error500(): Response
+    {
+        throw new \RuntimeException('Test 500');
     }
 }

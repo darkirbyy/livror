@@ -172,7 +172,7 @@ class ReviewControllerTest extends AbstractControllerTest
         $this->expectException(AccessDeniedException::class);
         $this->client->catchExceptions(false);
 
-        $crawler = $this->client->request($method, '/review/' . $review->getId() . $route);
+        $this->client->request($method, '/review/' . $review->getId() . $route);
     }
 
     public static function indexValues(): array
