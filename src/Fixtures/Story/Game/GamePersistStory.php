@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Fixtures\Story;
+namespace App\Fixtures\Story\Game;
 
 use App\Fixtures\Factory\GameFactory;
 use Zenstruck\Foundry\Story;

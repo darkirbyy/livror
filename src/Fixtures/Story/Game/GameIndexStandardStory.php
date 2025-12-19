@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Fixtures\Story;
+namespace App\Fixtures\Story\Game;
 
 use App\Entity\Account\User;
 use App\Enum\TypeGameEnum;
