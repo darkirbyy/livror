@@ -9,6 +9,7 @@ final class GamePersistStory extends Story
 {
     public function build(): void
     {
+        // Create 2 games
         GameFactory::createOne(['steamId' => 2, 'name' => 'Core Keeper']);
         GameFactory::createOne(['steamId' => 5, 'name' => 'Team Fortress Classic']);
     }

@@ -51,16 +51,16 @@ class GameControllerTest extends AbstractControllerTest
             return;
         }
 
+        $gameRepo = GameFactory::repository();
+        $games = $gameRepo->findBy($criteria, $sortBy, $maxLimit, $expectedNbGames);
+        $gamesTitleExpected = array_slice(array_map(fn (Game $g) => $g->getName(), $games), 0, $expectedNbGames);
+
         $showMoreButton = $crawler->filter('button[data-load-more-target]')->first();
         $xmlUrl = $showMoreButton->ancestors()->first()->attr('data-load-more-url-value');
         $xmlCrawler = $this->client->xmlHttpRequest('GET', $xmlUrl);
 
         $gamesTitleXmlCrawler = $xmlCrawler->filter('div[id^=game] h5');
         $gamesTitle = array_map('trim', $gamesTitleXmlCrawler->extract(['_text']));
-
-        $gameRepo = GameFactory::repository();
-        $games = $gameRepo->findBy($criteria, $sortBy, $maxLimit, $expectedNbGames);
-        $gamesTitleExpected = array_slice(array_map(fn (Game $g) => $g->getName(), $games), 0, $expectedNbGames);
 
         $this->assertResponseIsSuccessful();
         $this->assertSelectorNotExists('h1');

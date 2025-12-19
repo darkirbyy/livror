@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Tests\Func\Controller;
 
-use App\Repository\UserRepository;
 use App\Service\HubUrlGenerator;
 use PHPUnit\Framework\Attributes as PU;
 
@@ -29,10 +28,6 @@ class HomeControllerTest extends AbstractControllerTest
     #[PU\Test]
     public function homeLoggedIn(): void
     {
-        $userRepository = static::getContainer()->get(UserRepository::class);
-        $user = $userRepository->findOneBy(['username' => 'user1']);
-        $this->client->loginUser($user);
-
         $this->client->request('GET', '');
 
         $this->assertResponseIsSuccessful();
@@ -42,10 +37,6 @@ class HomeControllerTest extends AbstractControllerTest
     #[PU\Test]
     public function account(): void
     {
-        $userRepository = static::getContainer()->get(UserRepository::class);
-        $user = $userRepository->findOneBy(['username' => 'user1']);
-        $this->client->loginUser($user);
-
         $hubUrlGenerator = static::getContainer()->get(HubUrlGenerator::class);
         $expectedUrl = $hubUrlGenerator->generateAccount('');
 

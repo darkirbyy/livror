@@ -27,8 +27,8 @@ final class DevStory extends Story
         $userRepository = $this->managerRegistry->getManager('account')->getRepository(User::class);
         $usersId = array_map(fn (User $u) => $u->getId(), $userRepository->findAll());
 
-        // Create 20 games with "0" to "number of users" reviews, and 200 steam game
-        GameFactory::new()->withUsersId($usersId, false)->many(20)->create();
+        // Create 50 games with "0" to "number of users" reviews, and 200 steam game
+        GameFactory::new()->withUsersId($usersId, false)->many(50)->create();
         SteamFactory::new()
             ->sequence(array_map(fn ($i) => ['id' => $i], range(1, 200)))
             ->create();
