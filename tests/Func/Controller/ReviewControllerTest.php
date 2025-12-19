@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Func\Controller;
 
+use App\Entity\Account\User;
 use App\Entity\Main\Review;
 use App\Fixtures\Factory\ReviewFactory;
 use App\Fixtures\Story\Review\ReviewIndexAllStory;
@@ -11,6 +12,7 @@ use App\Fixtures\Story\Review\ReviewIndexStandardStory;
 use App\Fixtures\Story\Review\ReviewPersistStory;
 use App\Fixtures\Story\TestStory;
 use PHPUnit\Framework\Attributes as PU;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 #[PU\RequiresFunction('databaseAvailable')]
 class ReviewControllerTest extends AbstractControllerTest
@@ -159,6 +161,20 @@ class ReviewControllerTest extends AbstractControllerTest
         $this->assertResponseRedirects($expectedRedirect);
     }
 
+    #[PU\Test]
+    #[PU\DataProvider('accessDeniedValues')]
+    public function accessDenied(string $method, string $route): void
+    {
+        ReviewPersistStory::load();
+
+        $review = ReviewFactory::repository()->findOneBy(['userId' => array_map(fn (User $u) => $u->getId(), TestStory::getPool('other-users'))]);
+
+        $this->expectException(AccessDeniedException::class);
+        $this->client->catchExceptions(false);
+
+        $crawler = $this->client->request($method, '/review/' . $review->getId() . $route);
+    }
+
     public static function indexValues(): array
     {
         return [
@@ -190,6 +206,15 @@ class ReviewControllerTest extends AbstractControllerTest
         return [
             'wrong token' => [false, ''],
             'valid token' => [true, '/review'],
+        ];
+    }
+
+    public static function accessDeniedValues(): array
+    {
+        return [
+            'edit' => ['GET', '/edit'],
+            'edit' => ['POST', '/edit'],
+            'delete' => ['POST', '/delete'],
         ];
     }
 }
