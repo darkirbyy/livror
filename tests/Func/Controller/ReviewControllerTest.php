@@ -21,7 +21,7 @@ class ReviewControllerTest extends AbstractControllerTest
     {
         $storyClass::load();
 
-        $user1 = TestStory::get('user1');
+        $user1 = TestStory::get('connected-user');
         $reviews = ReviewFactory::repository()->findBy(['userId' => $user1->getId()]);
         usort($reviews, fn (Review $r1, Review $r2) => $r1->getGame()->getName() <=> $r2->getGame()->getName());
         $gamesTitleExpected = array_slice(array_map(fn (Review $r) => $r->getGame()->getName(), $reviews), 0, $expectedNbGames);
@@ -57,7 +57,7 @@ class ReviewControllerTest extends AbstractControllerTest
             return;
         }
 
-        $user1 = TestStory::get('user1');
+        $user1 = TestStory::get('connected-user');
         $reviews = ReviewFactory::repository()->findBy(['userId' => $user1->getId()]);
         usort($reviews, fn (Review $r1, Review $r2) => $r1->getGame()->getName() <=> $r2->getGame()->getName());
         $gamesTitleExpected = array_slice(array_map(fn (Review $r) => $r->getGame()->getName(), $reviews), $expectedNbGames, $expectedNbGames);
@@ -76,42 +76,18 @@ class ReviewControllerTest extends AbstractControllerTest
 
     #[PU\Test]
     #[PU\DataProvider('newValues')]
-    public function newEmpty(array $formOverride, bool $formValid): void
-    {
-        ReviewPersistStory::load();
-        $previousCount = ReviewFactory::repository()->count();
-
-        $crawler = $this->client->request('GET', '/review/new');
-        $form = $crawler->filter('form[name=review]')->form();
-
-        $this->assertResponseIsSuccessful();
-        $this->assertSelectorTextContains('h1', 'review.edit.title');
-
-        $this->client->submit($form, array_merge(['review[rating]' => 3], $formOverride));
-
-        if ($formValid) {
-            ReviewFactory::assert()->count($previousCount + 1);
-            $this->assertResponseRedirects('/review');
-        } else {
-            ReviewFactory::assert()->count($previousCount);
-            $this->assertResponseIsUnprocessable();
-        }
-    }
-
-    #[PU\Test]
-    #[PU\DataProvider('newValues')]
-    public function newPrefill(array $formOverride, bool $formValid): void
+    public function new(bool $prefill, array $formOverride, bool $formValid): void
     {
         ReviewPersistStory::load();
         $previousCount = ReviewFactory::repository()->count();
         $game = ReviewPersistStory::get('notCommented');
 
-        $crawler = $this->client->request('GET', '/review/new?gameId=' . $game->getId());
+        $crawler = $this->client->request('GET', '/review/new' . ($prefill ? '?gameId=' . $game->getId() : ''));
         $form = $crawler->filter('form[name=review]')->form();
 
         $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('h1', 'review.edit.title');
-        $this->assertEquals($game->getId(), $form->get('review[game]')->getValue());
+        $prefill ? $this->assertEquals($game->getId(), $form->get('review[game]')->getValue()) : null;
 
         $this->client->submit($form, array_merge(['review[rating]' => 3], $formOverride));
 
@@ -142,7 +118,7 @@ class ReviewControllerTest extends AbstractControllerTest
         ReviewPersistStory::load();
 
         $previousCount = ReviewFactory::repository()->count();
-        $review = ReviewFactory::repository()->findOneBy(['userId' => TestStory::get('user1')->getId()]);
+        $review = ReviewFactory::repository()->findOneBy(['userId' => TestStory::get('connected-user')->getId()]);
 
         $crawler = $this->client->request('GET', '/review/' . $review->getId() . '/edit');
         $form = $crawler->filter('form[name=review]')->form();
@@ -169,7 +145,7 @@ class ReviewControllerTest extends AbstractControllerTest
         ReviewPersistStory::load();
 
         $previousCount = ReviewFactory::repository()->count();
-        $review = ReviewFactory::repository()->findOneBy(['userId' => TestStory::get('user1')->getId()]);
+        $review = ReviewFactory::repository()->findOneBy(['userId' => TestStory::get('connected-user')->getId()]);
 
         $crawler = $this->client->request('GET', '/review/' . $review->getId() . '/edit');
         $tokenValue = $validToken ? $crawler->filter('div[role=dialog] form input[type=hidden]')->attr('value') : '';
@@ -194,9 +170,10 @@ class ReviewControllerTest extends AbstractControllerTest
     public static function newValues(): array
     {
         return [
-            'invalid fields 1' => [['review[firstPlay]' => 'thousand'], false],
-            'invalid fields 2' => [['review[hourSpend]' => 'hundred'], false],
-            'valid fields' => [['review[hourSpend]' => 150], true],
+            'empty, invalid fields' => [false, ['review[firstPlay]' => 'thousand'], false],
+            'prefill, invalid fields' => [true, ['review[hourSpend]' => 'hundred'], false],
+            'empty, valid fields' => [false, ['review[hourSpend]' => 150], true],
+            'prefill, valid fields' => [true, [], true],
         ];
     }
 

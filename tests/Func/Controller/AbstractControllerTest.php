@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Func\Controller;
 
-use App\Repository\UserRepository;
+use App\Fixtures\Story\TestStory;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Zenstruck\Foundry\Test\Factories;
@@ -22,8 +22,6 @@ abstract class AbstractControllerTest extends WebTestCase
         parent::setUp();
         $this->client = static::createClient();
 
-        $userRepository = static::getContainer()->get(UserRepository::class);
-        $user = $userRepository->findOneBy(['username' => 'user1']);
-        $this->client->loginUser($user);
+        $this->client->loginUser(TestStory::get('connected-user'));
     }
 }

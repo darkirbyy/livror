@@ -4,7 +4,6 @@ namespace App\Fixtures\Story\Game;
 
 use App\Entity\Account\User;
 use App\Fixtures\Factory\GameFactory;
-use App\Fixtures\Factory\UserFactory;
 use App\Fixtures\Story\TestStory;
 use Zenstruck\Foundry\Story;
 
@@ -12,9 +11,8 @@ final class GameAutocompleteStory extends Story
 {
     public function build(): void
     {
-        $user1 = TestStory::get('user1');
-        $usersId = array_map(fn (User $u) => $u->getId(), UserFactory::all());
-        $usersButUser1Id = array_filter($usersId, fn ($id) => $id != $user1->getId());
+        $user1 = TestStory::get('connected-user');
+        $usersButUser1Id = array_map(fn (User $u) => $u->getId(), TestStory::getPool('other-users'));
 
         // Create 10 games NOT reviewed by user 1, with "welcome" in the name
         GameFactory::new()

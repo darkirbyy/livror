@@ -10,7 +10,7 @@ final class ReviewIndexAllStory extends Story
 {
     public function build(): void
     {
-        $user1 = TestStory::get('user1');
+        $user1 = TestStory::get('connected-user');
 
         // Create 20 games reviewed by user1
         GameFactory::new()
