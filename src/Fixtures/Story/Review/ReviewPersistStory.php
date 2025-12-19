@@ -22,7 +22,8 @@ final class ReviewPersistStory extends Story
             ->many(4)
             ->create();
 
-        // Create 4 games NOT reviewed by user 1
-        GameFactory::new()->withUsersId($usersButUser1Id, true)->many(4)->create();
+        // Create 4 games NOT reviewed by user 1, one being set in a state
+        $this->addState('notCommented', GameFactory::new()->withUsersId($usersButUser1Id, false)->create());
+        GameFactory::new()->withUsersId($usersButUser1Id, false)->many(3)->create();
     }
 }

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Tests\Func\Controller;
 
-use App\Entity\Main\Game;
 use App\Entity\Main\Review;
 use App\Fixtures\Factory\ReviewFactory;
 use App\Fixtures\Story\Review\ReviewIndexAllStory;
@@ -75,36 +74,66 @@ class ReviewControllerTest extends AbstractControllerTest
         $this->assertSame($gamesTitle, $gamesTitleExpected);
     }
 
-    // #[PU\Test]
-    // #[PU\DataProvider('newAvailableValues')]
-    // public function newAvailable(bool $prefill, bool $overrideGame, bool $formValid): void
-    // {
-    //     ReviewPersistStory::load();
-    //     $previousCount = ReviewFactory::repository()->count();
-    //     $gameNotCommented = ReviewPersistStory::get('notCommented');
+    #[PU\Test]
+    #[PU\DataProvider('newValues')]
+    public function newEmpty(array $formOverride, bool $formValid): void
+    {
+        ReviewPersistStory::load();
+        $previousCount = ReviewFactory::repository()->count();
 
-    //     $crawler = $this->client->request('GET', '/review/new?' . $prefill ? 'gameId=' . $gameNotCommented->getId() : '');
-    //     $form = $crawler->filter('form[name=review]')->form();
+        $crawler = $this->client->request('GET', '/review/new');
+        $form = $crawler->filter('form[name=review]')->form();
 
-    //     $this->assertResponseIsSuccessful();
-    //     $this->assertSelectorTextContains('h1', 'review.edit.title');
-    //     if ($prefill) {
-    //         $this->assertEquals($gameNotCommented->getName(), $form->get('review[game]')->getValue());
-    //     }
+        $this->assertResponseIsSuccessful();
+        $this->assertSelectorTextContains('h1', 'review.edit.title');
 
-    //     $formOverride = [];
-    //     $overrideGame ? ($formOverride['review[game]'] = ReviewPersistStory::get('notCommented')->getId()) : null;
-    //     $formOverride['review[rating]'] = 5;
-    //     $this->client->submit($form, $formOverride);
+        $this->client->submit($form, array_merge(['review[rating]' => 3], $formOverride));
 
-    //     if ($formValid) {
-    //         ReviewFactory::assert()->count($previousCount + 1);
-    //         $this->assertResponseRedirects('/review');
-    //     } else {
-    //         ReviewFactory::assert()->count($previousCount);
-    //         $this->assertResponseIsUnprocessable();
-    //     }
-    // }
+        if ($formValid) {
+            ReviewFactory::assert()->count($previousCount + 1);
+            $this->assertResponseRedirects('/review');
+        } else {
+            ReviewFactory::assert()->count($previousCount);
+            $this->assertResponseIsUnprocessable();
+        }
+    }
+
+    #[PU\Test]
+    #[PU\DataProvider('newValues')]
+    public function newPrefill(array $formOverride, bool $formValid): void
+    {
+        ReviewPersistStory::load();
+        $previousCount = ReviewFactory::repository()->count();
+        $game = ReviewPersistStory::get('notCommented');
+
+        $crawler = $this->client->request('GET', '/review/new?gameId=' . $game->getId());
+        $form = $crawler->filter('form[name=review]')->form();
+
+        $this->assertResponseIsSuccessful();
+        $this->assertSelectorTextContains('h1', 'review.edit.title');
+        $this->assertEquals($game->getId(), $form->get('review[game]')->getValue());
+
+        $this->client->submit($form, array_merge(['review[rating]' => 3], $formOverride));
+
+        if ($formValid) {
+            ReviewFactory::assert()->count($previousCount + 1);
+            $this->assertResponseRedirects('/review');
+        } else {
+            ReviewFactory::assert()->count($previousCount);
+            $this->assertResponseIsUnprocessable();
+        }
+    }
+
+    #[PU\Test]
+    public function newNotAvailable(): void
+    {
+        ReviewIndexAllStory::load();
+
+        $this->expectException(\RuntimeException::class);
+        $this->client->catchExceptions(false);
+
+        $this->client->request('GET', '/review/new');
+    }
 
     #[PU\Test]
     #[PU\DataProvider('editValues')]
@@ -162,20 +191,20 @@ class ReviewControllerTest extends AbstractControllerTest
         ];
     }
 
-    // public static function newAvailableValues(): array
-    // {
-    //     return [
-    //         'gameId null, no game' => [true, false, false],
-    //         'gameId null, valid game' => ['', '', true, true],
-    //         // 'gameId valid' => ['gameId=', [],true],
-    //     ];
-    // }
+    public static function newValues(): array
+    {
+        return [
+            'invalid fields 1' => [['review[firstPlay]' => 'thousand'], false],
+            'invalid fields 2' => [['review[hourSpend]' => 'hundred'], false],
+            'valid fields' => [['review[hourSpend]' => 150], true],
+        ];
+    }
 
     public static function editValues(): array
     {
         return [
-            'valid fields' => [[], true],
             'invalid fields' => [['review[rating]' => 7], false],
+            'no change' => [[], true],
         ];
     }
 
