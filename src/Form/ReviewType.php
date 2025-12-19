@@ -31,7 +31,7 @@ class ReviewType extends DefaultType
             $builder->add('game', EntityType::class, [
                 'required' => true,
                 'class' => Game::class,
-                'choices' => [],
+                'choices' => $this->gameRepo->findWithoutReview($options['userId']),
                 'choice_label' => fn (Game $game) => $game->getName(),
             ]);
         }
@@ -62,32 +62,13 @@ class ReviewType extends DefaultType
         if (!empty($options['gameId'])) {
             $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) use ($options) {
                 $review = $event->getData();
-                $form = $event->getForm();
-
-                $game = $this->gameRepo->find($options['gameId']);
-                $review->setGame($game);
-                $options = $form->get('game')->getConfig()->getOptions();
-                $options['choices'] = [$game];
-                $form->add('game', EntityType::class, $options);
+                $review->setGame($this->gameRepo->find($options['gameId']));
             });
         }
         if ($options['userId']) {
             $builder->addEventListener(FormEvents::SUBMIT, function (FormEvent $event) use ($options) {
                 $review = $event->getData();
-
                 $review->setUserId($options['userId']);
-            });
-
-            $builder->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {
-                $review = $event->getData();
-                $form = $event->getForm();
-
-                if (!empty($review['game'])) {
-                    $options = $form->get('game')->getConfig()->getOptions();
-                    $game = $this->gameRepo->find($review['game']);
-                    $options['choices'] = [$game];
-                    $form->add('game', EntityType::class, $options);
-                }
             });
         }
     }

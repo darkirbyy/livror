@@ -8,7 +8,7 @@ use App\Fixtures\Factory\UserFactory;
 use App\Fixtures\Story\TestStory;
 use Zenstruck\Foundry\Story;
 
-final class ReviewIndexStandardStory extends Story
+final class ReviewPersistStory extends Story
 {
     public function build(): void
     {
@@ -16,13 +16,13 @@ final class ReviewIndexStandardStory extends Story
         $usersId = array_map(fn (User $u) => $u->getId(), UserFactory::all());
         $usersButUser1Id = array_filter($usersId, fn ($id) => $id != $user1->getId());
 
-        // Create 12 games reviewed by user1
+        // Create 4 games reviewed by user1
         GameFactory::new()
             ->withUsersId([$user1->getId()], true)
-            ->many(12)
+            ->many(4)
             ->create();
 
-        // Create 10 games NOT reviewed by user 1
-        GameFactory::new()->withUsersId($usersButUser1Id, true)->many(10)->create();
+        // Create 4 games NOT reviewed by user 1
+        GameFactory::new()->withUsersId($usersButUser1Id, true)->many(4)->create();
     }
 }

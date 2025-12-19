@@ -22,8 +22,7 @@ class GameControllerTest extends AbstractControllerTest
     public function indexDefault(string $storyClass, string $queryString, array $criteria, array $sortBy, int $expectedNbGames): void
     {
         $storyClass::load();
-        $gameRepo = GameFactory::repository();
-        $games = $gameRepo->findBy($criteria, $sortBy);
+        $games = GameFactory::repository()->findBy($criteria, $sortBy);
         $gamesTitleExpected = array_slice(array_map(fn (Game $g) => $g->getName(), $games), 0, $expectedNbGames);
 
         $crawler = $this->client->request('GET', '/game?' . $queryString);
@@ -51,8 +50,7 @@ class GameControllerTest extends AbstractControllerTest
             return;
         }
 
-        $gameRepo = GameFactory::repository();
-        $games = $gameRepo->findBy($criteria, $sortBy, $maxLimit, $expectedNbGames);
+        $games = GameFactory::repository()->findBy($criteria, $sortBy, $maxLimit, $expectedNbGames);
         $gamesTitleExpected = array_slice(array_map(fn (Game $g) => $g->getName(), $games), 0, $expectedNbGames);
 
         $showMoreButton = $crawler->filter('button[data-load-more-target]')->first();
@@ -99,9 +97,9 @@ class GameControllerTest extends AbstractControllerTest
     public function edit(string $queryString, array $formOverride, bool $formValid): void
     {
         GamePersistStory::load();
-        $gameRepo = GameFactory::repository();
-        $previousCount = $gameRepo->count();
-        $game = $gameRepo->first('steamId');
+
+        $previousCount = GameFactory::repository()->count();
+        $game = GameFactory::repository()->first('steamId');
 
         $crawler = $this->client->request('GET', '/game/' . $game->getId() . '/edit?' . $queryString);
         $form = $crawler->filter('form[name=game]')->form();
@@ -126,9 +124,9 @@ class GameControllerTest extends AbstractControllerTest
     public function delete(bool $validToken, string $expectedRedirect): void
     {
         GamePersistStory::load();
-        $gameRepo = GameFactory::repository();
-        $previousCount = $gameRepo->count();
-        $game = $gameRepo->first('steamId');
+
+        $previousCount = GameFactory::repository()->count();
+        $game = GameFactory::repository()->first();
 
         $crawler = $this->client->request('GET', '/game/' . $game->getId() . '/edit');
         $tokenValue = $validToken ? $crawler->filter('div[role=dialog] form input[type=hidden]')->attr('value') : '';
