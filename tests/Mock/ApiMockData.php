@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Mock;
 
 // prettier-ignore
-final class DataMock
+final class ApiMockData
 {
     public static array $appsId = [
         1418860, 1418870, 1418900, 1418910, 1418920, 1418930, 1418940, 1418950, 1418980, 1418990, 1419010, 1419040, 1419050, 1419060, 1419070, 1419080, 1419100, 1419110, 1419120, 1419121,

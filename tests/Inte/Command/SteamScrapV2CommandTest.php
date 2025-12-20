@@ -6,7 +6,7 @@ namespace App\Tests\Inte\Command;
 
 use App\Entity\Main\Steam;
 use App\Tests\Mock\ApiMock;
-use App\Tests\Mock\DataMock;
+use App\Tests\Mock\ApiMockData;
 use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\Attributes as PU;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
@@ -60,7 +60,7 @@ final class SteamScrapV2CommandTest extends KernelTestCase
         $output = $this->commandTester->getDisplay();
 
         $this->assertSame(Command::SUCCESS, $this->commandTester->getStatusCode());
-        $this->assertSame(count(DataMock::$appsListTruncate), $steamNb);
+        $this->assertSame(count(ApiMockData::$appsListTruncate), $steamNb);
         $this->assertStringContainsStringIgnoringCase('Deleting existing data', $output);
         $this->assertSame(5, preg_match_all('/Done/i', $output));
     }

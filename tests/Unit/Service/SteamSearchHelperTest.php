@@ -8,7 +8,7 @@ use App\Entity\Main\Game;
 use App\Enum\SteamSearchStatusEnum as Status;
 use App\Service\ExceptionManager;
 use App\Service\SteamSearchHelper;
-use App\Tests\Mock\DataMock;
+use App\Tests\Mock\ApiMockData;
 use PHPUnit\Framework\Attributes as PU;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpClient\MockHttpClient;
@@ -87,9 +87,9 @@ final class SteamSearchHelperTest extends TestCase
     public static function fillGameValues(): array
     {
         return [
-            'id 1' => [1, DataMock::$appDetails[1]['data'], 2],
-            'id 2' => [2, DataMock::$appDetails[2]['data'], 0],
-            'id 3' => [3, DataMock::$appDetails[3]['data'], 0],
+            'id 1' => [1, ApiMockData::$appDetails[1]['data'], 2],
+            'id 2' => [2, ApiMockData::$appDetails[2]['data'], 0],
+            'id 3' => [3, ApiMockData::$appDetails[3]['data'], 0],
         ];
     }
 }

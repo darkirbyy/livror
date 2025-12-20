@@ -11,7 +11,7 @@ use App\Fixtures\Story\Game\GameAutocompleteStory;
 use App\Fixtures\Story\Game\GameIndexAllStory;
 use App\Fixtures\Story\Game\GameIndexStandardStory;
 use App\Fixtures\Story\Game\GamePersistStory;
-use App\Tests\Mock\DataMock;
+use App\Tests\Mock\ApiMockData;
 use PHPUnit\Framework\Attributes as PU;
 
 #[PU\RequiresFunction('databaseAvailable')]
@@ -178,9 +178,9 @@ class GameControllerTest extends AbstractControllerTest
             'steamId null, valid fields' => ['', ['name' => '', 'steam_appid' => ''], ['game[name]' => 'Half-life 3', 'game[fullPrice]' => 2999], true],
             'steamId null, no name' => ['', ['name' => '', 'steam_appid' => ''], ['game[genres]' => 'Multi'], false],
             'steamId null, duplicate steamId' => ['', ['name' => '', 'steam_appid' => ''], ['game[steamId]' => 1], false],
-            'steamId valid, no change' => ['steamId=1', DataMock::$appDetails[1]['data'], [], true],
-            'steamId valid, invalid fields' => ['steamId=1', DataMock::$appDetails[1]['data'], ['game[releaseYear]' => 'thousand'], false],
-            'steamId valid, duplicate name' => ['steamId=2', DataMock::$appDetails[2]['data'], ['game[name]' => 'Core Keeper'], false],
+            'steamId valid, no change' => ['steamId=1', ApiMockData::$appDetails[1]['data'], [], true],
+            'steamId valid, invalid fields' => ['steamId=1', ApiMockData::$appDetails[1]['data'], ['game[releaseYear]' => 'thousand'], false],
+            'steamId valid, duplicate name' => ['steamId=2', ApiMockData::$appDetails[2]['data'], ['game[name]' => 'Core Keeper'], false],
         ];
     }
 

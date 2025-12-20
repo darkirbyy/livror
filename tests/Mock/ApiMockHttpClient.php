@@ -53,15 +53,15 @@ final class ApiMockHttpClient extends MockHttpClient
 
     private function getAppsListV1Mock(): mixed
     {
-        return $this->generateMockResponse(['applist' => ['apps' => DataMock::$appsListTruncate]]);
+        return $this->generateMockResponse(['applist' => ['apps' => ApiMockData::$appsListTruncate]]);
     }
 
     private function getAppsListV2Mock(string $lastAppid, ?string $ifModifiedSince): mixed
     {
         if (is_null($ifModifiedSince)) {
-            $apps = array_filter(DataMock::$appsListTruncate, fn(array $app) => $app['appid'] > intval($lastAppid));
+            $apps = array_filter(ApiMockData::$appsListTruncate, fn (array $app) => $app['appid'] > intval($lastAppid));
         } else {
-            $apps = array_filter(DataMock::$appsListUpdate, fn(array $app) => $app['appid'] > intval($lastAppid) && $app['last_modified'] >= intval($ifModifiedSince));
+            $apps = array_filter(ApiMockData::$appsListUpdate, fn (array $app) => $app['appid'] > intval($lastAppid) && $app['last_modified'] >= intval($ifModifiedSince));
         }
 
         $appsCount = count($apps);
@@ -82,7 +82,7 @@ final class ApiMockHttpClient extends MockHttpClient
     private function getAppDetailsMock(string $appId): mixed
     {
         $appId = intval($appId);
-        $data = DataMock::$appDetails;
+        $data = ApiMockData::$appDetails;
         $body = array_key_exists($appId, $data) ? $data[$appId] : ['success' => false];
 
         return $this->generateMockResponse([$appId => $body]);
