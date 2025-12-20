@@ -63,7 +63,7 @@ final class ApiMock extends MockHttpClient
         if (is_null($ifModifiedSince)) {
             $apps = array_filter(DataMock::$appsListTruncate, fn (array $app) => $app['appid'] > intval($lastAppid));
         } else {
-            $apps = array_filter(DataMock::$appsListUpdate, fn (array $app) => $app['appid'] > intval($lastAppid) && $app['last_modified'] > intval($ifModifiedSince));
+            $apps = array_filter(DataMock::$appsListUpdate, fn (array $app) => $app['appid'] > intval($lastAppid) && $app['last_modified'] >= intval($ifModifiedSince));
         }
 
         $appsCount = count($apps);

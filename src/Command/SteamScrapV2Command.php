@@ -33,7 +33,7 @@ class SteamScrapV2Command extends Command
     {
         $this->setDescription('Retrieve all games from steam and put them in the steam table for autocompletion (with API key).')
             ->addArgument('mode', InputArgument::REQUIRED, 'truncate = reset and insert all games | update = upsert games since a given date')
-            ->addOption('since', 's', InputOption::VALUE_REQUIRED, 'with update mode, only update games modified since this date', 0);
+            ->addOption('since', 's', InputOption::VALUE_REQUIRED, 'with update mode, only update games modified since this date', -1);
     }
 
     public function __invoke(OutputInterface $output, InputInterface $input): int

@@ -56,6 +56,7 @@ final class DataMock
         ['appid' => 15, 'name' => 'Detroit Become Human', 'last_modified' => 500],
         ['appid' => 20, 'name' => 'Spiderman 2', 'last_modified' => 10],
         ['appid' => 22, 'name' => 'Resident Evil', 'last_modified' => 500],
+        ['appid' => 26, 'last_modified' => 50],
         ['appid' => 30, 'name' => 'Super Mario Odyssey', 'last_modified' => 500],
     ];
 
