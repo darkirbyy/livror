@@ -11,4 +11,10 @@ if [ ! $HAS_COMPOSER  ]; then
     exit 1
 fi
 
-composer tests-all
+# Test all if pushing on main, unit only otherwise
+CURRENT_BRANCH=$(git branch --show-current)
+if [ $CURRENT_BRANCH = 'main' ]; then
+    composer tests-all
+else
+    composer tests-unit
+fi
