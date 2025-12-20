@@ -21,6 +21,7 @@ parameters:
     app.html_validation: '%env(bool:APP_HTML_VALIDATION)%'
     app.enable_prefetch: '%env(bool:APP_ENABLE_PREFETCH)%'
     app.enable_autoload: '%env(bool:APP_ENABLE_AUTOLOAD)%'
+    app.mock_api: '%env(bool:APP_MOCK_API)%'
     hub.base_url: '%env(string:HUB_BASE_URL)%'
     hub.account_route: '%env(string:HUB_ACCOUNT_ROUTE)%'
 
@@ -91,8 +92,11 @@ services:
 
 when@test: &test
     services:
-        App\Tests\Mock\ApiMock:
-            decorates: 'http_client'
-            arguments: ['@App\Tests\Mock\ApiMock.inner']
+        App\Tests\Mock\HttpClientFactory: ~ 
 
-# when@dev: *test
+        Symfony\Contracts\HttpClient\HttpClientInterface:
+            factory: ['App\Tests\Mock\HttpClientFactory', 'create']
+            arguments:
+                $enable: '%app.mock_api%'
+
+when@dev: *test

@@ -8,13 +8,11 @@ use Symfony\Component\HttpClient\MockHttpClient;
 use Symfony\Component\HttpClient\Response\MockResponse;
 use Symfony\Component\HttpFoundation\Response;
 
-final class ApiMock extends MockHttpClient
+final class ApiMockHttpClient extends MockHttpClient
 {
     public function __construct()
     {
-        $callback = \Closure::fromCallable([$this, 'handleRequests']);
-
-        parent::__construct($callback);
+        parent::__construct(\Closure::fromCallable([$this, 'handleRequests']));
     }
 
     private function handleRequests(string $method, string $url): MockResponse
@@ -61,9 +59,9 @@ final class ApiMock extends MockHttpClient
     private function getAppsListV2Mock(string $lastAppid, ?string $ifModifiedSince): mixed
     {
         if (is_null($ifModifiedSince)) {
-            $apps = array_filter(DataMock::$appsListTruncate, fn (array $app) => $app['appid'] > intval($lastAppid));
+            $apps = array_filter(DataMock::$appsListTruncate, fn(array $app) => $app['appid'] > intval($lastAppid));
         } else {
-            $apps = array_filter(DataMock::$appsListUpdate, fn (array $app) => $app['appid'] > intval($lastAppid) && $app['last_modified'] >= intval($ifModifiedSince));
+            $apps = array_filter(DataMock::$appsListUpdate, fn(array $app) => $app['appid'] > intval($lastAppid) && $app['last_modified'] >= intval($ifModifiedSince));
         }
 
         $appsCount = count($apps);
