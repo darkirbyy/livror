@@ -72,6 +72,6 @@ To start all tests, run `composer tests-all`.
 
 ## Deploy
 
-A workflow to build and deploy the application is preconfigured.  
+A workflow to test, build and deploy the application is preconfigured.  
 The workflow can be triggered manually in GitHub Actions or automatically when pushing to main (for prod) or to develop (for stage).  
 :warning: Only prod trigger is available for the moment.

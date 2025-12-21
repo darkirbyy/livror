@@ -19,22 +19,23 @@ permissions:
 jobs:
   test:
     runs-on: ubuntu-24.04
+
     steps:
     - name: Checkout code in the runner
       uses: actions/checkout@v4
 
-    - name: Setup PHP 8.2
+    - name: Setup mysql 8.0
+      run: |
+        sudo systemctl start mysql.service
+        echo 'DATABASE_URL="mysql://root:root@127.0.0.1:3306/livror_db?serverVersion=8.0.44"' > .env.test.local
+
+    - name: Setup php 8.2
       uses: shivammathur/setup-php@v2
       with:
         php-version: '8.2'
         coverage: pcov
 
-    - name : Setup MYSQL database
-      run: |
-        echo 'DATABASE_URL="mysql://root:root@127.0.0.1:3306/livror_db"' > .env.test.local
-        sudo systemctl start mysql.service
-
-    - name: Cache composer packages
+    - name: Cache composer TEST packages
       id: composer-cache
       uses: actions/cache@v4
       with:
@@ -43,13 +44,32 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-php-test-
 
-    - name: Install PHP DEV dependencies
+    - name: Install php TEST dependencies
       run: composer install --no-scripts --no-interaction --no-progress --prefer-dist
+       
+    - name: Setup Node.js 22.x
+      uses: actions/setup-node@v4
+      with:
+        node-version: 22.x
+
+    - name: Cache npm packages
+      id: npm-cache
+      uses: actions/cache@v4
+      with:
+        path: node_modules
+        key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-node-
+
+    - name: Install node dependencies and build assets
+      run: |
+        npm install
+        npm run build
 
     - name: Run all test suites and check coverage
       run: |
         php vendor/bin/phpunit 
-        php vendor/bin/coverage-check coverage/clover.xml ${{ vars.SERV_PATH }}
+        php vendor/bin/coverage-check coverage/clover.xml ${{ vars.MIN_COVERAGE }}
         coverage=$(php vendor/bin/coverage-check coverage/clover.xml 1 --only-percentage | grep -Eo '[0-9.]+%' | sed 's/%//')
         echo "coverage=$coverage" >> $GITHUB_OUTPUT
         
@@ -59,12 +79,12 @@ jobs:
     - name: Checkout code in the runner
       uses: actions/checkout@v4
 
-    - name: Setup PHP 8.2
+    - name: Setup php 8.2
       uses: shivammathur/setup-php@v2
       with:
         php-version: '8.2'
 
-    - name: Cache composer packages
+    - name: Cache composer BUILD packages
       id: composer-cache
       uses: actions/cache@v4
       with:
@@ -73,7 +93,7 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-php-build-
 
-    - name: Install PHP NO-DEV dependencies
+    - name: Install php BUILD dependencies
       run: composer install --no-scripts --no-interaction --no-progress --prefer-dist --no-dev --optimize-autoloader
 
     - name: Setup Node.js 22.x
@@ -90,11 +110,10 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-node-
 
-    - name: Install Node dependencies
-      run: npm install
-
-    - name: Build front end using Webpack Encore 
-      run: npm run build
+    - name: Install node dependencies and build assets
+      run: | 
+        npm install
+        npm run build
 
     - name: Upload build
       uses: actions/upload-artifact@v4
