@@ -191,3 +191,4 @@ jobs:
         filename: livror-version.json
         label: version
         message: ${{ inputs.version }}
+        color: blue
