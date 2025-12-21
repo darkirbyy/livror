@@ -1,6 +1,6 @@
 services:
   database:
-    image: mariadb:11.5
+    image: mariadb:11.8
     container_name: ${APP_NAME}-mariadb
     environment:
       - MARIADB_ROOT_PASSWORD=${APP_NAME}_password

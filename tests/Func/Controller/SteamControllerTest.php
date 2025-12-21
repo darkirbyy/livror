@@ -7,7 +7,6 @@ namespace App\Tests\Func\Controller;
 use App\Fixtures\Story\Steam\SteamAutocompleteStory;
 use PHPUnit\Framework\Attributes as PU;
 
-#[PU\RequiresFunction('databaseAvailable')]
 class SteamControllerTest extends AbstractControllerTest
 {
     #[PU\Test]

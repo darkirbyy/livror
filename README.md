@@ -11,7 +11,7 @@ Small webapp to share reviews of games with my friends, developed while learning
   - **Symfony**: 7.4 framework
   - **PHP**: 8.2 (compatible with Symfony 7.4)
   - **Composer**: >= 2.8 for dependency management
-  - **MariaDB**: 11.5 through **docker** for the database
+  - **MariaDB**: 11.8 through **docker** for the database
 - Front-end:
   - **Node.js**: 22.x
   - **npm**: >= 10.x for dependency management
@@ -54,7 +54,7 @@ After cloning the project:
 To use default git hooks, run `git config core.hooksPath ./githooks`. Current hooks are
 
 - prettify and linting all staged files before commit
-- running all unit tests before push
+- running tests before push : all tests for `main` branch, unit tests otherwise
 
 ## Dev
 

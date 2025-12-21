@@ -14,7 +14,6 @@ use App\Fixtures\Story\Game\GamePersistStory;
 use App\Tests\Mock\ApiMockData;
 use PHPUnit\Framework\Attributes as PU;
 
-#[PU\RequiresFunction('databaseAvailable')]
 class GameControllerTest extends AbstractControllerTest
 {
     #[PU\Test]

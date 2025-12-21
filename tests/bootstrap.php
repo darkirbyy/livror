@@ -14,13 +14,3 @@ if (true === (bool) $_SERVER['APP_DEBUG']) {
 } else {
     (new Symfony\Component\Filesystem\Filesystem())->remove(__DIR__ . '/../var/cache/test');
 }
-
-// Create the test database and the schema is the connection is possible
-passthru(sprintf('php "%s/../bin/console" --env=test --silent doctrine:database:create', __DIR__));
-passthru(sprintf('php "%s/../bin/console" --env=test --silent doctrine:query:sql "SELECT 1"', __DIR__), $databaseAvailable);
-if (0 == $databaseAvailable) {
-    passthru(sprintf('php "%s/../bin/console" --env=test --silent doctrine:schema:create', __DIR__));
-    function databaseAvailable()
-    {
-    }
-}

@@ -14,7 +14,6 @@ use App\Fixtures\Story\TestStory;
 use PHPUnit\Framework\Attributes as PU;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
-#[PU\RequiresFunction('databaseAvailable')]
 class ReviewControllerTest extends AbstractControllerTest
 {
     #[PU\Test]

@@ -7,7 +7,6 @@ namespace App\Tests\Func\Controller;
 use App\Service\HubUrlGenerator;
 use PHPUnit\Framework\Attributes as PU;
 
-#[PU\RequiresFunction('databaseAvailable')]
 class HomeControllerTest extends AbstractControllerTest
 {
     #[PU\Test]

@@ -10,7 +10,6 @@ use App\Fixtures\Story\Error\ErrorAllStory;
 use App\Fixtures\Story\TestStory;
 use PHPUnit\Framework\Attributes as PU;
 
-#[PU\RequiresFunction('databaseAvailable')]
 class ErrorControllerTest extends AbstractControllerTest
 {
     #[PU\Test]
