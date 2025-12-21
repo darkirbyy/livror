@@ -1,7 +1,7 @@
 # Livror
 
-![version](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/darkirbyy/07bb4b086f8e7dea73754e73bc5c1bb2/raw/b5d2f326bb171d4277079f73e56b358b202939c1/livror-version.json)
-![coverage](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/darkirbyy/07bb4b086f8e7dea73754e73bc5c1bb2/raw/7e4891712c6545e83e7b826fc1148e39cacfb137/livror-coverage.json)
+![version](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/darkirbyy/07bb4b086f8e7dea73754e73bc5c1bb2/raw/livror-version.json)
+![coverage](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/darkirbyy/07bb4b086f8e7dea73754e73bc5c1bb2/raw/livror-coverage.json)
 
 Small webapp to share reviews of games with my friends, developed while learning Symfony.
 
@@ -58,8 +58,8 @@ To use default git hooks, run `git config core.hooksPath ./githooks`. Current ho
 
 ## Dev
 
-To increment the version, use `symfony console bizkit:versioning:increment`.
-To mock the HTTP request to Steam API with dummy data, uncomment the line `when@dev: *test` in `config/services.yaml`.
+To increment the version, use `symfony console bizkit:versioning:increment`.  
+To mock the HTTP request to Steam API with dummy data, uncomment the line `when@dev: *test` in `config/services.yaml`.  
 To generate fake random data, use the Foundry Default Story with `symfony console doctrine:fixtures:load`.  
 :warning: It will purge the database !
 

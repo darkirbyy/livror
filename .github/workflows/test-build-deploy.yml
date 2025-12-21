@@ -20,6 +20,8 @@ jobs:
   test:
     runs-on: ubuntu-24.04
     environment: ${{ inputs.environment }}
+    outputs:
+      coverage: ${{ steps.phpunit.outputs.coverage }}
     steps:
     - name: Checkout code in the runner
       uses: actions/checkout@v4
@@ -67,6 +69,7 @@ jobs:
         npm run build
 
     - name: Run all test suites and check coverage
+      id: phpunit
       run: |
         php vendor/bin/phpunit 
         php vendor/bin/coverage-check coverage/clover.xml ${{ vars.MIN_COVERAGE }}
