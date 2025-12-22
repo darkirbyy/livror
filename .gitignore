@@ -1,5 +1,3 @@
-coverage/
-docker/
 .vscode/
 
 ###> symfony/framework-bundle ###

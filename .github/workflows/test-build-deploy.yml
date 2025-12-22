@@ -72,8 +72,8 @@ jobs:
       id: phpunit
       run: |
         php vendor/bin/phpunit 
-        php vendor/bin/coverage-check coverage/clover.xml ${{ vars.MIN_COVERAGE }}
-        coverage=$(php vendor/bin/coverage-check coverage/clover.xml 1 --only-percentage | grep -Eo '[0-9.]+%' | sed 's/%//')
+        php vendor/bin/coverage-check var/coverage/clover.xml ${{ vars.MIN_COVERAGE }}
+        coverage=$(php vendor/bin/coverage-check var/coverage/clover.xml 1 --only-percentage | grep -Eo '[0-9.]+%' | sed 's/%//')
         echo "coverage=$coverage" >> $GITHUB_OUTPUT
         
   build:

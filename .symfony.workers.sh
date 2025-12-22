@@ -14,14 +14,17 @@ find_next_available_port() {
 echo "Starting custom workers..."
 
 # Find first available wp port and run webpack dev server with the selected port
-export WEBPACK_PORT=$(find_next_available_port $WEBPACK_DEFAULT_PORT)
 echo "Starting WebPack dev server on port $WEBPACK_PORT"
+export WEBPACK_PORT=$(find_next_available_port $WEBPACK_DEFAULT_PORT)
 ./node_modules/.bin/encore dev-server --hot --port=$WEBPACK_PORT &
 WEBPACK_PID=$!  # Capture the Webpack process PID
 
 # Find first available db port and run docker compose with the selected port
-export DATABASE_PORT=$(find_next_available_port $DATABASE_DEFAULT_PORT)
 echo "Starting MariaDB container on port $DATABASE_PORT"
+export DATABASE_PORT=$(find_next_available_port $DATABASE_DEFAULT_PORT)
+export USER_ID=$(id -u)
+export GROUP_ID=$(id -g)
+mkdir -p var/mariadb
 docker compose up -d
 
 # Function to stop processes on exit

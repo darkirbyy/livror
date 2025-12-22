@@ -46,8 +46,8 @@
     </source>
     <coverage>
         <report>
-            <html outputDirectory="coverage" lowUpperBound="50" highLowerBound="90"/>
-            <clover outputFile="coverage/clover.xml"/>
+            <html outputDirectory="var/coverage" lowUpperBound="50" highLowerBound="90"/>
+            <clover outputFile="var/coverage/clover.xml"/>
         </report>
     </coverage>
     <extensions>

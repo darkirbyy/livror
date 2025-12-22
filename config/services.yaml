@@ -95,6 +95,10 @@ services:
         arguments:
             $mockHub: '%app.mock_hub%'
 
+    App\Fixtures\Story\DevStory:
+        arguments:
+            $mockHub: '%app.mock_hub%'
+
 when@dev: 
     services:
         App\Tests\Mock\HttpClientFactory: ~ 
@@ -103,10 +107,6 @@ when@dev:
             factory: ['App\Tests\Mock\HttpClientFactory', 'create']
             arguments:
                 $enable: '%app.mock_api%'
-
-        App\Fixtures\Story\DevStory:
-            arguments:
-                $mockHub: '%app.mock_hub%'
 
 when@test:
     services:
