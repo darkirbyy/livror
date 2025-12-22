@@ -56,12 +56,49 @@ To use default git hooks, run `git config core.hooksPath ./githooks`. Current ho
 - prettify and linting all staged files before commit
 - running tests before push : all tests for `main` branch, unit tests otherwise
 
+## User provider
+
+In production, this app is designed to rely on the [Hub app](https://github.com/darkirbyy/hub) to provide and authentify users, thanks to a shared session.
+In dev, it's possible to emulate this behavior or to mock the hub by creating dummy users.
+
+### Emulate the prod behavior
+
+- clone the Hub project, install it, and configure it as explained.
+- start the hub server first, so the port will probably be `8000` for the http and `3306` for the database
+- create an application with these parameters :
+  - **status** : `user only`
+  - **name** : `livror`
+  - **path** : `https://127.0.0.1:8001/`
+  - **right** : add one with **role** = `user`.
+  - the rest can be random
+- create one or more users, add add the right `livror - user` to them.
+- in this project, in the `.env.local` file, set :
+  - `HUB_DATABASE_URL="mysql://root:hub_password@127.0.0.1:3306/hub_db"`
+  - `HUB_BASE_URL="https://127.0.0.1:8000"`
+  - `HUB_ACCOUNT_ROUTE=/account`
+- start this project, so the port will probably be `8001` for the http and `3307` for the database
+- that's it ! when visiting a page, you'll be automatically redirected to the hub to log in.
+
+### Mock the hub and use dummy users
+
+- in the `.env.local` file, set :
+  - `APP_MOCK_HUB=true`
+  - `HUB_DATABASE_URL="mysql://root:livror_password@127.0.0.1:3306/user_db"`
+  - `HUB_BASE_URL=""`
+  - `HUB_ACCOUNT_ROUTE=""`
+- execute theses commands to create and prepare the user database along with the app database :
+  - `symfony console doctrine:database:create --connection=account`
+  - `symfony console doctrine:schema:update --em=account --force`.
+- that's it ! when loading fixtures (see [Dev](#dev)), four dummy users will be created and you'll be connected as the first one.
+
 ## Dev
 
-To increment the version, use `symfony console bizkit:versioning:increment`.  
+To generate fake random data, use the Foundry `DevStory` with `symfony console doctrine:fixtures:load`.  
+
 To mock the HTTP request to Steam API with dummy data, uncomment the line `when@dev: *test` in `config/services.yaml`.  
-To generate fake random data, use the Foundry Default Story with `symfony console doctrine:fixtures:load`.  
 :warning: It will purge the database !
+
+To increment the version, use `symfony console bizkit:versioning:increment`.  
 
 ## Test
 
@@ -69,6 +106,8 @@ To start a specific test suite, run `composer tests-[unit|inte|func]`.
 To start all tests, run `composer tests-all`.
 
 :warning: Tests that require a database connection use a specific database suffixed with `_test`, automatically created when needed. For Symfony to get the `DATABASE_URL` value from docker in test environnement, it's mandatory to run PHPUnit through symfony with `symfony php bin/phpunit`.
+
+:information_source: Tests are indenpendant of the chosen user provider, as it will always create temporary users in the test database.
 
 ## Deploy
 

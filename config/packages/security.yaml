@@ -20,6 +20,12 @@ security:
     access_control:
         - { path: ^/, roles: ROLE_LIVROR_USER }
 
+when@dev:
+    security:
+        firewalls:
+            main: # Allow to create and connect with local dummy user
+             form_login: 
+
 when@test:
     security:
         password_hashers:

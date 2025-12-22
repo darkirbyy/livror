@@ -22,6 +22,7 @@ parameters:
     app.enable_prefetch: '%env(bool:APP_ENABLE_PREFETCH)%'
     app.enable_autoload: '%env(bool:APP_ENABLE_AUTOLOAD)%'
     app.mock_api: '%env(bool:APP_MOCK_API)%'
+    app.mock_hub: '%env(bool:APP_MOCK_HUB)%'
     hub.base_url: '%env(string:HUB_BASE_URL)%'
     hub.account_route: '%env(string:HUB_ACCOUNT_ROUTE)%'
 
@@ -90,7 +91,11 @@ services:
         arguments:
             $requestTimeout: '%app.request_timeout%'
 
-when@test: &test
+    App\Security\AccountEntryPoint:
+        arguments:
+            $mockHub: '%app.mock_hub%'
+
+when@dev: 
     services:
         App\Tests\Mock\HttpClientFactory: ~ 
 
@@ -99,4 +104,15 @@ when@test: &test
             arguments:
                 $enable: '%app.mock_api%'
 
-when@dev: *test
+        App\Fixtures\Story\DevStory:
+            arguments:
+                $mockHub: '%app.mock_hub%'
+
+when@test:
+    services:
+        App\Tests\Mock\HttpClientFactory: ~ 
+
+        Symfony\Contracts\HttpClient\HttpClientInterface:
+            factory: ['App\Tests\Mock\HttpClientFactory', 'create']
+            arguments:
+                $enable: '%app.mock_api%'
