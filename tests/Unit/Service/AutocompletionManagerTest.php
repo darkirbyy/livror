@@ -14,6 +14,7 @@ use App\Service\AutocompletionManager;
 use PHPUnit\Framework\Attributes as PU;
 use PHPUnit\Framework\TestCase;
 use Symfony\Bundle\SecurityBundle\Security;
+use Twig\Environment;
 
 final class AutocompletionManagerTest extends TestCase
 {
@@ -22,6 +23,7 @@ final class AutocompletionManagerTest extends TestCase
     private $security;
     private $steamRepo;
     private $gameRepo;
+    private $twig;
 
     private $autocompletionManager;
 
@@ -30,8 +32,16 @@ final class AutocompletionManagerTest extends TestCase
         $this->security = $this->createMock(Security::class);
         $this->steamRepo = $this->createMock(SteamRepository::class);
         $this->gameRepo = $this->createMock(GameRepository::class);
+        $this->twig = $this->createMock(Environment::class);
 
-        $this->autocompletionManager = new AutocompletionManager(self::$autocompletionLimit, self::$autocompletionMinLength, $this->security, $this->steamRepo, $this->gameRepo);
+        $this->autocompletionManager = new AutocompletionManager(
+            self::$autocompletionLimit,
+            self::$autocompletionMinLength,
+            $this->security,
+            $this->steamRepo,
+            $this->gameRepo,
+            $this->twig,
+        );
     }
 
     #[PU\Test]
@@ -50,18 +60,17 @@ final class AutocompletionManagerTest extends TestCase
     public function fromSteamOk(?string $search, SearchModeEnum $searchMode, string $expectedSearch): void
     {
         $steam1 = $this->createMock(Steam::class);
-        $steam1->expects($this->exactly(2))->method('getId')->willReturn(1);
-        $steam1->expects($this->once())->method('getName')->willReturn('game1');
         $steam2 = $this->createMock(Steam::class);
-        $steam2->expects($this->exactly(2))->method('getId')->willReturn(2);
-        $steam2->expects($this->once())->method('getName')->willReturn('game2');
 
         $this->steamRepo
             ->expects($this->once())
             ->method($searchMode->toRepoMethod())
             ->with($expectedSearch, self::$autocompletionLimit)
             ->willReturn([$steam1, $steam2]);
+        $this->twig->expects($this->exactly(2))->method('render');
+
         $data = $this->autocompletionManager->fromSteam($search, $searchMode);
+
         $this->assertSame(2, count($data));
         $this->assertArrayHasKey('value', $data[0]);
         $this->assertArrayHasKey('text', $data[1]);
@@ -72,9 +81,10 @@ final class AutocompletionManagerTest extends TestCase
     {
         $searchMode = SearchModeEnum::LIKE;
         $search = 'yes';
-
         $this->gameRepo->expects($this->never())->method($searchMode->toRepoMethod());
+
         $data = $this->autocompletionManager->fromGame($search, $searchMode, true);
+
         $this->assertSame($data, []);
     }
 
@@ -83,23 +93,22 @@ final class AutocompletionManagerTest extends TestCase
     public function fromGameOk(?string $search, SearchModeEnum $searchMode, string $expectedSearch): void
     {
         $game1 = $this->createMock(Game::class);
-        $game1->expects($this->once())->method('getId')->willReturn(1);
-        $game1->expects($this->once())->method('getName')->willReturn('game1');
         $game2 = $this->createMock(Game::class);
-        $game2->expects($this->once())->method('getId')->willReturn(2);
-        $game2->expects($this->once())->method('getName')->willReturn('game2');
 
         $userId = 10;
         $user = $this->createMock(User::class);
         $user->expects($this->once())->method('getId')->willReturn($userId);
-        $this->security->expects($this->once())->method('getUser')->willReturn($user);
 
+        $this->security->expects($this->once())->method('getUser')->willReturn($user);
         $this->gameRepo
             ->expects($this->once())
             ->method($searchMode->toRepoMethod())
             ->with($expectedSearch, self::$autocompletionLimit, $userId)
             ->willReturn([$game1, $game2]);
+        $this->twig->expects($this->exactly(2))->method('render');
+
         $data = $this->autocompletionManager->fromGame($search, $searchMode, true);
+
         $this->assertSame(2, count($data));
         $this->assertArrayHasKey('value', $data[0]);
         $this->assertArrayHasKey('text', $data[1]);
