@@ -69,13 +69,14 @@ class GameRepository extends ServiceEntityRepository
         return $qb->getQuery()->getResult();
     }
 
-    public function findPatternWithoutReview(string $pattern, int $limit, int $userId): array
+    public function findPattern(string $pattern, int $limit, ?int $userId): array
     {
         $qb = $this->createQueryBuilder('g');
-        $qb->leftJoin('g.reviews', 'r', Join::WITH, 'r.userId = :userId')
-            ->where('r.id IS NULL')
-            ->setParameter('userId', $userId)
-            ->addSelect('MATCH_AGAINST(g.name, :pattern) as HIDDEN relevance')
+        if (!is_null($userId)) {
+            $qb->leftJoin('g.reviews', 'r', Join::WITH, 'r.userId = :userId')->where('r.id IS NULL')->setParameter('userId', $userId);
+        }
+
+        $qb->addSelect('MATCH_AGAINST(g.name, :pattern) as HIDDEN relevance')
             ->andWhere('MATCH_AGAINST(g.name, :pattern) > 0')
             ->setParameter('pattern', $pattern)
             ->orderBy('relevance', 'DESC')
@@ -85,16 +86,13 @@ class GameRepository extends ServiceEntityRepository
         return $qb->getQuery()->getResult();
     }
 
-    public function findLikeWithoutReview(string $like, int $limit, int $userId): array
+    public function findLike(string $like, int $limit, ?int $userId): array
     {
         $qb = $this->createQueryBuilder('g');
-        $qb->leftJoin('g.reviews', 'r', Join::WITH, 'r.userId = :userId')
-            ->where('r.id IS NULL')
-            ->setParameter('userId', $userId)
-            ->andWhere('g.name LIKE :like')
-            ->setParameter('like', $like)
-            ->orderBy('g.name', 'ASC')
-            ->setMaxResults($limit);
+        if (!is_null($userId)) {
+            $qb->leftJoin('g.reviews', 'r', Join::WITH, 'r.userId = :userId')->where('r.id IS NULL')->setParameter('userId', $userId);
+        }
+        $qb->andWhere('g.name LIKE :like')->setParameter('like', $like)->orderBy('g.name', 'ASC')->setMaxResults($limit);
 
         return $qb->getQuery()->getResult();
     }
@@ -114,10 +112,7 @@ class GameRepository extends ServiceEntityRepository
     public function countWithoutReview(int $userId): int
     {
         $qb = $this->createQueryBuilder('g');
-        $qb->select('COUNT(g.id)')
-            ->leftJoin('g.reviews', 'r', Join::WITH, 'r.userId = :userId')
-            ->where('r.id IS NULL')
-            ->setParameter('userId', $userId);
+        $qb->select('COUNT(g.id)')->leftJoin('g.reviews', 'r', Join::WITH, 'r.userId = :userId')->where('r.id IS NULL')->setParameter('userId', $userId);
 
         return (int) $qb->getQuery()->getSingleScalarResult();
     }

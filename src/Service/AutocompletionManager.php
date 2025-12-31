@@ -42,9 +42,9 @@ class AutocompletionManager
     }
 
     /**
-     * Search App game in the game table that have not been commented by the current user.
+     * Search App game in the game table (excluding game already reviewed by the user if asked).
      */
-    public function fromGameWithoutReview(?string $search, SearchModeEnum $searchMode): array
+    public function fromGame(?string $search, SearchModeEnum $searchMode, bool $withoutReview): array
     {
         // Sanitize the user input
         $search = $this->sanitizeSearch($search, $searchMode);
@@ -54,8 +54,8 @@ class AutocompletionManager
 
         // Query the database and return the data as an array formatted for tomselect
         $userId = $this->security->getUser()->getId();
-        $repoMethod = $searchMode->toRepoMethod() . 'WithoutReview';
-        $result = $this->gameRepo->$repoMethod($search, $this->autocompletionLimit, $userId);
+        $repoMethod = $searchMode->toRepoMethod();
+        $result = $this->gameRepo->$repoMethod($search, $this->autocompletionLimit, $withoutReview ? $userId : null);
         $data = array_map(fn (Game $g) => ['value' => $g->getId(), 'text' => $g->getName()], $result);
 
         return $data;

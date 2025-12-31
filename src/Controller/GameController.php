@@ -107,12 +107,13 @@ class GameController extends AbstractController
         return $this->redirectToRoute('game_edit', ['id' => $game->getId()], Response::HTTP_SEE_OTHER);
     }
 
-    // Autocomplete a game name thanks to the app game list, excluding game already reviewed by the user
+    // Autocomplete a game name thanks to the app game list (excluding game already reviewed by the user if asked)
     #[Route('/autocomplete', name: 'autocomplete', methods: ['GET'])]
     public function autocomplete(Request $request, AutocompletionManager $autocompletionManager): Response
     {
         $search = $request->query->get('query');
-        $data = $autocompletionManager->fromGameWithoutReview($search, SearchModeEnum::LIKE);
+        $withoutReview = $request->query->getBoolean('withoutReview', false);
+        $data = $autocompletionManager->fromGame($search, SearchModeEnum::LIKE, $withoutReview);
 
         return $this->json(['results' => $data]);
     }

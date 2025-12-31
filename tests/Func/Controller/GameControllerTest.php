@@ -204,8 +204,10 @@ class GameControllerTest extends AbstractControllerTest
     public static function autocompleteValues(): array
     {
         return [
-            'valid, max results' => ['query=welcome', static::getContainer()->getParameter('app.autocompletion_limit')],
-            'valid, 2 results' => ['query=goodbye', 2],
+            'valid, without review, max results' => ['withoutReview=true&query=welcome', static::getContainer()->getParameter('app.autocompletion_limit')],
+            'valid, without review, 2 results' => ['withoutReview=true&query=goodbye', 2],
+            'valid, with review, max results' => ['query=welcome', static::getContainer()->getParameter('app.autocompletion_limit')],
+            'valid, with review, 2 results' => ['query=goodbye', 4],
         ];
     }
 }

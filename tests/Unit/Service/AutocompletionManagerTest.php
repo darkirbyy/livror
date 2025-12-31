@@ -68,19 +68,19 @@ final class AutocompletionManagerTest extends TestCase
     }
 
     #[PU\Test]
-    public function fromGameWithoutReviewTooShort(): void
+    public function fromGameTooShort(): void
     {
         $searchMode = SearchModeEnum::LIKE;
         $search = 'yes';
 
-        $this->gameRepo->expects($this->never())->method($searchMode->toRepoMethod() . 'WithoutReview');
-        $data = $this->autocompletionManager->fromGameWithoutReview($search, $searchMode);
+        $this->gameRepo->expects($this->never())->method($searchMode->toRepoMethod());
+        $data = $this->autocompletionManager->fromGame($search, $searchMode, true);
         $this->assertSame($data, []);
     }
 
     #[PU\Test]
     #[PU\DataProvider('fromValues')]
-    public function fromGameWithoutReviewOk(?string $search, SearchModeEnum $searchMode, string $expectedSearch): void
+    public function fromGameOk(?string $search, SearchModeEnum $searchMode, string $expectedSearch): void
     {
         $game1 = $this->createMock(Game::class);
         $game1->expects($this->once())->method('getId')->willReturn(1);
@@ -96,10 +96,10 @@ final class AutocompletionManagerTest extends TestCase
 
         $this->gameRepo
             ->expects($this->once())
-            ->method($searchMode->toRepoMethod() . 'WithoutReview')
+            ->method($searchMode->toRepoMethod())
             ->with($expectedSearch, self::$autocompletionLimit, $userId)
             ->willReturn([$game1, $game2]);
-        $data = $this->autocompletionManager->fromGameWithoutReview($search, $searchMode);
+        $data = $this->autocompletionManager->fromGame($search, $searchMode, true);
         $this->assertSame(2, count($data));
         $this->assertArrayHasKey('value', $data[0]);
         $this->assertArrayHasKey('text', $data[1]);
