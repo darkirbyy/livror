@@ -93,7 +93,9 @@ form:
     unique: Cannot add or update this item because some fields must be unique.
     other: Error while adding, updating, or deleting this item.
   autocomplete:
-    placeholder: Search for a game
+    placeholder: 
+      global: Search for a game on this website
+      steam: Search for a game on Steam
     noResults: No results
 
 modal:

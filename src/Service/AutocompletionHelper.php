@@ -25,7 +25,7 @@ class AutocompletionHelper
      * @param string $route      endpoint route
      * @param array  $parameters endpoint parameters
      */
-    public function prepareAttributes(string $route, array $parameters = []): StimulusAttributes
+    public function prepareAttributes(string $placeholderKey, string $route, array $parameters = []): StimulusAttributes
     {
         $stimulusController = $this->stimulusHelper->createStimulusAttributes();
         $stimulusController->addController('symfony/ux-autocomplete/autocomplete', [
@@ -39,7 +39,7 @@ class AutocompletionHelper
                 'maxItems' => 1,
                 'optionsAsHtml' => true,
                 'closeAfterSelect' => true,
-                'placeholder' => $this->trans->trans('form.autocomplete.placeholder'),
+                'placeholder' => $this->trans->trans('form.autocomplete.placeholder.' . $placeholderKey),
                 'loadThrottle' => 500,
                 'plugins' => [
                     'clear_button' => false,

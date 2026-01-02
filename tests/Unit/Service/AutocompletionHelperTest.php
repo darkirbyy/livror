@@ -32,11 +32,13 @@ final class AutocompletionHelperTest extends TestCase
 
     #[PU\Test]
     #[PU\DataProvider('prepareAttributesValues')]
-    public function prepareAttributes(string $route, ?array $params): void
+    public function prepareAttributes(string $placeholderKey, string $route, ?array $params): void
     {
         $this->urlGenerator->expects($this->once())->method('generate')->with($route, $params);
         $this->trans->expects($this->any())->method('trans');
-        $stimulusAttributes = $this->autocompletionHelper->prepareAttributes($route, $params);
+
+        $stimulusAttributes = $this->autocompletionHelper->prepareAttributes($placeholderKey, $route, $params);
+
         $this->assertSame(StimulusAttributes::class, $stimulusAttributes::class);
         $this->assertArrayHasKey('data-controller', $stimulusAttributes->toArray());
     }
@@ -44,8 +46,8 @@ final class AutocompletionHelperTest extends TestCase
     public static function prepareAttributesValues(): array
     {
         return [
-            'without params' => ['home_index', []],
-            'with params' => ['game_edit', ['id' => 2]],
+            'without params' => ['steam', 'home_index', []],
+            'with params' => ['global', 'game_edit', ['id' => 2]],
         ];
     }
 }

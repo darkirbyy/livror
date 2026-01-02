@@ -75,8 +75,8 @@ class TwigExtension
 
     // Prepare html attributes for stimulus autocompletion
     #[AsTwigFunction(name: 'prepare_attributes')]
-    public function autocompletePrepareAttributes(string $route, array $parameters = []): StimulusAttributes
+    public function autocompletePrepareAttributes(string $placeholderKey, string $route, array $parameters = []): StimulusAttributes
     {
-        return $this->autocompletionHelper->prepareAttributes($route, $parameters);
+        return $this->autocompletionHelper->prepareAttributes($placeholderKey, $route, $parameters);
     }
 }
