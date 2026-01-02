@@ -7,12 +7,12 @@
   <section>
     <div class="container">
       {# Redefine the flashes with the same width as the cards #}
-      <div class="mx-auto card-max-auto card-max-md-none">
+      <div class="mx-auto card-max-large card-max-md-none">
         {{ block('flash', 'theme/flash.html.twig') }}
       </div>
 
       {# Button to add a new game #}
-      <div class="mx-auto card-max-auto card-max-md-none text-center mt-2 mb-4">
+      <div class="mx-auto card-max-large card-max-md-none text-center mt-2 mb-4">
         <a href="{{ path('game_new') }}" class="btn btn-primary" data-turbo-frame="_top" aria-label="{{ 'game.index.button.addGame'|trans }}">
           <span class="bi bi-plus-square-fill me-md-1" aria-hidden="true"></span>
           <span>{{ 'game.index.button.addGame'|trans }}</span>

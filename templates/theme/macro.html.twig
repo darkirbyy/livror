@@ -70,7 +70,7 @@
 {% endmacro %}
 
 {% macro index_buttons(queryParam, entityKey, displayedSortsKeys, filterContent) %}
-  <div class="card-max-auto card-max-md-none mx-auto">
+  <div class="card-max-large card-max-md-none mx-auto">
     <div class="d-flex flex-wrap align-items-end justify-content-between gap-2">
       {# Fields to sort : prepare variables + independant buttons (large screen) or select (small screen) for each possibility + asc/desc button #}
       <div class="flex-md-fill {{ displayedSortsKeys is empty ? 'd-none' }}">

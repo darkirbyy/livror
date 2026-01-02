@@ -5,6 +5,9 @@
 home:
   index:
     title: Home
+    search:
+      title: Search
+      reviewedBy: Played by
 
 game:
   index:
@@ -54,7 +57,7 @@ review:
       informations: Information
       comment: Comment
       noComment: No comment
-      added: Written
+      added: Published
       updated: updated
     sort:
       name: Name

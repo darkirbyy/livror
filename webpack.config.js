@@ -96,7 +96,7 @@ Encore
             watch: false
         };
         options.watchFiles = {
-            paths: ['templates/**/*'],
+            paths: ['templates/**/*', 'translations/**/*'],
         };
         options.server = {
             type: 'https',

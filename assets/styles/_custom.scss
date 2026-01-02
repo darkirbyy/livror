@@ -98,18 +98,30 @@ legend.col-form-label.required::after {
   }
 }
 
-// Misc ///////////////////////////
+// Cover image ///////////////////////////
+
+@mixin app-card-img-missing($size) {
+  font-size: $size;
+  opacity: 0.25;
+  align-content: center;
+}
+
+.app-card-img-missing-index {
+  @include app-card-img-missing(4rem);
+}
+
+.app-card-img-missing-search {
+  @include app-card-img-missing(2rem);
+
+  border: solid 1px black;
+}
 
 .app-card-img-fit {
   width: 100%;
   aspect-ratio: 460 / 215;
 }
 
-.app-card-img-missing {
-  font-size: 4rem;
-  opacity: 0.25;
-  align-content: center;
-}
+// Form ///////////////////////////
 
 .app-form-row {
   margin-bottom: ($spacer * 1) !important;

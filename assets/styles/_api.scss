@@ -1,49 +1,18 @@
-// Import Bootstrap API
-@import '~bootstrap/scss/maps';
-@import '~bootstrap/scss/mixins';
-@import '~bootstrap/scss/utilities';
-
 // Use bootstrap API to generate custom responsive classes
 
+$responsive-true: (
+  responsive: true,
+);
 $utilities: map.merge(
   $utilities,
   (
-    'height': map.merge(
-        map.get($utilities, 'height'),
-        (
-          responsive: true,
-        )
-      ),
-    'border': map.merge(
-        map.get($utilities, 'border'),
-        (
-          responsive: true,
-        )
-      ),
-    'border-top': map.merge(
-        map.get($utilities, 'border-top'),
-        (
-          responsive: true,
-        )
-      ),
-    'border-end': map.merge(
-        map.get($utilities, 'border-end'),
-        (
-          responsive: true,
-        )
-      ),
-    'border-bottom': map.merge(
-        map.get($utilities, 'border-bottom'),
-        (
-          responsive: true,
-        )
-      ),
-    'border-start': map.merge(
-        map.get($utilities, 'border-start'),
-        (
-          responsive: true,
-        )
-      ),
+    'font-size': map.merge(map.get($utilities, 'font-size'), $responsive-true),
+    'height': map.merge(map.get($utilities, 'height'), $responsive-true),
+    'border': map.merge(map.get($utilities, 'border'), $responsive-true),
+    'border-top': map.merge(map.get($utilities, 'border-top'), $responsive-true),
+    'border-end': map.merge(map.get($utilities, 'border-end'), $responsive-true),
+    'border-bottom': map.merge(map.get($utilities, 'border-bottom'), $responsive-true),
+    'border-start': map.merge(map.get($utilities, 'border-start'), $responsive-true),
     'flex-even': (
       responsive: true,
       property: flex,
@@ -67,12 +36,18 @@ $utilities: map.merge(
       class: 'card-max',
       property: max-width,
       values: (
-        auto: 460px,
+        large: 460px,
         none: inherit,
+      ),
+    ),
+    'card': (
+      responsive: true,
+      class: 'card-flex',
+      property: flex,
+      values: (
+        small: 0 0 100px,
+        medium: 0 0 150px,
       ),
     ),
   )
 );
-
-// Import Bootstrap utilities API (processes utility changes)
-@import '~bootstrap/scss/utilities/api';

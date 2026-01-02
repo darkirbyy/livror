@@ -6,11 +6,11 @@
     {% set backpath = path_with_query_param(queryParam|clone_with({ offset: 0, limit: queryParam.limit + queryParam.offset }), 'review-' ~ review.id) %}
 
     {# Each game is displayed on a "card" containing all the data #}
-    <div id="{{ reviewId }}" class="card-max-auto card-max-md-none mx-auto my-3 rounded-3 border overflow-hidden">
+    <div id="{{ reviewId }}" class="card-max-large card-max-md-none mx-auto my-3 rounded-3 border overflow-hidden">
       {# Card title bar with the the title on one side, and 3 infos on the other side (or on top of each other on small screen) #}
       <div class="row gx-0 bg-primary-subtle border-bottom text-center">
         {# Actual title with the edit button #}
-        <div class="col-12 border-bottom col-md-6 border-bottom-md-0 border-end-md card-max-md-auto">
+        <div class="col-12 border-bottom col-md-6 border-bottom-md-0 border-end-md card-max-md-large">
           {{ game_title(review.game, backpath) }}
         </div>
         {# 3 piece of information : player rating, hour spend, and first play date #}
@@ -44,7 +44,7 @@
     {{ more_button(queryParam) }}
   {% endif %}
 {% else %}
-  <div class="card-max-auto card-max-md-none my-1 p-2 fs-5 fw-light">
+  <div class="card-max-large card-max-md-none my-1 p-2 fs-5 fw-light">
     {{ 'review.index.notFound'|trans }}
   </div>
 {% endif %}
