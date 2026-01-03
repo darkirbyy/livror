@@ -6,7 +6,7 @@ namespace App\Dto;
 
 use App\Entity\Main\Game;
 
-class GameIndex
+class GameInfo
 {
     public ?\DateTime $minFirstPlay;
 

@@ -54,10 +54,10 @@ class AutocompletionManager
         // Query the database and return the results with users plugged into each review
         $userId = $this->security->getUser()->getId();
         $repoMethod = $searchMode->toRepoMethod();
-        $gamesIndex = $this->gameRepo->$repoMethod($search, $this->autocompletionLimit, $withoutReview ? $userId : null);
-        $this->userManager->plugToGamesIndex($gamesIndex, $this->userManager->findWithReview());
+        $gamesInfo = $this->gameRepo->$repoMethod($search, $this->autocompletionLimit, $withoutReview ? $userId : null);
+        $this->userManager->plugToGamesInfo($gamesInfo, $this->userManager->findWithReview());
 
-        return $gamesIndex;
+        return $gamesInfo;
     }
 
     /**

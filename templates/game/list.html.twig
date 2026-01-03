@@ -1,8 +1,8 @@
 {% from 'theme/macro.html.twig' import path_with_query_param, fmt_full_price, game_title, review_body, more_button %}
 
-{% if (gamesIndex|length) > 0 %}
-  {% for gameIndex in gamesIndex %}
-    {% set game = gameIndex.game %}
+{% if (gamesInfo|length) > 0 %}
+  {% for gameInfo in gamesInfo %}
+    {% set game = gameInfo.game %}
     {% set gameId = 'game-' ~ game.id %}
     {% set backpath = path_with_query_param(queryParam|clone_with({ offset: 0, limit: queryParam.limit + queryParam.offset }), 'game-' ~ game.id) %}
 
@@ -24,17 +24,17 @@
           <div class="flex-basis-0 flex-grow-2 flex-grow-lg-1 py-1 px-2 py-md-2 border-end text-truncate">
             <span class="fa-solid fa-star fa-sm" aria-hidden="true"></span>
             <span class="visually-hidden">{{ 'game.label.avgRating'|trans({ }, 'validators') }} :</span>
-            {{ gameIndex.avgRating is not empty ? gameIndex.avgRating|format_number({ fraction_digit: 2 }) : '-' }}
+            {{ gameInfo.avgRating is not empty ? gameInfo.avgRating|format_number({ fraction_digit: 2 }) : '-' }}
           </div>
           <div class="flex-basis-0 flex-grow-2 flex-grow-lg-1 py-1 px-2 py-md-2 border-end text-truncate">
             <span class="fa-regular fa-hourglass-half fa-sm" aria-hidden="true"></span>
             <span class="visually-hidden">{{ 'game.label.totHourSpend'|trans({ }, 'validators') }} :</span>
-            {{ gameIndex.totHourSpend is not empty ? gameIndex.totHourSpend ~ 'h' : '-' }}
+            {{ gameInfo.totHourSpend is not empty ? gameInfo.totHourSpend ~ 'h' : '-' }}
           </div>
           <div class="flex-basis-0 flex-grow-3 flex-grow-lg-1 py-1 px-2 py-md-2 text-truncate">
             <span class="fa-regular fa-calendar-days fa-sm" aria-hidden="true"></span>
             <span class="visually-hidden">{{ 'game.label.minFirstPlay'|trans({ }, 'validators') }} :</span>
-            <span class="small">{{ gameIndex.minFirstPlay is not empty ? gameIndex.minFirstPlay|format_datetime('short', 'none') : '-' }}</span>
+            <span class="small">{{ gameInfo.minFirstPlay is not empty ? gameInfo.minFirstPlay|format_datetime('short', 'none') : '-' }}</span>
           </div>
         </div>
       </div>

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Unit\Service;
 
-use App\Dto\GameIndex;
+use App\Dto\GameInfo;
 use App\Entity\Account\User;
 use App\Entity\Main\Game;
 use App\Entity\Main\Review;
@@ -31,19 +31,19 @@ final class UserManagerTest extends TestCase
     }
 
     #[PU\Test]
-    public function plugToGamesIndex(): void
+    public function plugToGamesInfo(): void
     {
         [$reviews, $users] = $this->prepareReviewsAndUsers();
 
         $game1 = $this->createMock(Game::class);
         $game1->expects($this->once())->method('getReviews')->willReturn(new ArrayCollection($reviews));
-        $gameIndex1 = new GameIndex($game1, null, null, null);
+        $gameInfo1 = new GameInfo($game1, null, null, null);
         $game2 = $this->createMock(Game::class);
         $game2->expects($this->once())->method('getReviews')->willReturn(new ArrayCollection());
-        $gameIndex2 = new GameIndex($game2, null, null, null);
-        $gamesIndex = [$gameIndex1, $gameIndex2];
+        $gameInfo2 = new GameInfo($game2, null, null, null);
+        $gamesInfo = [$gameInfo1, $gameInfo2];
 
-        $this->userManager->plugToGamesIndex($gamesIndex, $users);
+        $this->userManager->plugToGamesInfo($gamesInfo, $users);
     }
 
     #[PU\Test]

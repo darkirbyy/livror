@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Service;
 
-use App\Dto\GameIndex;
+use App\Dto\GameInfo;
 use App\Entity\Main\Review;
 use App\Repository\ReviewRepository;
 use App\Repository\UserRepository;
@@ -21,12 +21,12 @@ class UserManager
     /**
      * Extract and flatten all reviews of each game, then plug the user.
      *
-     * @param array $gamesIndex list of gameIndex DTO with each review with null user
-     * @param array $users      list of all users necessary to plug
+     * @param array $gamesInfo list of gameInfo DTO with each review with null user
+     * @param array $users     list of all users necessary to plug
      */
-    public function plugToGamesIndex(array &$gamesIndex, array $users): void
+    public function plugToGamesInfo(array &$gamesInfo, array $users): void
     {
-        $reviews = array_merge(...array_map(fn (GameIndex $g) => $g->game->getReviews()->toArray(), $gamesIndex));
+        $reviews = array_merge(...array_map(fn (GameInfo $g) => $g->game->getReviews()->toArray(), $gamesInfo));
         $this->plugToReviews($reviews, $users);
     }
 
