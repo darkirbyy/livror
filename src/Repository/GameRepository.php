@@ -43,18 +43,6 @@ class GameRepository extends ServiceEntityRepository
             $qb->where('g.typeGame IN (:typeGame)')->setParameter('typeGame', $queryParam->filters['typeGame']);
         }
 
-        // Filter logic : at least one of the reviews is in the filter list
-        // if (array_key_exists('users', $queryParam->filters)) {
-        //     $conditions[] = 'EXISTS (SELECT 1 FROM ' . Review::class . ' r1 WHERE r1.game = g AND r1.userId IN (:users))';
-        //     $qb->setParameter('users', $queryParam->filters['users']);
-        // }
-        // if (array_key_exists('withoutReview', $queryParam->filters) && !empty($queryParam->filters['withoutReview'])) {
-        //     $conditions[] = 'NOT EXISTS (SELECT 1 FROM ' . Review::class . ' r0 WHERE r0.game = g)';
-        // }
-        // if(!empty($conditions)){
-        //     $qb->andWhere(implode(' OR ', $conditions));
-        // }
-
         // Filter logic : all the reviews are in the filter list
         if (array_key_exists('users', $queryParam->filters)) {
             $qb->leftJoin('g.reviews', 'rf', Join::WITH, 'rf.userId IN (:users)')
@@ -72,8 +60,10 @@ class GameRepository extends ServiceEntityRepository
     public function findPattern(string $pattern, int $limit, ?int $userId): array
     {
         $qb = $this->createQueryBuilder('g');
+        $qb->leftJoin('g.reviews', 'ra')->select('NEW App\Dto\GameIndex(g, AVG(ra.rating), SUM(ra.hourSpend), MIN(ra.firstPlay))')->groupBy('g.id');
+
         if (!is_null($userId)) {
-            $qb->leftJoin('g.reviews', 'r', Join::WITH, 'r.userId = :userId')->where('r.id IS NULL')->setParameter('userId', $userId);
+            $qb->leftJoin('g.reviews', 'rf', Join::WITH, 'rf.userId = :userId')->where('rf.id IS NULL')->setParameter('userId', $userId);
         }
 
         $qb->addSelect('MATCH_AGAINST(g.name, :pattern) as HIDDEN relevance')
@@ -89,8 +79,10 @@ class GameRepository extends ServiceEntityRepository
     public function findLike(string $like, int $limit, ?int $userId): array
     {
         $qb = $this->createQueryBuilder('g');
+        $qb->leftJoin('g.reviews', 'ra')->select('NEW App\Dto\GameIndex(g, AVG(ra.rating), SUM(ra.hourSpend), MIN(ra.firstPlay))')->groupBy('g.id');
+
         if (!is_null($userId)) {
-            $qb->leftJoin('g.reviews', 'r', Join::WITH, 'r.userId = :userId')->where('r.id IS NULL')->setParameter('userId', $userId);
+            $qb->leftJoin('g.reviews', 'rf', Join::WITH, 'rf.userId = :userId')->where('rf.id IS NULL')->setParameter('userId', $userId);
         }
         $qb->andWhere('g.name LIKE :like')->setParameter('like', $like)->orderBy('g.name', 'ASC')->setMaxResults($limit);
 

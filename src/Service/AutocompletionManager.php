@@ -4,13 +4,11 @@ declare(strict_types=1);
 
 namespace App\Service;
 
-use App\Entity\Main\Game;
 use App\Entity\Main\Steam;
 use App\Enum\SearchModeEnum;
 use App\Repository\GameRepository;
 use App\Repository\SteamRepository;
 use Symfony\Bundle\SecurityBundle\Security;
-use Twig\Environment;
 
 class AutocompletionManager
 {
@@ -20,7 +18,7 @@ class AutocompletionManager
         private Security $security,
         private SteamRepository $steamRepo,
         private GameRepository $gameRepo,
-        private Environment $twig,
+        private UserManager $userManager,
     ) {
     }
 
@@ -35,18 +33,11 @@ class AutocompletionManager
             return [];
         }
 
-        // Query the database and return the data as an array formatted for tomselect
+        // Query the database and return the results
         $repoMethod = $searchMode->toRepoMethod();
-        $result = $this->steamRepo->$repoMethod($search, $this->autocompletionLimit);
-        $data = array_map(
-            fn (Steam $steam) => [
-                'value' => $steam->getId(),
-                'text' => $this->twig->render('steam/autocomplete.html.twig', ['steam' => $steam]),
-            ],
-            $result,
-        );
+        $steams = $this->steamRepo->$repoMethod($search, $this->autocompletionLimit);
 
-        return $data;
+        return $steams;
     }
 
     /**
@@ -60,19 +51,13 @@ class AutocompletionManager
             return [];
         }
 
-        // Query the database and return the data as an array formatted for tomselect
+        // Query the database and return the results with users plugged into each review
         $userId = $this->security->getUser()->getId();
         $repoMethod = $searchMode->toRepoMethod();
-        $result = $this->gameRepo->$repoMethod($search, $this->autocompletionLimit, $withoutReview ? $userId : null);
-        $data = array_map(
-            fn (Game $game) => [
-                'value' => $game->getId(),
-                'text' => $this->twig->render('game/autocomplete.html.twig', ['game' => $game]),
-            ],
-            $result,
-        );
+        $gamesIndex = $this->gameRepo->$repoMethod($search, $this->autocompletionLimit, $withoutReview ? $userId : null);
+        $this->userManager->plugToGamesIndex($gamesIndex, $this->userManager->findWithReview());
 
-        return $data;
+        return $gamesIndex;
     }
 
     /**

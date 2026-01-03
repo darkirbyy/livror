@@ -11,10 +11,10 @@ use App\Enum\SearchModeEnum;
 use App\Repository\GameRepository;
 use App\Repository\SteamRepository;
 use App\Service\AutocompletionManager;
+use App\Service\UserManager;
 use PHPUnit\Framework\Attributes as PU;
 use PHPUnit\Framework\TestCase;
 use Symfony\Bundle\SecurityBundle\Security;
-use Twig\Environment;
 
 final class AutocompletionManagerTest extends TestCase
 {
@@ -23,7 +23,7 @@ final class AutocompletionManagerTest extends TestCase
     private $security;
     private $steamRepo;
     private $gameRepo;
-    private $twig;
+    private $userManager;
 
     private $autocompletionManager;
 
@@ -32,7 +32,7 @@ final class AutocompletionManagerTest extends TestCase
         $this->security = $this->createMock(Security::class);
         $this->steamRepo = $this->createMock(SteamRepository::class);
         $this->gameRepo = $this->createMock(GameRepository::class);
-        $this->twig = $this->createMock(Environment::class);
+        $this->userManager = $this->createMock(UserManager::class);
 
         $this->autocompletionManager = new AutocompletionManager(
             self::$autocompletionLimit,
@@ -40,7 +40,7 @@ final class AutocompletionManagerTest extends TestCase
             $this->security,
             $this->steamRepo,
             $this->gameRepo,
-            $this->twig,
+            $this->userManager,
         );
     }
 
@@ -51,8 +51,8 @@ final class AutocompletionManagerTest extends TestCase
         $search = 'yes';
 
         $this->steamRepo->expects($this->never())->method($searchMode->toRepoMethod());
-        $data = $this->autocompletionManager->fromSteam($search, $searchMode);
-        $this->assertSame($data, []);
+        $objects = $this->autocompletionManager->fromSteam($search, $searchMode);
+        $this->assertSame($objects, []);
     }
 
     #[PU\Test]
@@ -67,13 +67,10 @@ final class AutocompletionManagerTest extends TestCase
             ->method($searchMode->toRepoMethod())
             ->with($expectedSearch, self::$autocompletionLimit)
             ->willReturn([$steam1, $steam2]);
-        $this->twig->expects($this->exactly(2))->method('render');
 
-        $data = $this->autocompletionManager->fromSteam($search, $searchMode);
+        $objects = $this->autocompletionManager->fromSteam($search, $searchMode);
 
-        $this->assertSame(2, count($data));
-        $this->assertArrayHasKey('value', $data[0]);
-        $this->assertArrayHasKey('text', $data[1]);
+        $this->assertSame([$steam1, $steam2], $objects);
     }
 
     #[PU\Test]
@@ -83,9 +80,9 @@ final class AutocompletionManagerTest extends TestCase
         $search = 'yes';
         $this->gameRepo->expects($this->never())->method($searchMode->toRepoMethod());
 
-        $data = $this->autocompletionManager->fromGame($search, $searchMode, true);
+        $objects = $this->autocompletionManager->fromGame($search, $searchMode, true);
 
-        $this->assertSame($data, []);
+        $this->assertSame($objects, []);
     }
 
     #[PU\Test]
@@ -105,13 +102,12 @@ final class AutocompletionManagerTest extends TestCase
             ->method($searchMode->toRepoMethod())
             ->with($expectedSearch, self::$autocompletionLimit, $userId)
             ->willReturn([$game1, $game2]);
-        $this->twig->expects($this->exactly(2))->method('render');
+        $this->userManager->expects($this->once())->method('plugToGamesIndex');
+        $this->userManager->expects($this->once())->method('findWithReview');
 
-        $data = $this->autocompletionManager->fromGame($search, $searchMode, true);
+        $objects = $this->autocompletionManager->fromGame($search, $searchMode, true);
 
-        $this->assertSame(2, count($data));
-        $this->assertArrayHasKey('value', $data[0]);
-        $this->assertArrayHasKey('text', $data[1]);
+        $this->assertSame([$game1, $game2], $objects);
     }
 
     #[PU\Test]

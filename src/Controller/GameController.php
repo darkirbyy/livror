@@ -10,6 +10,7 @@ use App\Entity\Main\Game;
 use App\Enum\SearchModeEnum;
 use App\Form\GameType;
 use App\Repository\GameRepository;
+use App\Service\AutocompletionHelper;
 use App\Service\AutocompletionManager;
 use App\Service\BackpathUrlGenerator;
 use App\Service\FormManager;
@@ -109,12 +110,13 @@ class GameController extends AbstractController
 
     // Autocomplete a game name thanks to the app game list (excluding game already reviewed by the user if asked)
     #[Route('/autocomplete', name: 'autocomplete', methods: ['GET'])]
-    public function autocomplete(Request $request, AutocompletionManager $autocompletionManager): Response
+    public function autocomplete(Request $request, AutocompletionManager $autocompletionManager, AutocompletionHelper $autocompletionHelper): Response
     {
         $search = $request->query->get('query');
         $withoutReview = $request->query->getBoolean('withoutReview', false);
-        $data = $autocompletionManager->fromGame($search, SearchModeEnum::LIKE, $withoutReview);
 
-        return $this->json(['results' => $data]);
+        $objects = $autocompletionManager->fromGame($search, SearchModeEnum::LIKE, $withoutReview);
+
+        return $this->json($autocompletionHelper->renderItems('game/autocomplete.html.twig', $objects));
     }
 }

@@ -14,4 +14,9 @@ class GameIndex
     {
         $this->minFirstPlay = !empty($minFirstPlay) ? new \DateTime($minFirstPlay) : null;
     }
+
+    public function getId(): int
+    {
+        return $this->game->getId();
+    }
 }

@@ -8,6 +8,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\UX\StimulusBundle\Dto\StimulusAttributes;
 use Symfony\UX\StimulusBundle\Helper\StimulusHelper;
+use Twig\Environment;
 
 class AutocompletionHelper
 {
@@ -16,6 +17,7 @@ class AutocompletionHelper
         private TranslatorInterface $trans,
         private StimulusHelper $stimulusHelper,
         private UrlGeneratorInterface $urlGenerator,
+        private Environment $twig,
     ) {
     }
 
@@ -49,5 +51,24 @@ class AutocompletionHelper
         ]);
 
         return $stimulusController;
+    }
+
+    /**
+     * Transform a list of objects into an array readable by tomselect for dynamic autocompletion.
+     *
+     * @param string $template the template to render each object
+     * @param array  $objects  list of objects to render
+     */
+    public function renderItems(string $template, array $objects): array
+    {
+        $results = array_map(
+            fn ($object) => [
+                'value' => $object->getId(),
+                'text' => $this->twig->render($template, ['object' => $object]),
+            ],
+            $objects,
+        );
+
+        return ['results' => $results];
     }
 }
