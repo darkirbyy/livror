@@ -1,4 +1,14 @@
-{% from 'theme/macro.html.twig' import path_with_query_param, fmt_full_price, game_title, review_body, more_button %}
+{% from 'theme/macro.html.twig' import
+  path_with_query_param,
+  fmt_full_price,
+  fmt_num_users,
+  fmt_avg_rating,
+  fmt_tot_hour_spend,
+  fmt_min_first_play,
+  game_title,
+  review_body,
+  more_button
+%}
 
 {% if (gamesInfo|length) > 0 %}
   {% for gameInfo in gamesInfo %}
@@ -19,22 +29,22 @@
           <div class="flex-basis-0 flex-grow-2 flex-grow-lg-1 py-1 px-2 py-md-2 border-end text-truncate">
             <span class="fa-solid fa-user-group fa-sm" aria-hidden="true"></span>
             <span class="visually-hidden">{{ 'game.label.numUsers'|trans({ }, 'validators') }} :</span>
-            {{ game.reviews is not empty ? game.reviews|length : '-' }}
+            {{ fmt_num_users(game) }}
           </div>
           <div class="flex-basis-0 flex-grow-2 flex-grow-lg-1 py-1 px-2 py-md-2 border-end text-truncate">
             <span class="fa-solid fa-star fa-sm" aria-hidden="true"></span>
             <span class="visually-hidden">{{ 'game.label.avgRating'|trans({ }, 'validators') }} :</span>
-            {{ gameInfo.avgRating is not empty ? gameInfo.avgRating|format_number({ fraction_digit: 2 }) : '-' }}
+            {{ fmt_avg_rating(gameInfo.avgRating) }}
           </div>
           <div class="flex-basis-0 flex-grow-2 flex-grow-lg-1 py-1 px-2 py-md-2 border-end text-truncate">
             <span class="fa-regular fa-hourglass-half fa-sm" aria-hidden="true"></span>
             <span class="visually-hidden">{{ 'game.label.totHourSpend'|trans({ }, 'validators') }} :</span>
-            {{ gameInfo.totHourSpend is not empty ? gameInfo.totHourSpend ~ 'h' : '-' }}
+            {{ fmt_tot_hour_spend(gameInfo.totHourSpend) }}
           </div>
           <div class="flex-basis-0 flex-grow-3 flex-grow-lg-1 py-1 px-2 py-md-2 text-truncate">
             <span class="fa-regular fa-calendar-days fa-sm" aria-hidden="true"></span>
             <span class="visually-hidden">{{ 'game.label.minFirstPlay'|trans({ }, 'validators') }} :</span>
-            <span class="small">{{ gameInfo.minFirstPlay is not empty ? gameInfo.minFirstPlay|format_datetime('short', 'none') : '-' }}</span>
+            <span class="small">{{ fmt_min_first_play(gameInfo.minFirstPlay) }}</span>
           </div>
         </div>
       </div>

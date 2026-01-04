@@ -1,4 +1,7 @@
+{% from 'theme/macro.html.twig' import fmt_avg_rating %}
+
 {% set game = object.game %}
+
 <div class="d-flex gap-2">
   <div class="card-flex-small card-flex-md-medium">
     {% if game.imgUrl is not empty %}
@@ -11,8 +14,9 @@
     <div class="fw-bold">
       {{ game.name }} <small>({{ game.releaseYear }})</small>
     </div>
-    <div>
-      {{ 'home.index.search.reviewedBy'|trans }} : {{ game.reviews|map(r => r.user.username)|join(', ') }}
+    <div class="fw-light lh-sm">
+      {{ 'home.index.search.reviewedBy'|trans }} : {{ game.reviews|map(r => r.user.username)|sort|join(', ') }}<br />
+      {{ 'home.index.search.avgRating'|trans }} : {{ fmt_avg_rating(object.avgRating) }} <span class="fa-regular fa-star fa-sm" aria-hidden="true"></span>
     </div>
   </div>
 </div>

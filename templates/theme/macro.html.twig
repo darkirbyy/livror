@@ -1,22 +1,35 @@
-{# Macro to lighten the code to generate path with query params #}
-{%- macro path_with_query_param(queryParam, anchor = null) -%}
-  {{- path(app.current_route, queryParam|to_array|merge({ anchor: anchor }))|raw -}}
-{%- endmacro -%}
+{# #################################### #}
+{# ## Format ########################## #}
+{# #################################### #}
 
-{# Macro to display the price : type if 0 or null, value with local formatting otherwise #}
+{# Macro to display the price #}
 {%- macro fmt_full_price(fullPrice) -%}
   {{ fullPrice > 0 ? (fullPrice / 100)|format_currency(env.app.currency, { decimal_always_shown: true, fraction_digit: 2 }) : fullPrice|to_type_price|trans }}
 {%- endmacro -%}
 
-{# Macro to create a backlink #}
-{% macro backlink(path) %}
-  <div class="mb-2">
-    <a class="link-secondary icon-link icon-link-hover icon-link-left" href="{{ path|generate_backpath }}">
-      <span class="bi bi-arrow-left mb-1" aria-hidden="true"></span>
-      {{ 'form.button.backToList'|trans }}
-    </a>
-  </div>
-{% endmacro %}
+{# Macro to display the number of users having reviewed that game #}
+{%- macro fmt_num_users(game) -%}
+  {{ game.reviews is not empty ? game.reviews|length : '-' }}
+{%- endmacro -%}
+
+{# Macro to display the average rating #}
+{%- macro fmt_avg_rating(avgRating) -%}
+  {{ avgRating is not empty ? avgRating|format_number({ fraction_digit: 2 }) : '-' }}
+{%- endmacro -%}
+
+{# Macro to display the total hour spend #}
+{%- macro fmt_tot_hour_spend(totHourSpend) -%}
+  {{ totHourSpend is not empty ? totHourSpend ~ 'h' : '-' }}
+{%- endmacro -%}
+
+{# Macro to display the min of the first play date #}
+{%- macro fmt_min_first_play(minFirstPlay) -%}
+  {{ minFirstPlay is not empty ? minFirstPlay|format_datetime('short', 'none') : '-' }}
+{%- endmacro -%}
+
+{# #################################### #}
+{# ## Forms ########################### #}
+{# #################################### #}
 
 {# Macro to prepare the delete modal in the form #}
 {% macro form_modal(body, path) %}
@@ -68,6 +81,10 @@
     {% endif %}
   </div>
 {% endmacro %}
+
+{# #################################### #}
+{# ## Content ######################### #}
+{# #################################### #}
 
 {% macro index_buttons(queryParam, entityKey, displayedSortsKeys, filterContent) %}
   <div class="card-max-large card-max-md-none mx-auto">
@@ -195,6 +212,25 @@
   {# <p class="m-0">
     Documents joints : à venir...
   </p> #}
+{% endmacro %}
+
+{# #################################### #}
+{# ## Miscellaneous ################### #}
+{# #################################### #}
+
+{# Macro to lighten the code to generate path with query params #}
+{%- macro path_with_query_param(queryParam, anchor = null) -%}
+  {{- path(app.current_route, queryParam|to_array|merge({ anchor: anchor }))|raw -}}
+{%- endmacro -%}
+
+{# Macro to create a backlink #}
+{% macro backlink(path) %}
+  <div class="mb-2">
+    <a class="link-secondary icon-link icon-link-hover icon-link-left" href="{{ path|generate_backpath }}">
+      <span class="bi bi-arrow-left mb-1" aria-hidden="true"></span>
+      {{ 'form.button.backToList'|trans }}
+    </a>
+  </div>
 {% endmacro %}
 
 {# Macro to display and prepare the load more button #}

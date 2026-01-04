@@ -8,6 +8,7 @@ home:
     search:
       title: Search
       reviewedBy: Played by
+      avgRating: Rating
 
 game:
   index:
