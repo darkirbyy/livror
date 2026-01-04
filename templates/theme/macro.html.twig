@@ -8,8 +8,8 @@
 {%- endmacro -%}
 
 {# Macro to display the number of users having reviewed that game #}
-{%- macro fmt_num_users(game) -%}
-  {{ game.reviews is not empty ? game.reviews|length : '-' }}
+{%- macro fmt_num_users(numUsers) -%}
+  {{ numUsers != 0 ? numUsers : '-' }}
 {%- endmacro -%}
 
 {# Macro to display the average rating #}

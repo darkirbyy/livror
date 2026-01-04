@@ -33,7 +33,7 @@ class GameRepository extends ServiceEntityRepository
 
         // Build the base query (with select, join and group)
         $qb = $this->createQueryBuilder('g');
-        $qb->leftJoin('g.reviews', 'ra')->select('NEW App\Dto\GameInfo(g, AVG(ra.rating), SUM(ra.hourSpend), MIN(ra.firstPlay))')->groupBy('g.id');
+        $qb->leftJoin('g.reviews', 'ra')->select('NEW App\Dto\GameInfo(g, COUNT(ra), AVG(ra.rating), SUM(ra.hourSpend), MIN(ra.firstPlay))')->groupBy('g.id');
 
         // Apply alls the query param but filters and add last sort by id
         $this->queryParamHelper->applyButFiltersToQb($queryParam, $qb, $sortsConversion);
@@ -60,7 +60,7 @@ class GameRepository extends ServiceEntityRepository
     public function findPattern(string $pattern, int $limit, ?int $userId): array
     {
         $qb = $this->createQueryBuilder('g');
-        $qb->leftJoin('g.reviews', 'ra')->select('NEW App\Dto\GameInfo(g, AVG(ra.rating), SUM(ra.hourSpend), MIN(ra.firstPlay))')->groupBy('g.id');
+        $qb->leftJoin('g.reviews', 'ra')->select('NEW App\Dto\GameInfo(g, COUNT(ra), AVG(ra.rating), SUM(ra.hourSpend), MIN(ra.firstPlay))')->groupBy('g.id');
 
         if (!is_null($userId)) {
             $qb->leftJoin('g.reviews', 'rf', Join::WITH, 'rf.userId = :userId')->where('rf.id IS NULL')->setParameter('userId', $userId);
@@ -79,7 +79,7 @@ class GameRepository extends ServiceEntityRepository
     public function findLike(string $like, int $limit, ?int $userId): array
     {
         $qb = $this->createQueryBuilder('g');
-        $qb->leftJoin('g.reviews', 'ra')->select('NEW App\Dto\GameInfo(g, AVG(ra.rating), SUM(ra.hourSpend), MIN(ra.firstPlay))')->groupBy('g.id');
+        $qb->leftJoin('g.reviews', 'ra')->select('NEW App\Dto\GameInfo(g, COUNT(ra), AVG(ra.rating), SUM(ra.hourSpend), MIN(ra.firstPlay))')->groupBy('g.id');
 
         if (!is_null($userId)) {
             $qb->leftJoin('g.reviews', 'rf', Join::WITH, 'rf.userId = :userId')->where('rf.id IS NULL')->setParameter('userId', $userId);
