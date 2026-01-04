@@ -113,9 +113,10 @@ class GameController extends AbstractController
     public function autocomplete(Request $request, AutocompletionManager $autocompletionManager, AutocompletionHelper $autocompletionHelper): Response
     {
         $search = $request->query->get('query');
+        $searchMode = $request->query->getEnum('mode', SearchModeEnum::class, SearchModeEnum::LIKE);
         $withoutReview = $request->query->getBoolean('withoutReview', false);
 
-        $objects = $autocompletionManager->fromGame($search, SearchModeEnum::LIKE, $withoutReview);
+        $objects = $autocompletionManager->fromGame($search, $searchMode, $withoutReview);
 
         return $this->json($autocompletionHelper->renderItems('game/autocomplete.html.twig', $objects));
     }

@@ -14,6 +14,7 @@ class SteamControllerTest extends AbstractControllerTest
     public function autocomplete(string $queryString, int $expectedNbGames): void
     {
         SteamAutocompleteStory::load();
+
         $this->client->request('GET', '/steam/autocomplete?' . $queryString);
 
         $response = $this->client->getResponse();

@@ -8,7 +8,7 @@ use App\Repository\GameRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: GameRepository::class)]
-#[ORM\UniqueConstraint(fields: ['id'])]
+#[ORM\Index(fields: ['name'], flags: ['fulltext'])]
 class Steam
 {
     // /////////////////////////////////////////////////////

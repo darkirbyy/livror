@@ -20,8 +20,9 @@ class SteamController extends AbstractController
     public function autocomplete(Request $request, AutocompletionManager $autocompletionManager, AutocompletionHelper $autocompletionHelper): Response
     {
         $search = $request->query->get('query');
+        $searchMode = $request->query->getEnum('mode', SearchModeEnum::class, SearchModeEnum::LIKE);
 
-        $objects = $autocompletionManager->fromSteam($search, SearchModeEnum::LIKE);
+        $objects = $autocompletionManager->fromSteam($search, $searchMode);
 
         return $this->json($autocompletionHelper->renderItems('steam/autocomplete.html.twig', $objects));
     }

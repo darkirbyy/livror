@@ -15,11 +15,10 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: GameRepository::class)]
+#[ORM\Index(fields: ['name'], flags: ['fulltext'])]
 #[ORM\HasLifecycleCallbacks]
 #[UniqueEntity(fields: ['name'])]
 #[UniqueEntity(fields: ['steamId'])]
-#[ORM\UniqueConstraint(fields: ['name'])]
-#[ORM\UniqueConstraint(fields: ['steamId'])]
 class Game
 {
     // /////////////////////////////////////////////////////
@@ -37,11 +36,11 @@ class Game
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $dateUpdate = null;
 
-    #[ORM\Column(nullable: true)]
+    #[ORM\Column(nullable: true, unique: true)]
     #[Assert\Regex('/^\d+$/', message: 'game.error.steamId.invalid')]
     private ?int $steamId = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, unique: true)]
     #[Assert\Length(min: 2)]
     #[Assert\NotBlank]
     private ?string $name = null;
