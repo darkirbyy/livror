@@ -1,5 +1,5 @@
 {% extends 'base.html.twig' %}
-{% from 'theme/macro.html.twig' import index_buttons %}
+{% import 'theme/macro.html.twig' as m %}
 
 {% set title = 'game.index.title'|trans %}
 
@@ -62,7 +62,7 @@
         {% endset %}
         {# Include the buttons to sort, filter and reset #}
         {{
-          index_buttons(
+          m.index_buttons(
             queryParam,
             'game',
             ['name', 'avgRating', 'totHourSpend', 'minFirstPlay'],

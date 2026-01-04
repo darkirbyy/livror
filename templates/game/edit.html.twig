@@ -1,5 +1,5 @@
 {% extends 'base.html.twig' %}
-{% from 'theme/macro.html.twig' import backlink, form_modal, form_buttons %}
+{% import 'theme/macro.html.twig' as m %}
 
 {% set isEditMode = game.id is not null %}
 {% set title = isEditMode ? 'game.edit.title.update'|trans({ '{name}': game.name }) : 'game.edit.title.add'|trans %}
@@ -7,7 +7,7 @@
 {% block main %}
   {# Modal to confirm delete, if in EDIT mode #}
   {% if isEditMode %}
-    {{ form_modal('game.edit.modalDeleteBody'|trans({ '{name}': game.name }), path('game_delete', { id: game.id, backpath: app.request.query.get('backpath') })) }}
+    {{ m.form_modal('game.edit.modalDeleteBody'|trans({ '{name}': game.name }), path('game_delete', { id: game.id, backpath: app.request.query.get('backpath') })) }}
   {% endif %}
 
   {# Actual content with flashes and form #}
@@ -19,7 +19,7 @@
           {{ block('flash', 'theme/flash.html.twig') }}
 
           {# Back link #}
-          {{ backlink(path('game_index')) }}
+          {{ m.backlink(path('game_index')) }}
 
           {# Form start #}
           {{ form_start(form) }}
@@ -75,7 +75,7 @@
           {{ form_row(form.imgUrl, { label: 'game.label.imgUrl' }) }}
 
           {# Buttons to submit, or open the delete modal #}
-          {{ form_buttons(form, isEditMode) }}
+          {{ m.form_buttons(form, isEditMode) }}
           {{ form_rest(form) }}
           {{ form_end(form) }}
         </div>

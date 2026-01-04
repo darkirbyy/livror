@@ -1,5 +1,5 @@
 {% extends 'base.html.twig' %}
-{% from 'theme/macro.html.twig' import index_buttons %}
+{% import 'theme/macro.html.twig' as m %}
 
 {% set title = 'review.index.title'|trans %}
 
@@ -29,7 +29,7 @@
       {# Turboframe to refresh only the main section when sorting the results #}
       <turbo-frame id="main-section">
         {# Include the buttons to sort, filter and reset #}
-        {{ index_buttons(queryParam, 'review', ['name', 'rating', 'hourSpend', 'firstPlay'], [], null) }}
+        {{ m.index_buttons(queryParam, 'review', ['name', 'rating', 'hourSpend', 'firstPlay'], [], null) }}
 
         {# Include the template to render the card of each review + show more button #}
         {{ include('review/list.html.twig') }}

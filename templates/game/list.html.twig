@@ -1,20 +1,10 @@
-{% from 'theme/macro.html.twig' import
-  path_with_query_param,
-  fmt_full_price,
-  fmt_num_users,
-  fmt_avg_rating,
-  fmt_tot_hour_spend,
-  fmt_min_first_play,
-  game_title,
-  review_body,
-  more_button
-%}
+{% import 'theme/macro.html.twig' as m %}
 
 {% if (gamesInfo|length) > 0 %}
   {% for gameInfo in gamesInfo %}
     {% set game = gameInfo.game %}
     {% set gameId = 'game-' ~ game.id %}
-    {% set backpath = path_with_query_param(queryParam|clone_with({ offset: 0, limit: queryParam.limit + queryParam.offset }), 'game-' ~ game.id) %}
+    {% set backpath = m.path_with_query_param(queryParam|clone_with({ offset: 0, limit: queryParam.limit + queryParam.offset }), 'game-' ~ game.id) %}
 
     {# Each game is displayed on a "card" containing all the data #}
     <div id="{{ gameId }}" class="card-max-large card-max-md-none mx-auto my-3 rounded-3 border overflow-hidden">
@@ -22,29 +12,29 @@
       <div class="row gx-0 bg-primary-subtle border-bottom">
         {# Actual title with the edit button #}
         <div class="col-12 border-bottom col-md-6 border-bottom-md-0 border-end-md card-max-md-large">
-          {{ game_title(game, backpath) }}
+          {{ m.game_title(game, backpath) }}
         </div>
         {# 4 piece of information : player who have written a review, average rating, total hour spend, minimum first play date #}
         <div class="col-12 text-center d-flex align-items-center col-md-auto flex-even">
           <div class="flex-basis-0 flex-grow-2 flex-grow-lg-1 py-1 px-2 py-md-2 border-end text-truncate">
             <span class="fa-solid fa-user-group fa-sm" aria-hidden="true"></span>
             <span class="visually-hidden">{{ 'game.label.numUsers'|trans({ }, 'validators') }} :</span>
-            {{ fmt_num_users(gameInfo.numUsers) }}
+            {{ m.fmt_num_users(gameInfo.numUsers) }}
           </div>
           <div class="flex-basis-0 flex-grow-2 flex-grow-lg-1 py-1 px-2 py-md-2 border-end text-truncate">
             <span class="fa-solid fa-star fa-sm" aria-hidden="true"></span>
             <span class="visually-hidden">{{ 'game.label.avgRating'|trans({ }, 'validators') }} :</span>
-            {{ fmt_avg_rating(gameInfo.avgRating) }}
+            {{ m.fmt_avg_rating(gameInfo.avgRating) }}
           </div>
           <div class="flex-basis-0 flex-grow-2 flex-grow-lg-1 py-1 px-2 py-md-2 border-end text-truncate">
             <span class="fa-regular fa-hourglass-half fa-sm" aria-hidden="true"></span>
             <span class="visually-hidden">{{ 'game.label.totHourSpend'|trans({ }, 'validators') }} :</span>
-            {{ fmt_tot_hour_spend(gameInfo.totHourSpend) }}
+            {{ m.fmt_tot_hour_spend(gameInfo.totHourSpend) }}
           </div>
           <div class="flex-basis-0 flex-grow-3 flex-grow-lg-1 py-1 px-2 py-md-2 text-truncate">
             <span class="fa-regular fa-calendar-days fa-sm" aria-hidden="true"></span>
             <span class="visually-hidden">{{ 'game.label.minFirstPlay'|trans({ }, 'validators') }} :</span>
-            <span class="small">{{ fmt_min_first_play(gameInfo.minFirstPlay) }}</span>
+            <span class="small">{{ m.fmt_min_first_play(gameInfo.minFirstPlay) }}</span>
           </div>
         </div>
       </div>
@@ -82,7 +72,7 @@
               {% set gameData = {
                 typeGame: game.typeGame|trans,
                 releaseYear: game.releaseYear,
-                fullPrice: fmt_full_price(game.fullPrice),
+                fullPrice: m.fmt_full_price(game.fullPrice),
                 developers: game.developers,
                 genres: game.genres,
                 description: game.description,
@@ -144,7 +134,7 @@
                   </div>
                 </div>
                 <div class="col-12 mb-2 py-1 px-2">
-                  {{ review_body(review, backpath) }}
+                  {{ m.review_body(review, backpath) }}
                 </div>
               {% endfor %}
               {% if not (app.user.id in (game.reviews|map(review => review.userId))) %}
@@ -163,7 +153,7 @@
   {% endfor %}
 
   {% if hasMore %}
-    {{ more_button(queryParam) }}
+    {{ m.more_button(queryParam) }}
   {% endif %}
 {% else %}
   <div class="card-max-large card-max-md-none my-1 p-2 fs-5 fw-light">

@@ -1,9 +1,9 @@
-{% from 'theme/macro.html.twig' import path_with_query_param, game_title, review_body, more_button %}
+{% import 'theme/macro.html.twig' as m %}
 
 {% if (reviews|length) > 0 %}
   {% for review in reviews %}
     {% set reviewId = 'review-' ~ review.id %}
-    {% set backpath = path_with_query_param(queryParam|clone_with({ offset: 0, limit: queryParam.limit + queryParam.offset }), 'review-' ~ review.id) %}
+    {% set backpath = m.path_with_query_param(queryParam|clone_with({ offset: 0, limit: queryParam.limit + queryParam.offset }), 'review-' ~ review.id) %}
 
     {# Each game is displayed on a "card" containing all the data #}
     <div id="{{ reviewId }}" class="card-max-large card-max-md-none mx-auto my-3 rounded-3 border overflow-hidden">
@@ -11,7 +11,7 @@
       <div class="row gx-0 bg-primary-subtle border-bottom text-center">
         {# Actual title with the edit button #}
         <div class="col-12 border-bottom col-md-6 border-bottom-md-0 border-end-md card-max-md-large">
-          {{ game_title(review.game, backpath) }}
+          {{ m.game_title(review.game, backpath) }}
         </div>
         {# 3 piece of information : player rating, hour spend, and first play date #}
         <div class="col-12 d-flex align-items-center col-md-auto flex-even">
@@ -35,13 +35,13 @@
 
       {# Card body in one part : the comment #}
       <div class="px-2 py-1 bg-body-tertiary">
-        {{ review_body(review, backpath) }}
+        {{ m.review_body(review, backpath) }}
       </div>
     </div>
   {% endfor %}
 
   {% if hasMore %}
-    {{ more_button(queryParam) }}
+    {{ m.more_button(queryParam) }}
   {% endif %}
 {% else %}
   <div class="card-max-large card-max-md-none my-1 p-2 fs-5 fw-light">
