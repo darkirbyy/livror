@@ -37,10 +37,10 @@ final class UserManagerTest extends TestCase
 
         $game1 = $this->createMock(Game::class);
         $game1->expects($this->once())->method('getReviews')->willReturn(new ArrayCollection($reviews));
-        $gameInfo1 = new GameInfo($game1, null, null, null);
+        $gameInfo1 = new GameInfo($game1, 0, null, null, null);
         $game2 = $this->createMock(Game::class);
         $game2->expects($this->once())->method('getReviews')->willReturn(new ArrayCollection());
-        $gameInfo2 = new GameInfo($game2, null, null, null);
+        $gameInfo2 = new GameInfo($game2, 0, null, null, null);
         $gamesInfo = [$gameInfo1, $gameInfo2];
 
         $this->userManager->plugToGamesInfo($gamesInfo, $users);
