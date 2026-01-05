@@ -8,6 +8,7 @@ use App\Entity\Main\Steam;
 use Doctrine\DBAL\ParameterType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
@@ -26,7 +27,7 @@ class SteamScrapV1Command extends Command
         $this->setDescription('Retrieve all games from steam and put them in the steam table for autocompletion (without API key).');
     }
 
-    public function __invoke(OutputInterface $output): int
+    public function __invoke(OutputInterface $output, InputInterface $input): int
     {
         $this->output = $output;
         $this->prevTime = microtime(true);
@@ -78,7 +79,9 @@ class SteamScrapV1Command extends Command
         } catch (\Exception $e) {
             $connection->rollBack();
             $output->writeln(' Failed.');
-            $output->write($e->getMessage());
+            if ($input->getOption('verbose')) {
+                $output->write($e->getMessage());
+            }
 
             return Command::FAILURE;
         }

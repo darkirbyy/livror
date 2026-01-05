@@ -116,7 +116,9 @@ class SteamScrapV2Command extends Command
         } catch (\Exception $e) {
             $connection->rollBack();
             $output->writeln(' Failed.');
-            $output->write($e->getMessage());
+            if ($input->getOption('verbose')) {
+                $output->write($e->getMessage());
+            }
 
             return Command::FAILURE;
         }
