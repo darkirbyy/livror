@@ -33,7 +33,8 @@ class SteamScrapV2Command extends Command
     {
         $this->setDescription('Retrieve all games from steam and put them in the steam table for autocompletion (with API key).')
             ->addArgument('mode', InputArgument::REQUIRED, 'truncate = reset and insert all games | update = upsert games since a given date')
-            ->addOption('since', 's', InputOption::VALUE_REQUIRED, 'with update mode, only update games modified since this date', -1);
+            ->addOption('since', 's', InputOption::VALUE_REQUIRED, 'with update mode, only update games modified since this date', -1)
+            ->addOption('timeout', 't', InputOption::VALUE_REQUIRED, 'http request timeout in seconds', $this->requestTimeout);
     }
 
     public function __invoke(OutputInterface $output, InputInterface $input): int
@@ -56,6 +57,8 @@ class SteamScrapV2Command extends Command
             return Command::INVALID;
         }
 
+        $timeout = intval($input->getOption('timeout'));
+
         try {
             $output->write('Starting transaction...');
             $connection = $this->entityManager->getConnection();
@@ -75,7 +78,7 @@ class SteamScrapV2Command extends Command
 
             $output->writeln('Upserting all apps...');
             $query = ['key' => $this->steamApiKey, 'max_results' => $this->batchSize, 'if_modified_since' => $since, 'last_appid' => 0];
-            $options = ['max_duration' => $this->requestTimeout];
+            $options = ['max_duration' => $timeout];
 
             $countBatch = 0;
             $countUpsert = 0;
