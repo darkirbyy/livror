@@ -2,7 +2,7 @@
 
 {% if (reviews|length) > 0 %}
   {% for review in reviews %}
-    {{ include('review/show.html.twig') }}
+    {{ include('review/_card.html.twig') }}
   {% endfor %}
 
   {% if hasMore %}

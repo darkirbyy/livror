@@ -2,7 +2,7 @@
 
 {% if (gamesInfo|length) > 0 %}
   {% for gameInfo in gamesInfo %}
-    {{ include('game/show.html.twig') }}
+    {{ include('game/_card.html.twig') }}
   {% endfor %}
 
   {% if hasMore %}

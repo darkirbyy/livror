@@ -2,7 +2,7 @@
 
 {% set game = object.game %}
 
-<div class="d-flex gap-2">
+<div class="d-flex gap-2" data-search-select-target="item" data-search-select-url="{{ game.id }}">
   <div class="card-flex-small card-flex-md-medium">
     {% if game.imgUrl is not empty %}
       <img src="{{ game.imgUrl }}" class="app-card-img-fit" alt="{{ 'aria.cover'|trans({ name: game.name }) }}" />
