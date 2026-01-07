@@ -34,7 +34,7 @@ class ReviewControllerTest extends AbstractControllerTest
 
         $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('h1', 'review.index.title');
-        $this->assertSame($gamesTitle, $gamesTitleExpected);
+        $this->assertSame($gamesTitleExpected, $gamesTitle);
 
         if ($canAdd) {
             $this->assertSelectorNotExists('div[class~=alert-secondary]');
@@ -72,7 +72,7 @@ class ReviewControllerTest extends AbstractControllerTest
 
         $this->assertResponseIsSuccessful();
         $this->assertSelectorNotExists('h1');
-        $this->assertSame($gamesTitle, $gamesTitleExpected);
+        $this->assertSame($gamesTitleExpected, $gamesTitle);
     }
 
     #[PU\Test]

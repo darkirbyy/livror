@@ -31,7 +31,7 @@ class GameControllerTest extends AbstractControllerTest
 
         $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('h1', 'game.index.title');
-        $this->assertSame($gamesTitle, $gamesTitleExpected);
+        $this->assertSame($gamesTitleExpected, $gamesTitle);
     }
 
     #[PU\Test]
@@ -61,7 +61,7 @@ class GameControllerTest extends AbstractControllerTest
 
         $this->assertResponseIsSuccessful();
         $this->assertSelectorNotExists('h1');
-        $this->assertSame($gamesTitle, $gamesTitleExpected);
+        $this->assertSame($gamesTitleExpected, $gamesTitle);
     }
 
     #[PU\Test]
@@ -89,6 +89,23 @@ class GameControllerTest extends AbstractControllerTest
             GameFactory::assert()->count($previousCount);
             $this->assertResponseIsUnprocessable();
         }
+    }
+
+    #[PU\Test]
+    #[PU\DataProvider('showValues')]
+    public function show(string $repoMethod): void
+    {
+        GameIndexAllStory::load();
+        $game = GameFactory::repository()->$repoMethod();
+
+        $crawler = $this->client->request('GET', '/game/' . $game->getId());
+
+        $gamesTitleCrawler = $crawler->filter('div[id^=game] h5');
+        $gamesTitle = array_map('trim', $gamesTitleCrawler->extract(['_text']));
+
+        $this->assertResponseIsSuccessful();
+        $this->assertSelectorTextContains('h1', 'game.show.title');
+        $this->assertSame([$game->getName()], $gamesTitle);
     }
 
     #[PU\Test]
@@ -180,6 +197,13 @@ class GameControllerTest extends AbstractControllerTest
             'steamId valid, no change' => ['steamId=1', ApiMockData::$appDetails[1]['data'], [], true],
             'steamId valid, invalid fields' => ['steamId=1', ApiMockData::$appDetails[1]['data'], ['game[releaseYear]' => 'thousand'], false],
             'steamId valid, duplicate name' => ['steamId=2', ApiMockData::$appDetails[2]['data'], ['game[name]' => 'Core Keeper'], false],
+        ];
+    }
+
+    public static function showValues(): array
+    {
+        return [
+            'first id' => ['first'],
         ];
     }
 

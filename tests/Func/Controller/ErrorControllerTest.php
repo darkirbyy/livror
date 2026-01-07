@@ -50,6 +50,7 @@ class ErrorControllerTest extends AbstractControllerTest
     {
         return [
             'no route' => ['GET', '/not-a-route'],
+            'no game show' => ['GET', '/game/1500'],
             'no game edit' => ['GET', '/game/1500/edit'],
             'no game delete' => ['POST', '/game/1500/delete'],
             'no review edit' => ['GET', '/review/1500/edit'],

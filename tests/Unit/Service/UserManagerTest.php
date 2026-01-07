@@ -31,6 +31,18 @@ final class UserManagerTest extends TestCase
     }
 
     #[PU\Test]
+    public function plugToGameInfo(): void
+    {
+        [$reviews, $users] = $this->prepareReviewsAndUsers();
+
+        $game = $this->createMock(Game::class);
+        $game->expects($this->once())->method('getReviews')->willReturn(new ArrayCollection($reviews));
+        $gameInfo = new GameInfo($game, 0, null, null, null);
+
+        $this->userManager->plugToGameInfo($gameInfo, $users);
+    }
+
+    #[PU\Test]
     public function plugToGamesInfo(): void
     {
         [$reviews, $users] = $this->prepareReviewsAndUsers();
