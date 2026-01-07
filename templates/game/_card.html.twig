@@ -2,7 +2,6 @@
 
 {% set game = gameInfo.game %}
 {% set gameId = 'game-' ~ game.id %}
-{% set backpath = m.path_with_query_param(queryParam|clone_with({ offset: 0, limit: queryParam.limit + queryParam.offset }), 'game-' ~ game.id) %}
 
 {# Each game is displayed on a "card" containing all the data #}
 <div id="{{ gameId }}" class="card-max-large card-max-md-none mx-auto my-3 rounded-3 border overflow-hidden">

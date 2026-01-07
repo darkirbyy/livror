@@ -90,7 +90,7 @@ form:
     filterBy: Filtrer par
     apply: Appliquer
     showMore: Voir plus
-    backToList: Retour à la liste
+    goBack: Retour
     reset: Réinitialiser
   flash:
     invalidCsrf: Le jeton CSRF est invalide.

@@ -11,6 +11,7 @@
         {{ block('flash', 'theme/flash.html.twig') }}
       </div>
 
+      {% set backpath = path('game_show', { id: gameInfo.game.id }) %}
       {{ include('game/_card.html.twig') }}
     </div>
   </section>

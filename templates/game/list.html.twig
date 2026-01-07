@@ -2,6 +2,8 @@
 
 {% if (gamesInfo|length) > 0 %}
   {% for gameInfo in gamesInfo %}
+    {% set backpath = m.path_with_query_param(queryParam|clone_with({ offset: 0, limit: queryParam.limit + queryParam.offset }), 'game-' ~ gameInfo.game.id) %}
+
     {{ include('game/_card.html.twig') }}
   {% endfor %}
 

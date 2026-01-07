@@ -90,7 +90,7 @@ form:
     filterBy: Filter by
     apply: Apply
     showMore: Show more
-    backToList: Back to list
+    goBack: Go back
     reset: Reset
   flash:
     invalidCsrf: The CSRF token is invalid.
