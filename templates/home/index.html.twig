@@ -6,9 +6,10 @@
   <section>
     <div class="container">
       {{ block('flash', 'theme/flash.html.twig') }}
+
       <div class="row">
         <div class="col-12 col-md-10 offset-md-1 col-lg-8 offset-lg-2">
-          <div class="mt-2 p-2 p-md-3 bg-primary-subtle rounded">
+          <div class="mt-2 p-2 p-md-3 bg-primary-subtle rounded" {{ stimulus_controller('search-select') }}>
             <h5 class="text-center pb-2">{{ 'home.index.search.title'|trans }}</h5>
             <div class="input-group" role="group" aria-label="{{ 'form.button.search'|trans }}">
               <label class="input-group-text"><span class="bi bi-search" aria-hidden="true"></span></label>

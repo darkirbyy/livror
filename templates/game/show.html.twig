@@ -11,8 +11,17 @@
         {{ block('flash', 'theme/flash.html.twig') }}
       </div>
 
+      {# Back link #}
+      {{ m.backlink(path('home_index')) }}
+
+      {# Game card #}
       {% set backpath = path('game_show', { id: gameInfo.game.id }) %}
       {{ include('game/_card.html.twig') }}
+
+      {# Link to check all games list #}
+      <div class="text-center py-4">
+        <a href="{{ path('game_index') }}" class="btn btn-outline-secondary">{{ 'game.show.button.allGame'|trans }}</a>
+      </div>
     </div>
   </section>
 {% endblock %}

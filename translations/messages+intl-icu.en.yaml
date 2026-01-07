@@ -35,6 +35,8 @@ game:
     notFound: No games found
   show:
     title: Detail of a game
+    button:
+      allGame: See all games
   edit:
     title:
       add: Add a game

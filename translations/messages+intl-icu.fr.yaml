@@ -35,6 +35,8 @@ game:
     notFound: Aucun jeu trouvé
   show:
     title: Détails d'un jeu
+    button:
+      allGame: Voir tous les jeux
   edit:
     title:
       add: Ajouter un jeu
