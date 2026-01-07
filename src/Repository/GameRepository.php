@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Repository;
 
+use App\Dto\GameInfo;
 use App\Dto\QueryParam;
 use App\Entity\Main\Game;
 use App\Enum\TypeGameEnum;
@@ -57,15 +58,31 @@ class GameRepository extends ServiceEntityRepository
         return $qb->getQuery()->getResult();
     }
 
-    public function findPattern(string $pattern, int $limit, ?int $userId): array
+    public function findShow(Game $game): GameInfo
     {
+        // Build the base query (with select, join and group)
         $qb = $this->createQueryBuilder('g');
         $qb->leftJoin('g.reviews', 'ra')->select('NEW App\Dto\GameInfo(g, COUNT(ra), AVG(ra.rating), SUM(ra.hourSpend), MIN(ra.firstPlay))')->groupBy('g.id');
 
+        // Only retrieve the required game
+        $qb->where('g.id = :id')->setParameter('id', $game->getId());
+
+        // Execute and fetch the query
+        return $qb->getQuery()->getSingleResult();
+    }
+
+    public function findPattern(string $pattern, int $limit, ?int $userId): array
+    {
+        // Build the base query (with select, join and group)
+        $qb = $this->createQueryBuilder('g');
+        $qb->leftJoin('g.reviews', 'ra')->select('NEW App\Dto\GameInfo(g, COUNT(ra), AVG(ra.rating), SUM(ra.hourSpend), MIN(ra.firstPlay))')->groupBy('g.id');
+
+        // Restrict to game not reviewed by user with userId (if not null)
         if (!is_null($userId)) {
             $qb->leftJoin('g.reviews', 'rf', Join::WITH, 'rf.userId = :userId')->where('rf.id IS NULL')->setParameter('userId', $userId);
         }
 
+        // Select and limit by relevance thanks to mariadb fulltext search
         $qb->addSelect('MATCH_AGAINST(g.name, :pattern) as HIDDEN relevance')
             ->andWhere('MATCH_AGAINST(g.name, :pattern) > 0')
             ->setParameter('pattern', $pattern)
@@ -73,19 +90,25 @@ class GameRepository extends ServiceEntityRepository
             ->addOrderBy('g.name', 'ASC')
             ->setMaxResults($limit);
 
+        // Execute and fetch the query
         return $qb->getQuery()->getResult();
     }
 
     public function findLike(string $like, int $limit, ?int $userId): array
     {
+        // Build the base query (with select, join and group)
         $qb = $this->createQueryBuilder('g');
         $qb->leftJoin('g.reviews', 'ra')->select('NEW App\Dto\GameInfo(g, COUNT(ra), AVG(ra.rating), SUM(ra.hourSpend), MIN(ra.firstPlay))')->groupBy('g.id');
 
+        // Restrict to game not reviewed by user with userId (if not null)
         if (!is_null($userId)) {
             $qb->leftJoin('g.reviews', 'rf', Join::WITH, 'rf.userId = :userId')->where('rf.id IS NULL')->setParameter('userId', $userId);
         }
+
+        // Select and limit using basic like clause
         $qb->andWhere('g.name LIKE :like')->setParameter('like', $like)->orderBy('g.name', 'ASC')->setMaxResults($limit);
 
+        // Execute and fetch the query
         return $qb->getQuery()->getResult();
     }
 

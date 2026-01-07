@@ -24,6 +24,6 @@ class SteamController extends AbstractController
 
         $objects = $autocompletionManager->fromSteam($search, $searchMode);
 
-        return $this->json($autocompletionHelper->renderItems('steam/autocomplete.html.twig', $objects));
+        return $this->json($autocompletionHelper->renderItems('steam/_autocomplete.html.twig', $objects));
     }
 }

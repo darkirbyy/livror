@@ -33,6 +33,8 @@ game:
       users: Players
       withoutReview: Reviews
     notFound: No games found
+  show:
+    title: Detail of a game
   edit:
     title:
       add: Add a game

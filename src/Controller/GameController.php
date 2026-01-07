@@ -56,6 +56,7 @@ class GameController extends AbstractController
     #[Route('/new', name: 'new', methods: ['GET', 'POST'])]
     public function new(Request $request, FormManager $fm): Response
     {
+        // Do not use the query param during a form submission
         $game = new Game();
         $steamId = 'GET' == $request->getMethod() ? $request->query->get('steamId') : null;
 
@@ -76,10 +77,25 @@ class GameController extends AbstractController
         ]);
     }
 
+    // Show an existing game
+    #[Route('/{id}', name: 'show', methods: ['GET'], requirements: ['id' => Requirement::DIGITS])]
+    public function show(Game $game, UserManager $userManager, GameRepository $gameRepo): Response
+    {
+        $users = $userManager->findWithReview();
+
+        $gameInfo = $gameRepo->findShow($game);
+        $userManager->plugToGameInfo($gameInfo, $users);
+
+        return $this->render('game/show.html.twig', [
+            'gameInfo' => $gameInfo,
+        ]);
+    }
+
     // Edit an existing game
     #[Route('/{id}/edit', name: 'edit', methods: ['GET', 'POST'], requirements: ['id' => Requirement::DIGITS])]
     public function edit(Game $game, Request $request, FormManager $fm, BackpathUrlGenerator $backpathUrlGenerator): Response
     {
+        // Do not use the query param during a form submission
         $steamId = 'GET' == $request->getMethod() ? $request->query->get('steamId') : null;
 
         $form = $this->createForm(GameType::class, $game, ['steamId' => $steamId]);
@@ -118,6 +134,6 @@ class GameController extends AbstractController
 
         $objects = $autocompletionManager->fromGame($search, $searchMode, $withoutReview);
 
-        return $this->json($autocompletionHelper->renderItems('game/autocomplete.html.twig', $objects));
+        return $this->json($autocompletionHelper->renderItems('game/_autocomplete.html.twig', $objects));
     }
 }

@@ -19,7 +19,19 @@ class UserManager
     }
 
     /**
-     * Extract and flatten all reviews of each game, then plug the user.
+     * Extract all reviews of a gameInfo DTO, then plug the user.
+     *
+     * @param GameInfo $gameInfo one gameInfo DTO with each review with null user
+     * @param array    $users    list of all users necessary to plug
+     */
+    public function plugToGameInfo(GameInfo $gameInfo, array $users): void
+    {
+        $reviews = $gameInfo->game->getReviews()->toArray();
+        $this->plugToReviews($reviews, $users);
+    }
+
+    /**
+     * Extract and flatten all reviews of each game inside a list of gameInfo DTOs, then plug the user.
      *
      * @param array $gamesInfo list of gameInfo DTO with each review with null user
      * @param array $users     list of all users necessary to plug

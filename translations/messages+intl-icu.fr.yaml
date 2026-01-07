@@ -33,6 +33,8 @@ game:
       users: Joueurs
       withoutReview: Avis
     notFound: Aucun jeu trouvé
+  show:
+    title: Détails d'un jeu
   edit:
     title:
       add: Ajouter un jeu
