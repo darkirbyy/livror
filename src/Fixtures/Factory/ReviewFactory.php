@@ -19,7 +19,7 @@ final class ReviewFactory extends PersistentProxyObjectFactory
         $defaults['dateUpdate'] = self::faker()->optional(0.25, clone $defaults['dateAdd'])->dateTimeBetween($defaults['dateAdd'], '-1 day');
         $defaults['rating'] = self::faker()->randomFloat(1, 0, 6);
         $defaults['hourSpend'] = self::faker()->optional(0.75)->numberBetween(0, 200);
-        $defaults['firstPlay'] = self::faker()->optional(0.75)->dateTimeBetween('-25 years', '-1 day');
+        $defaults['firstPlay'] = self::faker()->optional(0.75)->dateTimeBetween('-25 years', '-1 day')?->setTime(0, 0, 0, 0);
         $defaults['comment'] = self::faker()
             ->optional(0.75)
             ->paragraph(self::faker()->numberBetween(1, 10));
@@ -34,7 +34,7 @@ final class ReviewFactory extends PersistentProxyObjectFactory
 
         return $this->with(function () use ($releaseDate) {
             $defaults = [];
-            $defaults['firstPlay'] = self::faker()->optional(0.75)->dateTimeBetween($releaseDate, '-1 day');
+            $defaults['firstPlay'] = self::faker()->optional(0.75)->dateTimeBetween($releaseDate, '-1 day')?->setTime(0, 0, 0, 0);
 
             return $defaults;
         });
