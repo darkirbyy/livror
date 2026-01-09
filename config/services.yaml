@@ -16,6 +16,8 @@ parameters:
     app.steam_api_key: '%env(string:APP_STEAM_API_KEY)%'
     app.default_limit: '%env(int:APP_DEFAULT_LIMIT)%'
     app.max_limit: '%env(int:APP_MAX_LIMIT)%'
+    app.home_game_limit: '%env(int:APP_HOME_GAME_LIMIT)%'
+    app.home_review_limit: '%env(int:APP_HOME_REVIEW_LIMIT)%'
     app.autocompletion_limit: '%env(int:APP_AUTOCOMPLETION_LIMIT)%'
     app.autocompletion_min_length: '%env(int:APP_AUTOCOMPLETION_MIN_LENGTH)%'
     app.html_validation: '%env(bool:APP_HTML_VALIDATION)%'

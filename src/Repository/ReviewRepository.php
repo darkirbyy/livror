@@ -6,6 +6,7 @@ namespace App\Repository;
 
 use App\Dto\QueryParam;
 use App\Entity\Main\Review;
+use App\Enum\DateFieldEnum;
 use App\Service\QueryParamHelper;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -46,5 +47,17 @@ class ReviewRepository extends ServiceEntityRepository
         $qb->select('r.userId')->distinct();
 
         return $qb->getQuery()->getSingleColumnResult();
+    }
+
+    public function findLast(DateFieldEnum $dateField, int $limit): array
+    {
+        // Build the base query
+        $qb = $this->createQueryBuilder('r');
+
+        // Find last ones by the given field
+        $qb->orderBy('r.' . $dateField->toDatabaseField(), 'desc')->setMaxResults($limit);
+
+        // Execute and fetch the query
+        return $qb->getQuery()->getResult();
     }
 }

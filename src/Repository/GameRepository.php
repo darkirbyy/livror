@@ -7,6 +7,7 @@ namespace App\Repository;
 use App\Dto\GameInfo;
 use App\Dto\QueryParam;
 use App\Entity\Main\Game;
+use App\Enum\DateFieldEnum;
 use App\Enum\TypeGameEnum;
 use App\Service\QueryParamHelper;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -130,5 +131,18 @@ class GameRepository extends ServiceEntityRepository
         $qb->select('COUNT(g.id)')->leftJoin('g.reviews', 'r', Join::WITH, 'r.userId = :userId')->where('r.id IS NULL')->setParameter('userId', $userId);
 
         return (int) $qb->getQuery()->getSingleScalarResult();
+    }
+
+    public function findLast(DateFieldEnum $dateField, int $limit): array
+    {
+        // Build the base query (with select, join and group)
+        $qb = $this->createQueryBuilder('g');
+        $qb->leftJoin('g.reviews', 'ra')->select('NEW App\Dto\GameInfo(g, COUNT(ra), AVG(ra.rating), SUM(ra.hourSpend), MIN(ra.firstPlay))')->groupBy('g.id');
+
+        // Find last ones by the given field
+        $qb->orderBy('g.' . $dateField->toDatabaseField(), 'desc')->setMaxResults($limit);
+
+        // Execute and fetch the query
+        return $qb->getQuery()->getResult();
     }
 }
