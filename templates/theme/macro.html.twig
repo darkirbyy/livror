@@ -180,6 +180,35 @@
   </div>
 {%- endmacro -%}
 
+{# Image from the URL or a placeholder if empty #}
+{%- macro game_image(game) -%}
+  {% if game.imgUrl is not empty %}
+    <img src="{{ game.imgUrl }}" class="app-card-img-fit" alt="{{ 'aria.cover'|trans({ name: game.name }) }}" />
+  {% else %}
+    <div class="bi bi-image text-center app-card-img-fit app-card-img-missing-index bg-body-secondary" aria-hidden="true"></div>
+  {% endif %}
+{%- endmacro -%}
+
+{%- macro game_information(game) -%}
+  {% set gameData = {
+    typeGame: game.typeGame|trans,
+    releaseYear: game.releaseYear,
+    fullPrice: _self.fmt_full_price(game.fullPrice),
+    developers: game.developers,
+    genres: game.genres,
+    description: game.description,
+  } %}
+
+  {% for field, value in gameData %}
+    <div class="col-4 py-1 px-1 text-end text-truncate {{ field != 'description' ? 'border-bottom' : '' }}">
+      <span class="fw-light">{{ ('game.label.' ~ field)|trans({ }, 'validators') }}</span>
+    </div>
+    <div class="col-8 py-1 text-start {{ (field not in ['genres', 'description'] ? 'text-truncate') ~ ' ' ~ (field != 'description' ? 'border-bottom') }}">
+      {{ value|default('-') }}
+    </div>
+  {% endfor %}
+{%- endmacro -%}
+
 {# Macro to display the body of a review (button to edit, date added, comment) #}
 {% macro review_body(review, backpath = null) %}
   {% if review.user.id == app.user.id %}
