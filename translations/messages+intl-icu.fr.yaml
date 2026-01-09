@@ -42,7 +42,7 @@ game:
       withoutReview: Avis
     notFound: Aucun jeu trouvé
   show:
-    title: Détails d'un jeu
+    title: 'Détails du jeu : {name}'
   edit:
     title:
       add: Ajouter un jeu

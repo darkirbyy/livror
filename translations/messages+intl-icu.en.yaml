@@ -42,7 +42,7 @@ game:
       withoutReview: Reviews
     notFound: No games found
   show:
-    title: Detail of a game
+    title: 'Detail of the game: {name}'
   edit:
     title:
       add: Add a game

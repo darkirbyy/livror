@@ -1,7 +1,7 @@
 {% extends 'base.html.twig' %}
 {% import 'theme/macro.html.twig' as m %}
 
-{% set title = 'game.show.title'|trans %}
+{% set title = 'game.show.title'|trans({ name: gameInfo.game.name }) %}
 
 {% block main %}
   <section>
@@ -9,7 +9,7 @@
       {# Redefine the flashes and backlink with the same width as the cards #}
       <div class="mx-auto card-max-large card-max-md-none">
         {{ block('flash', 'theme/flash.html.twig') }}
-        {{ m.backlink(path('home_index')) }}
+        {{ m.backlink(path('game_index')) }}
       </div>
 
       {# Game card #}
