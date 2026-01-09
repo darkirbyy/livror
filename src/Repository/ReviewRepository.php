@@ -55,7 +55,9 @@ class ReviewRepository extends ServiceEntityRepository
         $qb = $this->createQueryBuilder('r');
 
         // Find last ones by the given field
-        $qb->orderBy('r.' . $dateField->toDatabaseField(), 'desc')->setMaxResults($limit);
+        $qb->orderBy('r.' . $dateField->toDatabaseField(), 'DESC')
+            ->addOrderBy('r.id', 'ASC')
+            ->setMaxResults($limit);
 
         // Execute and fetch the query
         return $qb->getQuery()->getResult();

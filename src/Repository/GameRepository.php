@@ -140,7 +140,9 @@ class GameRepository extends ServiceEntityRepository
         $qb->leftJoin('g.reviews', 'ra')->select('NEW App\Dto\GameInfo(g, COUNT(ra), AVG(ra.rating), SUM(ra.hourSpend), MIN(ra.firstPlay))')->groupBy('g.id');
 
         // Find last ones by the given field
-        $qb->orderBy('g.' . $dateField->toDatabaseField(), 'desc')->setMaxResults($limit);
+        $qb->orderBy('g.' . $dateField->toDatabaseField(), 'DESC')
+            ->addOrderBy('g.id', 'ASC')
+            ->setMaxResults($limit);
 
         // Execute and fetch the query
         return $qb->getQuery()->getResult();
