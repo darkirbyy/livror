@@ -31,10 +31,10 @@ jobs:
         sudo systemctl start mysql.service
         echo 'DATABASE_URL="mysql://root:root@127.0.0.1:3306/livror_db?serverVersion=8.0.44"' > .env.test.local
 
-    - name: Setup php 8.2
+    - name: Setup php 8.4
       uses: shivammathur/setup-php@v2
       with:
-        php-version: '8.2'
+        php-version: '8.4'
         coverage: pcov
 
     - name: Cache composer TEST packages
@@ -82,10 +82,10 @@ jobs:
     - name: Checkout code in the runner
       uses: actions/checkout@v4
 
-    - name: Setup php 8.2
+    - name: Setup php 8.4
       uses: shivammathur/setup-php@v2
       with:
-        php-version: '8.2'
+        php-version: '8.4'
 
     - name: Cache composer BUILD packages
       id: composer-cache
