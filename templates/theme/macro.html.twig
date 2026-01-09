@@ -186,7 +186,7 @@
   </div>
 {%- endmacro -%}
 
-{# Image from the URL or a placeholder if empty #}
+{# Macro to display the image of a game from the URL or a placeholder if empty #}
 {%- macro game_image(game) -%}
   {% if game.imgUrl is not empty %}
     <img src="{{ game.imgUrl }}" class="app-card-img-fit" alt="{{ 'aria.cover'|trans({ name: game.name }) }}" />
@@ -195,6 +195,7 @@
   {% endif %}
 {%- endmacro -%}
 
+{# Macro to display the information of a game #}
 {%- macro game_information(game) -%}
   {% set gameData = {
     typeGame: game.typeGame|trans,
@@ -213,6 +214,25 @@
       {{ value|default('-') }}
     </div>
   {% endfor %}
+{%- endmacro -%}
+
+{# Macro to display the information of a review #}
+{%- macro review_information(review) -%}
+  <div class="flex-basis-0 flex-grow-1 py-1 px-2 py-md-2 border-end text-truncate">
+    <span class="fa-solid fa-star fa-sm" aria-hidden="true"></span>
+    <span class="visually-hidden">{{ 'review.label.rating'|trans({ }, 'validators') }} :</span>
+    {{ review.rating is not empty ? review.rating|format_number({ fraction_digit: 1 }) : '-' }}
+  </div>
+  <div class="flex-basis-0 flex-grow-1 py-1 px-2 py-md-2 border-end text-truncate">
+    <span class="fa-regular fa-hourglass-half fa-sm" aria-hidden="true"></span>
+    <span class="visually-hidden">{{ 'review.label.hourSpend'|trans({ }, 'validators') }} :</span>
+    {{ review.hourSpend is not empty ? review.hourSpend ~ 'h' : '-' }}
+  </div>
+  <div class="flex-basis-0 flex-grow-1 py-1 px-2 py-md-2 text-truncate">
+    <span class="fa-regular fa-calendar-days fa-sm" aria-hidden="true"></span>
+    <span class="visually-hidden">{{ 'review.label.firstPlay'|trans({ }, 'validators') }} :</span>
+    <span class="small">{{ review.firstPlay is not empty ? review.firstPlay|format_datetime('short', 'none') : '-' }}</span>
+  </div>
 {%- endmacro -%}
 
 {# Macro to display the body of a review (button to edit, date added, comment) #}

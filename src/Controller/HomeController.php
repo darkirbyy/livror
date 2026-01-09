@@ -26,6 +26,7 @@ class HomeController extends AbstractController
         $reviews = $reviewRepository->findLast(DateFieldEnum::ADD, $this->getParameter('app.home_review_limit'));
 
         $userManager->plugToGamesInfo($gamesInfo, $users);
+        $userManager->plugToReviews($reviews, $users);
 
         return $this->render('home/index.html.twig', [
             'gamesInfo' => $gamesInfo,
