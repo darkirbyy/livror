@@ -11,7 +11,7 @@
       {# Search part #}
       <div class="card-max-large card-max-md-extra mx-auto">
         <div class="mt-2 p-2 p-md-3 bg-primary-subtle rounded" {{ stimulus_controller('search-select') }}>
-          <h5 class="text-center pb-2">{{ 'home.index.search.title'|trans }}</h5>
+          <h4 class="text-center pb-2">{{ 'home.index.search.title'|trans }}</h4>
           <div class="input-group" role="group" aria-label="{{ 'form.button.search'|trans }}">
             <label class="input-group-text"><span class="bi bi-search" aria-hidden="true"></span></label>
             {% set autocomplete = prepare_attributes('global', 'game_autocomplete') %}
@@ -23,7 +23,7 @@
       <div class="row my-4">
         {# Last games part #}
         <div class="col-12 col-md-6">
-          <h5 class="text-center pb-2">{{ 'home.index.lastGame.title'|trans }}</h5>
+          <h4 class="text-center pb-2">{{ 'home.index.lastGame.title'|trans }}</h4>
           {% if (gamesInfo|length) > 0 %}
             {% for gameInfo in gamesInfo %}
               {% set game = gameInfo.game %}
@@ -63,7 +63,7 @@
 
         {# Last reviews part #}
         <div class="col-12 col-md-6 mt-5 mt-md-0">
-          <h5 class="text-center pb-2">{{ 'home.index.lastReview.title'|trans }}</h5>
+          <h4 class="text-center pb-2">{{ 'home.index.lastReview.title'|trans }}</h4>
 
           {% if (reviews|length) > 0 %}
             {% for review in reviews %}{% endfor %}

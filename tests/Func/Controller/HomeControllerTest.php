@@ -34,6 +34,19 @@ class HomeControllerTest extends AbstractControllerTest
     }
 
     #[PU\Test]
+    public function homeAllSections(): void
+    {
+        $crawler = $this->client->request('GET', '');
+
+        $sectionsTitleCrawler = $crawler->filter('h4');
+        $sectionsTitle = array_map('trim', $sectionsTitleCrawler->extract(['_text']));
+        $expectedSectionsTitle = ['home.index.search.title', 'home.index.lastGame.title', 'home.index.lastReview.title'];
+
+        $this->assertResponseIsSuccessful();
+        $this->assertSame($expectedSectionsTitle, $sectionsTitle);
+    }
+
+    #[PU\Test]
     public function account(): void
     {
         $hubUrlGenerator = static::getContainer()->get(HubUrlGenerator::class);
