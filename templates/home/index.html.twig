@@ -49,8 +49,12 @@
                 </div>
               </div>
             {% endfor %}
+            {# Link to check all games list #}
+            <div class="text-center p-2 p-md-4">
+              <a href="{{ path('game_index') }}" class="btn btn-outline-secondary">{{ 'home.index.lastGame.all'|trans }}</a>
+            </div>
           {% else %}
-            <div class="card-max-large mx-auto text-center my-1 p-2 fs-5 fw-light">
+            <div class="text-center p-2 fs-5 fw-light">
               {{ 'home.index.lastGame.none'|trans }}
             </div>
           {% endif %}
@@ -62,6 +66,10 @@
 
           {% if (reviews|length) > 0 %}
             {% for review in reviews %}{% endfor %}
+            {# Link to check all user reviews list #}
+            <div class="text-center p-2 p-md-4">
+              <a href="{{ path('review_index') }}" class="btn btn-outline-secondary">{{ 'home.index.lastReview.all'|trans }}</a>
+            </div>
           {% else %}
             <div class="card-max-large mx-auto text-center my-1 p-2 fs-5 fw-light">
               {{ 'home.index.lastReview.none'|trans }}

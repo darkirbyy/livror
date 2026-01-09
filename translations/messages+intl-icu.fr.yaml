@@ -12,9 +12,11 @@ home:
     lastGame:
       title: Derniers jeux ajoutés
       none: Aucun jeu
+      all: Voir tous les jeux
     lastReview:
       title: Derniers avis publiés
       none: Aucun avis
+      all: Voir tous mes avis
 
 game:
   index:
@@ -41,8 +43,6 @@ game:
     notFound: Aucun jeu trouvé
   show:
     title: Détails d'un jeu
-    button:
-      allGame: Voir tous les jeux
   edit:
     title:
       add: Ajouter un jeu

@@ -12,9 +12,11 @@ home:
     lastGame:
       title: Last added games
       none: No game
+      all: See all games
     lastReview:
       title: Last published reviews
       none: No review
+      all: See my reviews
       
 game:
   index:
@@ -41,8 +43,6 @@ game:
     notFound: No games found
   show:
     title: Detail of a game
-    button:
-      allGame: See all games
   edit:
     title:
       add: Add a game
