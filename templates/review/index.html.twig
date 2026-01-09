@@ -6,17 +6,16 @@
 {% block main %}
   <section>
     <div class="container">
-      {# Redefine the flashes with the same width as the cards #}
+      {# Redefine the flashes and alert with the same width as the cards #}
       <div class="mx-auto card-max-large card-max-md-none">
         {{ block('flash', 'theme/flash.html.twig') }}
+        {% if cannotAdd %}
+          <div class="alert alert-secondary" role="alert">
+            {% set url = path('game_new', { backpath: path(app.current_route) }) %}
+            {{ 'review.index.flash.cannotAddReview'|trans({ url: url })|raw }}
+          </div>
+        {% endif %}
       </div>
-
-      {% if cannotAdd %}
-        <div class="alert alert-secondary" role="alert">
-          {% set url = path('game_new', { backpath: path(app.current_route) }) %}
-          {{ 'review.index.flash.cannotAddReview'|trans({ url: url })|raw }}
-        </div>
-      {% endif %}
 
       {# Button to add a new review #}
       <div class="mx-auto card-max-large card-max-md-none text-center mt-2 mb-4">

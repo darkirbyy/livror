@@ -9,7 +9,13 @@ home:
       title: Search
       reviewedBy: Played by
       avgRating: Rating
-
+    lastGame:
+      title: Last added games
+      none: No game
+    lastReview:
+      title: Last published reviews
+      none: No review
+      
 game:
   index:
     title: All games

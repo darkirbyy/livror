@@ -6,13 +6,11 @@
 {% block main %}
   <section>
     <div class="container">
-      {# Redefine the flashes with the same width as the cards #}
+      {# Redefine the flashes and backlink with the same width as the cards #}
       <div class="mx-auto card-max-large card-max-md-none">
         {{ block('flash', 'theme/flash.html.twig') }}
+        {{ m.backlink(path('home_index')) }}
       </div>
-
-      {# Back link #}
-      {{ m.backlink(path('home_index')) }}
 
       {# Game card #}
       {% set backpath = path('game_show', { id: gameInfo.game.id }) %}

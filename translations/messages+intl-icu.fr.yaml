@@ -9,6 +9,12 @@ home:
       title: Recherche
       reviewedBy: Joué par
       avgRating: Saucisses
+    lastGame:
+      title: Derniers jeux ajoutés
+      none: Aucun jeu
+    lastReview:
+      title: Derniers avis publiés
+      none: Aucun avis
 
 game:
   index:

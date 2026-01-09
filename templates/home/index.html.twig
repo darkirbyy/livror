@@ -50,7 +50,7 @@
               </div>
             {% endfor %}
           {% else %}
-            <div class="card-max-large card-max-md-none mx-auto my-1 p-2 fs-5 fw-light">
+            <div class="card-max-large mx-auto text-center my-1 p-2 fs-5 fw-light">
               {{ 'home.index.lastGame.none'|trans }}
             </div>
           {% endif %}
@@ -63,7 +63,7 @@
           {% if (reviews|length) > 0 %}
             {% for review in reviews %}{% endfor %}
           {% else %}
-            <div class="card-max-large card-max-md-none mx-auto my-1 p-2 fs-5 fw-light">
+            <div class="card-max-large mx-auto text-center my-1 p-2 fs-5 fw-light">
               {{ 'home.index.lastReview.none'|trans }}
             </div>
           {% endif %}
