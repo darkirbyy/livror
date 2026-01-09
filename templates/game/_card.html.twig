@@ -112,7 +112,7 @@
               </div>
             </div>
             <div class="col-12 mb-2 py-1 px-2">
-              {{ m.review_body(review, backpath) }}
+              {{ m.review_body(review, backpath, true) }}
             </div>
           {% endfor %}
           {% if not (app.user.id in (game.reviews|map(review => review.userId))) %}

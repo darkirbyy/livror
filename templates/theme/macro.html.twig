@@ -236,8 +236,8 @@
 {%- endmacro -%}
 
 {# Macro to display the body of a review (button to edit, date added, comment) #}
-{% macro review_body(review, backpath = null) %}
-  {% if review.user.id == app.user.id %}
+{% macro review_body(review, backpath = null, edit = false) %}
+  {% if edit and review.user.id == app.user.id %}
     <div class="float-end">
       <a
         class="btn btn-sm btn-outline-secondary"
