@@ -240,7 +240,7 @@
   </span>
   <p class="m-0">
     {% if review.comment is not empty %}
-      {{ review.comment }}
+      {{ review.comment|nl2br }}
     {% else %}
       <span class="fw-light">{{ 'review.index.card.noComment'|trans }}</span>
     {% endif %}
