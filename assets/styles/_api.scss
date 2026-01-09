@@ -36,6 +36,7 @@ $utilities: map.merge(
       class: 'card-max',
       property: max-width,
       values: (
+        extra: 720px,
         large: 460px,
         none: inherit,
       ),

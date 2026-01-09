@@ -16,6 +16,7 @@
 
       {# Game card #}
       {% set backpath = path('game_show', { id: gameInfo.game.id }) %}
+      {% set collapsed = false %}
       {{ include('game/_card.html.twig') }}
 
       {# Link to check all games list #}

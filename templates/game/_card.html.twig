@@ -2,6 +2,7 @@
 
 {% set game = gameInfo.game %}
 {% set gameId = 'game-' ~ game.id %}
+{% set collapsed = collapsed is defined ? collapsed : true %}
 
 {# Each game is displayed on a "card" containing all the data #}
 <div id="{{ gameId }}" class="card-max-large card-max-md-none mx-auto my-3 rounded-3 border overflow-hidden">
@@ -47,13 +48,13 @@
           class="btn btn-outline-secondary d-flex w-100 justify-content-center align-items-center border-0 border-bottom app-no-border-bottom rounded-0 py-1 my-0 dropdown-toggle app-dropdown-left app-dropdown-smooth d-md-none"
           data-bs-toggle="collapse"
           data-bs-target="#{{ collapseId }}"
-          aria-expanded="false"
+          aria-expanded="{{ collapsed ? 'false' : 'true' }}"
           aria-controls="{{ collapseId }}"
         >
           <h6 class="m-0 p-0 fs-5">{{ 'game.index.card.informations'|trans }}</h6>
         </button>
 
-        <div class="row p-0 m-0 collapse d-md-flex" id="{{ collapseId }}">
+        <div class="row p-0 m-0 {{ collapsed ? 'collapse' }} d-md-flex" id="{{ collapseId }}">
           {# Image from the URL or a placeholder if empty #}
           <div class="col-12 px-0 border-bottom">
             <div class="mx-auto">
@@ -76,14 +77,14 @@
           class="btn btn-outline-secondary d-flex w-100 justify-content-center align-items-center border-0 border-bottom app-no-border-bottom rounded-0 py-1 my-0 dropdown-toggle app-dropdown-left app-dropdown-smooth d-md-none"
           data-bs-toggle="collapse"
           data-bs-target="#{{ collapseId }}"
-          aria-expanded="false"
+          aria-expanded="{{ collapsed ? 'false' : 'true' }}"
           aria-controls="{{ collapseId }}"
         >
           <h6 class="m-0 p-0 fs-5">{{ 'game.index.card.reviews'|trans }}</h6>
         </button>
 
         {# Reviews content #}
-        <div class="row gx-0 p-0 m-0 collapse d-md-flex" id="{{ collapseId }}">
+        <div class="row gx-0 p-0 m-0 {{ collapsed ? 'collapse' }} d-md-flex" id="{{ collapseId }}">
           {% for review in game.reviews|filter(review => review.user is not empty) %}
             <div class="col-12 text-center d-flex bg-secondary-subtle align-items-center border-bottom {{ loop.index0 > 0 ? 'border-top' }} col-md-auto flex-even">
               <div class="flex-basis-0 flex-grow-2 flex-grow-lg-1 py-0 px-2 py-md-1 text-truncate">

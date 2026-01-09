@@ -9,15 +9,13 @@
       {{ block('flash', 'theme/flash.html.twig') }}
 
       {# Search part #}
-      <div class="row py-4">
-        <div class="col-12 col-md-10 offset-md-1 col-lg-8 offset-lg-2">
-          <div class="mt-2 p-2 p-md-3 bg-primary-subtle rounded" {{ stimulus_controller('search-select') }}>
-            <h5 class="text-center pb-2">{{ 'home.index.search.title'|trans }}</h5>
-            <div class="input-group" role="group" aria-label="{{ 'form.button.search'|trans }}">
-              <label class="input-group-text"><span class="bi bi-search" aria-hidden="true"></span></label>
-              {% set autocomplete = prepare_attributes('global', 'game_autocomplete') %}
-              <input class="form-control" type="text" {{ autocomplete|raw }} />
-            </div>
+      <div class="card-max-large card-max-md-extra mx-auto">
+        <div class="mt-2 p-2 p-md-3 bg-primary-subtle rounded" {{ stimulus_controller('search-select') }}>
+          <h5 class="text-center pb-2">{{ 'home.index.search.title'|trans }}</h5>
+          <div class="input-group" role="group" aria-label="{{ 'form.button.search'|trans }}">
+            <label class="input-group-text"><span class="bi bi-search" aria-hidden="true"></span></label>
+            {% set autocomplete = prepare_attributes('global', 'game_autocomplete') %}
+            <input class="form-control" type="text" {{ autocomplete|raw }} />
           </div>
         </div>
       </div>
