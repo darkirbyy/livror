@@ -11,13 +11,26 @@ use Symfony\Component\HttpFoundation\Response;
 
 final class ApiMockHttpClient extends MockHttpClient
 {
+    private ?MockResponse $overrideReponse = null;
+
     public function __construct(private string $discordDir, private Filesystem $filesystem)
     {
-        parent::__construct(\Closure::fromCallable([$this, 'handleRequests']));
+        parent::__construct(function (string $method, string $url, array $options) {
+            return $this->handleRequests($method, $url, $options);
+        });
+    }
+
+    public function setOverrideResponse(MockResponse $overrideReponse): void
+    {
+        $this->overrideReponse = $overrideReponse;
     }
 
     private function handleRequests(string $method, string $url, array $options): MockResponse
     {
+        if (null !== $this->overrideReponse) {
+            return $this->overrideReponse;
+        }
+
         $queryString = parse_url($url, PHP_URL_QUERY) ?? '';
         parse_str($queryString, $query);
 

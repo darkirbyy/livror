@@ -12,6 +12,8 @@ use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Tester\CommandTester;
+use Symfony\Component\HttpClient\Response\MockResponse;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Zenstruck\Foundry\Test\Factories;
 use Zenstruck\Foundry\Test\ResetDatabase;
 
@@ -50,5 +52,21 @@ final class SteamScrapV1CommandTest extends KernelTestCase
         $this->assertSame(count(ApiMockData::$appsListTruncate), $steamNb);
         $this->assertStringContainsStringIgnoringCase('Deleting existing data', $output);
         $this->assertSame(6, preg_match_all('/Done/i', $output));
+    }
+
+    #[PU\Test]
+    public function exception(): void
+    {
+        $apiMockHttpClient = static::getContainer()->get(HttpClientInterface::class);
+        $apiMockHttpClient->setOverrideResponse(new MockResponse('', ['error' => 'exception']));
+
+        $this->commandTester->execute(['-v' => true]);
+
+        $steamNb = $this->entityManager->getConnection()->fetchOne('SELECT COUNT(*) FROM ' . $this->tableName);
+        $output = $this->commandTester->getDisplay();
+
+        $this->assertSame(Command::FAILURE, $this->commandTester->getStatusCode());
+        $this->assertStringContainsStringIgnoringCase('Failed', $output);
+        $this->assertSame(0, $steamNb);
     }
 }

@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Tests\Inte\Command;
 
 use App\Entity\Main\Steam;
-use App\Tests\Mock\ApiMock;
 use App\Tests\Mock\ApiMockData;
 use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\Attributes as PU;
@@ -13,8 +12,8 @@ use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Tester\CommandTester;
-use Symfony\Component\HttpClient\MockHttpClient;
 use Symfony\Component\HttpClient\Response\MockResponse;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Zenstruck\Foundry\Test\Factories;
 use Zenstruck\Foundry\Test\ResetDatabase;
 
@@ -83,23 +82,24 @@ final class SteamScrapV2CommandTest extends KernelTestCase
         $this->assertSame(4, preg_match_all('/Done/i', $output));
     }
 
-    // #[PU\Test]
-    // public function exception(): void
-    // {
-    //     // Remplacer le service dans le container
-    //     $mockClient = new MockHttpClient(new MockResponse('', ['error' => 'exception']));
-    //     static::getContainer()->set(ApiMock::class, $mockClient);
+    #[PU\Test]
+    public function exception(): void
+    {
+        $apiMockHttpClient = static::getContainer()->get(HttpClientInterface::class);
+        $apiMockHttpClient->setOverrideResponse(new MockResponse('', ['error' => 'exception']));
 
-    //     $this->commandTester->execute([
-    //         'mode' => 'truncate',
-    //     ]);
+        $this->commandTester->execute([
+            'mode' => 'truncate',
+            '-v' => true,
+        ]);
 
-    //     $steamNb = $this->entityManager->getConnection()->fetchOne('SELECT COUNT(*) FROM ' . $this->tableName);
-    //     $output = $this->commandTester->getDisplay();
+        $steamNb = $this->entityManager->getConnection()->fetchOne('SELECT COUNT(*) FROM ' . $this->tableName);
+        $output = $this->commandTester->getDisplay();
 
-    //     $this->assertSame(Command::FAILURE, $this->commandTester->getStatusCode());
-    //     $this->assertSame(0, $steamNb);
-    // }
+        $this->assertSame(Command::FAILURE, $this->commandTester->getStatusCode());
+        $this->assertStringContainsStringIgnoringCase('Failed', $output);
+        $this->assertSame(0, $steamNb);
+    }
 
     public static function invalidInputsValues(): array
     {

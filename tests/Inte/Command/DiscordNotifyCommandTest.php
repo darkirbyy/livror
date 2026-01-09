@@ -11,6 +11,8 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\HttpClient\Response\MockResponse;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Zenstruck\Foundry\Test\Factories;
 use Zenstruck\Foundry\Test\ResetDatabase;
 
@@ -37,8 +39,8 @@ final class DiscordNotifyCommandTest extends KernelTestCase
 
     public function tearDown(): void
     {
-        // $filesystem = static::getContainer()->get(Filesystem::class);
-        // $filesystem->remove($this->discordDir);
+        $filesystem = static::getContainer()->get(Filesystem::class);
+        $filesystem->remove($this->discordDir);
 
         parent::tearDown();
     }
@@ -87,5 +89,24 @@ final class DiscordNotifyCommandTest extends KernelTestCase
         $this->assertStringContainsString('discord.notify.10PublishedReviewsBy :trophy:', file_get_contents($filename));
         $this->assertStringContainsString('discord.notify.checkOn', file_get_contents($filename));
         $this->assertSame(3, preg_match_all('/Done/i', $output));
+    }
+
+    #[PU\Test]
+    public function exception(): void
+    {
+        DiscordNotifyStory::load();
+
+        $apiMockHttpClient = static::getContainer()->get(HttpClientInterface::class);
+        $apiMockHttpClient->setOverrideResponse(new MockResponse('', ['http_code' => 400]));
+
+        $this->commandTester->execute([
+            '--since' => (new \DateTime())->getTimestamp(),
+            '-v' => true,
+        ]);
+
+        $output = $this->commandTester->getDisplay();
+
+        $this->assertSame(Command::FAILURE, $this->commandTester->getStatusCode());
+        $this->assertStringContainsStringIgnoringCase('Failed', $output);
     }
 }
