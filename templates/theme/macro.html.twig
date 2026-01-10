@@ -134,9 +134,11 @@
           <label class="input-group-text" id="input-group-filters">{{ 'form.button.filterBy'|trans }}</label>
           {% for filterKey in filterContent|keys %}
             {% set filtersId = 'filters-' ~ filterKey %}
+            {% set filter_not_empty = attribute(queryParam.filters, filterKey) is not empty %}
+            {% set filter_size = attribute(queryParam.filters, filterKey)|length %}
             <button
               type="button"
-              class="btn btn-outline-secondary app-btn-border-light dropdown-toggle app-dropdown-left app-dropdown-smooth"
+              class="btn btn-outline-secondary app-btn-border-light dropdown-toggle app-dropdown-left app-dropdown-smooth {{ filter_not_empty ? 'active' }}"
               data-bs-toggle="dropdown"
               data-bs-target="#{{ filtersId }}"
               data-bs-auto-close="outside"
@@ -144,6 +146,9 @@
               aria-haspopup="true"
             >
               {{ (entityKey ~ '.index.filter.' ~ filterKey)|trans }}
+              {% if filter_not_empty %}
+                <sup><span class="bi bi-{{ filter_size < 10 ? filter_size : 'check' }}-square" aria-hidden="true"></span></sup>
+              {% endif %}
             </button>
             {% set new_param = { offset: 0, limit: env.app.default_limit, filters: queryParam.filters|filter((value, key) => key != filterKey) } %}
             {% set url = _self.path_with_query_param(queryParam|clone_with(new_param)) %}
