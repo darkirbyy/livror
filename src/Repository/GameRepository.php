@@ -7,11 +7,12 @@ namespace App\Repository;
 use App\Dto\GameInfo;
 use App\Dto\QueryParam;
 use App\Entity\Main\Game;
+use App\Entity\Main\Review;
 use App\Enum\DateFieldEnum;
-use App\Enum\TypeGameEnum;
 use App\Service\QueryParamHelper;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query\Expr\Join;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
 class GameRepository extends ServiceEntityRepository
@@ -29,31 +30,38 @@ class GameRepository extends ServiceEntityRepository
 
         // Validate and complete the parameters
         $this->queryParamHelper->load($queryParam, 'game-index');
-        $this->queryParamHelper->defaults($queryParam, ['name' => 'asc'], ['typeGame' => [TypeGameEnum::GAME->value, TypeGameEnum::DLC->value], 'withoutReview' => []]);
+        $this->queryParamHelper->defaults($queryParam, ['name' => 'asc'], ['typeGame' => [], 'users' => [], 'withoutReview' => []]);
         $this->queryParamHelper->validate($queryParam, array_keys($sortsConversion), array_keys($filtersConversion));
         $this->queryParamHelper->save($queryParam, 'game-index');
 
         // Build the base query (with select, join and group)
         $qb = $this->createQueryBuilder('g');
-        $qb->leftJoin('g.reviews', 'ra')->select('NEW App\Dto\GameInfo(g, COUNT(ra), AVG(ra.rating), SUM(ra.hourSpend), MIN(ra.firstPlay))')->groupBy('g.id');
+        $this->selectDto($qb);
 
         // Apply alls the query param but filters and add last sort by id
         $this->queryParamHelper->applyButFiltersToQb($queryParam, $qb, $sortsConversion);
         $qb->addOrderBy('g.id', 'ASC');
 
-        if (array_key_exists('typeGame', $queryParam->filters)) {
+        // Filter logic : type of game, users that have reviewed, without review
+        if (array_key_exists('typeGame', $queryParam->filters) && !empty($queryParam->filters['typeGame'])) {
             $qb->where('g.typeGame IN (:typeGame)')->setParameter('typeGame', $queryParam->filters['typeGame']);
         }
 
-        // Filter logic : all the reviews are in the filter list
-        if (array_key_exists('users', $queryParam->filters)) {
-            $qb->leftJoin('g.reviews', 'rf', Join::WITH, 'rf.userId IN (:users)')
-                ->andHaving('COUNT(DISTINCT ra.id) = COUNT(DISTINCT rf.id)')
-                ->setParameter('users', $queryParam->filters['users']);
+        if (array_key_exists('users', $queryParam->filters) && !empty($queryParam->filters['users'])) {
+            // prettier-ignore
+            $conditionsOr[] = 'EXISTS (SELECT 1 FROM ' . Review::class . ' ru WHERE ru.game = g AND ru.userId IN (:users)
+                               GROUP BY ru.game HAVING COUNT(DISTINCT ru.userId) = :userCount)';
+            $qb->setParameter('users', $queryParam->filters['users']);
+            $qb->setParameter('userCount', count($queryParam->filters['users']));
+        } else {
+            $conditionsOr[] = 'EXISTS (SELECT 1 FROM ' . Review::class . ' ru WHERE ru.game = g)';
         }
-        if (!array_key_exists('withoutReview', $queryParam->filters) || empty($queryParam->filters['withoutReview'])) {
-            $qb->andHaving('COUNT(ra.id) > 0');
+
+        if (array_key_exists('withoutReview', $queryParam->filters) && !empty($queryParam->filters['withoutReview'])) {
+            $conditionsOr[] = 'NOT EXISTS (SELECT 1 FROM ' . Review::class . ' rw WHERE rw.game = g)';
         }
+
+        $qb->andWhere(implode(' OR ', $conditionsOr));
 
         // Execute and fetch the query
         return $qb->getQuery()->getResult();
@@ -63,7 +71,7 @@ class GameRepository extends ServiceEntityRepository
     {
         // Build the base query (with select, join and group)
         $qb = $this->createQueryBuilder('g');
-        $qb->leftJoin('g.reviews', 'ra')->select('NEW App\Dto\GameInfo(g, COUNT(ra), AVG(ra.rating), SUM(ra.hourSpend), MIN(ra.firstPlay))')->groupBy('g.id');
+        $this->selectDto($qb);
 
         // Only retrieve the required game
         $qb->where('g.id = :id')->setParameter('id', $game->getId());
@@ -76,7 +84,7 @@ class GameRepository extends ServiceEntityRepository
     {
         // Build the base query (with select, join and group)
         $qb = $this->createQueryBuilder('g');
-        $qb->leftJoin('g.reviews', 'ra')->select('NEW App\Dto\GameInfo(g, COUNT(ra), AVG(ra.rating), SUM(ra.hourSpend), MIN(ra.firstPlay))')->groupBy('g.id');
+        $this->selectDto($qb);
 
         // Restrict to game not reviewed by user with userId (if not null)
         if (!is_null($userId)) {
@@ -99,7 +107,7 @@ class GameRepository extends ServiceEntityRepository
     {
         // Build the base query (with select, join and group)
         $qb = $this->createQueryBuilder('g');
-        $qb->leftJoin('g.reviews', 'ra')->select('NEW App\Dto\GameInfo(g, COUNT(ra), AVG(ra.rating), SUM(ra.hourSpend), MIN(ra.firstPlay))')->groupBy('g.id');
+        $this->selectDto($qb);
 
         // Restrict to game not reviewed by user with userId (if not null)
         if (!is_null($userId)) {
@@ -108,6 +116,21 @@ class GameRepository extends ServiceEntityRepository
 
         // Select and limit using basic like clause
         $qb->andWhere('g.name LIKE :like')->setParameter('like', $like)->orderBy('g.name', 'ASC')->setMaxResults($limit);
+
+        // Execute and fetch the query
+        return $qb->getQuery()->getResult();
+    }
+
+    public function findLast(DateFieldEnum $dateField, int $limit): array
+    {
+        // Build the base query (with select, join and group)
+        $qb = $this->createQueryBuilder('g');
+        $this->selectDto($qb);
+
+        // Find last ones by the given field
+        $qb->orderBy('g.' . $dateField->toDatabaseField(), 'DESC')
+            ->addOrderBy('g.id', 'ASC')
+            ->setMaxResults($limit);
 
         // Execute and fetch the query
         return $qb->getQuery()->getResult();
@@ -133,18 +156,8 @@ class GameRepository extends ServiceEntityRepository
         return (int) $qb->getQuery()->getSingleScalarResult();
     }
 
-    public function findLast(DateFieldEnum $dateField, int $limit): array
+    private function selectDto(QueryBuilder $qb): void
     {
-        // Build the base query (with select, join and group)
-        $qb = $this->createQueryBuilder('g');
         $qb->leftJoin('g.reviews', 'ra')->select('NEW App\Dto\GameInfo(g, COUNT(ra), AVG(ra.rating), SUM(ra.hourSpend), MIN(ra.firstPlay))')->groupBy('g.id');
-
-        // Find last ones by the given field
-        $qb->orderBy('g.' . $dateField->toDatabaseField(), 'DESC')
-            ->addOrderBy('g.id', 'ASC')
-            ->setMaxResults($limit);
-
-        // Execute and fetch the query
-        return $qb->getQuery()->getResult();
     }
 }
