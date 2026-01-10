@@ -93,10 +93,6 @@ services:
         arguments:
             $requestTimeout: '%app.request_timeout%'
 
-    App\Security\AccountEntryPoint:
-        arguments:
-            $mockHub: '%app.mock_hub%'
-
 when@dev: 
     services:
         App\Tests\Mock\HttpClientFactory: ~ 
@@ -106,9 +102,10 @@ when@dev:
             arguments:
                 $enable: '%app.mock_api%'
 
-        App\Fixtures\Story\DevStory:
-            arguments:
-                $mockHub: '%app.mock_hub%'
+        App\Tests\Mock\AccountEntryPoint:
+            decorates: 'App\Security\AccountEntryPoint'
+            autowire: true
+            autoconfigure: true
 
 when@test:
     services:
@@ -118,7 +115,3 @@ when@test:
             factory: ['App\Tests\Mock\HttpClientFactory', 'create']
             arguments:
                 $enable: '%app.mock_api%'
-
-        App\Fixtures\Story\DevStory:
-            arguments:
-                $mockHub: '%app.mock_hub%'

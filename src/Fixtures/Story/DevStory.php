@@ -9,11 +9,12 @@ use App\Fixtures\Factory\GameFactory;
 use App\Fixtures\Factory\SteamFactory;
 use App\Fixtures\Factory\UserFactory;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Zenstruck\Foundry\Story;
 
 final class DevStory extends Story
 {
-    public function __construct(private bool $mockHub, private ManagerRegistry $managerRegistry)
+    public function __construct(private ParameterBagInterface $parameterBag, private ManagerRegistry $managerRegistry)
     {
     }
 
@@ -26,7 +27,7 @@ final class DevStory extends Story
             $this->managerRegistry->getManager()->getClassMetadata($entityClass)->setLifecycleCallbacks([]);
         }
 
-        if ($this->mockHub) {
+        if ($this->parameterBag->get('app.mock_hub')) {
             UserFactory::repository()->truncate();
             // Create four dummy users
             UserFactory::new()
