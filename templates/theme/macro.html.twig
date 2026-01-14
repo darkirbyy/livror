@@ -134,8 +134,7 @@
           <label class="input-group-text" id="input-group-filters">{{ 'form.button.filterBy'|trans }}</label>
           {% for filterKey in filterContent|keys %}
             {% set filtersId = 'filters-' ~ filterKey %}
-            {% set filter_not_empty = attribute(queryParam.filters, filterKey) is not empty %}
-            {% set filter_size = attribute(queryParam.filters, filterKey)|length %}
+            {% set filter_not_empty = attribute(queryParam.filters, filterKey) is defined and attribute(queryParam.filters, filterKey) is not empty %}
             <button
               type="button"
               class="btn btn-outline-secondary app-btn-border-light dropdown-toggle app-dropdown-left app-dropdown-smooth {{ filter_not_empty ? 'active' }}"
@@ -147,6 +146,7 @@
             >
               {{ (entityKey ~ '.index.filter.' ~ filterKey)|trans }}
               {% if filter_not_empty %}
+                {% set filter_size = attribute(queryParam.filters, filterKey)|length %}
                 <sup><span class="bi bi-{{ filter_size < 10 ? filter_size : 'check' }}-square" aria-hidden="true"></span></sup>
               {% endif %}
             </button>
