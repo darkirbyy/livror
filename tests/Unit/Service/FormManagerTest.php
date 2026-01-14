@@ -60,13 +60,31 @@ final class FormManagerTest extends TestCase
     }
 
     #[PU\Test]
-    #[PU\DataProvider('validateAndPersistValidValues')]
-    public function validateAndPersistValid(bool $isSubmitted, bool $isValid): void
+    #[PU\DataProvider('validateAndPersistCheckValues')]
+    public function validateAndPersistCheck(bool $isSubmitted, bool $isValid): void
     {
         $this->form->expects($this->once())->method('isSubmitted')->willReturn($isSubmitted);
         $this->form->expects($this->any())->method('isValid')->willReturn($isValid);
 
-        $this->assertSame($isSubmitted && $isValid, $this->formManager->validateAndPersist($this->form, $this->game, null));
+        $success = $this->formManager->validateAndPersist($this->form, $this->game, null);
+
+        $this->assertSame($isSubmitted && $isValid, $success);
+    }
+
+    #[PU\Test]
+    public function validateAndPersistInvalidPersist(): void
+    {
+        $this->form->expects($this->once())->method('isSubmitted')->willReturn(true);
+        $this->form->expects($this->once())->method('isValid')->willReturn(true);
+        $this->entityManager
+            ->expects($this->once())
+            ->method('flush')
+            ->willThrowException(new ConstraintViolationException($this->driverException, null));
+        $this->form->expects($this->once())->method('addError');
+
+        $success = $this->formManager->validateAndPersist($this->form, $this->game, null);
+
+        $this->assertSame(false, $success);
     }
 
     #[PU\Test]
@@ -162,7 +180,7 @@ final class FormManagerTest extends TestCase
         $this->assertSame($errorMessage, $this->session->getFlashBag()->get('livror/danger')[0]->message);
     }
 
-    public static function validateAndPersistValidValues(): array
+    public static function validateAndPersistCheckValues(): array
     {
         return [
             'both true' => [true, true],

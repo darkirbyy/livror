@@ -7,6 +7,7 @@ namespace App\Service;
 use App\Dto\FlashMessage;
 use Doctrine\DBAL\Exception\ConstraintViolationException;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
@@ -27,12 +28,18 @@ class FormManager
     }
 
     /**
-     * Validate an entity according to the form and persist it with a custom flash message upon success.
+     * Validate an entity according to the form and persist it with a custom flash message upon success
+     * and an empty error on failure to force a 422 response for turbo.
      */
     public function validateAndPersist(FormInterface $form, object $object, ?FlashMessage $flashSuccess = null): bool
     {
         if ($form->isSubmitted() && $form->isValid()) {
-            return $this->persist($object, $flashSuccess);
+            $persist = $this->persist($object, $flashSuccess);
+            if (!$persist) {
+                $form->addError(new FormError(''));
+            }
+
+            return $persist;
         }
 
         return false;
