@@ -15,6 +15,7 @@ use Symfony\UX\StimulusBundle\Dto\StimulusAttributes;
 use Symfony\UX\StimulusBundle\Helper\StimulusHelper;
 use Twig\Environment;
 
+#[PU\AllowMockObjectsWithoutExpectations]
 final class AutocompletionHelperTest extends TestCase
 {
     private static $autocompletionMinLength = 5;

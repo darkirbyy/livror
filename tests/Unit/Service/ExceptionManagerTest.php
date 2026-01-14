@@ -14,6 +14,7 @@ use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 
+#[PU\AllowMockObjectsWithoutExpectations]
 final class ExceptionManagerTest extends TestCase
 {
     #[PU\Test]

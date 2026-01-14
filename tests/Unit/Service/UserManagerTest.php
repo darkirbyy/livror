@@ -15,6 +15,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use PHPUnit\Framework\Attributes as PU;
 use PHPUnit\Framework\TestCase;
 
+#[PU\AllowMockObjectsWithoutExpectations]
 final class UserManagerTest extends TestCase
 {
     private $userRepo;

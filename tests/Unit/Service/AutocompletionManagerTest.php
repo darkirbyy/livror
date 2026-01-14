@@ -16,6 +16,7 @@ use PHPUnit\Framework\Attributes as PU;
 use PHPUnit\Framework\TestCase;
 use Symfony\Bundle\SecurityBundle\Security;
 
+#[PU\AllowMockObjectsWithoutExpectations]
 final class AutocompletionManagerTest extends TestCase
 {
     private static $autocompletionLimit = 20;

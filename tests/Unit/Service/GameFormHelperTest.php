@@ -16,6 +16,7 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
+#[PU\AllowMockObjectsWithoutExpectations]
 final class GameFormHelperTest extends TestCase
 {
     private $form;

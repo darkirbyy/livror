@@ -14,6 +14,7 @@ use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpClient\MockHttpClient;
 use Symfony\Component\HttpClient\Response\MockResponse;
 
+#[PU\AllowMockObjectsWithoutExpectations]
 final class SteamSearchHelperTest extends TestCase
 {
     private static $requestTimeout = 5;

@@ -10,6 +10,7 @@ use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
+#[PU\AllowMockObjectsWithoutExpectations]
 final class BackpathUrlGeneratorTest extends TestCase
 {
     #[PU\Test]

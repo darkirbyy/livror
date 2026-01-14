@@ -15,6 +15,7 @@ use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBag;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 
+#[PU\AllowMockObjectsWithoutExpectations]
 final class QueryParamHelperTest extends TestCase
 {
     private $session;

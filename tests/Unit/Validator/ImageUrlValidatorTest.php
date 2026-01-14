@@ -55,7 +55,7 @@ final class ImageUrlValidatorTest extends ConstraintValidatorTestCase
     public static function noViolationValues(): array
     {
         return [
-            'null' => [null, 200, false, 'image/jpg', 'game.error.imgUrl.notValidExtension'],
+            'null' => [null, 200, false, 'image/jpg'],
             'valid' => ['image.jpg', 200, false, 'image/jpg'],
         ];
     }

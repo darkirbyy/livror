@@ -19,6 +19,7 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 
+#[PU\AllowMockObjectsWithoutExpectations]
 final class FormManagerTest extends TestCase
 {
     private $driverException;

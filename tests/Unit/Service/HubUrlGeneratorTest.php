@@ -8,6 +8,7 @@ use App\Service\HubUrlGenerator;
 use PHPUnit\Framework\Attributes as PU;
 use PHPUnit\Framework\TestCase;
 
+#[PU\AllowMockObjectsWithoutExpectations]
 final class HubUrlGeneratorTest extends TestCase
 {
     private $hubBaseUrl;
