@@ -117,7 +117,7 @@ modal:
     delete: Confirm deletion
 
 layout:
-  name: Livror
+  name: Darkirbible
   navbar:
     home: Home
     game: All games

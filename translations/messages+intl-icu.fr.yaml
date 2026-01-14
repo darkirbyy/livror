@@ -117,7 +117,7 @@ modal:
     delete: Confirmer la suppression
 
 layout:
-  name: Livror
+  name: Darkirbible
   navbar:
     home: Accueil
     game: Tous les jeux
