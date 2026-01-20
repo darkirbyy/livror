@@ -6,6 +6,7 @@ namespace App\Controller;
 
 use App\Dto\FlashMessage;
 use App\Dto\QueryParam;
+use App\Entity\Account\User;
 use App\Entity\Main\Review;
 use App\Form\ReviewType;
 use App\Repository\GameRepository;
@@ -13,6 +14,7 @@ use App\Repository\ReviewRepository;
 use App\Service\BackpathUrlGenerator;
 use App\Service\FormManager;
 use App\Service\UserManager;
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -25,11 +27,17 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 class ReviewController extends AbstractController
 {
     // List and find reviews
-    #[Route('', name: 'index', methods: ['GET'])]
-    public function index(#[MapQueryString] QueryParam $queryParam, UserManager $userManager, GameRepository $gameRepo, ReviewRepository $reviewRepo, Request $request): Response
-    {
-        // Retrieve the connected user
-        $user = $this->getUser();
+    #[Route('/{id?}', name: 'index', methods: ['GET'], requirements: ['id' => Requirement::DIGITS])]
+    public function index(
+        #[MapEntity] ?User $user,
+        #[MapQueryString] QueryParam $queryParam,
+        UserManager $userManager,
+        GameRepository $gameRepo,
+        ReviewRepository $reviewRepo,
+        Request $request,
+    ): Response {
+        // Retrieve the user from the route param, or the currect user otherwise
+        $user ??= $this->getUser();
         $userId = $user->getId();
 
         // Make the database query and get the corresponding reviews
@@ -42,6 +50,7 @@ class ReviewController extends AbstractController
             'reviews' => array_slice($reviews, 0, $queryParam->limit), // remove on result as we have fetched one more that configured
             'hasMore' => count($reviews) > $queryParam->limit, // determine if there is more games to fetch
             'cannotAdd' => 0 == $gameRepo->countWithoutReview($userId),
+            'user' => $user,
         ];
 
         // Render only the review list block when the request comes from the JavaScript, otherwise render the whole page

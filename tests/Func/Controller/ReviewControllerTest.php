@@ -33,8 +33,9 @@ class ReviewControllerTest extends AbstractControllerTest
         $gamesTitle = array_map('trim', $gamesTitleCrawler->extract(['_text']));
 
         $this->assertResponseIsSuccessful();
-        $this->assertSelectorTextContains('h1', 'review.index.title');
+        $this->assertSelectorTextContains('h1', 'review.index.title.owner');
         $this->assertSame($gamesTitleExpected, $gamesTitle);
+        $this->assertAnySelectorTextContains('div a.btn.btn-primary', 'review.index.button.addReview');
 
         if ($canAdd) {
             $this->assertSelectorNotExists('div[class~=alert-secondary]');
@@ -73,6 +74,29 @@ class ReviewControllerTest extends AbstractControllerTest
         $this->assertResponseIsSuccessful();
         $this->assertSelectorNotExists('h1');
         $this->assertSame($gamesTitleExpected, $gamesTitle);
+    }
+
+    #[PU\Test]
+    #[PU\DataProvider('indexValues')]
+    public function indexOtherUser(string $storyClass, string $queryString, int $expectedNbGames, bool $canAdd): void
+    {
+        $storyClass::load();
+
+        $userOther = TestStory::getRandom('other-users');
+        $reviews = ReviewFactory::repository()->findBy(['userId' => $userOther->getId()]);
+        usort($reviews, fn (Review $r1, Review $r2) => $r1->getGame()->getName() <=> $r2->getGame()->getName());
+        $gamesTitleExpected = array_slice(array_map(fn (Review $r) => $r->getGame()->getName(), $reviews), 0, $expectedNbGames);
+
+        $crawler = $this->client->request('GET', '/review/' . $userOther->getId() . '?' . $queryString);
+
+        $gamesTitleCrawler = $crawler->filter('div[id^=review] h5');
+        $gamesTitle = array_map('trim', $gamesTitleCrawler->extract(['_text']));
+
+        $this->assertResponseIsSuccessful();
+        $this->assertSelectorTextContains('h1', 'review.index.title.other');
+        $this->assertSame($gamesTitleExpected, $gamesTitle);
+        $this->assertAnySelectorTextContains('div a.btn.btn-outline-secondary', 'review.index.button.seeMyReviews');
+        $this->assertSelectorNotExists('div[class~=alert-secondary]');
     }
 
     #[PU\Test]

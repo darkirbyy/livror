@@ -55,10 +55,13 @@ game:
 
 review:
   index:
-    title: All my reviews
+    title:
+      owner: All my reviews
+      other: 'All reviews of {name}'
     button:
       addReview: Write a review
       editReview: Edit
+      seeMyReviews: See all my reviews
     flash:
       newReview: 'Your review for {name} has been saved!'
       updateReview: 'Your review for {name} has been updated!'

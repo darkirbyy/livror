@@ -55,10 +55,13 @@ game:
 
 review:
   index:
-    title: Tous mes avis
+    title:
+      owner: Tous mes avis
+      other: 'Tous les avis de {name}'
     button:
       addReview: Écrire un avis
       editReview: Editer
+      seeMyReviews: Voir tous mes avis
     flash:
       newReview: 'Votre avis sur {name} a été enregistré !'
       updateReview: 'Votre avis sur {name} a été mise à jour !'

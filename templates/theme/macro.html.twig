@@ -288,7 +288,7 @@
       <div class="mb-1">
         xxx avis publiés
       </div>
-      <a data-turbo-frame="_top" href="{{ path('review_index') }}" class="link-secondary icon-link icon-link-hover icon-link-right">
+      <a data-turbo-frame="_top" href="{{ path('review_index', { id: user.id }) }}" class="link-secondary icon-link icon-link-hover icon-link-right">
         Voir les avis
         <span class="bi bi-arrow-right" aria-hidden="true"></span>
       </a>
@@ -301,7 +301,7 @@
 
 {# Macro to lighten the code to generate path with query params #}
 {%- macro path_with_query_param(queryParam, anchor = null) -%}
-  {{- path(app.current_route, queryParam|to_array|merge({ anchor: anchor }))|raw -}}
+  {{- path(app.current_route, queryParam|to_array|merge({ anchor: anchor })|merge(app.current_route_parameters))|raw -}}
 {%- endmacro -%}
 
 {# Macro to create a backlink #}
