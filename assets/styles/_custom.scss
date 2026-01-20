@@ -31,6 +31,10 @@ legend.col-form-label.required::after {
   --bs-icon-link-transform: translateX(-0.2rem);
 }
 
+:not(.modal) .popover {
+  z-index: 10 !important;
+}
+
 ///////////////////////////////////
 // Tomselect improvements /////////
 ///////////////////////////////////
@@ -58,12 +62,19 @@ legend.col-form-label.required::after {
   border-radius: 50% !important;
 }
 
-.app-avatar-navbar {
+.app-avatar-sm {
   @include app-avatar(1.5);
 }
 
-.app-avatar-card {
-  @include app-avatar(1.5);
+.app-avatar-md {
+  @include app-avatar(4);
+}
+
+.app-toto:hover,
+.app-toto:active {
+  filter: brightness(120%);
+  transform: scale(1.2);
+  transition: 0.2s;
 }
 
 // Dropdown ///////////////////////

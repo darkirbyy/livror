@@ -4,7 +4,9 @@
   {% for gameInfo in gamesInfo %}
     {% set backpath = m.path_with_query_param(queryParam|clone_with({ offset: 0, limit: queryParam.limit + queryParam.offset }), 'game-' ~ gameInfo.game.id) %}
 
-    {{ include('game/_card.html.twig') }}
+    <div {{ stimulus_controller('load-popover') }}>
+      {{ include('game/_card.html.twig') }}
+    </div>
   {% endfor %}
 
   {% if hasMore %}

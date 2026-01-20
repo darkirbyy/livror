@@ -15,7 +15,9 @@
       {# Game card #}
       {% set backpath = path('game_show', { id: gameInfo.game.id }) %}
       {% set collapsed = false %}
-      {{ include('game/_card.html.twig') }}
+      <div {{ stimulus_controller('load-popover') }}>
+        {{ include('game/_card.html.twig') }}
+      </div>
     </div>
   </section>
 {% endblock %}

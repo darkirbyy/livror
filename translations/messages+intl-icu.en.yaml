@@ -55,7 +55,7 @@ game:
 
 review:
   index:
-    title: My reviews
+    title: All my reviews
     button:
       addReview: Write a review
       editReview: Edit
@@ -124,7 +124,7 @@ layout:
     account:
       signIn: Sign in
       signOut: Sign out
-      myReviews: My reviews
+      myReviews: All my reviews
       myAccount: My account
       backToHub: Back to Hub
   footer:

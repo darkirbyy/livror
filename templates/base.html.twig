@@ -1,3 +1,5 @@
+{% import 'theme/macro.html.twig' as m %}
+
 <!DOCTYPE html>
 <html lang="{{ app.request.locale|default('fr') }}">
   <head>
@@ -89,8 +91,8 @@
                   aria-haspopup="true"
                   {{ currentRoute starts with 'review' ? 'aria-current="page" aria-selected="true"' }}
                 >
-                  <span class="me-1">{{ app.user.username }}</span>
-                  <img src="{{ app.user.avatarPath|generate_root }}" class="img-fluid ms-1 app-avatar-navbar" alt="{{ 'aria.avatar'|trans({ name: app.user.username }) }}" />
+                  <span class="me-2">{{ app.user.username }}</span>
+                  {{ m.user_avatar(app.user) }}
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end" role="menu">
                   <li><a class="dropdown-item" role="menuitem" href="{{ path('review_index') }}">{{ 'layout.navbar.account.myReviews'|trans }}</a></li>

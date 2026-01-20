@@ -276,6 +276,25 @@
   </p> #}
 {% endmacro %}
 
+{% macro user_avatar(user, size = 'sm') %}
+  <img src="{{ user.avatarPath|generate_root }}" class="rounded-circle img-fluid app-avatar-{{ size }}" alt="{{ 'aria.avatar'|trans({ name: user.username }) }}" />
+{% endmacro %}
+
+{% macro user_popover(user) %}
+  <div class="d-flex align-items-center gap-2">
+    {{ _self.user_avatar(user, 'md') }}
+    <div>
+      <h6 class="mb-0">{{ user.username }}</h6>
+      <div class="mb-1">
+        xxx avis publiés
+      </div>
+      <a data-turbo-frame="_top" href="{{ path('review_index') }}" class="link-secondary icon-link icon-link-hover icon-link-right">
+        Voir les avis
+        <span class="bi bi-arrow-right" aria-hidden="true"></span>
+      </a>
+    </div>
+  </div>
+{% endmacro %}
 {# #################################### #}
 {# ## Miscellaneous ################### #}
 {# #################################### #}

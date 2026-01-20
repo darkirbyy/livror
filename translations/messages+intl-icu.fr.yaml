@@ -55,7 +55,7 @@ game:
 
 review:
   index:
-    title: Mes avis
+    title: Tous mes avis
     button:
       addReview: Écrire un avis
       editReview: Editer
@@ -124,7 +124,7 @@ layout:
     account:
       signIn: Se connecter
       signOut: Se déconnecter
-      myReviews: Mes avis
+      myReviews: Tous mes avis
       myAccount: Mon compte
       backToHub: Retour au Hub
   footer:

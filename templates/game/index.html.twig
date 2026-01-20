@@ -42,7 +42,7 @@
                 {% set filtersUserId = 'filters-users-' ~ user.id %}
                 <input class="form-check-input" type="checkbox" value="{{ user.id }}" id="{{ filtersUserId }}" {{ checked }} data-filter-apply-target="checkbox" />
                 <label class="form-check-label w-100" for="{{ filtersUserId }}">
-                  <img src="{{ user.avatarPath|generate_root }}" class="rounded-circle img-fluid app-avatar-card" alt="{{ 'aria.avatar'|trans({ name: user.username }) }}" />
+                  {{ m.user_avatar(user) }}
                   <span class="ms-1">{{ user.username }}</span>
                 </label>
               </li>
