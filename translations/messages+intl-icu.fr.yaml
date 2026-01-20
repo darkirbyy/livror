@@ -79,6 +79,7 @@ review:
       hourSpend: Heures de jeu
       firstPlay: Lancement
     notFound: Aucun avis trouvé
+    numberReviews: '{number} avis publiés'
   edit:
     title:
       add:  Écrire un avis

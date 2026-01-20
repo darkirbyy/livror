@@ -79,6 +79,7 @@ review:
       hourSpend: Playtime
       firstPlay: Launch
     notFound: No reviews found
+    numberReviews: '{number} published reviews'
   edit:
     title:
       add: Write a review

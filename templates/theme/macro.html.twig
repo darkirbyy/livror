@@ -281,12 +281,12 @@
 {% endmacro %}
 
 {% macro user_popover(user) %}
-  <div class="d-flex align-items-center gap-2">
+  <div class="d-flex align-items-center gap-3">
     {{ _self.user_avatar(user, 'md') }}
     <div>
-      <h6 class="mb-0">{{ user.username }}</h6>
+      <h6 class="fs-5 mb-0">{{ user.username }}</h6>
       <div class="mb-1">
-        xxx avis publiés
+        {{ 'review.index.numberReviews'|trans({ number: user.numberReviews }) }}
       </div>
       <a data-turbo-frame="_top" href="{{ path('review_index', { id: user.id }) }}" class="link-secondary icon-link icon-link-hover icon-link-right">
         Voir les avis
