@@ -34,6 +34,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?string $avatarPath = null;
 
+    // No ORM column because it's a calculated value
+    private ?int $numberReviews = null;
+
     public function __construct()
     {
     }
@@ -122,6 +125,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setAvatarPath(string $avatarPath): static
     {
         $this->avatarPath = $avatarPath;
+
+        return $this;
+    }
+
+    public function getNumberReviews(): ?int
+    {
+        return $this->numberReviews;
+    }
+
+    public function setNumberReviews(?int $numberReviews): static
+    {
+        $this->numberReviews = $numberReviews;
 
         return $this;
     }

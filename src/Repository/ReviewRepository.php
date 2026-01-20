@@ -44,9 +44,9 @@ class ReviewRepository extends ServiceEntityRepository
     public function findUsersId(): array
     {
         $qb = $this->createQueryBuilder('r');
-        $qb->select('r.userId')->distinct();
+        $qb->indexBy('r', 'r.userId')->select('r.userId, count(r.id) as numberReviews')->groupBy('r.userId');
 
-        return $qb->getQuery()->getSingleColumnResult();
+        return $qb->getQuery()->getResult();
     }
 
     public function findLast(DateFieldEnum $dateField, int $limit): array

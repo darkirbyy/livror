@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Service;
 
 use App\Dto\GameInfo;
+use App\Entity\Account\User;
 use App\Entity\Main\Review;
 use App\Repository\ReviewRepository;
 use App\Repository\UserRepository;
@@ -58,8 +59,14 @@ class UserManager
      */
     public function findWithReview(): array
     {
-        $usersId = $this->reviewRepo->findUsersId();
-        $users = $this->userRepo->byUsersId($usersId);
+        // Find all distinct users id among the reviews, adn the number of reviews for each one
+        $usersInfo = $this->reviewRepo->findUsersId();
+
+        // Fetch all User objects through the account connection
+        $users = $this->userRepo->byUsersId(array_column($usersInfo, 'userId'));
+
+        // Plug the number of reviews in each User
+        array_walk($users, fn (User $u) => $u->setNumberReviews($usersInfo[$u->getId()]['numberReviews']));
 
         return $users;
     }

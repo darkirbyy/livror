@@ -158,6 +158,8 @@ class GameRepository extends ServiceEntityRepository
 
     private function selectDto(QueryBuilder $qb): void
     {
-        $qb->leftJoin('g.reviews', 'ra')->select('NEW App\Dto\GameInfo(g, COUNT(ra), AVG(ra.rating), SUM(ra.hourSpend), MIN(ra.firstPlay))')->groupBy('g.id');
+        $qb->leftJoin('g.reviews', 'ra')
+            ->select('NEW ' . GameInfo::class . '(g, COUNT(ra), AVG(ra.rating), SUM(ra.hourSpend), MIN(ra.firstPlay))')
+            ->groupBy('g.id');
     }
 }
