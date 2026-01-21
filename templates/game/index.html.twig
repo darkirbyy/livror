@@ -21,6 +21,11 @@
 
       {# Turboframe to refresh only the main section when sorting the results #}
       <turbo-frame id="main-section">
+        {# Number of games added in the app #}
+        <div class="text-start fw-light mb-2">
+          {{ 'game.index.numberGames'|trans({ number: numberDisplayed }) }}
+        </div>
+
         {# Prepare the filters content #}
         {% set filterContentTypeGame %}
           <ul class="p-0 m-0">

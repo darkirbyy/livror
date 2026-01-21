@@ -39,7 +39,7 @@ class ReviewController extends AbstractController
         // Retrieve the user from the route param, or the current user otherwise
         $user ??= $this->getUser();
         $userId = $user->getId();
-        $user->setNumberReviews($reviewRepo->findNumberReviews($userId));
+        $user->setNumberReviews($reviewRepo->countIndex($userId));
 
         // Make the database query and get the corresponding reviews
         $reviews = $reviewRepo->findIndex($queryParam, $userId);

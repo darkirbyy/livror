@@ -41,18 +41,18 @@ class ReviewRepository extends ServiceEntityRepository
         return $qb->getQuery()->getResult();
     }
 
-    public function findNumberReviews(int $userId): ?int
+    public function countIndex(int $userId): ?int
     {
         $qb = $this->createQueryBuilder('r');
-        $qb->select('count(r.id)')->where('r.userId = :userId')->setParameter('userId', $userId);
+        $qb->select('COUNT(r.id)')->where('r.userId = :userId')->setParameter('userId', $userId);
 
         return $qb->getQuery()->getSingleScalarResult();
     }
 
-    public function findUsersIdAndNumberReviews(): array
+    public function countByUserId(): array
     {
         $qb = $this->createQueryBuilder('r');
-        $qb->indexBy('r', 'r.userId')->select('r.userId, count(r.id) as numberReviews')->groupBy('r.userId');
+        $qb->indexBy('r', 'r.userId')->select('r.userId, COUNT(r.id) as numberReviews')->groupBy('r.userId');
 
         return $qb->getQuery()->getResult();
     }

@@ -60,7 +60,7 @@ class UserManager
     public function findWithReview(): array
     {
         // Find all distinct users id among the reviews, adn the number of reviews for each one
-        $usersInfo = $this->reviewRepo->findUsersIdAndNumberReviews();
+        $usersInfo = $this->reviewRepo->countByUserId();
 
         // Fetch all User objects through the account connection
         $users = $this->userRepo->byUsersId(array_column($usersInfo, 'userId'));

@@ -30,12 +30,13 @@
         {% endif %}
       </div>
 
-      <div class="text-start fw-light mb-2">
-        {{ 'review.index.numberReviews'|trans({ number: user.numberReviews }) }}
-      </div>
-
       {# Turboframe to refresh only the main section when sorting the results #}
       <turbo-frame id="main-section">
+        {# Number of reviews published by the current user #}
+        <div class="text-start fw-light mb-2">
+          {{ 'review.index.numberReviews'|trans({ number: user.numberReviews }) }}
+        </div>
+
         {# Include the buttons to sort, filter and reset #}
         {{ m.index_buttons(queryParam, 'review', ['name', 'rating', 'hourSpend', 'firstPlay'], [], null) }}
 

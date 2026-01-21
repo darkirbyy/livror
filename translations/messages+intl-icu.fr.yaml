@@ -41,6 +41,12 @@ game:
       users: Joueurs
       withoutReview: Avis
     notFound: Aucun jeu trouvé
+    numberGames: >-
+      {number, plural, 
+        =0 {Aucun jeu affiché}
+        =1 {1  jeu affiché}
+        other {# jeux affichés}
+      }
   show:
     title: 'Détails du jeu : {name}'
   edit:
@@ -79,7 +85,12 @@ review:
       hourSpend: Heures de jeu
       firstPlay: Lancement
     notFound: Aucun avis trouvé
-    numberReviews: '{number} avis publiés'
+    numberReviews: >-
+      {number, plural, 
+        =0 {Aucun avis publié}
+        =1 {1 avis publié}
+        other {# avis publiés}
+      }
   edit:
     title:
       add:  Écrire un avis

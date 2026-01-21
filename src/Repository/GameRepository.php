@@ -38,33 +38,25 @@ class GameRepository extends ServiceEntityRepository
         $qb = $this->createQueryBuilder('g');
         $this->selectDto($qb);
 
-        // Apply alls the query param but filters and add last sort by id
+        // Apply alls the query param and add last sort by id
         $this->queryParamHelper->applyButFiltersToQb($queryParam, $qb, $sortsConversion);
+        $this->applyFiltersToQb($queryParam, $qb);
         $qb->addOrderBy('g.id', 'ASC');
-
-        // Filter logic : type of game, users that have reviewed, without review
-        if (array_key_exists('typeGame', $queryParam->filters) && !empty($queryParam->filters['typeGame'])) {
-            $qb->where('g.typeGame IN (:typeGame)')->setParameter('typeGame', $queryParam->filters['typeGame']);
-        }
-
-        if (array_key_exists('users', $queryParam->filters) && !empty($queryParam->filters['users'])) {
-            // prettier-ignore
-            $conditionsOr[] = 'EXISTS (SELECT 1 FROM ' . Review::class . ' ru WHERE ru.game = g AND ru.userId IN (:users)
-                               GROUP BY ru.game HAVING COUNT(DISTINCT ru.userId) = :userCount)';
-            $qb->setParameter('users', $queryParam->filters['users']);
-            $qb->setParameter('userCount', count($queryParam->filters['users']));
-        } else {
-            $conditionsOr[] = 'EXISTS (SELECT 1 FROM ' . Review::class . ' ru WHERE ru.game = g)';
-        }
-
-        if (array_key_exists('withoutReview', $queryParam->filters) && !empty($queryParam->filters['withoutReview'])) {
-            $conditionsOr[] = 'NOT EXISTS (SELECT 1 FROM ' . Review::class . ' rw WHERE rw.game = g)';
-        }
-
-        $qb->andWhere(implode(' OR ', $conditionsOr));
 
         // Execute and fetch the query
         return $qb->getQuery()->getResult();
+    }
+
+    public function countIndex(QueryParam $queryParam): mixed
+    {
+        // Build the base query with the count
+        $qb = $this->createQueryBuilder('g')->select('COUNT(g.id)');
+
+        // Apply filters logic
+        $this->applyFiltersToQb($queryParam, $qb);
+
+        // Execute and fetch the query
+        return $qb->getQuery()->getSingleScalarResult();
     }
 
     public function findShow(Game $game): GameInfo
@@ -154,6 +146,32 @@ class GameRepository extends ServiceEntityRepository
         $qb->select('COUNT(g.id)')->leftJoin('g.reviews', 'r', Join::WITH, 'r.userId = :userId')->where('r.id IS NULL')->setParameter('userId', $userId);
 
         return (int) $qb->getQuery()->getSingleScalarResult();
+    }
+
+    private function applyFiltersToQb(QueryParam $queryParam, QueryBuilder $qb): QueryBuilder
+    {
+        // Filter logic : type of game, users that have reviewed, without review
+        if (array_key_exists('typeGame', $queryParam->filters) && !empty($queryParam->filters['typeGame'])) {
+            $qb->where('g.typeGame IN (:typeGame)')->setParameter('typeGame', $queryParam->filters['typeGame']);
+        }
+
+        if (array_key_exists('users', $queryParam->filters) && !empty($queryParam->filters['users'])) {
+            // prettier-ignore
+            $conditionsOr[] = 'EXISTS (SELECT 1 FROM ' . Review::class . ' ru WHERE ru.game = g AND ru.userId IN (:users)
+                               GROUP BY ru.game HAVING COUNT(DISTINCT ru.userId) = :userCount)';
+            $qb->setParameter('users', $queryParam->filters['users']);
+            $qb->setParameter('userCount', count($queryParam->filters['users']));
+        } else {
+            $conditionsOr[] = 'EXISTS (SELECT 1 FROM ' . Review::class . ' ru WHERE ru.game = g)';
+        }
+
+        if (array_key_exists('withoutReview', $queryParam->filters) && !empty($queryParam->filters['withoutReview'])) {
+            $conditionsOr[] = 'NOT EXISTS (SELECT 1 FROM ' . Review::class . ' rw WHERE rw.game = g)';
+        }
+
+        $qb->andWhere(implode(' OR ', $conditionsOr));
+
+        return $qb;
     }
 
     private function selectDto(QueryBuilder $qb): void
