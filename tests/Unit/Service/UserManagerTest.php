@@ -71,7 +71,7 @@ final class UserManagerTest extends TestCase
     {
         $usersId = [['userId' => 1, 'numberReviews' => 5], ['userId' => 2, 'numberReviews' => 10], ['userId' => 4, 'numberReviews' => 2]];
 
-        $this->reviewRepo->expects($this->once())->method('findUsersId')->willReturn($usersId);
+        $this->reviewRepo->expects($this->once())->method('findUsersIdAndNumberReviews')->willReturn($usersId);
         $this->userRepo->expects($this->once())->method('byUsersId')->with(array_column($usersId, 'userId'));
 
         $this->userManager->findWithReview();

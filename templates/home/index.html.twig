@@ -63,7 +63,7 @@
         </div>
 
         {# Last reviews part #}
-        <div class="col-12 col-md-6 mt-4 mt-md-0">
+        <div class="col-12 col-md-6 mt-4 mt-md-0" {{ stimulus_controller('load-popover') }}>
           <h4 class="text-center pb-2">{{ 'home.index.lastReview.title'|trans }}</h4>
 
           {% if (reviews|length) > 0 %}
@@ -74,8 +74,17 @@
               <div id="{{ reviewId }}" class="card-max-large card-max-md-none mx-auto my-3 rounded-3 border overflow-hidden">
                 {# Card title bar with the the title on one side, and 3 infos on the other side (or on top of each other on small screen) #}
                 <div class="row gx-0 bg-primary-subtle border-bottom text-center">
-                  {# Actual title with the edit button #}
-                  <div class="col-12 border-bottom">
+                  {# Actual title without the edit button #}
+                  {% set popover = m.user_popover(review.user) %}
+                  <div
+                    class="col-4 border-bottom border-end border-end-md-0 d-flex p-1 ps-md-2 justify-content-center align-items-center"
+                    tabindex="0"
+                    data-bs-toggle="popover"
+                    data-bs-content="{{ popover|e }}"
+                  >
+                    {{ m.user_avatar(review.user) }} <span class="ms-2">{{ review.user.username }}</span>
+                  </div>
+                  <div class="col-8 border-bottom border-start-md">
                     {% set backpath = path('home_index', { anchor: reviewId }) %}
                     {{ m.game_title(review.game, backpath, true, false) }}
                   </div>
