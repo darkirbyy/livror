@@ -17,8 +17,7 @@ class SteamSearchHelper
         private string $currency,
         private ExceptionManager $exceptionManager,
         private HttpClientInterface $httpClient,
-    ) {
-    }
+    ) {}
 
     /**
      *  Perform the request on the steam API endpoint, storing the status and return the data if successful.

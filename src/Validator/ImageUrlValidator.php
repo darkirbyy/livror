@@ -10,9 +10,7 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class ImageUrlValidator extends ConstraintValidator
 {
-    public function __construct(private int $requestTimeout, private HttpClientInterface $httpClient)
-    {
-    }
+    public function __construct(private int $requestTimeout, private HttpClientInterface $httpClient) {}
 
     public function validate($value, Constraint $constraint): void
     {

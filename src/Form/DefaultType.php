@@ -14,9 +14,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 abstract class DefaultType extends AbstractType
 {
-    public function __construct(protected bool $htmlValidation)
-    {
-    }
+    public function __construct(protected bool $htmlValidation) {}
 
     public function configureOptions(OptionsResolver $resolver): void
     {

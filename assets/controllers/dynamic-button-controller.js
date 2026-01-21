@@ -42,8 +42,7 @@ export default class DynamicButtonController extends Controller {
     this.removeTargets.forEach((item) => {
       item.remove();
     });
-    this.spinnerTarget.innerHTML =
-      '<span class="fa fa-spin fa-spinner"></span>';
+    this.spinnerTarget.innerHTML = '<span class="fa fa-spin fa-spinner"></span>';
     this.onClick();
   }
 }

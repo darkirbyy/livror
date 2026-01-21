@@ -22,8 +22,7 @@ class AccountEntryPoint implements AuthenticationEntryPointInterface
         private Security $security,
         private EntityManagerInterface $accountEntityManager,
         private UrlGeneratorInterface $urlGenerator,
-    ) {
-    }
+    ) {}
 
     public function start(Request $request, ?AuthenticationException $authException = null): RedirectResponse
     {

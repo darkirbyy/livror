@@ -29,7 +29,7 @@ class ErrorControllerTest extends AbstractControllerTest
     public function error403(string $method, string $route): void
     {
         ErrorAllStory::load();
-        $review = ReviewFactory::repository()->findOneBy(['userId' => array_map(fn (User $u) => $u->getId(), TestStory::getPool('other-users'))]);
+        $review = ReviewFactory::repository()->findOneBy(['userId' => array_map(fn(User $u) => $u->getId(), TestStory::getPool('other-users'))]);
 
         $this->client->request($method, '/review/' . $review->getId() . $route);
 

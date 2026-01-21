@@ -12,7 +12,7 @@ final class ReviewIndexStandardStory extends Story
     public function build(): void
     {
         $user1 = TestStory::get('connected-user');
-        $usersButUser1Id = array_map(fn (User $u) => $u->getId(), TestStory::getPool('other-users'));
+        $usersButUser1Id = array_map(fn(User $u) => $u->getId(), TestStory::getPool('other-users'));
 
         // Create 12 games reviewed by user1
         GameFactory::new()

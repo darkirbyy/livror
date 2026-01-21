@@ -15,9 +15,7 @@ use App\Repository\UserRepository;
  */
 class UserManager
 {
-    public function __construct(private UserRepository $userRepo, private ReviewRepository $reviewRepo)
-    {
-    }
+    public function __construct(private UserRepository $userRepo, private ReviewRepository $reviewRepo) {}
 
     /**
      * Extract all reviews of a gameInfo DTO, then plug the user.
@@ -39,7 +37,7 @@ class UserManager
      */
     public function plugToGamesInfo(array &$gamesInfo, array $users): void
     {
-        $reviews = array_merge(...array_map(fn (GameInfo $g) => $g->game->getReviews()->toArray(), $gamesInfo));
+        $reviews = array_merge(...array_map(fn(GameInfo $g) => $g->game->getReviews()->toArray(), $gamesInfo));
         $this->plugToReviews($reviews, $users);
     }
 
@@ -51,7 +49,7 @@ class UserManager
      */
     public function plugToReviews(array &$reviews, array $users): void
     {
-        array_walk($reviews, fn (Review $r) => $r->setUser($users[$r->getUserId()]));
+        array_walk($reviews, fn(Review $r) => $r->setUser($users[$r->getUserId()]));
     }
 
     /**
@@ -66,7 +64,7 @@ class UserManager
         $users = $this->userRepo->byUsersId(array_column($usersInfo, 'userId'));
 
         // Plug the number of reviews in each User
-        array_walk($users, fn (User $u) => $u->setNumberReviews($usersInfo[$u->getId()]['numberReviews']));
+        array_walk($users, fn(User $u) => $u->setNumberReviews($usersInfo[$u->getId()]['numberReviews']));
 
         return $users;
     }

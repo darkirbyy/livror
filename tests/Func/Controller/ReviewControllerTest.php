@@ -24,8 +24,8 @@ class ReviewControllerTest extends AbstractControllerTest
 
         $user1 = TestStory::get('connected-user');
         $reviews = ReviewFactory::repository()->findBy(['userId' => $user1->getId()]);
-        usort($reviews, fn (Review $r1, Review $r2) => $r1->getGame()->getName() <=> $r2->getGame()->getName());
-        $gamesTitleExpected = array_slice(array_map(fn (Review $r) => $r->getGame()->getName(), $reviews), 0, $expectedNbGames);
+        usort($reviews, fn(Review $r1, Review $r2) => $r1->getGame()->getName() <=> $r2->getGame()->getName());
+        $gamesTitleExpected = array_slice(array_map(fn(Review $r) => $r->getGame()->getName(), $reviews), 0, $expectedNbGames);
 
         $crawler = $this->client->request('GET', '/review?' . $queryString);
 
@@ -61,8 +61,8 @@ class ReviewControllerTest extends AbstractControllerTest
 
         $user1 = TestStory::get('connected-user');
         $reviews = ReviewFactory::repository()->findBy(['userId' => $user1->getId()]);
-        usort($reviews, fn (Review $r1, Review $r2) => $r1->getGame()->getName() <=> $r2->getGame()->getName());
-        $gamesTitleExpected = array_slice(array_map(fn (Review $r) => $r->getGame()->getName(), $reviews), $expectedNbGames, $expectedNbGames);
+        usort($reviews, fn(Review $r1, Review $r2) => $r1->getGame()->getName() <=> $r2->getGame()->getName());
+        $gamesTitleExpected = array_slice(array_map(fn(Review $r) => $r->getGame()->getName(), $reviews), $expectedNbGames, $expectedNbGames);
 
         $showMoreButton = $crawler->filter('button[data-load-more-target]')->first();
         $xmlUrl = $showMoreButton->ancestors()->first()->attr('data-load-more-url-value');
@@ -84,8 +84,8 @@ class ReviewControllerTest extends AbstractControllerTest
 
         $userOther = TestStory::getRandom('other-users');
         $reviews = ReviewFactory::repository()->findBy(['userId' => $userOther->getId()]);
-        usort($reviews, fn (Review $r1, Review $r2) => $r1->getGame()->getName() <=> $r2->getGame()->getName());
-        $gamesTitleExpected = array_slice(array_map(fn (Review $r) => $r->getGame()->getName(), $reviews), 0, $expectedNbGames);
+        usort($reviews, fn(Review $r1, Review $r2) => $r1->getGame()->getName() <=> $r2->getGame()->getName());
+        $gamesTitleExpected = array_slice(array_map(fn(Review $r) => $r->getGame()->getName(), $reviews), 0, $expectedNbGames);
 
         $crawler = $this->client->request('GET', '/review/' . $userOther->getId() . '?' . $queryString);
 
@@ -190,7 +190,7 @@ class ReviewControllerTest extends AbstractControllerTest
     {
         ReviewPersistStory::load();
 
-        $review = ReviewFactory::repository()->findOneBy(['userId' => array_map(fn (User $u) => $u->getId(), TestStory::getPool('other-users'))]);
+        $review = ReviewFactory::repository()->findOneBy(['userId' => array_map(fn(User $u) => $u->getId(), TestStory::getPool('other-users'))]);
 
         $this->expectException(AccessDeniedException::class);
         $this->client->catchExceptions(false);

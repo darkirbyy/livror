@@ -6,9 +6,7 @@ namespace App\Service;
 
 class HubUrlGenerator
 {
-    public function __construct(private string $hubBaseUrl, private string $hubAccountRoute)
-    {
-    }
+    public function __construct(private string $hubBaseUrl, private string $hubAccountRoute) {}
 
     /**
      * Generate a route prefixed by the hub root url.

@@ -14,9 +14,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class GameFormHelper
 {
-    public function __construct(private RequestStack $requestStack, private TranslatorInterface $trans, private SteamSearchHelper $steamSearchHelper)
-    {
-    }
+    public function __construct(private RequestStack $requestStack, private TranslatorInterface $trans, private SteamSearchHelper $steamSearchHelper) {}
 
     /**
      * Allow to pre-fill a form (with data class Gam) by filling a Game entity using a steamId

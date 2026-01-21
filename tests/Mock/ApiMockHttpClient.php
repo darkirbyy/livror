@@ -59,9 +59,9 @@ final class ApiMockHttpClient extends MockHttpClient
     private function getAppsListV2Mock(string $lastAppid, ?string $ifModifiedSince): mixed
     {
         if (is_null($ifModifiedSince)) {
-            $apps = array_filter(ApiMockData::$appsListTruncate, fn (array $app) => $app['appid'] > intval($lastAppid));
+            $apps = array_filter(ApiMockData::$appsListTruncate, fn(array $app) => $app['appid'] > intval($lastAppid));
         } else {
-            $apps = array_filter(ApiMockData::$appsListUpdate, fn (array $app) => $app['appid'] > intval($lastAppid) && $app['last_modified'] >= intval($ifModifiedSince));
+            $apps = array_filter(ApiMockData::$appsListUpdate, fn(array $app) => $app['appid'] > intval($lastAppid) && $app['last_modified'] >= intval($ifModifiedSince));
         }
 
         $appsCount = count($apps);

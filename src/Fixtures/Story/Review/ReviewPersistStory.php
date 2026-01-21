@@ -12,7 +12,7 @@ final class ReviewPersistStory extends Story
     public function build(): void
     {
         $user1 = TestStory::get('connected-user');
-        $usersButUser1Id = array_map(fn (User $u) => $u->getId(), TestStory::getPool('other-users'));
+        $usersButUser1Id = array_map(fn(User $u) => $u->getId(), TestStory::getPool('other-users'));
 
         // Create 4 games reviewed by user1
         GameFactory::new()

@@ -8,9 +8,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 
 class BackpathUrlGenerator
 {
-    public function __construct(private RequestStack $requestStack)
-    {
-    }
+    public function __construct(private RequestStack $requestStack) {}
 
     /**
      * Generate the backpath if exists and valid, keep the given path otherwise.

@@ -14,9 +14,7 @@ use Zenstruck\Foundry\Story;
 
 final class DevStory extends Story
 {
-    public function __construct(private ParameterBagInterface $parameterBag, private ManagerRegistry $managerRegistry)
-    {
-    }
+    public function __construct(private ParameterBagInterface $parameterBag, private ManagerRegistry $managerRegistry) {}
 
     public function build(): void
     {
@@ -31,19 +29,19 @@ final class DevStory extends Story
             UserFactory::repository()->truncate();
             // Create four dummy users
             UserFactory::new()
-                ->sequence(array_map(fn ($i) => ['username' => 'user' . $i, 'avatarPath' => 'https://lorempokemon.fakerapi.it/pokemon/256/' . $i], range(1, 4)))
+                ->sequence(array_map(fn($i) => ['username' => 'user' . $i, 'avatarPath' => 'https://lorempokemon.fakerapi.it/pokemon/256/' . $i], range(1, 4)))
                 ->create();
-            $usersId = array_map(fn (User $u) => $u->getId(), UserFactory::repository()->findAll());
+            $usersId = array_map(fn(User $u) => $u->getId(), UserFactory::repository()->findAll());
         } else {
             // Fetch the users id available through the account connection
             $userRepository = $this->managerRegistry->getManager('account')->getRepository(User::class);
-            $usersId = array_map(fn (User $u) => $u->getId(), $userRepository->findAll());
+            $usersId = array_map(fn(User $u) => $u->getId(), $userRepository->findAll());
         }
 
         // Create 50 games with "0" to "number of users" reviews, and 200 steam game
         GameFactory::new()->withUsersId($usersId, false)->many(50)->create();
         SteamFactory::new()
-            ->sequence(array_map(fn ($i) => ['id' => $i], range(1, 200)))
+            ->sequence(array_map(fn($i) => ['id' => $i], range(1, 200)))
             ->create();
 
         // Reenable PrePersit and PreUpdate event

@@ -22,7 +22,7 @@ class GameControllerTest extends AbstractControllerTest
     {
         $storyClass::load();
         $games = GameFactory::repository()->findBy($criteria, $sortBy);
-        $gamesTitleExpected = array_slice(array_map(fn (Game $g) => $g->getName(), $games), 0, $expectedNbGames);
+        $gamesTitleExpected = array_slice(array_map(fn(Game $g) => $g->getName(), $games), 0, $expectedNbGames);
 
         $crawler = $this->client->request('GET', '/game?' . $queryString);
 
@@ -50,7 +50,7 @@ class GameControllerTest extends AbstractControllerTest
         }
 
         $games = GameFactory::repository()->findBy($criteria, $sortBy, $maxLimit, $expectedNbGames);
-        $gamesTitleExpected = array_slice(array_map(fn (Game $g) => $g->getName(), $games), 0, $expectedNbGames);
+        $gamesTitleExpected = array_slice(array_map(fn(Game $g) => $g->getName(), $games), 0, $expectedNbGames);
 
         $showMoreButton = $crawler->filter('button[data-load-more-target]')->first();
         $xmlUrl = $showMoreButton->ancestors()->first()->attr('data-load-more-url-value');

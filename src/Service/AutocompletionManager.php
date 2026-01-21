@@ -19,8 +19,7 @@ class AutocompletionManager
         private SteamRepository $steamRepo,
         private GameRepository $gameRepo,
         private UserManager $userManager,
-    ) {
-    }
+    ) {}
 
     /**
      * Search Steam game in the steam table (must have been populated using the command first).
@@ -90,8 +89,8 @@ class AutocompletionManager
 
         if (SearchModeEnum::PATTERN == $searchMode) {
             // Identify each word (max 5) and surround each with + and * for mariadb fulltext boolean mode
-            $words = array_slice(array_filter(explode(' ', $search), fn ($word) => strlen($word) > 0), 0, 5);
-            $search = implode('', array_map(fn ($word) => '+' . $word . '*', $words));
+            $words = array_slice(array_filter(explode(' ', $search), fn($word) => strlen($word) > 0), 0, 5);
+            $search = implode('', array_map(fn($word) => '+' . $word . '*', $words));
         } else {
             // Add % wildcard for mariadb like clause
             $search = '%' . $search . '%';

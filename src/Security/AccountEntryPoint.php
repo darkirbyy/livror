@@ -12,9 +12,7 @@ use Symfony\Component\Security\Http\EntryPoint\AuthenticationEntryPointInterface
 
 class AccountEntryPoint implements AuthenticationEntryPointInterface
 {
-    public function __construct(private HubUrlGenerator $hubUrlGenerator)
-    {
-    }
+    public function __construct(private HubUrlGenerator $hubUrlGenerator) {}
 
     public function start(Request $request, ?AuthenticationException $authException = null): RedirectResponse
     {

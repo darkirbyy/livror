@@ -33,7 +33,7 @@ class ReviewType extends DefaultType
                 'required' => true,
                 'class' => Game::class,
                 'choices' => $this->gameRepo->findWithoutReview($options['userId']),
-                'choice_label' => fn (Game $game) => $game->getName(),
+                'choice_label' => fn(Game $game) => $game->getName(),
             ]);
         }
         $builder

@@ -18,8 +18,7 @@ class AutocompletionHelper
         private StimulusHelper $stimulusHelper,
         private UrlGeneratorInterface $urlGenerator,
         private Environment $twig,
-    ) {
-    }
+    ) {}
 
     /**
      * Prepare html stimulus for autocompletion.
@@ -62,7 +61,7 @@ class AutocompletionHelper
     public function renderItems(string $template, array $objects): array
     {
         $results = array_map(
-            fn ($object) => [
+            fn($object) => [
                 'value' => $object->getId(),
                 'text' => $this->twig->render($template, ['object' => $object]),
             ],

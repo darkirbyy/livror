@@ -6,7 +6,5 @@ namespace App\Dto;
 
 class FlashMessage
 {
-    public function __construct(public string $message, public array $params = [])
-    {
-    }
+    public function __construct(public string $message, public array $params = []) {}
 }

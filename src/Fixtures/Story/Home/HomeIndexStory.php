@@ -12,9 +12,7 @@ use Zenstruck\Foundry\Story;
 
 final class HomeIndexStory extends Story
 {
-    public function __construct(private ManagerRegistry $managerRegistry)
-    {
-    }
+    public function __construct(private ManagerRegistry $managerRegistry) {}
 
     public function build(): void
     {
@@ -26,7 +24,7 @@ final class HomeIndexStory extends Story
         }
 
         // Create 20 games with "1" to "number of users" reviews
-        $usersId = array_map(fn (User $u) => $u->getId(), UserFactory::all());
+        $usersId = array_map(fn(User $u) => $u->getId(), UserFactory::all());
         GameFactory::new()->withUsersId($usersId, 1)->many(50)->create();
 
         // Reenable PrePersit and PreUpdate event

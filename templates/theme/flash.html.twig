@@ -3,7 +3,7 @@
 
 {# Macro to translate the flash message while escaping the parameters #}
 {% macro trans_flash(flash) %}
-  {% set message = flash.message|trans(flash.params|default({ })|map(p => p|e), flash.domain|default('messages')) %}
+  {% set message = flash.message|trans(flash.params|default([])|map(p => p|e), flash.domain|default('messages')) %}
   {{ message|raw }}
 {% endmacro %}
 

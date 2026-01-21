@@ -47,7 +47,7 @@ final class GameFactory extends PersistentProxyObjectFactory
             $defaults['reviews'] = ReviewFactory::new()
                 ->withReleaseYear($defaults['releaseYear'])
                 ->withGameDateAdd($defaults['dateAdd'])
-                ->sequence(array_map(fn ($userId) => ['userId' => $userId], $users));
+                ->sequence(array_map(fn($userId) => ['userId' => $userId], $users));
 
             return $defaults;
         });

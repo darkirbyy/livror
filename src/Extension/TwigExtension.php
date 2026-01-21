@@ -21,8 +21,7 @@ class TwigExtension
         private BackpathUrlGenerator $backpathUrlGenerator,
         private QueryParamHelper $queryParamHelper,
         private AutocompletionHelper $autocompletionHelper,
-    ) {
-    }
+    ) {}
 
     // Transform a full price to a type of price
     #[AsTwigFilter(name: 'to_type_price')]

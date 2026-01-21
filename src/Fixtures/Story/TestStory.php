@@ -14,7 +14,7 @@ final class TestStory extends Story
         $this->addToPool(
             'other-users',
             UserFactory::new()
-                ->sequence(array_map(fn ($i) => ['username' => 'user' . $i], range(2, 4)))
+                ->sequence(array_map(fn($i) => ['username' => 'user' . $i], range(2, 4)))
                 ->create(),
         );
     }

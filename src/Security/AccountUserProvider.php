@@ -13,9 +13,7 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
 
 class AccountUserProvider implements UserProviderInterface
 {
-    public function __construct(private UserRepository $userRepo)
-    {
-    }
+    public function __construct(private UserRepository $userRepo) {}
 
     public function loadUserByIdentifier(string $identifier): UserInterface
     {

@@ -26,7 +26,7 @@ class QueryParamHelper
      */
     public function load(QueryParam $queryParam, string $sessionKey): void
     {
-        $isQueryEmpty = array_all((array) $queryParam, fn ($value, $key): bool => is_null($value));
+        $isQueryEmpty = array_all((array) $queryParam, fn($value, $key): bool => is_null($value));
         $this->isLoadFromSesion = $isQueryEmpty && $this->requestStack->getSession()->has('livror/' . $sessionKey);
         if ($this->isLoadFromSesion) {
             foreach ($this->requestStack->getSession()->get('livror/' . $sessionKey) as $property => $value) {
@@ -62,13 +62,13 @@ class QueryParamHelper
         ]);
         $queryParam->sorts = array_filter(
             $queryParam->sorts,
-            fn ($value, $key): bool => in_array($key, $allowedSortsKeys, true) && in_array($value, ['asc', 'desc'], true),
+            fn($value, $key): bool => in_array($key, $allowedSortsKeys, true) && in_array($value, ['asc', 'desc'], true),
             ARRAY_FILTER_USE_BOTH,
         );
-        $queryParam->filters = array_map(fn ($values) => '' !== $values ? $values : [], $queryParam->filters);
+        $queryParam->filters = array_map(fn($values) => '' !== $values ? $values : [], $queryParam->filters);
         $queryParam->filters = array_filter(
             $queryParam->filters,
-            fn ($values, $key): bool => in_array($key, $allowedFiltersKeys, true) && is_array($values) && array_all($values, fn ($value) => ctype_alnum($value)),
+            fn($values, $key): bool => in_array($key, $allowedFiltersKeys, true) && is_array($values) && array_all($values, fn($value) => ctype_alnum($value)),
             ARRAY_FILTER_USE_BOTH,
         );
     }
@@ -141,7 +141,7 @@ class QueryParamHelper
     {
         $queryParamArray = (array) $queryParam;
         if (isset($queryParamArray['filters'])) {
-            $queryParamArray['filters'] = array_map(fn ($values) => [] !== $values ? $values : '', $queryParamArray['filters']);
+            $queryParamArray['filters'] = array_map(fn($values) => [] !== $values ? $values : '', $queryParamArray['filters']);
         }
 
         return $queryParamArray;

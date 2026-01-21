@@ -12,9 +12,7 @@ use Psr\Log\LoggerInterface;
 
 class ExceptionManager
 {
-    public function __construct(private LoggerInterface $logger)
-    {
-    }
+    public function __construct(private LoggerInterface $logger) {}
 
     /**
      * Log catched exception to keep trace.

@@ -37,9 +37,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     // No ORM column because it's a calculated value
     private ?int $numberReviews = null;
 
-    public function __construct()
-    {
-    }
+    public function __construct() {}
 
     public function __toString(): string
     {
@@ -72,9 +70,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     #[\Deprecated]
-    public function eraseCredentials(): void
-    {
-    }
+    public function eraseCredentials(): void {}
 
     public function getId(): ?int
     {

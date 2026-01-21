@@ -12,7 +12,7 @@ final class GameIndexAllStory extends Story
     public function build(): void
     {
         // Create 20 games with "0" to "number of users" reviews
-        $usersId = array_map(fn (User $u) => $u->getId(), UserFactory::all());
+        $usersId = array_map(fn(User $u) => $u->getId(), UserFactory::all());
         GameFactory::new()->withUsersId($usersId, false)->many(20)->create();
     }
 }
