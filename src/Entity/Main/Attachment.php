@@ -9,7 +9,6 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Validator\Constraints as Assert;
 use Vich\UploaderBundle\Entity\File as FileMeta;
-use Vich\UploaderBundle\Entity\File as VichFile;
 use Vich\UploaderBundle\Mapping\Attribute as Vich;
 use Vich\UploaderBundle\Validator\Constraints as VichAssert;
 
@@ -31,7 +30,7 @@ class Attachment
     #[Assert\AtLeastOneOf([new Assert\File(maxSize: '10Mi'), new Assert\Image(maxSize: '10Mi', detectCorrupted: true)])]
     private ?File $file = null;
 
-    #[ORM\Embedded(class: VichFile::class)]
+    #[ORM\Embedded(class: FileMeta::class)]
     private ?FileMeta $fileMeta = null;
 
     #[ORM\Column(nullable: true)]

@@ -42,7 +42,6 @@ services:
     Symfony\Component\Dotenv\Command\DotenvDumpCommand: ~
     Symfony\UX\StimulusBundle\Helper\StimulusHelper: '@stimulus.helper'
     
-    # todo : changer le method ?
     Vich\UploaderBundle\Naming\SlugNamer:
         arguments:
             $service: '@App\Repository\AttachmentRepository'

@@ -37,6 +37,7 @@ review:
     attachments: Attachments
   help:
     rating: Between 0 and 6
+    attachments: Each file must not exceed 10Mio.
   error:
     game:
       notUnique: A review already exists for this game.

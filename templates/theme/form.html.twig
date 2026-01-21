@@ -5,7 +5,12 @@
 {# #################################### #}
 
 {# Simplify the standard row #}
-{% block form_row %}
+{% block form_row_render %}
+  {# Choose the tag depending on compound #}
+  {%- if compound is defined and compound -%}
+    {%- set element = 'fieldset' -%}
+  {%- endif -%}
+
   {# Calculates the row_attr with `app-form-row` + `has_validation` (if errors) + custom row attributes #}
   {% set custom_classes = 'app-form-row' ~ ' ' ~ (not compound or (force_error|default(false)) ? (errors|length) > 0 ? 'has-validation') %}
   {% set attributes %}
@@ -14,12 +19,15 @@
     {% endwith %}
   {% endset %}
 
-  <div {{ attributes }}>
-    {{ form_label(form) }}
-    {{ form_help(form) }}
-    {{ form_widget(form) }}
-    {{ form_errors(form) }}
-  </div>
+  {# Render the elements in this order : label, help, widget, error #}
+  {# prettier-ignore-start #}
+  {{ ('<' ~ element|default('div'))|raw }} {{ attributes }}>
+  {{- form_label(form) -}}
+  {{- form_help(form) -}}
+  {{- form_widget(form, widget_attr) -}}
+  {{- form_errors(form) -}}
+  {{ ('</' ~ element|default('div'))|raw }}>
+  {# prettier-ignore-end #}
 {% endblock %}
 
 {# Add .is-invalid on the container div #}
@@ -85,7 +93,7 @@
 {% endblock %}
 
 {% block _review_attachments_entry_file_row %}
-  {{ form_row(form.file, { label: 'attachment.label.file', attr: { 'data-collec-field-target': 'focus' } }) }}
+  {{ form_row(form, { label: 'attachment.label.file', attr: { 'data-collec-field-target': 'focus' } }) }}
 {% endblock %}
 
 {% block _review_attachments_entry_description_row %}
