@@ -126,6 +126,8 @@ form:
       global: Rechercher un jeu sur l'ensemble du site
       steam:  Rechercher un jeu sur steam
     noResults: Aucun résultat
+  file:
+    stored: Fichier enregistré
 
 modal:
   title:

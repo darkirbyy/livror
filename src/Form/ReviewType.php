@@ -57,7 +57,6 @@ class ReviewType extends DefaultType
                 'required' => false,
             ])
             ->add('attachments', CollectionType::class, [
-                'required' => false,
                 'entry_type' => AttachmentType::class,
                 'entry_options' => [
                     'label' => false,

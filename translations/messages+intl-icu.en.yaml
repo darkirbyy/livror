@@ -126,6 +126,8 @@ form:
       global: Search for a game on this website
       steam: Search for a game on Steam
     noResults: No results
+  file:
+    stored: Stored file
 
 modal:
   title:

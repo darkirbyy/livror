@@ -22,8 +22,8 @@
   margin-top: ($spacer * 0) !important;
 }
 
-label.form-label.required::after,
-legend.col-form-label.required::after {
+label.form-label.required:not(.remove-required)::after,
+legend.col-form-label.required:not(.remove-required)::after {
   content: ' *';
   color: $primary !important;
 }

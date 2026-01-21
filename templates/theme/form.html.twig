@@ -73,6 +73,23 @@
   </div>
 {% endblock %}
 
+{# Customize vich uploader widget to add the stored file #}
+{%- block vich_file_widget -%}
+  <div class="vich-file">
+    {%- if (errors|length) > 0 -%}
+      {%- set attr = attr|merge({ class: ((attr.class|default('')) ~ ' is-invalid')|trim }) -%}
+    {%- endif -%}
+    {{- form_widget(form.file, { attr: attr }) -}}
+    {%- if form.delete is defined -%}
+      {{- form_row(form.delete) -}}
+    {%- endif -%}
+
+    {%- if download_uri -%}
+      <span class="ps-2 fw-light">{{ 'form.file.stored'|trans }} :</span> {{ download_label }}
+    {%- endif -%}
+  </div>
+{%- endblock -%}
+
 {# #################################### #}
 {# ## Specific modifications ########## #}
 {# #################################### #}
