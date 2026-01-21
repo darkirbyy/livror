@@ -8,6 +8,11 @@
   margin-bottom: 0 !important;
 }
 
+.col-form-label {
+  padding-bottom: ($spacer * 0) !important;
+  padding-top: ($spacer * 0) !important;
+}
+
 .help-text {
   margin-top: 0 !important;
   margin-bottom: 0 !important;
@@ -92,6 +97,7 @@ legend.col-form-label.required::after {
 }
 
 // Dropdown ///////////////////////
+
 .app-dropdown-smooth {
   &::before {
     transition: transform 0.2s ease-in-out;
@@ -150,6 +156,10 @@ legend.col-form-label.required::after {
 
 .app-form-row {
   margin-bottom: ($spacer * 1) !important;
+}
+
+.app-btn-max-height {
+  height: calc(2.5rem - calc(var(--bs-border-width) * 2));
 }
 
 .app-form-range-tick {

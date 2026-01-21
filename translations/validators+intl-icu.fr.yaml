@@ -40,3 +40,8 @@ review:
   error:
     game:
       notUnique: Un avis existe déjà pour ce jeu.
+
+attachment:
+  label:
+    file: Fichier
+    description: Description

@@ -65,6 +65,7 @@ class Review
      * @var Collection<int, Attachment>
      */
     #[ORM\OneToMany(targetEntity: Attachment::class, mappedBy: 'review', orphanRemoval: true, cascade: ['persist', 'remove'])]
+    #[Assert\Valid]
     private Collection $attachments;
 
     // /////////////////////////////////////////////////////

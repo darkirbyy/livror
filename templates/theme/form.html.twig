@@ -45,10 +45,12 @@
 {% block collection_widget %}
   {% set custom_attr = { 'data-collec-field-target': 'collec' } %}
   {% set attr = attr|merge(custom_attr) %}
-  {{- parent() -}}
-  <button class="btn btn-outline-secondary" type="button" data-collec-field-target="add">
-    <span class="bi bi-plus-square me-1" aria-hidden="true"></span>{{ 'form.button.add'|trans }}
-  </button>
+  <div class="form-control">
+    {{- parent() -}}
+    <button class="btn btn-outline-secondary" type="button" data-collec-field-target="add">
+      <span class="bi bi-plus-square me-1" aria-hidden="true"></span>{{ 'form.button.add'|trans }}
+    </button>
+  </div>
 {% endblock %}
 
 {# Add one mandatory target and the delete button #}
@@ -57,7 +59,7 @@
     {% for row in form.children %}
       {{ form_row(row) }}
     {% endfor %}
-    <button class="btn btn-outline-danger app-btn-max-height mb-3" type="button" data-collec-field-target="remove" aria-label="{{ 'form.button.delete'|trans }}">
+    <button class="btn btn-outline-danger mt-4 app-btn-max-height" type="button" data-collec-field-target="remove" aria-label="{{ 'form.button.delete'|trans }}">
       <span class="bi bi-trash" aria-hidden="true"></span>
     </button>
   </div>
@@ -80,4 +82,12 @@
 {% block _review_hourSpend_widget %}
   {%- set type = 'text' -%}
   {{ block('form_widget_simple') }}
+{% endblock %}
+
+{% block _review_attachments_entry_file_row %}
+  {{ form_row(form.file, { label: 'attachment.label.file', attr: { 'data-collec-field-target': 'focus' } }) }}
+{% endblock %}
+
+{% block _review_attachments_entry_description_row %}
+  {{ form_row(form, { label: 'attachment.label.description', row_attr: { class: 'flex-fill' } }) }}
 {% endblock %}

@@ -8,6 +8,7 @@ use App\Entity\Main\Game;
 use App\Entity\Main\Review;
 use App\Repository\GameRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\RangeType;
@@ -54,6 +55,16 @@ class ReviewType extends DefaultType
             ])
             ->add('comment', TextareaType::class, [
                 'required' => false,
+            ])
+            ->add('attachments', CollectionType::class, [
+                'required' => false,
+                'entry_type' => AttachmentType::class,
+                'entry_options' => [
+                    'label' => false,
+                ],
+                'allow_add' => true,
+                'allow_delete' => true,
+                'by_reference' => false,
             ])
             ->add('submit', SubmitType::class, [
                 'translation_domain' => 'messages',
