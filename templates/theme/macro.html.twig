@@ -99,7 +99,7 @@
             key: sortKey,
             url: _self.path_with_query_param(queryParam|clone_with(new_param)),
             active: (queryParam.sorts|keys|first) == sortKey,
-            label: (entityKey ~ '.index.sort.' ~ sortKey)|trans,
+            label: (entityKey ~ '.index.sort.' ~ sortKey)|trans
           } %}
           {% set sorts = sorts|merge([sort]) %}
         {% endfor %}
@@ -208,12 +208,12 @@
     fullPrice: _self.fmt_full_price(game.fullPrice),
     developers: game.developers,
     genres: game.genres,
-    description: game.description,
+    description: game.description
   } %}
 
   {% for field, value in gameData %}
     <div class="col-4 py-1 px-1 text-end text-truncate {{ field != 'description' ? 'border-bottom' : '' }}">
-      <span class="fw-light">{{ ('game.label.' ~ field)|trans({ }, 'validators') }}</span>
+      <span class="fw-light">{{ ('game.label.' ~ field)|trans('', 'validators') }}</span>
     </div>
     <div class="col-8 py-1 text-start {{ (field not in ['genres', 'description'] ? 'text-truncate') ~ ' ' ~ (field != 'description' ? 'border-bottom') }}">
       {{ value|default('-') }}
@@ -225,17 +225,17 @@
 {%- macro review_information(review) -%}
   <div class="flex-basis-0 flex-grow-1 py-1 px-2 py-md-2 border-end text-truncate">
     <span class="fa-solid fa-star fa-sm" aria-hidden="true"></span>
-    <span class="visually-hidden">{{ 'review.label.rating'|trans({ }, 'validators') }} :</span>
+    <span class="visually-hidden">{{ 'review.label.rating'|trans('', 'validators') }} :</span>
     {{ review.rating is not empty ? review.rating|format_number({ fraction_digit: 1 }) : '-' }}
   </div>
   <div class="flex-basis-0 flex-grow-1 py-1 px-2 py-md-2 border-end text-truncate">
     <span class="fa-regular fa-hourglass-half fa-sm" aria-hidden="true"></span>
-    <span class="visually-hidden">{{ 'review.label.hourSpend'|trans({ }, 'validators') }} :</span>
+    <span class="visually-hidden">{{ 'review.label.hourSpend'|trans('', 'validators') }} :</span>
     {{ review.hourSpend is not empty ? review.hourSpend ~ 'h' : '-' }}
   </div>
   <div class="flex-basis-0 flex-grow-1 py-1 px-2 py-md-2 text-truncate">
     <span class="fa-regular fa-calendar-days fa-sm" aria-hidden="true"></span>
-    <span class="visually-hidden">{{ 'review.label.firstPlay'|trans({ }, 'validators') }} :</span>
+    <span class="visually-hidden">{{ 'review.label.firstPlay'|trans('', 'validators') }} :</span>
     <span class="small">{{ review.firstPlay is not empty ? review.firstPlay|format_datetime('short', 'none') : '-' }}</span>
   </div>
 {%- endmacro -%}
@@ -270,10 +270,24 @@
       <span class="fw-light">{{ 'review.index.card.noComment'|trans }}</span>
     {% endif %}
   </p>
-  {# todo : add documents #}
-  {# <p class="m-0">
-    Documents joints : à venir...
-  </p> #}
+  {% if (review.attachments|length) > 0 %}
+    <div class="d-flex flex-row align-items-start my-1">
+      <div>
+        {{ 'review.label.attachments'|trans({ }, 'validators') }} :
+      </div>
+      <ul class="mb-0">
+        {% for attachment in review.attachments %}
+          <li>
+            {{ attachment.description }} -
+            <a data-turbo="false" href="{{ path('attachment_download', { id: attachment.id }) }}" class="link-secondary icon-link icon-link-right">
+              {{ 'form.button.download'|trans }}
+              <span class="bi bi-download" aria-hidden="true"></span>
+            </a>
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+  {% endif %}
 {% endmacro %}
 
 {% macro user_avatar(user, size = 'sm') %}

@@ -115,6 +115,7 @@ form:
     showMore: Voir plus
     goBack: Retour
     reset: Réinitialiser
+    download: Télécharger
   flash:
     invalidCsrf: Le jeton CSRF est invalide.
     foreignKey: Impossible de supprimer cet élément tant que d'autres éléments y font référence.

@@ -2,16 +2,16 @@ vich_uploader:
     db_driver: orm
     mappings:
         attachments:
-            uri_prefix: '/uploads/attachments'
-            upload_destination: '%kernel.project_dir%/public/uploads/attachments'
+            uri_prefix: false
+            upload_destination: '%kernel.project_dir%/var/uploads/attachments'
             namer: Vich\UploaderBundle\Naming\SlugNamer
             inject_on_load: false
             delete_on_update: true
             delete_on_remove: true
 
-when@prod:
-    vich_uploader:
-        mappings:
-            attachments:
-                uri_prefix: '/%app.name%/uploads/attachments'
+# when@prod:
+#     vich_uploader:
+#         mappings:
+#             attachments:
+#                 uri_prefix: '/%app.name%/uploads/attachments'
 
