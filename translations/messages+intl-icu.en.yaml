@@ -132,7 +132,7 @@ modal:
     delete: Confirm deletion
 
 layout:
-  name: Darkirbible
+  name: DarkirBible
   navbar:
     home: Home
     game: All games

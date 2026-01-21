@@ -58,23 +58,37 @@ legend.col-form-label.required::after {
   object-position: center;
   height: $size * $font-size-base;
   width: $size * $font-size-base;
-  box-shadow: $box-shadow-sm !important;
   border-radius: 50% !important;
 }
 
 .app-avatar-sm {
   @include app-avatar(1.5);
+
+  box-shadow: $box-shadow-sm !important;
 }
 
 .app-avatar-md {
   @include app-avatar(4);
+
+  box-shadow: $box-shadow !important;
 }
 
-.app-toto:hover,
-.app-toto:active {
-  filter: brightness(120%);
-  transform: scale(1.2);
-  transition: 0.2s;
+// Users //////////////////////////
+
+.app-user-cell {
+  &:hover,
+  &:active {
+    background-color: var(--bs-dark-bg-subtle);
+    cursor: pointer;
+
+    span {
+      text-decoration: underline;
+    }
+
+    img {
+      box-shadow: $box-shadow !important;
+    }
+  }
 }
 
 // Dropdown ///////////////////////
