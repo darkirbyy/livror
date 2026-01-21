@@ -42,11 +42,11 @@ game:
       withoutReview: Avis
     notFound: Aucun jeu trouvé
     numberGames: >-
-      {number, plural, 
+      {displayed, plural, 
         =0 {Aucun jeu affiché}
-        =1 {1  jeu affiché}
+        =1 {1 jeu affiché}
         other {# jeux affichés}
-      }
+      } sur {total} en tout 
   show:
     title: 'Détails du jeu : {name}'
   edit:

@@ -47,16 +47,18 @@ class GameRepository extends ServiceEntityRepository
         return $qb->getQuery()->getResult();
     }
 
-    public function countIndex(QueryParam $queryParam): mixed
+    public function countIndex(QueryParam $queryParam): array
     {
-        // Build the base query with the count
+        // Count the displayed (with filters) number of games
         $qb = $this->createQueryBuilder('g')->select('COUNT(g.id)');
-
-        // Apply filters logic
         $this->applyFiltersToQb($queryParam, $qb);
+        $displayed = $qb->getQuery()->getSingleScalarResult();
 
-        // Execute and fetch the query
-        return $qb->getQuery()->getSingleScalarResult();
+        // Count the total number of games
+        $qb = $this->createQueryBuilder('g')->select('COUNT(g.id)');
+        $total = $qb->getQuery()->getSingleScalarResult();
+
+        return ['displayed' => $displayed, 'total' => $total];
     }
 
     public function findShow(Game $game): GameInfo

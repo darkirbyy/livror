@@ -42,11 +42,11 @@ game:
       withoutReview: Reviews
     notFound: No games found
     numberGames: >-
-      {number, plural, 
+      {displayed, plural, 
         =0 {No games displayed}
         =1 {1 game displayed}
         other {# games displayed}
-      }
+      } out of {total} in total
   show:
     title: 'Detail of the game: {name}'
   edit:

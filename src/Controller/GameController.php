@@ -34,14 +34,14 @@ class GameController extends AbstractController
 
         // Make the database query and get the corresponding games, and link the users
         $gamesInfo = $gameRepo->findIndex($queryParam);
-        $numberDisplayed = $gameRepo->countIndex($queryParam);
+        $numbers = $gameRepo->countIndex($queryParam);
         $userManager->plugToGamesInfo($gamesInfo, $users);
 
         // Prepare the data for the twig renderer
         $data = [
             'queryParam' => $queryParam,
             'users' => $users,
-            'numberDisplayed' => $numberDisplayed,
+            'numbers' => $numbers,
             'gamesInfo' => array_slice($gamesInfo, 0, $queryParam->limit), // remove one result as we have fetched one more that configured
             'hasMore' => count($gamesInfo) > $queryParam->limit, // determine if there is more games to fetch
         ];
