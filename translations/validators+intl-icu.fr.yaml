@@ -34,6 +34,7 @@ review:
     hourSpend: Heures de jeu
     firstPlay: Lancement
     game: Jeu
+    attachments: 'Pièces-jointes'
   help:
     rating: Entre 0 et 6
   error:

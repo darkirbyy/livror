@@ -45,8 +45,8 @@ services:
     # todo : changer le method ?
     Vich\UploaderBundle\Naming\SlugNamer:
         arguments:
-            $service: '@App\Repository\MyFileRepository'
-            $method: findOneByPath
+            $service: '@App\Repository\AttachmentRepository'
+            $method: findOneByName
 
     App\Command\SteamScrapV1Command:
         arguments:

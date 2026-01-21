@@ -6,6 +6,8 @@ namespace App\Entity\Main;
 
 use App\Entity\Account\User;
 use App\Repository\ReviewRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
@@ -59,9 +61,20 @@ class Review
     // No ORM column because it comes from a different doctrine mapping
     private ?User $user = null;
 
+    /**
+     * @var Collection<int, Attachment>
+     */
+    #[ORM\OneToMany(targetEntity: Attachment::class, mappedBy: 'review', orphanRemoval: true, cascade: ['persist', 'remove'])]
+    private Collection $attachments;
+
     // /////////////////////////////////////////////////////
     // Custom methods and validation constraints ///////////
     // /////////////////////////////////////////////////////
+
+    public function __construct()
+    {
+        $this->attachments = new ArrayCollection();
+    }
 
     // Auto fill "dateAdd" and "dateUpdate" date when storing the entity to the database
     #[ORM\PrePersist]
@@ -190,6 +203,36 @@ class Review
     public function setUser(?User $user): static
     {
         $this->user = $user;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Attachment>
+     */
+    public function getAttachments(): Collection
+    {
+        return $this->attachments;
+    }
+
+    public function addAttachment(Attachment $attachment): static
+    {
+        if (!$this->attachments->contains($attachment)) {
+            $this->attachments->add($attachment);
+            $attachment->setReview($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAttachment(Attachment $attachment): static
+    {
+        if ($this->attachments->removeElement($attachment)) {
+            // set the owning side to null (unless already changed)
+            if ($attachment->getReview() === $this) {
+                $attachment->setReview(null);
+            }
+        }
 
         return $this;
     }

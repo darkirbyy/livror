@@ -22,10 +22,6 @@ class Steam
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
-    public function __construct()
-    {
-    }
-
     // /////////////////////////////////////////////////////
     // Custom methods and validation constraints ///////////
     // /////////////////////////////////////////////////////

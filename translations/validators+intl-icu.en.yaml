@@ -34,6 +34,7 @@ review:
     hourSpend: Playtime
     firstPlay: Launch
     game: Game
+    attachments: Attachments
   help:
     rating: Between 0 and 6
   error:

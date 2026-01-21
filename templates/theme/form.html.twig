@@ -6,7 +6,15 @@
 
 {# Simplify the standard row #}
 {% block form_row %}
-  <div class="app-form-row {% if not compound or force_error|default(false) %}{% for error in errors %} has-validation{% endfor %}{% endif %}">
+  {# Calculates the row_attr with `app-form-row` + `has_validation` (if errors) + custom row attributes #}
+  {% set custom_classes = 'app-form-row' ~ ' ' ~ (not compound or (force_error|default(false)) ? (errors|length) > 0 ? 'has-validation') %}
+  {% set attributes %}
+    {% with { attr: row_attr|merge({ class: ((row_attr.class|default('')) ~ ' ' ~ custom_classes)|trim }) } %}
+    {{ block('attributes') }}
+    {% endwith %}
+  {% endset %}
+
+  <div {{ attributes }}>
     {{ form_label(form) }}
     {{ form_help(form) }}
     {{ form_widget(form) }}
@@ -22,6 +30,36 @@
     {%- for child in form %}
       {{- form_widget(child, { parent_label_class: label_attr.class|default(''), translation_domain: choice_translation_domain, valid: valid }) -}}
     {% endfor -%}
+  </div>
+{% endblock %}
+
+{# Custom collection changes to add button and javascript controller #}
+{# Add stimulus controller #}
+{% block collection_row %}
+  {% set custom_row_attr = { 'data-controller': 'collec-field' } %}
+  {% set row_attr = row_attr|merge(custom_row_attr) %}
+  {{- form_row(form, { row_attr: row_attr }) -}}
+{% endblock %}
+
+{# Add two mandatory targets and the add button #}
+{% block collection_widget %}
+  {% set custom_attr = { 'data-collec-field-target': 'collec' } %}
+  {% set attr = attr|merge(custom_attr) %}
+  {{- parent() -}}
+  <button class="btn btn-outline-secondary" type="button" data-collec-field-target="add">
+    <span class="bi bi-plus-square me-1" aria-hidden="true"></span>{{ 'form.button.add'|trans }}
+  </button>
+{% endblock %}
+
+{# Add one mandatory target and the delete button #}
+{% block collection_entry_row %}
+  <div class="d-flex gap-2" {{ block('attributes') }}>
+    {% for row in form.children %}
+      {{ form_row(row) }}
+    {% endfor %}
+    <button class="btn btn-outline-danger app-btn-max-height mb-3" type="button" data-collec-field-target="remove" aria-label="{{ 'form.button.delete'|trans }}">
+      <span class="bi bi-trash" aria-hidden="true"></span>
+    </button>
   </div>
 {% endblock %}
 

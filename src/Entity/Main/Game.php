@@ -79,15 +79,15 @@ class Game
     #[ORM\OrderBy(['dateAdd' => 'ASC'])]
     private Collection $reviews;
 
+    // /////////////////////////////////////////////////////
+    // Custom methods and validation constraints ///////////
+    // /////////////////////////////////////////////////////
+
     public function __construct()
     {
         $this->reviews = new ArrayCollection();
         $this->typeGame = TypeGameEnum::GAME;
     }
-
-    // /////////////////////////////////////////////////////
-    // Custom methods and validation constraints ///////////
-    // /////////////////////////////////////////////////////
 
     // Auto fill "dateAdd" and "dateUpdate" date when storing the entity to the database
     #[ORM\PrePersist]
