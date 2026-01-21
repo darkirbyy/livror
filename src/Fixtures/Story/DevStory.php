@@ -10,14 +10,20 @@ use App\Fixtures\Factory\SteamFactory;
 use App\Fixtures\Factory\UserFactory;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
+use Symfony\Component\Filesystem\Filesystem;
 use Zenstruck\Foundry\Story;
 
 final class DevStory extends Story
 {
-    public function __construct(private ParameterBagInterface $parameterBag, private ManagerRegistry $managerRegistry) {}
+    public function __construct(private ParameterBagInterface $parameterBag, private ManagerRegistry $managerRegistry, private Filesystem $filesystem) {}
 
     public function build(): void
     {
+        // Remove all uploaded files
+        $vichMappings = $this->parameterBag->get('vich_uploader.mappings');
+        $attachmentsPath = $vichMappings['attachments']['upload_destination'];
+        $this->filesystem->remove($attachmentsPath);
+
         // Disable PrePersit and PreUpdate event (prevent dateAdd and dateUpdate to be all equals)
         $lifecycleCallbacksList = [];
         foreach ([Game::class, Review::class] as $entityClass) {

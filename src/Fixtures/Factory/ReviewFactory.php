@@ -60,4 +60,14 @@ final class ReviewFactory extends PersistentProxyObjectFactory
             return $defaults;
         });
     }
+
+    public function withAttachments(int $number): self
+    {
+        return $this->with(function () use ($number) {
+            $defaults = [];
+            $defaults['attachments'] = AttachmentFactory::new()->many($number);
+
+            return $defaults;
+        });
+    }
 }
