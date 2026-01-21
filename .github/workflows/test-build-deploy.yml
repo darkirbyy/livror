@@ -157,7 +157,7 @@ jobs:
       with:
         SSH_PRIVATE_KEY: ${{ secrets.SERV_KEYS }}
         ARGS: "--recursive --delete --links --owner --group --perms --compress --checksum --verbose"
-        EXCLUDE: "/var/, /.env.local, /.env.${{ inputs.environment }}.local"
+        EXCLUDE: "/var/, /.env.local, /.env.${{ inputs.environment }}.local, /public/uploads/"
         SOURCE: "build/"
         REMOTE_HOST: ${{ vars.SERV_ADDR }}
         REMOTE_USER: ${{ secrets.SERV_USER }}
@@ -165,6 +165,7 @@ jobs:
         TARGET: ${{ vars.SERV_PATH }}
         SCRIPT_BEFORE: |
           mkdir -p ${{ vars.SERV_PATH }}
+          mkdir -p ${{ vars.SERV_PATH }}/public/uploads && chmod 775 ${{ vars.SERV_PATH }}/public/uploads
         SCRIPT_AFTER: |
           mkdir -p ${{ vars.SERV_PATH }}/var && chmod 775 ${{ vars.SERV_PATH }}/var
           touch ${{ vars.SERV_PATH }}/.env.local.php && chmod 664 ${{ vars.SERV_PATH }}/.env.local.php

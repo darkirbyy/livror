@@ -42,6 +42,12 @@ services:
     Symfony\Component\Dotenv\Command\DotenvDumpCommand: ~
     Symfony\UX\StimulusBundle\Helper\StimulusHelper: '@stimulus.helper'
     
+    # todo : changer le method ?
+    Vich\UploaderBundle\Naming\SlugNamer:
+        arguments:
+            $service: '@App\Repository\MyFileRepository'
+            $method: findOneByPath
+
     App\Command\SteamScrapV1Command:
         arguments:
             $requestTimeout: '%app.request_timeout%'
@@ -92,6 +98,8 @@ services:
     App\Validator\ImageUrlValidator:
         arguments:
             $requestTimeout: '%app.request_timeout%'
+
+
 
 when@dev: 
     services:
