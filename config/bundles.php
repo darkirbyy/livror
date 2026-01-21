@@ -19,4 +19,5 @@ return [
     Zenstruck\Foundry\ZenstruckFoundryBundle::class => ['dev' => true, 'test' => true],
     Symfony\UX\Autocomplete\AutocompleteBundle::class => ['all' => true],
     DAMA\DoctrineTestBundle\DAMADoctrineTestBundle::class => ['test' => true],
+    Vich\UploaderBundle\VichUploaderBundle::class => ['all' => true],
 ];
