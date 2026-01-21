@@ -15,30 +15,6 @@ use PHPUnit\Framework\Attributes as PU;
 class HomeControllerTest extends AbstractControllerTest
 {
     #[PU\Test]
-    public function homeNotLoggedIn(): void
-    {
-        // disconnect the user by removing the session cookie
-        $cookieJar = $this->client->getCookieJar();
-        $cookieJar->clear();
-
-        $hubUrlGenerator = static::getContainer()->get(HubUrlGenerator::class);
-        $expectedUrl = $hubUrlGenerator->generateAccount('/login');
-
-        $this->client->request('GET', '');
-
-        $this->assertResponseRedirects($expectedUrl);
-    }
-
-    #[PU\Test]
-    public function homeLoggedIn(): void
-    {
-        $this->client->request('GET', '');
-
-        $this->assertResponseIsSuccessful();
-        $this->assertSelectorTextContains('h1', 'home.index.title');
-    }
-
-    #[PU\Test]
     public function homeIndex(): void
     {
         HomeIndexStory::load();
@@ -60,6 +36,7 @@ class HomeControllerTest extends AbstractControllerTest
         $expectedReviewsTitles = array_map(fn(Review $g) => $g->getGame()->getName(), $expectedReviews);
 
         $this->assertResponseIsSuccessful();
+        $this->assertSelectorTextContains('h1', 'home.index.title');
         $this->assertSame($expectedSectionsTitle, $sectionsTitle);
         $this->assertSame($expectedGamesTitles, $gamesTitle);
         $this->assertSame($expectedReviewsTitles, $reviewsTitle);

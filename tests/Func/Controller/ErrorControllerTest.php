@@ -8,10 +8,26 @@ use App\Entity\Account\User;
 use App\Fixtures\Factory\ReviewFactory;
 use App\Fixtures\Story\Error\ErrorAllStory;
 use App\Fixtures\Story\TestStory;
+use App\Service\HubUrlGenerator;
 use PHPUnit\Framework\Attributes as PU;
 
 class ErrorControllerTest extends AbstractControllerTest
 {
+    #[PU\Test]
+    public function notLoggedIn(): void
+    {
+        // disconnect the user by removing the session cookie
+        $cookieJar = $this->client->getCookieJar();
+        $cookieJar->clear();
+
+        $hubUrlGenerator = static::getContainer()->get(HubUrlGenerator::class);
+        $expectedUrl = $hubUrlGenerator->generateAccount('/login');
+
+        $this->client->request('GET', '');
+
+        $this->assertResponseRedirects($expectedUrl);
+    }
+
     #[PU\Test]
     #[PU\DataProvider('error404Values')]
     public function error404(string $method, string $route): void
@@ -61,6 +77,7 @@ class ErrorControllerTest extends AbstractControllerTest
     {
         return [
             'review edit' => ['GET', '/edit'],
+            'review post' => ['POST', '/edit'],
             'review post' => ['POST', '/delete'],
         ];
     }
