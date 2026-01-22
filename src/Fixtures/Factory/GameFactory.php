@@ -35,10 +35,17 @@ final class GameFactory extends PersistentProxyObjectFactory
         return $defaults;
     }
 
-    public function withUsersId(array $usersId, bool $atLeastOne): self
+    public function withUsersId(array $usersId, bool $atLeastOne, string $attachmentMode = 'none'): self
     {
-        return $this->with(function () use ($usersId, $atLeastOne) {
+        return $this->with(function () use ($attachmentMode, $usersId, $atLeastOne) {
             $users = self::faker()->randomElements($usersId, self::faker()->numberBetween($atLeastOne ? 1 : 0, count($usersId)), false);
+            $attachmentsResolver = function () use ($attachmentMode) {
+                return match ($attachmentMode) {
+                    'random' => self::faker()->boolean(10) ? self::faker()->numberBetween(1, 2) : 0,
+                    'forced' => 1,
+                    default => 0,
+                };
+            };
 
             $defaults = [];
             $defaults['dateAdd'] = self::faker()->dateTimeBetween('-6 months', '-3 days');
@@ -47,7 +54,7 @@ final class GameFactory extends PersistentProxyObjectFactory
             $defaults['reviews'] = ReviewFactory::new()
                 ->withReleaseYear($defaults['releaseYear'])
                 ->withGameDateAdd($defaults['dateAdd'])
-                ->withAttachments(self::faker()->boolean(10) ? self::faker()->numberBetween(1, 2) : 0)
+                ->withAttachments($attachmentsResolver)
                 ->sequence(array_map(fn($userId) => ['userId' => $userId], $users));
 
             return $defaults;

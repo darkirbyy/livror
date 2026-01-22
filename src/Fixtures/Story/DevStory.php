@@ -45,7 +45,7 @@ final class DevStory extends Story
         }
 
         // Create 50 games with "0" to "number of users" reviews, and 200 steam game
-        GameFactory::new()->withUsersId($usersId, false)->many(50)->create();
+        GameFactory::new()->withUsersId($usersId, false, 'random')->many(50)->create();
         SteamFactory::new()
             ->sequence(array_map(fn($i) => ['id' => $i], range(1, 200)))
             ->create();

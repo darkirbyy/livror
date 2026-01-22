@@ -16,9 +16,8 @@ class ErrorControllerTest extends AbstractControllerTest
     #[PU\Test]
     public function notLoggedIn(): void
     {
-        // disconnect the user by removing the session cookie
-        $cookieJar = $this->client->getCookieJar();
-        $cookieJar->clear();
+        // disconnect the user
+        $this->client->restart();
 
         $hubUrlGenerator = static::getContainer()->get(HubUrlGenerator::class);
         $expectedUrl = $hubUrlGenerator->generateAccount('/login');
