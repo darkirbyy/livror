@@ -6,6 +6,8 @@
 {% block main %}
   <section>
     <div class="container">
+      {{ m.attachment_modal() }}
+
       {{ block('flash', 'theme/flash.html.twig') }}
 
       {# Search part #}

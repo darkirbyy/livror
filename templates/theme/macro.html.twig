@@ -279,22 +279,11 @@
         {% for attachment in review.attachments %}
           <li>
             {{ attachment.description }} -
-            <a data-turbo="false" href="{{ path('attachment_download', { id: attachment.id }) }}" class="link-secondary icon-link icon-link-right">
-              {{ 'form.button.download'|trans }}
-              {# <span class="bi bi-download" aria-hidden="true"></span> #}
-            </a>
+            <a data-turbo="false" href="{{ path('attachment_download', { id: attachment.id }) }}" class="link-secondary">{{ 'form.button.download'|trans }}</a>
             {% if attachment.fileMeta.mimeType starts with 'image/' %}
-              - <a
-                href="#"
-                class="link-secondary icon-link icon-link-right"
-                data-bs-toggle="modal"
-                data-bs-target="#attachment-modal"
-                data-bs-path="{{ path('attachment_download', { id: attachment.id }) }}"
-                data-bs-title="{{ attachment.description }}"
-              >
-                {{ 'form.button.display'|trans }}
-                {# <span class="bi bi-eye" aria-hidden="true"></span> #}
-              </a>
+              - <a href="#" role="button" class="link-secondary" data-bs-toggle="modal" data-bs-target="#attachment-modal" data-bs-path="{{ path('attachment_download', { id: attachment.id }) }}" data-bs-title="{{ attachment.description }}">{{
+                  'form.button.display'|trans
+                }}</a>
             {% endif %}
           </li>
         {% endfor %}
@@ -324,7 +313,7 @@
 
         {# Body with image #}
         <div class="modal-body text-center p-2">
-          <img class="img-fluid" data-attachment-display-target="image" src="" />
+          <img class="img-fluid" data-attachment-display-target="image" src="" alt="Image" />
         </div>
       </div>
     </div>

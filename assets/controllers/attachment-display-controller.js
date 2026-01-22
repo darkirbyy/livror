@@ -8,7 +8,8 @@ export default class extends Controller {
     this.element.addEventListener('show.bs.modal', (event) => {
       const button = event.relatedTarget;
       this.titleTarget.innerText = button.getAttribute('data-bs-title');
-      this.imageTarget.setAttribute('src', button.getAttribute('data-bs-path'));
+      this.imageTarget.setAttribute('src', button.getAttribute('data-bs-path') + '?t=' + new Date().getTime());
+      this.imageTarget.setAttribute('alt', button.getAttribute('data-bs-title'));
     });
   }
 }
