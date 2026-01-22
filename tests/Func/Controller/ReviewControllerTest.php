@@ -5,12 +5,15 @@ declare(strict_types=1);
 namespace App\Tests\Func\Controller;
 
 use App\Entity\Main\Review;
+use App\Fixtures\Factory\AttachmentFactory;
 use App\Fixtures\Factory\ReviewFactory;
 use App\Fixtures\Story\Review\ReviewIndexAllStory;
 use App\Fixtures\Story\Review\ReviewIndexStandardStory;
+use App\Fixtures\Story\Review\ReviewPersistAttachmentStory;
 use App\Fixtures\Story\Review\ReviewPersistStory;
 use App\Fixtures\Story\TestStory;
 use PHPUnit\Framework\Attributes as PU;
+use Symfony\Component\DomCrawler\Crawler;
 
 class ReviewControllerTest extends AbstractControllerTest
 {
@@ -159,6 +162,88 @@ class ReviewControllerTest extends AbstractControllerTest
         } else {
             $this->assertResponseIsUnprocessable();
         }
+    }
+
+    #[PU\Test]
+    public function addAttachment(): void
+    {
+        ReviewPersistAttachmentStory::load();
+
+        $previousCount = AttachmentFactory::repository()->count();
+        $review = ReviewFactory::repository()->findOneBy(['userId' => TestStory::get('connected-user')->getId()]);
+
+        $crawler = $this->client->request('GET', '/review/' . $review->getId() . '/edit');
+
+        // Parsing the dom to find the prototype and add it to the dom like the javascript does
+        $newFieldHtml = str_replace('__name__', '1', $crawler->filter('form div[data-prototype]')->attr('data-prototype'));
+        $formNode = $crawler->filter('form[name=review]')->getNode(0);
+        $newFieldNode = $formNode->ownerDocument->createDocumentFragment();
+        $newFieldNode->appendXML($newFieldHtml);
+        $formNode->appendChild($newFieldNode);
+
+        // Create a new crawler with this new dom to extract the form
+        $newCrawler = new Crawler($crawler->getNode(0), $crawler->getUri(), $crawler->getBaseHref());
+        $form = $newCrawler->filter('form[name=review]')->form();
+
+        $this->assertResponseIsSuccessful();
+
+        $tempFile = tempnam(sys_get_temp_dir(), 'new-');
+        file_put_contents($tempFile, 'new content');
+
+        $form->offsetSet('review[attachments][1][file][file]', $tempFile);
+        $form->offsetSet('review[attachments][1][description]', 'new description');
+
+        $this->client->submit($form);
+
+        AttachmentFactory::assert()->count($previousCount + 1);
+        $this->assertResponseRedirects('/review');
+    }
+
+    #[PU\Test]
+    public function editAttachment(): void
+    {
+        ReviewPersistAttachmentStory::load();
+
+        $previousCount = AttachmentFactory::repository()->count();
+        $review = ReviewFactory::repository()->findOneBy(['userId' => TestStory::get('connected-user')->getId()]);
+
+        $crawler = $this->client->request('GET', '/review/' . $review->getId() . '/edit');
+        $form = $crawler->filter('form[name=review]')->form();
+
+        $this->assertResponseIsSuccessful();
+
+        $tempFile = tempnam(sys_get_temp_dir(), 'edit-');
+        file_put_contents($tempFile, 'edit content');
+
+        $form->offsetSet('review[attachments][0][file][file]', $tempFile);
+        $form->offsetSet('review[attachments][0][description]', 'new description');
+
+        $this->client->submit($form);
+
+        AttachmentFactory::assert()->count($previousCount);
+        $this->assertResponseRedirects('/review');
+    }
+
+    #[PU\Test]
+    public function removeAttachment(): void
+    {
+        ReviewPersistAttachmentStory::load();
+
+        $previousCount = AttachmentFactory::repository()->count();
+        $review = ReviewFactory::repository()->findOneBy(['userId' => TestStory::get('connected-user')->getId()]);
+
+        $crawler = $this->client->request('GET', '/review/' . $review->getId() . '/edit');
+        $form = $crawler->filter('form[name=review]')->form();
+
+        $this->assertResponseIsSuccessful();
+
+        $form->offsetUnset('review[attachments][0]');
+
+        $this->client->submit($form);
+
+        AttachmentFactory::assert()->count($previousCount - 1);
+        $this->assertEmpty($review->getAttachments());
+        $this->assertResponseRedirects('/review');
     }
 
     #[PU\Test]
