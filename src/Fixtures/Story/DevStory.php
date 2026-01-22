@@ -21,8 +21,7 @@ final class DevStory extends Story
     {
         // Remove all uploaded files
         $vichMappings = $this->parameterBag->get('vich_uploader.mappings');
-        $attachmentsPath = $vichMappings['attachments']['upload_destination'];
-        $this->filesystem->remove($attachmentsPath);
+        $this->filesystem->remove($vichMappings['attachments']['upload_destination']);
 
         // Disable PrePersit and PreUpdate event (prevent dateAdd and dateUpdate to be all equals)
         $lifecycleCallbacksList = [];

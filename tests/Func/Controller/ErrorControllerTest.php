@@ -69,6 +69,7 @@ class ErrorControllerTest extends AbstractControllerTest
             'no game edit' => ['GET', '/game/1500/edit'],
             'no game delete' => ['POST', '/game/1500/delete'],
             'no review edit' => ['GET', '/review/1500/edit'],
+            'no attachment download' => ['GET', '/attachment/1500'],
         ];
     }
 
