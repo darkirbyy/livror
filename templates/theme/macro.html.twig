@@ -281,13 +281,54 @@
             {{ attachment.description }} -
             <a data-turbo="false" href="{{ path('attachment_download', { id: attachment.id }) }}" class="link-secondary icon-link icon-link-right">
               {{ 'form.button.download'|trans }}
-              <span class="bi bi-download" aria-hidden="true"></span>
+              {# <span class="bi bi-download" aria-hidden="true"></span> #}
             </a>
+            {% if attachment.fileMeta.mimeType starts with 'image/' %}
+              - <a
+                href="#"
+                class="link-secondary icon-link icon-link-right"
+                data-bs-toggle="modal"
+                data-bs-target="#attachment-modal"
+                data-bs-path="{{ path('attachment_download', { id: attachment.id }) }}"
+                data-bs-title="{{ attachment.description }}"
+              >
+                {{ 'form.button.display'|trans }}
+                {# <span class="bi bi-eye" aria-hidden="true"></span> #}
+              </a>
+            {% endif %}
           </li>
         {% endfor %}
       </ul>
     </div>
   {% endif %}
+{% endmacro %}
+
+{% macro attachment_modal() %}
+  <div
+    class="modal fade"
+    id="attachment-modal"
+    tabindex="-1"
+    aria-labelledby="attachment-modal-label"
+    aria-hidden="true"
+    role="dialog"
+    loading="lazy"
+    {{ stimulus_controller('attachment-display') }}
+  >
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+      <div class="modal-content">
+        {# Header with title and dismiss button #}
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="delete-modal-label" data-attachment-display-target="title"></h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ 'form.button.close'|trans }}"></button>
+        </div>
+
+        {# Body with image #}
+        <div class="modal-body text-center p-2">
+          <img class="img-fluid" data-attachment-display-target="image" src="" />
+        </div>
+      </div>
+    </div>
+  </div>
 {% endmacro %}
 
 {% macro user_avatar(user, size = 'sm') %}
@@ -309,6 +350,7 @@
     </div>
   </div>
 {% endmacro %}
+
 {# #################################### #}
 {# ## Miscellaneous ################### #}
 {# #################################### #}

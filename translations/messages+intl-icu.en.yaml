@@ -116,6 +116,7 @@ form:
     goBack: Go back
     reset: Reset
     download: Download
+    display: Display
   flash:
     invalidCsrf: The CSRF token is invalid.
     foreignKey: Cannot delete this item while other items reference it.

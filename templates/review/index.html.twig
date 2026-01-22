@@ -7,6 +7,8 @@
 {% block main %}
   <section>
     <div class="container">
+      {{ m.attachment_modal() }}
+
       {# Redefine the flashes and alert with the same width as the cards #}
       <div class="mx-auto card-max-large card-max-md-none">
         {{ block('flash', 'theme/flash.html.twig') }}

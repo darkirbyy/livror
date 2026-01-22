@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Fixtures\Story\Steam;
+namespace App\Fixtures\Story\Attachment;
 
 use App\Entity\Account\User;
 use App\Fixtures\Factory\GameFactory;
