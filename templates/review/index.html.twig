@@ -39,8 +39,22 @@
           {{ 'review.index.numberReviews'|trans({ number: user.numberReviews }) }}
         </div>
 
+        {# Prepare the filters content #}
+        {% set filterContentTypeGame %}
+          <ul class="p-0 m-0">
+            {% for typeGame in enum('App\\Enum\\TypeGameEnum').cases %}
+              <li class="dropdown-item">
+                {% set checked = queryParam.filters.typeGame is not defined or typeGame.value in queryParam.filters.typeGame ? 'checked' : '' %}
+                {% set filtersTypeGameId = 'filters-type-game-' ~ (typeGame.value|lower) %}
+                <input class="form-check-input" type="checkbox" value="{{ typeGame.value }}" id="{{ filtersTypeGameId }}" {{ checked }} data-filter-apply-target="checkbox" />
+                <label class="form-check-label w-100" for="{{ filtersTypeGameId }}">{{ typeGame|trans }}</label>
+              </li>
+            {% endfor %}
+          </ul>
+        {% endset %}
+
         {# Include the buttons to sort, filter and reset #}
-        {{ m.index_buttons(queryParam, 'review', ['name', 'rating', 'hourSpend', 'firstPlay'], [], null) }}
+        {{ m.index_buttons(queryParam, 'review', ['name', 'rating', 'hourSpend', 'firstPlay'], { typeGame: filterContentTypeGame }) }}
 
         {# Include the template to render the card of each review + show more button #}
         {{ include('review/list.html.twig') }}

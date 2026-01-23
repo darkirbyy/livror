@@ -84,6 +84,8 @@ review:
       rating: Ratings
       hourSpend: Playtime
       firstPlay: Launch
+    filter:
+      typeGame: Type
     notFound: No reviews found
     numberReviews: >-
       {number, plural, 

@@ -84,6 +84,8 @@ review:
       rating: Saucisses
       hourSpend: Heures de jeu
       firstPlay: Lancement
+    filter:
+      typeGame: Type
     notFound: Aucun avis trouvé
     numberReviews: >-
       {number, plural, 
