@@ -40,10 +40,10 @@ class GameController extends AbstractController
         // Prepare the data for the twig renderer
         $data = [
             'queryParam' => $queryParam,
-            'users' => $users,
-            'numbers' => $numbers,
             'gamesInfo' => array_slice($gamesInfo, 0, $queryParam->limit), // remove one result as we have fetched one more that configured
             'hasMore' => count($gamesInfo) > $queryParam->limit, // determine if there is more games to fetch
+            'numbers' => $numbers,
+            'users' => $users,
         ];
 
         // Render only the game list block when the request comes from the JavaScript, otherwise render the whole page

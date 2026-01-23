@@ -33,7 +33,7 @@ class ReviewRepository extends ServiceEntityRepository
 
         // Build the base query (with select, join and group)
         $qb = $this->createQueryBuilder('r');
-        $qb->leftJoin('r.game', 'g')->where('r.userId = :userId')->setParameter('userId', $userId);
+        $this->selectUser($qb, $userId);
 
         // Apply the query param
         $this->queryParamHelper->applyButFiltersToQb($queryParam, $qb, $sortsConversion);
@@ -43,12 +43,20 @@ class ReviewRepository extends ServiceEntityRepository
         return $qb->getQuery()->getResult();
     }
 
-    public function countIndex(int $userId): ?int
+    public function countIndex(QueryParam $queryParam, int $userId): array
     {
-        $qb = $this->createQueryBuilder('r');
-        $qb->select('COUNT(r.id)')->where('r.userId = :userId')->setParameter('userId', $userId);
+        // Count the displayed (with filters) number of reviews
+        $qb = $this->createQueryBuilder('r')->select('COUNT(r.id)');
+        $this->selectUser($qb, $userId);
+        $this->applyFiltersToQb($queryParam, $qb);
+        $displayed = $qb->getQuery()->getSingleScalarResult();
 
-        return $qb->getQuery()->getSingleScalarResult();
+        // Count the total number of reviews
+        $qb = $this->createQueryBuilder('r')->select('COUNT(r.id)');
+        $this->selectUser($qb, $userId);
+        $total = $qb->getQuery()->getSingleScalarResult();
+
+        return ['displayed' => $displayed, 'total' => $total];
     }
 
     public function countByUserId(): array
@@ -81,5 +89,10 @@ class ReviewRepository extends ServiceEntityRepository
         }
 
         return $qb;
+    }
+
+    private function selectUser(QueryBuilder $qb, int $userId): void
+    {
+        $qb->leftJoin('r.game', 'g')->where('r.userId = :userId')->setParameter('userId', $userId);
     }
 }

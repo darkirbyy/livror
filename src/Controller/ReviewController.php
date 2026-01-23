@@ -39,10 +39,10 @@ class ReviewController extends AbstractController
         // Retrieve the user from the route param, or the current user otherwise
         $user ??= $this->getUser();
         $userId = $user->getId();
-        $user->setNumberReviews($reviewRepo->countIndex($userId));
 
         // Make the database query and get the corresponding reviews
         $reviews = $reviewRepo->findIndex($queryParam, $userId);
+        $numbers = $reviewRepo->countIndex($queryParam, $userId);
         $userManager->plugToReviews($reviews, [$userId => $user]);
 
         // Prepare the data for the twig renderer
@@ -50,6 +50,7 @@ class ReviewController extends AbstractController
             'queryParam' => $queryParam,
             'reviews' => array_slice($reviews, 0, $queryParam->limit), // remove on result as we have fetched one more that configured
             'hasMore' => count($reviews) > $queryParam->limit, // determine if there is more games to fetch
+            'numbers' => $numbers,
             'cannotAdd' => 0 == $gameRepo->countWithoutReview($userId),
             'user' => $user,
         ];

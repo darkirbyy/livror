@@ -88,11 +88,11 @@ review:
       typeGame: Type
     notFound: No reviews found
     numberReviews: >-
-      {number, plural, 
-        =0 {No published review}
-        =1 {1 published review}
-        other {# published reviews}
-      }
+      {displayed, plural, 
+        =0 {No reviews displayed}
+        =1 {1 review displayed}
+        other {# reviews displayed}
+      } out of {total} in total
   edit:
     title:
       add: Write a review

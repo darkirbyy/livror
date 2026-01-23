@@ -88,11 +88,11 @@ review:
       typeGame: Type
     notFound: Aucun avis trouvé
     numberReviews: >-
-      {number, plural, 
-        =0 {Aucun avis publié}
-        =1 {1 avis publié}
-        other {# avis publiés}
-      }
+      {displayed, plural, 
+        =0 {Aucun avis affiché}
+        =1 {1 avis affiché}
+        other {# avis affichés}
+      } sur {total} en tout 
   edit:
     title:
       add:  Écrire un avis
