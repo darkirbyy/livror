@@ -42,6 +42,12 @@ class SteamScrapV2Command extends Command
         $this->output = $output;
         $this->prevTime = microtime(true);
 
+        if (empty($this->steamApiKey)) {
+            $output->writeln('The steam API key is mandatory to use this command.');
+
+            return Command::INVALID;
+        }
+
         $mode = $input->getArgument('mode');
         if (!in_array($mode, ['truncate', 'update'])) {
             $output->writeln('The mode argument must be either truncate or update.');

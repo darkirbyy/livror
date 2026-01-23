@@ -49,7 +49,6 @@ final class SteamScrapV1CommandTest extends KernelTestCase
         $this->assertSame(Command::SUCCESS, $this->commandTester->getStatusCode());
         $this->assertSame(count(ApiMockData::$appsListTruncate), $steamNb);
         $this->assertStringContainsStringIgnoringCase('Deleting existing data', $output);
-        $this->assertStringContainsStringIgnoringCase('Deleting existing data', $output);
         $this->assertSame(6, preg_match_all('/Done/i', $output));
     }
 }
