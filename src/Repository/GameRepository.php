@@ -131,19 +131,16 @@ class GameRepository extends ServiceEntityRepository
         return $qb->getQuery()->getResult();
     }
 
-    public function findSince(\DateTime $dateTime, int $limit): array
+    public function findSince(\DateTime $dateTime): array
     {
         // Build the base query (games only)
-        $qb = $this->createQueryBuilder('g');
+        $qb = $this->createQueryBuilder('g')->select('g.name');
 
         // Find all since given datetime, ordered by name
-        $qb->where('g.dateAdd >= :dateTime')
-            ->setParameter('dateTime', $dateTime)
-            ->orderBy('g.name', 'ASC')
-            ->setMaxResults($limit + 1);
+        $qb->where('g.dateAdd >= :dateTime')->setParameter('dateTime', $dateTime)->orderBy('g.name', 'ASC');
 
         // Execute and fetch the query
-        return $qb->getQuery()->getResult();
+        return $qb->getQuery()->getSingleColumnResult();
     }
 
     public function findWithoutReview(int $userId): array

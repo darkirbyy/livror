@@ -95,8 +95,10 @@ In dev, it's possible to emulate this behavior or to mock the hub by creating du
 
 To generate fake random data, use the Foundry `DevStory` with `symfony console doctrine:fixtures:load`.  
 
-To mock the HTTP request to Steam API with dummy data, uncomment the line `when@dev: *test` in `config/services.yaml`.  
-:warning: It will purge the database !
+To mock the external API calls, set the `APP_MOCK_HUB=true` in the `.env.local` file:
+  
+- Steam API GET responses will be replaced with dummy data from `test/Mock/ApiMockData.php` file
+- Discord API POST will be written into `var/discord/` directory
 
 To increment the version, use `symfony console bizkit:versioning:increment`.  
 

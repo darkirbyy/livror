@@ -4,13 +4,14 @@ declare(strict_types=1);
 
 namespace App\Tests\Mock;
 
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpClient\MockHttpClient;
 use Symfony\Component\HttpClient\Response\MockResponse;
 use Symfony\Component\HttpFoundation\Response;
 
 final class ApiMockHttpClient extends MockHttpClient
 {
-    public function __construct()
+    public function __construct(private string $projectDir, private Filesystem $filesystem)
     {
         parent::__construct(\Closure::fromCallable([$this, 'handleRequests']));
     }
@@ -79,7 +80,7 @@ final class ApiMockHttpClient extends MockHttpClient
 
     private function getAppDetailsMock(?string $appId): mixed
     {
-        if (!is_null($appId)) {
+        if (is_null($appId)) {
             throw new \UnexpectedValueException('Missing appids parameter in URL.');
         }
 
@@ -102,10 +103,24 @@ final class ApiMockHttpClient extends MockHttpClient
 
     private function getDiscordWebhook(?string $body): mixed
     {
-        $data = json_decode($body, true, flags: JSON_THROW_ON_ERROR);
+        // Remove the old file
+        $fileName = $this->projectDir . '/var/discord/notify.md';
+        $this->filesystem->mkdir(dirname($fileName));
+        $this->filesystem->remove($fileName);
+        $this->filesystem->touch($fileName);
 
+        // Decode the body, prepre the response code, and write the body is valid
+        $data = json_decode($body, true, flags: JSON_THROW_ON_ERROR);
+        if (isset($data['content'])) {
+            $code = Response::HTTP_OK;
+            $this->filesystem->appendToFile($fileName, $data['content']);
+        } else {
+            $code = Response::HTTP_BAD_REQUEST;
+        }
+
+        // Return the mock response
         return new MockResponse('', [
-            'http_code' => isset($data['content']) ? Response::HTTP_OK : Response::HTTP_BAD_REQUEST,
+            'http_code' => $code,
             'response_headers' => [
                 'content-type' => 'application/json',
             ],

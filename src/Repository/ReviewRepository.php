@@ -34,7 +34,7 @@ class ReviewRepository extends ServiceEntityRepository
 
         // Build the base query (with select, join and group)
         $qb = $this->createQueryBuilder('r');
-        $this->selectUser($qb, $userId);
+        $this->joinGameAndUser($qb, $userId);
 
         // Apply the query param
         $this->queryParamHelper->applyButFiltersToQb($queryParam, $qb, $sortsConversion);
@@ -48,13 +48,13 @@ class ReviewRepository extends ServiceEntityRepository
     {
         // Count the displayed (with filters) number of reviews
         $qb = $this->createQueryBuilder('r')->select('COUNT(r.id)');
-        $this->selectUser($qb, $userId);
+        $this->joinGameAndUser($qb, $userId);
         $this->applyFiltersToQb($queryParam, $qb);
         $displayed = $qb->getQuery()->getSingleScalarResult();
 
         // Count the total number of reviews
         $qb = $this->createQueryBuilder('r')->select('COUNT(r.id)');
-        $this->selectUser($qb, $userId);
+        $this->joinGameAndUser($qb, $userId);
         $total = $qb->getQuery()->getSingleScalarResult();
 
         return ['displayed' => $displayed, 'total' => $total];
@@ -82,20 +82,18 @@ class ReviewRepository extends ServiceEntityRepository
         return $qb->getQuery()->getResult();
     }
 
-    public function findSince(\DateTime $dateTime, int $limit, int $userId): array
+    public function findSince(\DateTime $dateTime, int $userId): array
     {
         // Build the base query (with select, join and group)
         $qb = $this->createQueryBuilder('r');
-        $this->selectUser($qb, $userId);
+        $this->joinGameAndUser($qb, $userId);
+        $qb->select('g.name');
 
         // Find all since given datetime, ordered by name
-        $qb->andWhere('r.dateAdd >= :dateTime')
-            ->setParameter('dateTime', $dateTime)
-            ->orderBy('g.name', 'ASC')
-            ->setMaxResults($limit + 1);
+        $qb->andWhere('r.dateAdd >= :dateTime')->setParameter('dateTime', $dateTime)->orderBy('g.name', 'ASC');
 
         // Execute and fetch the query
-        return $qb->getQuery()->getResult();
+        return $qb->getQuery()->getSingleColumnResult();
     }
 
     private function applyFiltersToQb(QueryParam $queryParam, QueryBuilder $qb): QueryBuilder
@@ -108,7 +106,7 @@ class ReviewRepository extends ServiceEntityRepository
         return $qb;
     }
 
-    private function selectUser(QueryBuilder $qb, int $userId): void
+    private function joinGameAndUser(QueryBuilder $qb, int $userId): void
     {
         $qb->leftJoin('r.game', 'g')->where('r.userId = :userId')->setParameter('userId', $userId);
     }

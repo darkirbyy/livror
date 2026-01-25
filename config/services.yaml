@@ -15,7 +15,7 @@ parameters:
     app.batch_size: '%env(int:APP_BATCH_SIZE)%'
     app.steam_api_key: '%env(string:APP_STEAM_API_KEY)%'
     app.discord_webhook_url: '%env(string:APP_DISCORD_WEBHOOK_URL)%'
-    app.discord_webhook_limit: '%env(string:APP_DISCORD_WEBHOOK_LIMIT)%'
+    app.discord_webhook_ellipsis: '%env(string:APP_DISCORD_WEBHOOK_ELLIPSIS)%'
     app.default_limit: '%env(int:APP_DEFAULT_LIMIT)%'
     app.max_limit: '%env(int:APP_MAX_LIMIT)%'
     app.home_game_limit: '%env(int:APP_HOME_GAME_LIMIT)%'
@@ -64,7 +64,7 @@ services:
         arguments:
             $requestTimeout: '%app.request_timeout%'
             $discordWebhookUrl: '%app.discord_webhook_url%'
-            $discordWebhookLimit: '%app.discord_webhook_limit%'
+            $discordWebhookEllipsis: '%app.discord_webhook_ellipsis%'
             
     App\Form\:
         resource: '../src/Form'
@@ -114,6 +114,8 @@ when@dev:
             factory: ['App\Tests\Mock\HttpClientFactory', 'create']
             arguments:
                 $enable: '%app.mock_api%'
+                $projectDir: '%kernel.project_dir%'
+                $filesystem: '@Symfony\Component\Filesystem\Filesystem'
 
         App\Tests\Mock\AccountEntryPoint:
             decorates: 'App\Security\AccountEntryPoint'
@@ -128,3 +130,5 @@ when@test:
             factory: ['App\Tests\Mock\HttpClientFactory', 'create']
             arguments:
                 $enable: '%app.mock_api%'
+                $projectDir: '%kernel.project_dir%'
+                $filesystem: '@Symfony\Component\Filesystem\Filesystem'

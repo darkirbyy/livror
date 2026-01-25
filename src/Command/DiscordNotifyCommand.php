@@ -11,6 +11,8 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Routing\Generator\UrlGenerator;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Twig\Environment;
 
@@ -19,11 +21,12 @@ class DiscordNotifyCommand extends Command
     public function __construct(
         private int $requestTimeout,
         private string $discordWebhookUrl,
-        private int $discordWebhookLimit,
+        private int $discordWebhookEllipsis,
         private UserManager $userManager,
         private GameRepository $gameRepo,
         private ReviewRepository $reviewRepo,
         private Environment $twig,
+        private UrlGeneratorInterface $urlGenerator,
         private HttpClientInterface $client,
     ) {
         parent::__construct('discord:notify');
@@ -59,21 +62,20 @@ class DiscordNotifyCommand extends Command
             $output->write('Retriving games and reviews...');
             $dateTime = \DateTime::createFromTimestamp($since);
             $users = $this->userManager->findWithReview();
-            $games = $this->gameRepo->findSince($dateTime, $this->discordWebhookLimit);
-            $reviewsByUser = [];
+            $games = $this->gameRepo->findSince($dateTime);
+            $reviewsByUsers = [];
             foreach ($users as $user) {
-                $reviews = $this->reviewRepo->findSince($dateTime, $this->discordWebhookLimit, $user->getId());
-                $reviewsByUser[$user->getId()]['users'] = $user;
-                $reviewsByUser[$user->getId()]['reviews'] = array_slice($reviews, 0, $this->discordWebhookLimit); // remove on result as we have fetched one more that configured
-                $reviewsByUser[$user->getId()]['hasMore'] = count($reviews) > $this->discordWebhookLimit; // determine if there is more games to fetch
+                $reviewsByUsers[$user->getId()]['user'] = $user;
+                $reviewsByUsers[$user->getId()]['reviews'] = $this->reviewRepo->findSince($dateTime, $user->getId());
             }
             $output->writeln(' Done.');
 
             $output->write('Generating markdown content...');
             $content = $this->twig->render('discord/notify.md.twig', [
-                'games' => array_slice($games, 0, $this->discordWebhookLimit), // remove on result as we have fetched one more that configured
-                'hasMore' => count($games) > $this->discordWebhookLimit, // determine if there is more games to fetch
-                'reviewsByUser' => $reviewsByUser,
+                'ellipsis' => $this->discordWebhookEllipsis,
+                'games' => $games,
+                'reviewsByUsers' => $reviewsByUsers,
+                'url' => $this->urlGenerator->generate('home_index', [], UrlGenerator::ABSOLUTE_URL),
             ]);
             $output->writeln(' Done.');
 

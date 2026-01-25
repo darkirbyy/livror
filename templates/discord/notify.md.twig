@@ -1,3 +1,13 @@
-Nouveautés de la semaine sur **{{ 'layout.name'|trans }}** !{% if (games|length) > 0 %}
-  {{ games|length }} jeux ajoutés : {{ (games|map(g => g.name)|join(', ')) ~ hasMore ? ', ...' }}
+{# prettier-ignore-start #}
+Nouveautés de la semaine sur **{{ 'layout.name'|trans }}** !
+{% if (games|length) > 0 -%}
+- **{{ games|length }}** jeux ajoutés : {{ games|slice(0, ellipsis)|join(', ') ~ (games|length > ellipsis ? ', ...') }}
+{% endif -%}
+
+{%- for reviewsByUser in reviewsByUsers -%}
+{% if (reviewsByUser.reviews|length) > 0 %}
+- **{{ reviewsByUser.reviews|length }}** avis publiés par *{{ reviewsByUser.user.username }}* : {{ reviewsByUser.reviews|slice(0, ellipsis)|join(', ') ~ (games|length > ellipsis ? ', ...') }}
 {% endif %}
+{%- endfor -%}
+Voir sur [{{ 'layout.name'|trans }}]({{- url -}})  :grin:
+{# prettier-ignore-end #}
