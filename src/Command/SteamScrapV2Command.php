@@ -66,6 +66,8 @@ class SteamScrapV2Command extends Command
         $timeout = intval($input->getOption('timeout'));
 
         try {
+            $output->writeln('Upserting steam table from steam API changes since ' . date('Y-m-d H:i:s', $since) . '.');
+
             $output->write('Starting transaction...');
             $connection = $this->entityManager->getConnection();
             $connection->beginTransaction();
@@ -123,7 +125,7 @@ class SteamScrapV2Command extends Command
 
             return Command::SUCCESS;
         } catch (\Exception $e) {
-            $connection->rollBack();
+            $connection->isConnected() ? $connection->rollBack() : null;
             $output->writeln(' Failed.');
             if ($input->getOption('verbose')) {
                 $output->write($e->getMessage());

@@ -10,6 +10,7 @@ use App\Entity\Main\Game;
 use App\Entity\Main\Review;
 use App\Enum\DateFieldEnum;
 use App\Service\QueryParamHelper;
+use DateTime;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
@@ -125,6 +126,21 @@ class GameRepository extends ServiceEntityRepository
         $qb->orderBy('g.' . $dateField->toDatabaseField(), 'DESC')
             ->addOrderBy('g.id', 'ASC')
             ->setMaxResults($limit);
+
+        // Execute and fetch the query
+        return $qb->getQuery()->getResult();
+    }
+
+    public function findSince(\DateTime $dateTime, int $limit): array
+    {
+        // Build the base query (games only)
+        $qb = $this->createQueryBuilder('g');
+
+        // Find all since given datetime, ordered by name
+        $qb->where('g.dateAdd >= :dateTime')
+            ->setParameter('dateTime', $dateTime)
+            ->orderBy('g.name', 'ASC')
+            ->setMaxResults($limit + 1);
 
         // Execute and fetch the query
         return $qb->getQuery()->getResult();

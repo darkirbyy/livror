@@ -1,0 +1,3 @@
+Nouveautés de la semaine sur **{{ 'layout.name'|trans }}** !{% if (games|length) > 0 %}
+  {{ games|length }} jeux ajoutés : {{ (games|map(g => g.name)|join(', ')) ~ hasMore ? ', ...' }}
+{% endif %}

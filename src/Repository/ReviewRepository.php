@@ -8,6 +8,7 @@ use App\Dto\QueryParam;
 use App\Entity\Main\Review;
 use App\Enum\DateFieldEnum;
 use App\Service\QueryParamHelper;
+use DateTime;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
@@ -76,6 +77,22 @@ class ReviewRepository extends ServiceEntityRepository
         $qb->orderBy('r.' . $dateField->toDatabaseField(), 'DESC')
             ->addOrderBy('r.id', 'ASC')
             ->setMaxResults($limit);
+
+        // Execute and fetch the query
+        return $qb->getQuery()->getResult();
+    }
+
+    public function findSince(\DateTime $dateTime, int $limit, int $userId): array
+    {
+        // Build the base query (with select, join and group)
+        $qb = $this->createQueryBuilder('r');
+        $this->selectUser($qb, $userId);
+
+        // Find all since given datetime, ordered by name
+        $qb->andWhere('r.dateAdd >= :dateTime')
+            ->setParameter('dateTime', $dateTime)
+            ->orderBy('g.name', 'ASC')
+            ->setMaxResults($limit + 1);
 
         // Execute and fetch the query
         return $qb->getQuery()->getResult();
