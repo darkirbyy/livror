@@ -1,13 +1,13 @@
 {# prettier-ignore-start #}
-Nouveautés de la semaine sur **{{ 'layout.name'|trans }}** !
+{{ 'discord.notify.intro'|trans }} **{{ 'layout.name'|trans }}** !
 {% if (games|length) > 0 -%}
-- **{{ games|length }}** jeux ajoutés : {{ games|slice(0, ellipsis)|join(', ') ~ (games|length > ellipsis ? ', ...') }}
+- {{ 'discord.notify.numberAddedGames'|trans({ number: games|length }) }} : {{ games|slice(0, ellipsis)|join(', ') ~ (games|length > ellipsis ? ', ...') }}
 {% endif -%}
 
 {%- for reviewsByUser in reviewsByUsers -%}
 {% if (reviewsByUser.reviews|length) > 0 %}
-- **{{ reviewsByUser.reviews|length }}** avis publiés par *{{ reviewsByUser.user.username }}* : {{ reviewsByUser.reviews|slice(0, ellipsis)|join(', ') ~ (games|length > ellipsis ? ', ...') }}
+- {{ 'discord.notify.numberPublishedReviewsBy'|trans({ number: reviewsByUser.reviews|length, name: reviewsByUser.user.username }) }} : {{ reviewsByUser.reviews|slice(0, ellipsis)|join(', ') ~ (games|length > ellipsis ? ', ...') }}
 {% endif %}
 {%- endfor -%}
-Voir sur [{{ 'layout.name'|trans }}]({{- url -}})  :grin:
+{{ 'discord.notify.outro'|trans }} [{{ 'layout.name'|trans }}]({{- url -}})
 {# prettier-ignore-end #}

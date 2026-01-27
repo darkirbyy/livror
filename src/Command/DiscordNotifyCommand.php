@@ -14,6 +14,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Routing\Generator\UrlGenerator;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Environment;
 
 class DiscordNotifyCommand extends Command
@@ -27,6 +28,7 @@ class DiscordNotifyCommand extends Command
         private ReviewRepository $reviewRepo,
         private Environment $twig,
         private UrlGeneratorInterface $urlGenerator,
+        private TranslatorInterface $translator,
         private HttpClientInterface $client,
     ) {
         parent::__construct('discord:notify');
@@ -71,6 +73,7 @@ class DiscordNotifyCommand extends Command
             $output->writeln(' Done.');
 
             $output->write('Generating markdown content...');
+            $this->translator->setLocale('fr');
             $content = $this->twig->render('discord/notify.md.twig', [
                 'ellipsis' => $this->discordWebhookEllipsis,
                 'games' => $games,

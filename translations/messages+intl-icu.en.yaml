@@ -17,7 +17,7 @@ home:
       title: Last published reviews
       none: No review
       all: See my reviews
-      
+
 game:
   index:
     title: All games
@@ -99,6 +99,28 @@ review:
       update: 'Edit your review for {name}'
     modalDeleteBody: 'You are about to <span class="fw-bold">permanently</span> delete your review for {name}. Are you sure?'
 
+error:
+  title: Error {code}
+  message:
+    notFound: This page does not exist.
+    forbidden: This page is not accessible.
+    other: The server encountered a problem, please try again later.
+
+discord:
+  notify:
+    intro: News of the week on
+    numberAddedGames: >-
+      {number, plural, 
+        =1 {**1** game added}
+        other {**#** games added}
+      }
+    numberPublishedReviewsBy: >-
+      {number, plural, 
+        =1 {**1** review published}
+        other {**#** reviews published}
+      } by *{name}*
+    outro: Check on
+
 ##################################
 # Common translations ############
 ##################################
@@ -126,16 +148,14 @@ form:
     unique: Cannot add or update this item because some fields must be unique.
     other: Error while adding, updating, or deleting this item.
   autocomplete:
-    placeholder: 
+    placeholder:
       global: Search for a game on this website
       steam: Search for a game on Steam
     noResults: No results
   file:
     stored: Stored file
-
-modal:
-  title:
-    delete: Confirm deletion
+  modal:
+    deleteTitle: Confirm deletion
 
 layout:
   name: DarkirBible
@@ -163,13 +183,6 @@ enum:
     dlc: DLC
     demo: Demo
     other: Other
-
-error:
-  title: Error {code}
-  message:
-    notFound: This page does not exist.
-    forbidden: This page is not accessible.
-    other: The server encountered a problem, please try again later.
 
 aria:
   skipToContent: Skip to content

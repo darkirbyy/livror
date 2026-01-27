@@ -46,7 +46,7 @@ game:
         =0 {Aucun jeu affiché}
         =1 {1 jeu affiché}
         other {# jeux affichés}
-      } sur {total} en tout 
+      } sur {total} en tout
   show:
     title: 'Détails du jeu : {name}'
   edit:
@@ -92,12 +92,34 @@ review:
         =0 {Aucun avis affiché}
         =1 {1 avis affiché}
         other {# avis affichés}
-      } sur {total} en tout 
+      } sur {total} en tout
   edit:
     title:
-      add:  Écrire un avis
+      add: Écrire un avis
       update: 'Modifier votre avis sur {name}'
     modalDeleteBody: 'Vous êtes sur le point de supprimer <span class="fw-bold">définitivement</span> votre avis sur {name}. Êtes-vous sûr ?'
+
+error:
+  title: Erreur {code}
+  message:
+    notFound: Cette page n'existe pas.
+    forbidden: Cette page n'est pas accessible.
+    other: Le serveur a rencontré un problème, merci de réessayer plus tard.
+
+discord:
+  notify:
+    intro: Nouveautés de la semaine sur
+    numberAddedGames: >-
+      {number, plural, 
+        =1 {**1** jeu ajouté}
+        other {**#** jeux ajoutés}
+      }
+    numberPublishedReviewsBy: >-
+      {number, plural, 
+        =1 {**1** avis publié}
+        other {**#** avis publiés}
+      } par *{name}*
+    outro: Voir sur
 
 ##################################
 # Common translations ############
@@ -126,16 +148,14 @@ form:
     unique: Impossible d'ajouter ou de modifier cet élément car certains champs doivent être uniques.
     other: Erreur lors de l'ajout, de la modification ou de la suppression de cet élément.
   autocomplete:
-    placeholder: 
+    placeholder:
       global: Rechercher un jeu sur l'ensemble du site
-      steam:  Rechercher un jeu sur steam
+      steam: Rechercher un jeu sur steam
     noResults: Aucun résultat
   file:
     stored: Fichier enregistré
-
-modal:
-  title:
-    delete: Confirmer la suppression
+  modal:
+    deleteTitle: Confirmer la suppression
 
 layout:
   name: DarkirBible
@@ -163,13 +183,6 @@ enum:
     dlc: DLC
     demo: Démo
     other: Autre
-
-error:
-  title: Erreur {code}
-  message:
-    notFound: Cette page n'existe pas.
-    forbidden: Cette page n'est pas accessible.
-    other: Le serveur a rencontré un problème, merci de réessayer plus tard.
 
 aria:
   skipToContent: Aller au contenu
