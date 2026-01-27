@@ -62,6 +62,7 @@ services:
 
     App\Command\DiscordNotifyCommand:
         arguments:
+            $locale: '%app.locale%'
             $requestTimeout: '%app.request_timeout%'
             $discordWebhookUrl: '%app.discord_webhook_url%'
             $discordWebhookEllipsis: '%app.discord_webhook_ellipsis%'

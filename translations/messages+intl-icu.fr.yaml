@@ -119,7 +119,9 @@ discord:
         =1 {**1** avis publié}
         other {**#** avis publiés}
       } par *{name}*
-    outro: Voir sur
+    checkOn: Voir sur
+    nothingNew: Rien de neuf... 
+    writeYourReview: Aller vite écrire votre avis sur
 
 ##################################
 # Common translations ############

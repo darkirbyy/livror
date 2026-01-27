@@ -20,6 +20,7 @@ use Twig\Environment;
 class DiscordNotifyCommand extends Command
 {
     public function __construct(
+        private string $locale,
         private int $requestTimeout,
         private string $discordWebhookUrl,
         private int $discordWebhookEllipsis,
@@ -73,7 +74,7 @@ class DiscordNotifyCommand extends Command
             $output->writeln(' Done.');
 
             $output->write('Generating markdown content...');
-            $this->translator->setLocale('fr');
+            $this->translator->setLocale($this->locale);
             $content = $this->twig->render('discord/notify.md.twig', [
                 'ellipsis' => $this->discordWebhookEllipsis,
                 'games' => $games,
@@ -85,7 +86,7 @@ class DiscordNotifyCommand extends Command
             $output->write('Sending request to discord API...');
             $response = $this->client->request('POST', $this->discordWebhookUrl . '?wait=true', [
                 'max_duration' => $timeout,
-                'json' => ['content' => $content],
+                'json' => ['content' => $content, 'flags' => 4096],
             ]);
             if (200 !== $response->getStatusCode()) {
                 throw new \Exception('Error when posting message through discord API.');
