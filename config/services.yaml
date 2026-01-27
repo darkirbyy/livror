@@ -107,7 +107,10 @@ services:
         arguments:
             $requestTimeout: '%app.request_timeout%'
 
-when@dev: 
+when@dev: &services_dev
+    parameters:
+        discord.dir: '%kernel.project_dir%/var/discord/%kernel.environment%'
+
     services:
         App\Tests\Mock\HttpClientFactory: ~ 
 
@@ -115,7 +118,7 @@ when@dev:
             factory: ['App\Tests\Mock\HttpClientFactory', 'create']
             arguments:
                 $enable: '%app.mock_api%'
-                $projectDir: '%kernel.project_dir%'
+                $discordDir: '%discord.dir%'
                 $filesystem: '@Symfony\Component\Filesystem\Filesystem'
 
         App\Tests\Mock\AccountEntryPoint:
@@ -123,13 +126,4 @@ when@dev:
             autowire: true
             autoconfigure: true
 
-when@test:
-    services:
-        App\Tests\Mock\HttpClientFactory: ~ 
-
-        Symfony\Contracts\HttpClient\HttpClientInterface:
-            factory: ['App\Tests\Mock\HttpClientFactory', 'create']
-            arguments:
-                $enable: '%app.mock_api%'
-                $projectDir: '%kernel.project_dir%'
-                $filesystem: '@Symfony\Component\Filesystem\Filesystem'
+when@test: *services_dev

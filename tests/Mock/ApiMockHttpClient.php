@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 final class ApiMockHttpClient extends MockHttpClient
 {
-    public function __construct(private string $projectDir, private Filesystem $filesystem)
+    public function __construct(private string $discordDir, private Filesystem $filesystem)
     {
         parent::__construct(\Closure::fromCallable([$this, 'handleRequests']));
     }
@@ -104,16 +104,15 @@ final class ApiMockHttpClient extends MockHttpClient
     private function getDiscordWebhook(?string $body): mixed
     {
         // Remove the old file
-        $fileName = $this->projectDir . '/var/discord/notify.md';
-        $this->filesystem->mkdir(dirname($fileName));
-        $this->filesystem->remove($fileName);
-        $this->filesystem->touch($fileName);
+        $this->filesystem->mkdir($this->discordDir);
+        $this->filesystem->remove($this->discordDir . '/notify.md');
+        $this->filesystem->touch($this->discordDir . '/notify.md');
 
         // Decode the body, prepre the response code, and write the body is valid
         $data = json_decode($body, true, flags: JSON_THROW_ON_ERROR);
         if (isset($data['content'])) {
             $code = Response::HTTP_OK;
-            $this->filesystem->appendToFile($fileName, $data['content']);
+            $this->filesystem->appendToFile($this->discordDir . '/notify.md', $data['content']);
         } else {
             $code = Response::HTTP_BAD_REQUEST;
         }
