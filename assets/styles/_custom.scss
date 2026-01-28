@@ -36,6 +36,10 @@ legend.col-form-label.required:not(.remove-required)::after {
   --bs-icon-link-transform: translateX(-0.2rem);
 }
 
+.btn-outline-light:hover {
+  background-color: rgba($gray-500, 0.5);
+}
+
 :not(.modal) .popover {
   z-index: 10 !important;
 }
@@ -110,7 +114,7 @@ legend.col-form-label.required:not(.remove-required)::after {
   }
 
   &[aria-expanded='true']::before,
-  .link-secondary:hover &[aria-expanded='true']::after {
+  .link-primary:hover &[aria-expanded='true']::after {
     transform: rotate(0deg);
   }
 }
@@ -126,6 +130,14 @@ legend.col-form-label.required:not(.remove-required)::after {
     vertical-align: $caret-vertical-align;
     content: '';
     @include caret-down;
+  }
+}
+
+.app-filters .dropdown-menu .dropdown-item {
+  &,
+  & label,
+  & input {
+    cursor: pointer !important;
   }
 }
 

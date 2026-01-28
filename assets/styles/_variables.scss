@@ -36,6 +36,7 @@ $danger: $red !default;
 $light: color.adjust($gray-600, $lightness: 35%) !default;
 $dark: $gray-900 !default;
 $min-contrast-ratio: 1.6 !default;
+$spacer: 1rem !default;
 
 // Body
 
@@ -45,6 +46,7 @@ $body-secondary-bg-dark: shade-color($gray-800, 55%) !default;
 $body-secondary-color-dark: rgba($body-color-dark, 0.75) !default;
 $primary-bg-subtle-dark: shade-color($primary, 50%) !default;
 $secondary-bg-subtle-dark: shade-color($secondary, 35%) !default;
+$gradient: linear-gradient(180deg, rgba($dark, 0.2), rgba($dark, 0));
 
 // Borders
 
@@ -55,6 +57,21 @@ $border-color-dark: $gray-800 !default;
 $border-radius: 0 !default;
 $border-radius-lg: 0 !default;
 $border-radius-sm: 0 !default;
+
+// Buttons
+
+$btn-transition: 0;
+
+// Dropdowns
+
+$dropdown-bg: $body-secondary-bg-dark !default;
+$dropdown-link-color: $body-color-dark !default;
+$dropdown-link-hover-color: $dropdown-link-color !default;
+$dropdown-link-hover-bg: rgba($white, 0.075) !default;
+$dropdown-padding-y: 0 !default;
+$dropdown-divider-margin-y: 0 !default;
+$dropdown-item-padding-y: $spacer * 0.35 !default;
+$dropdown-link-active-bg: rgba($white, 0.2) !default;
 
 // // Fonts
 
@@ -94,15 +111,6 @@ $border-radius-sm: 0 !default;
 // $form-file-button-bg: $input-group-addon-bg !default;
 // $form-file-button-hover-bg: color.adjust($form-file-button-bg, $lightness: 5%) !default;
 // $form-floating-label-opacity: 1 !default;
-
-// // Dropdowns
-
-// $dropdown-bg: $gray-600 !default;
-// $dropdown-divider-bg: rgba($black, 0.15) !default;
-// $dropdown-link-color: $body-color !default;
-// $dropdown-link-hover-color: $dropdown-link-color !default;
-// $dropdown-link-hover-bg: $table-hover-bg !default;
-// $dropdown-header-color: $gray-500 !default;
 
 // // Navs
 
@@ -202,5 +210,3 @@ $border-radius-sm: 0 !default;
 // $form-range-thumb-height: 0.9rem;
 // $dropdown-link-active-color: var(--bs-body-color);
 // $dropdown-link-active-bg: var(--bs-tertiary-bg);
-
-$gradient: linear-gradient(180deg, rgba($dark, 0.2), rgba($dark, 0));

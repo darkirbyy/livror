@@ -129,7 +129,7 @@
         </div>
       </div>
       {# Fields to filter : dropdown with checkboxes for all possibilities and apply button #}
-      <div class="{{ filterContent|keys is empty ? 'd-none' }}">
+      <div class="app-filters {{ filterContent|keys is empty ? 'd-none' }}">
         <div class="input-group" role="group" aria-labelledby="input-group-filters">
           <label class="input-group-text" id="input-group-filters">{{ 'form.button.filterBy'|trans }}</label>
           {% for filterKey in filterContent|keys %}
@@ -154,7 +154,7 @@
             {% set url = _self.path_with_query_param(queryParam|clone_with(new_param)) %}
             <div id="{{ filtersId }}" class="dropdown-menu dropdown-menu-end" {{ stimulus_controller('filter-apply', { url: url, key: filterKey }) }}>
               {{ attribute(filterContent, filterKey) }}
-              <div class="dropdown-item text-center">
+              <div class="py-2 text-center">
                 <button class="btn btn-sm btn-outline-secondary" data-filter-apply-target="button">{{ 'form.button.apply'|trans }}</button>
               </div>
             </div>
@@ -178,13 +178,13 @@
     <h5 class="mb-0 p-1 text-truncate flex-grow-1">{{ game.name }}</h5>
     {% if show %}
       {% set url = path('game_show', { id: game.id, backpath: backpath }) %}
-      <a href="{{ url }}" class="btn btn-sm btn-outline-secondary" aria-label="{{ 'game.index.button.editGame'|trans }}" data-turbo-frame="_top">
+      <a href="{{ url }}" class="btn btn-sm btn-outline-light" aria-label="{{ 'game.index.button.editGame'|trans }}" data-turbo-frame="_top">
         <span class="bi bi-eye" aria-hidden="true"></span>
       </a>
     {% endif %}
     {% if edit %}
       {% set url = path('game_edit', { id: game.id, backpath: backpath }) %}
-      <a href="{{ url }}" class="btn btn-sm btn-outline-secondary ms-1" aria-label="{{ 'game.index.button.editGame'|trans }}" data-turbo-frame="_top">
+      <a href="{{ url }}" class="btn btn-sm btn-outline-light ms-1" aria-label="{{ 'game.index.button.editGame'|trans }}" data-turbo-frame="_top">
         <span class="bi bi-pen" aria-hidden="true"></span>
       </a>
     {% endif %}
@@ -279,9 +279,9 @@
         {% for attachment in review.attachments %}
           <li>
             {{ attachment.description }} -
-            <a data-turbo="false" href="{{ path('attachment_download', { id: attachment.id }) }}" class="link-secondary">{{ 'form.button.download'|trans }}</a>
+            <a data-turbo="false" href="{{ path('attachment_download', { id: attachment.id }) }}" class="link-light">{{ 'form.button.download'|trans }}</a>
             {% if attachment.fileMeta.mimeType starts with 'image/' %}
-              - <a href="#" role="button" class="link-secondary" data-bs-toggle="modal" data-bs-target="#attachment-modal" data-bs-path="{{ path('attachment_download', { id: attachment.id }) }}" data-bs-title="{{ attachment.description }}">{{
+              - <a href="#" role="button" class="link-light" data-bs-toggle="modal" data-bs-target="#attachment-modal" data-bs-path="{{ path('attachment_download', { id: attachment.id }) }}" data-bs-title="{{ attachment.description }}">{{
                   'form.button.display'|trans
                 }}</a>
             {% endif %}
@@ -332,7 +332,7 @@
       <div class="mb-1">
         {{ 'review.index.numberPublished'|trans({ published: user.numberReviews }) }}
       </div>
-      <a data-turbo-frame="_top" href="{{ path('review_index', { id: user.id }) }}" class="link-secondary icon-link icon-link-hover icon-link-right">
+      <a data-turbo-frame="_top" href="{{ path('review_index', { id: user.id }) }}" class="link-primary icon-link icon-link-hover icon-link-right">
         Voir les avis
         <span class="bi bi-arrow-right" aria-hidden="true"></span>
       </a>
@@ -352,7 +352,7 @@
 {# Macro to create a backlink #}
 {% macro backlink(path) %}
   <div class="mb-2">
-    <a class="link-secondary icon-link icon-link-hover icon-link-left" href="{{ path|generate_backpath }}">
+    <a class="link-light icon-link icon-link-hover icon-link-left" href="{{ path|generate_backpath }}">
       <span class="bi bi-arrow-left mb-1" aria-hidden="true"></span>
       {{ 'form.button.goBack'|trans }}
     </a>
