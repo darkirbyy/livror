@@ -41,7 +41,7 @@ game:
       users: Joueurs
       withoutReview: Avis
     notFound: Aucun jeu trouvé
-    numberGames: >-
+    numberDisplayed: >-
       {displayed, plural, 
         =0 {Aucun jeu affiché}
         =1 {1 jeu affiché}
@@ -57,7 +57,8 @@ game:
       steamSearch:
         success: Le formulaire a été complété avec les données de Steam !
         fail: Une erreur s'est produite en se connectant à Steam. Réessayez plus tard.
-    modalDeleteBody: 'Vous êtes sur le point de supprimer <span class="fw-bold">définitivement</span> {name}, ainsi que tous les avis associés. Êtes-vous sûr ?'
+    modal:
+      deleteBody: 'Vous êtes sur le point de supprimer <span class="fw-bold">définitivement</span> {name}, ainsi que tous les avis associés. Êtes-vous sûr ?'
 
 review:
   index:
@@ -87,17 +88,24 @@ review:
     filter:
       typeGame: Type
     notFound: Aucun avis trouvé
-    numberReviews: >-
+    numberDisplayed: >-
       {displayed, plural, 
         =0 {Aucun avis affiché}
         =1 {1 avis affiché}
         other {# avis affichés}
       } sur {total} en tout
+    numberPublished: >-
+      {published, plural, 
+        =0 {Aucun avis publié}
+        =1 {1 avis publié}
+        other {# avis publiéss}
+      }
   edit:
     title:
       add: Écrire un avis
       update: 'Modifier votre avis sur {name}'
-    modalDeleteBody: 'Vous êtes sur le point de supprimer <span class="fw-bold">définitivement</span> votre avis sur {name}. Êtes-vous sûr ?'
+    modal:
+      deleteBody: 'Vous êtes sur le point de supprimer <span class="fw-bold">définitivement</span> votre avis sur {name}. Êtes-vous sûr ?'
 
 error:
   title: Erreur {code}

@@ -330,7 +330,7 @@
     <div>
       <h6 class="fs-5 mb-0">{{ user.username }}</h6>
       <div class="mb-1">
-        {{ 'review.index.numberReviews'|trans({ number: user.numberReviews }) }}
+        {{ 'review.index.numberPublished'|trans({ published: user.numberReviews }) }}
       </div>
       <a data-turbo-frame="_top" href="{{ path('review_index', { id: user.id }) }}" class="link-secondary icon-link icon-link-hover icon-link-right">
         Voir les avis

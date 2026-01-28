@@ -41,7 +41,7 @@ game:
       users: Players
       withoutReview: Reviews
     notFound: No games found
-    numberGames: >-
+    numberDisplayed: >-
       {displayed, plural, 
         =0 {No games displayed}
         =1 {1 game displayed}
@@ -57,7 +57,8 @@ game:
       steamSearch:
         success: The form has been filled with Steam data!
         fail: An error occurred while connecting to Steam. Please try again later.
-    modalDeleteBody: 'You are about to <span class="fw-bold">permanently</span> delete {name}, along with all associated reviews. Are you sure?'
+    modal:
+      deleteBody: 'You are about to <span class="fw-bold">permanently</span> delete {name}, along with all associated reviews. Are you sure?'
 
 review:
   index:
@@ -87,17 +88,24 @@ review:
     filter:
       typeGame: Type
     notFound: No reviews found
-    numberReviews: >-
+    numberDisplayed: >-
       {displayed, plural, 
         =0 {No reviews displayed}
         =1 {1 review displayed}
         other {# reviews displayed}
       } out of {total} in total
+    numberPublished: >-
+      {published, plural, 
+        =0 {No reviews published}
+        =1 {1 review published}
+        other {# reviews published}
+      }
   edit:
     title:
       add: Write a review
       update: 'Edit your review for {name}'
-    modalDeleteBody: 'You are about to <span class="fw-bold">permanently</span> delete your review for {name}. Are you sure?'
+    modal:
+      deleteBody: 'You are about to <span class="fw-bold">permanently</span> delete your review for {name}. Are you sure?'
 
 error:
   title: Error {code}
