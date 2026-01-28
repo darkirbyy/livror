@@ -22,7 +22,7 @@
         </div>
       </div>
 
-      <div class="row my-4">
+      <div class="row my-4 pt-2 pt-md-4">
         {# Last games part #}
         <div class="col-12 col-md-6 mt-4 mt-md-0">
           <h4 class="text-center pb-2">{{ 'home.index.lastGame.title'|trans }}</h4>
@@ -79,14 +79,14 @@
                   {# Actual title without the edit button #}
                   {% set popover = m.user_popover(review.user) %}
                   <div
-                    class="col-4 border-bottom border-end border-end-md-0 d-flex p-1 ps-md-2 justify-content-center align-items-center text-light-emphasis bg-primary bg-gradient app-user-cell"
+                    class="col-4 border-end border-end-md-0 d-flex p-1 ps-md-2 justify-content-center align-items-center text-light-emphasis bg-primary bg-gradient app-user-cell"
                     tabindex="0"
                     data-bs-toggle="popover"
                     data-bs-content="{{ popover|e }}"
                   >
                     {{ m.user_avatar(review.user) }} <span class="ms-2">{{ review.user.username }}</span>
                   </div>
-                  <div class="col-8 border-bottom border-start-md bg-primary bg-gradient">
+                  <div class="col-8 border-start-md bg-primary bg-gradient">
                     {% set backpath = path('home_index', { anchor: reviewId }) %}
                     {{ m.game_title(review.game, backpath, true, false) }}
                   </div>

@@ -13,6 +13,15 @@ $utilities: map.merge(
     'border-end': map.merge(map.get($utilities, 'border-end'), $responsive-true),
     'border-bottom': map.merge(map.get($utilities, 'border-bottom'), $responsive-true),
     'border-start': map.merge(map.get($utilities, 'border-start'), $responsive-true),
+    'bg-gradient': (
+      class: 'bg-gradient',
+      responsive: true,
+      property: 'background-image',
+      values: (
+        on: $gradient,
+        off: none,
+      ),
+    ),
     'flex-even': (
       responsive: true,
       property: flex,

@@ -46,7 +46,11 @@ $body-secondary-color-dark: rgba($body-color-dark, 0.75) !default;
 $primary-bg-subtle-dark: shade-color($primary, 50%) !default;
 $secondary-bg-subtle-dark: shade-color($secondary, 35%) !default;
 
-// // Components
+// Borders
+
+$border-color-dark: $gray-800 !default;
+
+// Components
 
 $border-radius: 0 !default;
 $border-radius-lg: 0 !default;
@@ -191,7 +195,7 @@ $border-radius-sm: 0 !default;
 // $pre-color: inherit !default;
 
 // TODO
-// $border-color: $gray-500;
+
 // $form-range-track-bg: $border-color;
 // $form-range-track-height: 0.15rem;
 // $form-range-thumb-width: 1.25rem;
