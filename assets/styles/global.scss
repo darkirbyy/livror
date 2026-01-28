@@ -4,11 +4,13 @@
 // BOOTSTRAP //////////////////////////////
 ///////////////////////////////////////////
 
+// Import Bootstrap functions
+@import '~bootstrap/scss/functions';
+
 // Import custom variables
 @import 'variables';
 
-// Import Bootstrap core functions
-@import '~bootstrap/scss/functions';
+// Import Bootstrap  utilities
 @import '~bootstrap/scss/variables';
 @import '~bootstrap/scss/variables-dark';
 @import '~bootstrap/scss/maps';
@@ -57,7 +59,7 @@
 @import '~bootstrap/scss/utilities/api';
 
 // Import custom css
-@import 'bootswatch';
+// @import 'bootswatch';
 @import 'custom';
 
 ///////////////////////////////////////////

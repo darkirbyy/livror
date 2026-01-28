@@ -11,10 +11,10 @@
       {{ block('flash', 'theme/flash.html.twig') }}
 
       {# Search part #}
-      <div class="card-max-large card-max-md-extra mx-auto bg-primary">
-        <div class="mt-2 border border-primary bg-body rounded" {{ stimulus_controller('search-select') }}>
-          <h4 class="text-center bg-primary p-2 mb-0">{{ 'home.index.search.title'|trans }}</h4>
-          <div class="input-group p-3" role="group" aria-label="{{ 'form.button.search'|trans }}">
+      <div class="card-max-large card-max-md-extra mx-auto">
+        <div class="mt-2 border border-primary rounded" {{ stimulus_controller('search-select') }}>
+          <h4 class="text-center bg-primary bg-gradient p-2 mb-0">{{ 'home.index.search.title'|trans }}</h4>
+          <div class="input-group p-3 bg-body-secondary" role="group" aria-label="{{ 'form.button.search'|trans }}">
             <label class="input-group-text"><span class="bi bi-search" aria-hidden="true"></span></label>
             {% set autocomplete = prepare_attributes('global', 'game_autocomplete') %}
             <input class="form-control" type="text" {{ autocomplete|raw }} />
@@ -32,10 +32,10 @@
               {% set gameId = 'game-' ~ game.id %}
 
               {# One card for each game #}
-              <div id="{{ gameId }}" class="card-max-large mx-auto my-3 rounded-3 border border-primary bg-body overflow-hidden">
+              <div id="{{ gameId }}" class="card-max-large mx-auto my-3 rounded-3 border border-primary overflow-hidden">
                 <div class="row py-0 g-0 px-0">
                   {# Card title : no edit buttton on home page #}
-                  <div class="col-12 border-bottom bg-primary">
+                  <div class="col-12 bg-primary bg-gradient">
                     {% set backpath = path('home_index', { anchor: gameId }) %}
                     {{ m.game_title(game, backpath, true, false) }}
                   </div>
@@ -45,7 +45,7 @@
                   </div>
 
                   {# Card information #}
-                  <div class="col-12">
+                  <div class="col-12 bg-body-secondary">
                     <div class="row p-0 m-0">
                       {{ m.game_information(game) }}
                     </div>
@@ -79,25 +79,25 @@
                   {# Actual title without the edit button #}
                   {% set popover = m.user_popover(review.user) %}
                   <div
-                    class="col-4 border-bottom border-end border-end-md-0 d-flex p-1 ps-md-2 justify-content-center align-items-center text-light-emphasis bg-primary app-user-cell"
+                    class="col-4 border-bottom border-end border-end-md-0 d-flex p-1 ps-md-2 justify-content-center align-items-center text-light-emphasis bg-primary bg-gradient app-user-cell"
                     tabindex="0"
                     data-bs-toggle="popover"
                     data-bs-content="{{ popover|e }}"
                   >
                     {{ m.user_avatar(review.user) }} <span class="ms-2">{{ review.user.username }}</span>
                   </div>
-                  <div class="col-8 border-bottom border-start-md bg-primary">
+                  <div class="col-8 border-bottom border-start-md bg-primary bg-gradient">
                     {% set backpath = path('home_index', { anchor: reviewId }) %}
                     {{ m.game_title(review.game, backpath, true, false) }}
                   </div>
                   {# 3 piece of information : player rating, hour spend, and first play date #}
-                  <div class="col-12 d-flex align-items-center flex-even bg-body-tertiary">
+                  <div class="col-12 d-flex align-items-center flex-even bg-secondary-subtle">
                     {{ m.review_information(review) }}
                   </div>
                 </div>
 
                 {# Card body in one part : the comment #}
-                <div class="px-2 py-1 bg-body">
+                <div class="px-2 py-1 bg-body-secondary">
                   {{ m.review_body(review, backpath) }}
                 </div>
               </div>
