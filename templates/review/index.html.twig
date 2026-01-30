@@ -57,7 +57,7 @@
         {{ m.index_buttons(queryParam, 'review', ['name', 'rating', 'hourSpend', 'firstPlay'], { typeGame: filterContentTypeGame }) }}
 
         {# Include the template to render the card of each review + show more button #}
-        {{ include('review/list.html.twig') }}
+        {{ include('review/_list.html.twig') }}
       </turbo-frame>
     </div>
   </section>

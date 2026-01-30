@@ -48,7 +48,7 @@ class GameController extends AbstractController
 
         // Render only the game list block when the request comes from the JavaScript, otherwise render the whole page
         if ($request->isXmlHttpRequest()) {
-            return $this->render('game/list.html.twig', $data);
+            return $this->render('game/_list.html.twig', $data);
         }
 
         return $this->render('game/index.html.twig', $data);

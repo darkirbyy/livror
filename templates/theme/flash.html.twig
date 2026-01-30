@@ -12,7 +12,7 @@
 {% block flash %}
   <div aria-live="polite">
     {% for flash in app.flashes('livror/info') %}
-      <div class="alert alert-primary alert-dismissible fade show" role="alert">
+      <div class="alert alert-info alert-dismissible fade show" role="alert">
         <div class="bi bi-info-square-fill">
           {{ _self.trans_flash(flash) }}
         </div>

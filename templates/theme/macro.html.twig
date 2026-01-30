@@ -106,9 +106,7 @@
           <label class="input-group-text" id="input-group-sorts">{{ 'form.button.sortBy'|trans }}</label>
           {# independant buttons (large screen) #}
           {% for sort in sorts %}
-            <a href="{{ sort.url }}" class="btn btn-outline-light app-btn-border-light d-none d-md-block {{ sort.active ? 'active' }}" data-turbo-prefetch="false">
-              {{ sort.label }}
-            </a>
+            <a href="{{ sort.url }}" class="btn btn-outline-light  d-none d-md-block {{ sort.active ? 'active' }}" data-turbo-prefetch="false">{{ sort.label }}</a>
           {% endfor %}
           {# select (small screen) #}
           <select class="form-select d-md-none" {{ stimulus_controller('sort-select') }}>
@@ -122,7 +120,7 @@
           {% set direction_way = queryParam.sorts|first %}
           {% set new_param = { offset: 0, limit: env.app.default_limit, sorts: { (queryParam.sorts|keys|first): direction_way == 'asc' ? 'desc' : 'asc' } } %}
           {% set direction_url = _self.path_with_query_param(queryParam|clone_with(new_param)) %}
-          <a href="{{ direction_url }}" class="btn btn-outline-light app-btn-border-light" aria-label="{{ ('aria.order.' ~ direction_way)|trans }}" data-turbo-prefetch="false">
+          <a href="{{ direction_url }}" class="btn btn-outline-light" aria-label="{{ ('aria.order.' ~ direction_way)|trans }}" data-turbo-prefetch="false">
             <span class="bi bi-arrow-{{ direction_way == 'asc' ? 'up' : 'down' }}" aria-hidden="true"></span>
           </a>
         </div>
@@ -136,7 +134,7 @@
             {% set filter_not_empty = attribute(queryParam.filters, filterKey) is defined and attribute(queryParam.filters, filterKey) is not empty %}
             <button
               type="button"
-              class="btn btn-outline-light app-btn-border-light dropdown-toggle app-dropdown-left app-dropdown-smooth {{ filter_not_empty ? 'active' }}"
+              class="btn btn-outline-light  dropdown-toggle app-dropdown-left app-dropdown-smooth {{ filter_not_empty ? 'active' }}"
               data-bs-toggle="dropdown"
               data-bs-target="#{{ filtersId }}"
               data-bs-auto-close="outside"
@@ -162,10 +160,12 @@
       </div>
       {# Field to reset #}
       <div>
-        {% set reinit_url = _self.path_with_query_param(queryParam|clone_reset) %}
-        <a href="{{ reinit_url }}" class="btn btn-outline-light app-btn-border-light" aria-label="{{ 'form.button.reset'|trans }}">
-          <span class="bi bi-arrow-counterclockwise" aria-hidden="true"></span>
-        </a>
+        <div class="input-group">
+          {% set reinit_url = _self.path_with_query_param(queryParam|clone_reset) %}
+          <a href="{{ reinit_url }}" class="btn btn-outline-light" aria-label="{{ 'form.button.reset'|trans }}">
+            <span class="bi bi-arrow-counterclockwise" aria-hidden="true"></span>
+          </a>
+        </div>
       </div>
     </div>
   </div>

@@ -57,7 +57,7 @@ class ReviewController extends AbstractController
 
         // Render only the review list block when the request comes from the JavaScript, otherwise render the whole page
         if ($request->isXmlHttpRequest()) {
-            return $this->render('review/list.html.twig', $data);
+            return $this->render('review/_list.html.twig', $data);
         }
 
         return $this->render('review/index.html.twig', $data);
