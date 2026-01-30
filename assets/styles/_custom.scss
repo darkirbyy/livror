@@ -36,6 +36,10 @@ legend.col-form-label.required:not(.remove-required)::after {
   --bs-icon-link-transform: translateX(-0.2rem);
 }
 
+input[disabled] {
+  cursor: not-allowed;
+}
+
 .btn-outline-light {
   --bs-btn-active-bg: #{rgba($gray-500, 0.4)};
   --bs-btn-hover-bg: #{rgba($gray-500, 0.4)};
@@ -49,13 +53,55 @@ legend.col-form-label.required:not(.remove-required)::after {
 // Tomselect improvements /////////
 ///////////////////////////////////
 
-.ts-wrapper.single .ts-control,
-.ts-wrapper.single .ts-control input {
-  cursor: text !important;
-}
+.ts-wrapper {
+  .ts-dropdown {
+    color: $body-color-dark;
+    border-radius: 0;
+    background-color: $body-secondary-bg-dark;
+    border-color: $secondary;
 
-.ts-control .item {
-  display: inline !important;
+    .ts-dropdown-content {
+      padding: 0;
+      max-height: 400px;
+    }
+
+    .option {
+      padding: 0.4rem;
+
+      .highlight {
+        background-color: $primary-bg-subtle-dark;
+      }
+    }
+
+    .create,
+    .no-more-results {
+      padding: 0;
+    }
+  }
+
+  .ts-control {
+    cursor: text !important;
+    color: $body-color-dark;
+    box-shadow: none !important;
+
+    &:not(.rtl) {
+      padding-right: 0.75rem !important;
+    }
+
+    input {
+      color: $body-color-dark;
+      cursor: text !important;
+    }
+
+    .item {
+      display: inline !important;
+    }
+  }
+
+  &.focus {
+    box-shadow: $focus-ring-box-shadow !important;
+    border-color: $input-focus-border-color !important;
+  }
 }
 
 ///////////////////////////////////
@@ -103,32 +149,24 @@ legend.col-form-label.required:not(.remove-required)::after {
 
 // Dropdown ///////////////////////
 
-.app-dropdown-smooth {
-  &::before {
-    transform: rotate(-90deg);
-  }
-
-  &::after {
-    transform: rotate(90deg);
-  }
-
-  &[aria-expanded='true']::before,
-  .link-primary:hover &[aria-expanded='true']::after {
-    transform: rotate(0deg);
-  }
-}
-
 .app-dropdown-left {
   &::after {
     display: none;
+    transform: rotate(90deg);
   }
 
   &::before {
+    transform: rotate(-90deg);
     display: inline-block;
     margin-right: $caret-spacing;
     vertical-align: $caret-vertical-align;
     content: '';
     @include caret-down;
+  }
+
+  &[aria-expanded='true']::before,
+  .link-primary:hover &[aria-expanded='true']::after {
+    transform: rotate(0deg);
   }
 }
 
@@ -222,13 +260,21 @@ legend.col-form-label.required:not(.remove-required)::after {
   width: 5rem !important;
 }
 
-.app-btn-steam {
-  --bs-btn-bg: #{$steam};
-  --bs-btn-border-color: #{$input-border-color};
-  --bs-btn-hover-bg: #{shade-color($steam, $btn-hover-bg-shade-amount)};
-  --bs-btn-hover-border-color: #{$input-border-color};
-  --bs-btn-active-bg: #{shade-color($steam, $btn-active-bg-shade-amount)};
-  --bs-btn-active-border-color: #{$input-border-color};
+.app-form-steam {
+  .ts-wrapper.focus {
+    box-shadow: 0 0 $focus-ring-blur $focus-ring-width $steam !important;
+    border-color: tint-color($steam, 25%) !important;
+  }
+
+  .btn {
+    --bs-btn-bg: #{$steam};
+    --bs-btn-border-color: #{$input-border-color};
+    --bs-btn-hover-bg: #{shade-color($steam, $btn-hover-bg-shade-amount)};
+    --bs-btn-hover-border-color: #{$input-border-color};
+    --bs-btn-active-bg: #{shade-color($steam, $btn-active-bg-shade-amount)};
+    --bs-btn-active-border-color: #{$input-border-color};
+    --bs-focus-ring-color: #{$steam};
+  }
 }
 
 // Others /////////////////////////

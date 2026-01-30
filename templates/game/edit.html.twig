@@ -26,13 +26,13 @@
 
           <div class="row" {{ stimulus_controller('steam-search', { url: path(app.current_route, { id: game.id }), lazy: false }) }}>
             {# Field to write the steam ID and press the search button #}
-            <div class="col app-form-row">
+            <div class="col app-form-row app-form-steam">
               {{ form_label(form.steamId, 'game.label.steamId') }}
               {{ form_help(form.steamId, { help_html: true, help: 'game.help.steamId' }) }}
-              <div class="input-group app-ts-rounded-start">
+              <div class="input-group">
                 {% set autocomplete = prepare_attributes('steam', 'steam_autocomplete') %}
                 {{ form_widget(form.steamId, { attr: { 'data-steam-search-target': 'input' }|merge(autocomplete) }) }}
-                <button data-steam-search-target="button" class="btn app-btn-steam" aria-label="{{ 'form.button.search'|trans }}">
+                <button data-steam-search-target="button" class="btn focus-ring" aria-label="{{ 'form.button.search'|trans }}">
                   <span data-steam-search-target="remove" class="bi bi-steam" aria-hidden="true"></span>
                   <span data-steam-search-target="spinner" aria-hidden="true"></span>
                   <span class="ms-1">{{ 'form.button.search'|trans }}</span>

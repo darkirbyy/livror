@@ -136,7 +136,7 @@
             {% set filter_not_empty = attribute(queryParam.filters, filterKey) is defined and attribute(queryParam.filters, filterKey) is not empty %}
             <button
               type="button"
-              class="btn btn-outline-light app-btn-input-border dropdown-toggle app-dropdown-left app-dropdown-smooth {{ filter_not_empty ? 'active' }}"
+              class="btn btn-outline-light app-btn-input-border dropdown-toggle app-dropdown-left {{ filter_not_empty ? 'active' }}"
               data-bs-toggle="dropdown"
               data-bs-target="#{{ filtersId }}"
               data-bs-auto-close="outside"

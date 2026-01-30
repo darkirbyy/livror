@@ -89,6 +89,21 @@ $modal-fade-transform: none !default;
 $modal-scale-transform: none !default;
 $modal-transition: 0;
 
+// Forms
+
+$input-bg: rgba($dark, 0.25) !default;
+$input-disabled-color: $gray-600 !default;
+$input-disabled-bg: $dark !default;
+$form-file-button-bg: $input-group-addon-bg !default;
+$form-file-button-hover-bg: color.adjust($form-file-button-bg, $lightness: 5%) !default;
+$form-invalid-color-dark: $danger !default;
+$form-invalid-border-color-dark: $danger !default;
+$form-range-track-bg: $gray-300;
+$form-range-track-height: 0.15rem;
+$form-range-thumb-width: 1.25rem;
+$form-range-thumb-height: 0.9rem;
+$input-transition: 0;
+
 // // Fonts
 
 // // stylelint-disable-next-line value-keyword-case
@@ -108,25 +123,6 @@ $modal-transition: 0;
 // $table-dark-border-color: $gray-600 !default;
 // $table-dark-color: $body-bg !default;
 // $table-bg-scale: 0% !default;
-
-// // Forms
-
-// $input-bg: $white !default;
-// $input-disabled-color: $gray-600 !default;
-// $input-disabled-bg: $gray-100 !default;
-// $input-color: $gray-900 !default;
-// $input-border-color: transparent !default;
-// $input-placeholder-color: $gray-500 !default;
-// $input-group-addon-color: $body-color !default;
-// $input-group-addon-bg: $gray-600 !default;
-// $form-select-disabled-bg: $input-disabled-bg !default;
-// $form-select-disabled-color: $input-disabled-color !default;
-// $form-check-input-bg: $white !default;
-// $form-check-input-border: none !default;
-// $form-file-button-color: $input-group-addon-color !default;
-// $form-file-button-bg: $input-group-addon-bg !default;
-// $form-file-button-hover-bg: color.adjust($form-file-button-bg, $lightness: 5%) !default;
-// $form-floating-label-opacity: 1 !default;
 
 // // Navs
 
@@ -206,10 +202,3 @@ $modal-transition: 0;
 // // Code
 
 // $pre-color: inherit !default;
-
-// TODO
-
-// $form-range-track-bg: $border-color;
-// $form-range-track-height: 0.15rem;
-// $form-range-thumb-width: 1.25rem;
-// $form-range-thumb-height: 0.9rem;

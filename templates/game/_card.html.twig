@@ -45,7 +45,7 @@
         {# Collapse button for small screen #}
         {% set collapseId = gameId ~ '-collapse-informations' %}
         <button
-          class="btn btn-outline-light d-flex w-100 justify-content-center align-items-center border-0 border-bottom app-no-border-bottom rounded-0 py-2 my-0 dropdown-toggle app-dropdown-left app-dropdown-smooth d-md-none"
+          class="btn btn-outline-light d-flex w-100 justify-content-center align-items-center border-0 border-bottom app-no-border-bottom rounded-0 py-2 my-0 dropdown-toggle app-dropdown-left d-md-none"
           data-bs-toggle="collapse"
           data-bs-target="#{{ collapseId }}"
           aria-expanded="{{ collapsed ? 'false' : 'true' }}"
@@ -74,7 +74,7 @@
         {# Collapse button for small screen #}
         {% set collapseId = gameId ~ '-collapse-reviews' %}
         <button
-          class="btn btn-outline-light d-flex w-100 justify-content-center align-items-center border-0 border-bottom app-no-border-bottom rounded-0 py-2 my-0 dropdown-toggle app-dropdown-left app-dropdown-smooth d-md-none"
+          class="btn btn-outline-light d-flex w-100 justify-content-center align-items-center border-0 border-bottom app-no-border-bottom rounded-0 py-2 my-0 dropdown-toggle app-dropdown-left d-md-none"
           data-bs-toggle="collapse"
           data-bs-target="#{{ collapseId }}"
           aria-expanded="{{ collapsed ? 'false' : 'true' }}"
@@ -118,7 +118,7 @@
             </div>
           {% endfor %}
           {% if not (app.user.id in (game.reviews|map(review => review.userId))) %}
-            <div class="my-2 text-center">
+            <div class="mt-3 mb-4 text-center">
               <a href="{{ path('review_new', { gameId: game.id, backpath: backpath }) }}" class="btn btn-primary" data-turbo-frame="_top">
                 <span class="bi bi-plus-square-fill me-md-1" aria-hidden="true"></span>
                 {{ 'review.index.button.addReview'|trans }}
