@@ -115,6 +115,7 @@ input[disabled] {
   height: $size * $font-size-base;
   width: $size * $font-size-base;
   border-radius: 50% !important;
+  background-color: rgba($secondary, 0.5);
 }
 
 .app-avatar-sm {

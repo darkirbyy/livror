@@ -9,13 +9,19 @@ use App\Fixtures\Factory\GameFactory;
 use App\Fixtures\Factory\SteamFactory;
 use App\Fixtures\Factory\UserFactory;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\Asset\Packages;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Zenstruck\Foundry\Story;
 
 final class DevStory extends Story
 {
-    public function __construct(private ParameterBagInterface $parameterBag, private ManagerRegistry $managerRegistry, private Filesystem $filesystem) {}
+    public function __construct(
+        private ParameterBagInterface $parameterBag,
+        private ManagerRegistry $managerRegistry,
+        private Filesystem $filesystem,
+        private Packages $packages,
+    ) {}
 
     public function build(): void
     {
@@ -34,7 +40,7 @@ final class DevStory extends Story
             UserFactory::repository()->truncate();
             // Create four dummy users
             UserFactory::new()
-                ->sequence(array_map(fn($i) => ['username' => 'user' . $i, 'avatarPath' => 'https://lorempokemon.fakerapi.it/pokemon/256/' . $i], range(1, 4)))
+                ->sequence(array_map(fn($i) => ['username' => 'user' . $i, 'avatarPath' => $this->packages->getUrl('build/tests/avatar' . $i . '.png')], range(1, 4)))
                 ->create();
             $usersId = array_map(fn(User $u) => $u->getId(), UserFactory::repository()->findAll());
         } else {

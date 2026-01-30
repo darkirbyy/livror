@@ -25,7 +25,15 @@ Encore
         to: '[path][name]' + (Encore.isProduction() ? '.[hash:8]' : '') + '.[ext]',
         // only copy files matching this pattern
         pattern: /\.(png|jpg|jpeg|svg)$/
-    })
+        })
+    // copy tests images files to the build only in dev
+    .copyFiles(!Encore.isProduction() ? [{
+        from: './tests/images',
+        // target path, relative to the output dir
+        to: 'tests/[path][name].[ext]',
+        // only copy files matching this pattern
+        pattern: /\.(png|jpg|jpeg|svg)$/
+    }] : [])
 
     /*
      * ENTRY CONFIG
