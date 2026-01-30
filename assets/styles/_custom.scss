@@ -37,8 +37,8 @@ legend.col-form-label.required:not(.remove-required)::after {
 }
 
 .btn-outline-light {
-  --bs-btn-active-bg: #{rgba($gray-500, 0.5)};
-  --bs-btn-hover-bg: #{rgba($gray-500, 0.5)};
+  --bs-btn-active-bg: #{rgba($gray-500, 0.4)};
+  --bs-btn-hover-bg: #{rgba($gray-500, 0.4)};
 }
 
 :not(.modal) .popover {

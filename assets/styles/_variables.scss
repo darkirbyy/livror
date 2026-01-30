@@ -64,6 +64,7 @@ $border-radius-sm: 0 !default;
 $btn-hover-bg-shade-amount: 20% !default;
 $btn-active-bg-shade-amount: 30% !default;
 $btn-transition: 0 !default;
+$input-group-addon-bg: $secondary-bg-subtle-dark;
 
 // Links
 
@@ -74,8 +75,8 @@ $icon-link-icon-transition: 0 !default;
 $dropdown-bg: $body-secondary-bg-dark !default;
 $dropdown-link-color: $body-color-dark !default;
 $dropdown-link-hover-color: $dropdown-link-color !default;
-$dropdown-link-hover-bg: rgba($white, 0.2) !default;
-$dropdown-link-active-bg: rgba($white, 0.1) !default;
+$dropdown-link-hover-bg: rgba($white, 0.1) !default;
+$dropdown-link-active-bg: rgba($white, 0.05) !default;
 $dropdown-padding-y: 0 !default;
 $dropdown-divider-margin-y: 0 !default;
 $dropdown-item-padding-y: $spacer * 0.35 !default;

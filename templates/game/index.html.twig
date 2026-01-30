@@ -34,7 +34,7 @@
             {% for typeGame in enum('App\\Enum\\TypeGameEnum').cases %}
               {% set checked = queryParam.filters.typeGame is not defined or typeGame.value in queryParam.filters.typeGame %}
               {% set filtersTypeGameId = 'filters-type-game-' ~ (typeGame.value|lower) %}
-              <li class="dropdown-item {{ checked ? 'active' }}">
+              <li class="dropdown-item">
                 <input
                   class="form-check-input"
                   type="checkbox"
@@ -53,7 +53,7 @@
             {% for user in users|filter(u => u is not null)|sort((a, b) => a.username <=> b.username) %}
               {% set checked = queryParam.filters.users is not defined or user.id in queryParam.filters.users %}
               {% set filtersUserId = 'filters-users-' ~ user.id %}
-              <li class="dropdown-item {{ checked ? 'active' }}">
+              <li class="dropdown-item">
                 <input class="form-check-input" type="checkbox" value="{{ user.id }}" id="{{ filtersUserId }}" {{ checked ? 'checked' }} data-filter-apply-target="checkbox" />
                 <label class="form-check-label w-100" for="{{ filtersUserId }}">
                   {{ m.user_avatar(user) }}
@@ -68,7 +68,7 @@
           <ul class="p-0 m-0">
             {% set checked = queryParam.filters.withoutReview is defined and queryParam.filters.withoutReview is not empty %}
             {% set filtersWithoutReviewId = 'filters-without-review' %}
-            <li class="dropdown-item {{ checked ? 'active' }}">
+            <li class="dropdown-item">
               <input class="form-check-input" type="checkbox" value="1" id="{{ filtersWithoutReviewId }}" {{ checked ? 'checked' }} data-filter-apply-target="checkbox" />
               <label class="form-check-label w-100" for="{{ filtersWithoutReviewId }}">Afficher les jeux sans avis</label>
             </li>
