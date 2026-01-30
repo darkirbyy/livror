@@ -78,21 +78,18 @@
                 {# Card title bar with the the title on one side, and 3 infos on the other side (or on top of each other on small screen) #}
                 <div class="row gx-0 border-bottom text-center">
                   {# Actual title without the edit button #}
-                  {% set popover = m.user_popover(review.user) %}
-                  <div
-                    class="col-4 border-end border-end-md-0 d-flex p-1 ps-md-2 justify-content-center align-items-center text-light-emphasis bg-primary bg-gradient app-user-cell"
-                    tabindex="0"
-                    data-bs-toggle="popover"
-                    data-bs-content="{{ popover|e }}"
-                  >
-                    {{ m.user_avatar(review.user) }} <span class="ms-2">{{ review.user.username }}</span>
-                  </div>
-                  <div class="col-8 border-start-md bg-primary bg-gradient">
+                  <div class="col-12 bg-primary bg-gradient">
                     {% set backpath = path('home_index', { anchor: reviewId }) %}
                     {{ m.game_title(review.game, backpath, true, false) }}
                   </div>
                   {# 3 piece of information : player rating, hour spend, and first play date #}
                   <div class="col-12 d-flex align-items-center flex-even bg-secondary-subtle">
+                    {% set popover = m.user_popover(review.user) %}
+                    {% set classes = 'flex-basis-0 flex-grow-1 p-2 border-end text-truncate d-flex justify-content-center align-items-center app-user-cell' %}
+                    <div class="{{ classes }}" tabindex="0" data-bs-toggle="popover" data-bs-content="{{ popover|e }}">
+                      {{ m.user_avatar(review.user) }}
+                      <span class="ms-1 align-middle d-none d-lg-inline">{{ review.user.username }}</span>
+                    </div>
                     {{ m.review_information(review) }}
                   </div>
                 </div>

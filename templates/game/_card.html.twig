@@ -88,26 +88,22 @@
           {% for review in game.reviews|filter(review => review.user is not empty) %}
             <div class="col-12 text-center d-flex bg-secondary-subtle align-items-center border-bottom {{ loop.index0 > 0 ? 'border-top' }} col-md-auto flex-even">
               {% set popover = m.user_popover(review.user) %}
-              <div
-                class="flex-basis-0 flex-grow-2 flex-grow-lg-1 text-truncate py-0 px-2 py-md-1 h-100 text-light-emphasis app-user-cell"
-                tabindex="0"
-                data-bs-toggle="popover"
-                data-bs-content="{{ popover|e }}"
-              >
+              {% set classes = 'flex-basis-0 flex-grow-2 flex-grow-lg-1 text-truncate p-2 h-100 app-user-cell' %}
+              <div class="{{ classes }}" tabindex="0" data-bs-toggle="popover" data-bs-content="{{ popover|e }}">
                 {{ m.user_avatar(review.user) }}
-                <span class="ms-1 align-middle d-none d-lg-inline">{{ review.user.username }}</span>
+                <span class="ms-1 d-none d-lg-inline">{{ review.user.username }}</span>
               </div>
-              <div class="flex-basis-0 flex-grow-2 flex-grow-lg-1 py-1 px-2 py-md-2 border-start border-end text-truncate">
+              <div class="flex-basis-0 flex-grow-2 flex-grow-lg-1 p-2 border-start border-end text-truncate">
                 <span class="fa-solid fa-star fa-sm" aria-hidden="true"></span>
                 <span class="visually-hidden">{{ 'review.label.rating'|trans([], 'validators') }} :</span>
                 {{ review.rating is not empty ? review.rating|format_number({ fraction_digit: 1 }) : '-' }}
               </div>
-              <div class="flex-basis-0 flex-grow-2 flex-grow-lg-1 py-1 px-2 py-md-2 border-end text-truncate">
+              <div class="flex-basis-0 flex-grow-2 flex-grow-lg-1 p-2 border-end text-truncate">
                 <span class="fa-regular fa-hourglass-half fa-sm" aria-hidden="true"></span>
                 <span class="visually-hidden">{{ 'review.label.hourSpend'|trans([], 'validators') }} :</span>
                 {{ review.hourSpend is not empty ? review.hourSpend ~ 'h' : '-' }}
               </div>
-              <div class="flex-basis-0 flex-grow-3 flex-grow-lg-1 py-1 px-2 py-md-2 text-truncate">
+              <div class="flex-basis-0 flex-grow-3 flex-grow-lg-1 p-2 text-truncate">
                 <span class="fa-regular fa-calendar-days fa-sm" aria-hidden="true"></span>
                 <span class="visually-hidden">{{ 'review.label.firstPlay'|trans([], 'validators') }} :</span>
                 <span class="small">{{ review.firstPlay is not empty ? review.firstPlay|format_datetime('short', 'none') : '-' }}</span>
