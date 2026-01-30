@@ -33,7 +33,7 @@
 
 {# Macro to prepare the delete modal in the form #}
 {% macro form_modal(body, path) %}
-  <div class="modal fade" id="delete-modal" tabindex="-1" aria-labelledby="delete-modal-label" aria-hidden="true" role="dialog" loading="lazy">
+  <div class="modal" id="delete-modal" tabindex="-1" aria-labelledby="delete-modal-label" aria-hidden="true" role="dialog" loading="lazy">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         {# Header with title and dismiss button #}
@@ -54,7 +54,6 @@
               <span class="bi bi-trash-fill me-1" aria-hidden="true"></span>
               {{ 'form.button.delete'|trans }}
             </button>
-            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">{{ 'form.button.cancel'|trans }}</button>
             <input type="hidden" name="_token" data-controller="csrf-protection" value="{{ csrf_token('livror/delete') }}" />
           </form>
         </div>
@@ -107,7 +106,7 @@
           <label class="input-group-text" id="input-group-sorts">{{ 'form.button.sortBy'|trans }}</label>
           {# independant buttons (large screen) #}
           {% for sort in sorts %}
-            <a href="{{ sort.url }}" class="btn btn-outline-secondary app-btn-border-light d-none d-md-block {{ sort.active ? 'active' }}" data-turbo-prefetch="false">
+            <a href="{{ sort.url }}" class="btn btn-outline-light app-btn-border-light d-none d-md-block {{ sort.active ? 'active' }}" data-turbo-prefetch="false">
               {{ sort.label }}
             </a>
           {% endfor %}
@@ -123,7 +122,7 @@
           {% set direction_way = queryParam.sorts|first %}
           {% set new_param = { offset: 0, limit: env.app.default_limit, sorts: { (queryParam.sorts|keys|first): direction_way == 'asc' ? 'desc' : 'asc' } } %}
           {% set direction_url = _self.path_with_query_param(queryParam|clone_with(new_param)) %}
-          <a href="{{ direction_url }}" class="btn btn-outline-secondary app-btn-border-light" aria-label="{{ ('aria.order.' ~ direction_way)|trans }}" data-turbo-prefetch="false">
+          <a href="{{ direction_url }}" class="btn btn-outline-light app-btn-border-light" aria-label="{{ ('aria.order.' ~ direction_way)|trans }}" data-turbo-prefetch="false">
             <span class="bi bi-arrow-{{ direction_way == 'asc' ? 'up' : 'down' }}" aria-hidden="true"></span>
           </a>
         </div>
@@ -137,7 +136,7 @@
             {% set filter_not_empty = attribute(queryParam.filters, filterKey) is defined and attribute(queryParam.filters, filterKey) is not empty %}
             <button
               type="button"
-              class="btn btn-outline-secondary app-btn-border-light dropdown-toggle app-dropdown-left app-dropdown-smooth {{ filter_not_empty ? 'active' }}"
+              class="btn btn-outline-light app-btn-border-light dropdown-toggle app-dropdown-left app-dropdown-smooth {{ filter_not_empty ? 'active' }}"
               data-bs-toggle="dropdown"
               data-bs-target="#{{ filtersId }}"
               data-bs-auto-close="outside"
@@ -155,7 +154,7 @@
             <div id="{{ filtersId }}" class="dropdown-menu dropdown-menu-end" {{ stimulus_controller('filter-apply', { url: url, key: filterKey }) }}>
               {{ attribute(filterContent, filterKey) }}
               <div class="py-2 text-center">
-                <button class="btn btn-sm btn-outline-secondary" data-filter-apply-target="button">{{ 'form.button.apply'|trans }}</button>
+                <button class="btn btn-sm btn-outline-light" data-filter-apply-target="button">{{ 'form.button.apply'|trans }}</button>
               </div>
             </div>
           {% endfor %}
@@ -164,7 +163,7 @@
       {# Field to reset #}
       <div>
         {% set reinit_url = _self.path_with_query_param(queryParam|clone_reset) %}
-        <a href="{{ reinit_url }}" class="btn btn-outline-secondary app-btn-border-light" aria-label="{{ 'form.button.reset'|trans }}">
+        <a href="{{ reinit_url }}" class="btn btn-outline-light app-btn-border-light" aria-label="{{ 'form.button.reset'|trans }}">
           <span class="bi bi-arrow-counterclockwise" aria-hidden="true"></span>
         </a>
       </div>
@@ -174,20 +173,22 @@
 
 {# Macro to display the title of the game in the game and review index #}
 {%- macro game_title(game, backpath = null, show = false, edit = false) -%}
-  <div class="text-center text-md-start d-flex p-1 ps-md-2 justify-content-center justify-content-md-start align-items-center">
-    <h5 class="mb-0 p-1 text-truncate flex-grow-1">{{ game.name }}</h5>
-    {% if show %}
-      {% set url = path('game_show', { id: game.id, backpath: backpath }) %}
-      <a href="{{ url }}" class="btn btn-sm btn-outline-light" aria-label="{{ 'game.index.button.editGame'|trans }}" data-turbo-frame="_top">
-        <span class="bi bi-eye" aria-hidden="true"></span>
-      </a>
-    {% endif %}
-    {% if edit %}
-      {% set url = path('game_edit', { id: game.id, backpath: backpath }) %}
-      <a href="{{ url }}" class="btn btn-sm btn-outline-light ms-1" aria-label="{{ 'game.index.button.editGame'|trans }}" data-turbo-frame="_top">
-        <span class="bi bi-pen" aria-hidden="true"></span>
-      </a>
-    {% endif %}
+  <div class="text-center text-md-start p-1 ps-md-2 position-relative">
+    <div class="position-absolute end-0 float-end pe-1">
+      {% if show %}
+        {% set url = path('game_show', { id: game.id, backpath: backpath }) %}
+        <a href="{{ url }}" class="btn btn-sm btn-outline-light" aria-label="{{ 'game.index.button.editGame'|trans }}" data-turbo-frame="_top">
+          <span class="bi bi-eye" aria-hidden="true"></span>
+        </a>
+      {% endif %}
+      {% if edit %}
+        {% set url = path('game_edit', { id: game.id, backpath: backpath }) %}
+        <a href="{{ url }}" class="btn btn-sm btn-outline-light" aria-label="{{ 'game.index.button.editGame'|trans }}" data-turbo-frame="_top">
+          <span class="bi bi-pen" aria-hidden="true"></span>
+        </a>
+      {% endif %}
+    </div>
+    <h5 class="mb-0 p-1 text-truncate">{{ game.name }}</h5>
   </div>
 {%- endmacro -%}
 
@@ -245,7 +246,7 @@
   {% if edit and review.user.id == app.user.id %}
     <div class="float-end">
       <a
-        class="btn btn-sm btn-outline-secondary"
+        class="btn btn-sm btn-outline-light"
         href="{{ path('review_edit', { id: review.id, backpath: backpath }) }}"
         aria-label="{{ 'review.index.button.editReview'|trans }}"
         data-turbo-frame="_top"
@@ -255,46 +256,48 @@
       </a>
     </div>
   {% endif %}
-  <span class="small fw-light">
-    {% set date_add = review.dateAdd|format_datetime('relative_medium', 'none') %}
-    {% set date_update = review.dateUpdate|format_datetime('relative_medium', 'none') %}
-    {{ 'review.index.card.added'|trans }} : {{ date_add }}
-    {% if date_add != date_update %}
-      ({{ 'review.index.card.updated'|trans }} : {{ date_update }})
-    {% endif %}
-  </span>
-  <p class="m-0">
-    {% if review.comment is not empty %}
-      {{ review.comment|nl2br }}
-    {% else %}
-      <span class="fw-light">{{ 'review.index.card.noComment'|trans }}</span>
-    {% endif %}
-  </p>
-  {% if (review.attachments|length) > 0 %}
-    <div class="d-flex flex-row align-items-start my-1">
-      <div class="text-nowrap">
-        {{ 'review.label.attachments'|trans([], 'validators') }} :
+  <div class="px-1">
+    <span class="small fw-light">
+      {% set date_add = review.dateAdd|format_datetime('relative_medium', 'none') %}
+      {% set date_update = review.dateUpdate|format_datetime('relative_medium', 'none') %}
+      {{ 'review.index.card.added'|trans }} : {{ date_add }}
+      {% if date_add != date_update %}
+        ({{ 'review.index.card.updated'|trans }} : {{ date_update }})
+      {% endif %}
+    </span>
+    <p class="m-0">
+      {% if review.comment is not empty %}
+        {{ review.comment|nl2br }}
+      {% else %}
+        <span class="fw-light">{{ 'review.index.card.noComment'|trans }}</span>
+      {% endif %}
+    </p>
+    {% if (review.attachments|length) > 0 %}
+      <div class="d-flex flex-row align-items-start my-1">
+        <div class="text-nowrap">
+          {{ 'review.label.attachments'|trans([], 'validators') }} :
+        </div>
+        <ul class="mb-0">
+          {% for attachment in review.attachments %}
+            <li>
+              {{ attachment.description }} -
+              <a data-turbo="false" href="{{ path('attachment_download', { id: attachment.id }) }}" class="link-light">{{ 'form.button.download'|trans }}</a>
+              {% if attachment.fileMeta.mimeType starts with 'image/' %}
+                - <a href="#" role="button" class="link-light" data-bs-toggle="modal" data-bs-target="#attachment-modal" data-bs-path="{{ path('attachment_download', { id: attachment.id }) }}" data-bs-title="{{ attachment.description }}">{{
+                    'form.button.display'|trans
+                  }}</a>
+              {% endif %}
+            </li>
+          {% endfor %}
+        </ul>
       </div>
-      <ul class="mb-0">
-        {% for attachment in review.attachments %}
-          <li>
-            {{ attachment.description }} -
-            <a data-turbo="false" href="{{ path('attachment_download', { id: attachment.id }) }}" class="link-light">{{ 'form.button.download'|trans }}</a>
-            {% if attachment.fileMeta.mimeType starts with 'image/' %}
-              - <a href="#" role="button" class="link-light" data-bs-toggle="modal" data-bs-target="#attachment-modal" data-bs-path="{{ path('attachment_download', { id: attachment.id }) }}" data-bs-title="{{ attachment.description }}">{{
-                  'form.button.display'|trans
-                }}</a>
-            {% endif %}
-          </li>
-        {% endfor %}
-      </ul>
-    </div>
-  {% endif %}
+    {% endif %}
+  </div>
 {% endmacro %}
 
 {% macro attachment_modal() %}
   <div
-    class="modal fade"
+    class="modal"
     id="attachment-modal"
     tabindex="-1"
     aria-labelledby="attachment-modal-label"
@@ -363,8 +366,8 @@
 {% macro more_button(queryParam) %}
   {% set new_param = { offset: queryParam.offset + queryParam.limit, limit: env.app.default_limit } %}
   {% set url = _self.path_with_query_param(queryParam|clone_with(new_param)) %}
-  <div class="text-center" {{ stimulus_controller('load-more', { url: url, lazy: env.app.enable_autoload }) }}>
-    <button class="btn btn-outline-secondary" data-load-more-target="button remove">{{ 'form.button.showMore'|trans }}</button>
+  <div class="text-center py-3" {{ stimulus_controller('load-more', { url: url, lazy: env.app.enable_autoload }) }}>
+    <button class="btn btn-outline-light" data-load-more-target="button remove">{{ 'form.button.showMore'|trans }}</button>
     <span class="fs-4 text-muted" data-load-more-target="spinner"></span>
   </div>
 {% endmacro %}

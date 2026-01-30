@@ -14,7 +14,7 @@ game:
     totHourSpend: Total playtime
     minFirstPlay: First launch
   help:
-    steamId: If automatic search doesn't work, please retrieve the Steam ID from <a href='https://steamdb.info/' target='_blank'>SteamDB</a>.
+    steamId: If automatic search doesn't work, please retrieve the Steam ID from <a class="link-light" ref='https://steamdb.info/' target='_blank'>SteamDB</a>.
     commaSeparated: Separated by commas
   error:
     steamId:

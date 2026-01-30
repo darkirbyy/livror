@@ -19,7 +19,7 @@ export default class extends DynamicButtonController {
       })
       .catch(() => {
         this.element.outerHTML =
-          '<div class="text-center text-secondary fs-6 fst-italic">Erreur de chargement<br><a href="" class="my-2 btn btn-outline-secondary" data-turbo="false">Recharger la page</a></div>';
+          '<div class="text-center text-secondary fs-6 fst-italic">Erreur de chargement<br><a href="" class="my-2 btn btn-outline-light" data-turbo="false">Recharger la page</a></div>';
       });
   }
 }

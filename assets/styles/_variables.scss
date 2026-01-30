@@ -37,6 +37,7 @@ $light: color.adjust($gray-600, $lightness: 35%) !default;
 $dark: $gray-900 !default;
 $min-contrast-ratio: 1.6 !default;
 $spacer: 1rem !default;
+$steam: #1b2838 !default;
 
 // Body
 
@@ -60,7 +61,13 @@ $border-radius-sm: 0 !default;
 
 // Buttons
 
-$btn-transition: 0;
+$btn-hover-bg-shade-amount: 20% !default;
+$btn-active-bg-shade-amount: 30% !default;
+$btn-transition: 0 !default;
+
+// Links
+
+$icon-link-icon-transition: 0 !default;
 
 // Dropdowns
 
@@ -72,6 +79,14 @@ $dropdown-padding-y: 0 !default;
 $dropdown-divider-margin-y: 0 !default;
 $dropdown-item-padding-y: $spacer * 0.35 !default;
 $dropdown-link-active-bg: rgba($white, 0.2) !default;
+
+// Modals
+
+$modal-backdrop-opacity: 0.75 !default;
+$modal-footer-border-width: 0;
+$modal-fade-transform: none !default;
+$modal-scale-transform: none !default;
+$modal-transition: 0;
 
 // // Fonts
 
@@ -164,11 +179,6 @@ $dropdown-link-active-bg: rgba($white, 0.2) !default;
 // $toast-header-color: $body-color !default;
 // $toast-header-background-color: $toast-background-color !default;
 // $toast-header-border-color: $toast-border-color !default;
-
-// // Modals
-
-// $modal-content-bg: $gray-600 !default;
-// $modal-header-border-color: rgb(0 0 0 / 20%) !default;
 
 // // Progress bars
 

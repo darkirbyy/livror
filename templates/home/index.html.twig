@@ -55,7 +55,7 @@
             {% endfor %}
             {# Link to check all games list #}
             <div class="text-center p-2 p-md-4">
-              <a href="{{ path('game_index') }}" class="btn btn-outline-secondary">{{ 'home.index.lastGame.all'|trans }}</a>
+              <a href="{{ path('game_index') }}" class="btn btn-outline-light">{{ 'home.index.lastGame.all'|trans }}</a>
             </div>
           {% else %}
             <div class="text-center p-2 fs-5 fw-light">
@@ -97,14 +97,14 @@
                 </div>
 
                 {# Card body in one part : the comment #}
-                <div class="px-2 py-1 bg-body-secondary">
+                <div class="p-1 bg-body-secondary">
                   {{ m.review_body(review, backpath) }}
                 </div>
               </div>
             {% endfor %}
             {# Link to check all user reviews list #}
             <div class="text-center p-2 p-md-4">
-              <a href="{{ path('review_index') }}" class="btn btn-outline-secondary">{{ 'home.index.lastReview.all'|trans }}</a>
+              <a href="{{ path('review_index') }}" class="btn btn-outline-light">{{ 'home.index.lastReview.all'|trans }}</a>
             </div>
           {% else %}
             <div class="card-max-large mx-auto text-center my-1 p-2 fs-5 fw-light">

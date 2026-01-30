@@ -96,7 +96,7 @@ class ReviewControllerTest extends AbstractControllerTest
         $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('h1', 'review.index.title.other');
         $this->assertSame($gamesTitleExpected, $gamesTitle);
-        $this->assertAnySelectorTextContains('div a.btn.btn-outline-secondary', 'review.index.button.seeMyReviews');
+        $this->assertAnySelectorTextContains('div a.btn.btn-outline-light', 'review.index.button.seeMyReviews');
         $this->assertSelectorNotExists('div[class~=alert-secondary]');
     }
 

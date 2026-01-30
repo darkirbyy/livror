@@ -36,8 +36,9 @@ legend.col-form-label.required:not(.remove-required)::after {
   --bs-icon-link-transform: translateX(-0.2rem);
 }
 
-.btn-outline-light:hover {
-  background-color: rgba($gray-500, 0.5);
+.btn-outline-light {
+  --bs-btn-active-bg: #{rgba($gray-500, 0.5)};
+  --bs-btn-hover-bg: #{rgba($gray-500, 0.5)};
 }
 
 :not(.modal) .popover {
@@ -104,12 +105,10 @@ legend.col-form-label.required:not(.remove-required)::after {
 
 .app-dropdown-smooth {
   &::before {
-    transition: transform 0.2s ease-in-out;
     transform: rotate(-90deg);
   }
 
   &::after {
-    transition: transform 0.2s ease-in-out;
     transform: rotate(90deg);
   }
 
@@ -219,6 +218,15 @@ legend.col-form-label.required:not(.remove-required)::after {
 
 .app-rating-display {
   width: 5rem !important;
+}
+
+.app-btn-steam {
+  --bs-btn-bg: #{$steam};
+  --bs-btn-border-color: var(--bs-border-color);
+  --bs-btn-hover-bg: #{shade-color($steam, $btn-hover-bg-shade-amount)};
+  --bs-btn-hover-border-color: var(--bs-border-color);
+  --bs-btn-active-bg: #{shade-color($steam, $btn-active-bg-shade-amount)};
+  --bs-btn-active-border-color: var(--bs-border-color);
 }
 
 // Others /////////////////////////
