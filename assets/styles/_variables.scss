@@ -74,11 +74,11 @@ $icon-link-icon-transition: 0 !default;
 $dropdown-bg: $body-secondary-bg-dark !default;
 $dropdown-link-color: $body-color-dark !default;
 $dropdown-link-hover-color: $dropdown-link-color !default;
-$dropdown-link-hover-bg: rgba($white, 0.075) !default;
+$dropdown-link-hover-bg: rgba($white, 0.2) !default;
+$dropdown-link-active-bg: rgba($white, 0.1) !default;
 $dropdown-padding-y: 0 !default;
 $dropdown-divider-margin-y: 0 !default;
 $dropdown-item-padding-y: $spacer * 0.35 !default;
-$dropdown-link-active-bg: rgba($white, 0.2) !default;
 
 // Modals
 

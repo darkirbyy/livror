@@ -32,10 +32,17 @@
         {% set filterContentTypeGame %}
           <ul class="p-0 m-0">
             {% for typeGame in enum('App\\Enum\\TypeGameEnum').cases %}
-              <li class="dropdown-item">
-                {% set checked = queryParam.filters.typeGame is not defined or typeGame.value in queryParam.filters.typeGame ? 'checked' : '' %}
-                {% set filtersTypeGameId = 'filters-type-game-' ~ (typeGame.value|lower) %}
-                <input class="form-check-input" type="checkbox" value="{{ typeGame.value }}" id="{{ filtersTypeGameId }}" {{ checked }} data-filter-apply-target="checkbox" />
+              {% set checked = queryParam.filters.typeGame is not defined or typeGame.value in queryParam.filters.typeGame %}
+              {% set filtersTypeGameId = 'filters-type-game-' ~ (typeGame.value|lower) %}
+              <li class="dropdown-item {{ checked ? 'active' }}">
+                <input
+                  class="form-check-input"
+                  type="checkbox"
+                  value="{{ typeGame.value }}"
+                  id="{{ filtersTypeGameId }}"
+                  {{ checked ? 'checked' }}
+                  data-filter-apply-target="checkbox"
+                />
                 <label class="form-check-label w-100" for="{{ filtersTypeGameId }}">{{ typeGame|trans }}</label>
               </li>
             {% endfor %}
@@ -44,10 +51,10 @@
         {% set filterContentUsers %}
           <ul class="p-0 m-0">
             {% for user in users|filter(u => u is not null)|sort((a, b) => a.username <=> b.username) %}
-              <li class="dropdown-item">
-                {% set checked = queryParam.filters.users is not defined or user.id in queryParam.filters.users ? 'checked' : '' %}
-                {% set filtersUserId = 'filters-users-' ~ user.id %}
-                <input class="form-check-input" type="checkbox" value="{{ user.id }}" id="{{ filtersUserId }}" {{ checked }} data-filter-apply-target="checkbox" />
+              {% set checked = queryParam.filters.users is not defined or user.id in queryParam.filters.users %}
+              {% set filtersUserId = 'filters-users-' ~ user.id %}
+              <li class="dropdown-item {{ checked ? 'active' }}">
+                <input class="form-check-input" type="checkbox" value="{{ user.id }}" id="{{ filtersUserId }}" {{ checked ? 'checked' }} data-filter-apply-target="checkbox" />
                 <label class="form-check-label w-100" for="{{ filtersUserId }}">
                   {{ m.user_avatar(user) }}
                   <span class="ms-1">{{ user.username }}</span>
@@ -59,10 +66,10 @@
 
         {% set filterContentWithoutReview %}
           <ul class="p-0 m-0">
-            <li class="dropdown-item">
-              {% set checked = queryParam.filters.withoutReview is defined and queryParam.filters.withoutReview is not empty ? 'checked' : '' %}
-              {% set filtersWithoutReviewId = 'filters-without-review' %}
-              <input class="form-check-input" type="checkbox" value="1" id="{{ filtersWithoutReviewId }}" {{ checked }} data-filter-apply-target="checkbox" />
+            {% set checked = queryParam.filters.withoutReview is defined and queryParam.filters.withoutReview is not empty %}
+            {% set filtersWithoutReviewId = 'filters-without-review' %}
+            <li class="dropdown-item {{ checked ? 'active' }}">
+              <input class="form-check-input" type="checkbox" value="1" id="{{ filtersWithoutReviewId }}" {{ checked ? 'checked' }} data-filter-apply-target="checkbox" />
               <label class="form-check-label w-100" for="{{ filtersWithoutReviewId }}">Afficher les jeux sans avis</label>
             </li>
           </ul>

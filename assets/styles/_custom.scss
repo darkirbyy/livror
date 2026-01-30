@@ -41,12 +41,6 @@ legend.col-form-label.required:not(.remove-required)::after {
   --bs-btn-hover-bg: #{rgba($gray-500, 0.5)};
 }
 
-.input-group .btn-outline-light {
-  --bs-btn-border-color: #{$input-border-color};
-  --bs-btn-hover-border-color: #{$input-border-color};
-  --bs-btn-active-border-color: #{$input-border-color};
-}
-
 :not(.modal) .popover {
   z-index: 10 !important;
 }
@@ -177,6 +171,12 @@ legend.col-form-label.required:not(.remove-required)::after {
 
 .app-btn-max-height {
   height: calc(2.5rem - calc($border-width * 2));
+}
+
+.app-btn-input-border {
+  --bs-btn-border-color: #{$input-border-color};
+  --bs-btn-hover-border-color: #{$input-border-color};
+  --bs-btn-active-border-color: #{$input-border-color};
 }
 
 .app-form-range-tick {

@@ -47,8 +47,7 @@
     {# The HEADER regroup the navbar and the main title #}
     <header>
       <nav class="navbar navbar-expand-md bg-primary bg-gradient" aria-label="{{ 'aria.mainNavigation'|trans }}">
-        {% set currentRoute = app.current_route %}
-        {% set activeLink = 'class="nav-link active" aria-current="page" aria-selected="true"' %}
+        {% set activeLink = 'class="nav-link active" ' %}
         {% set otherLink = 'class="nav-link"' %}
         {# Navbar with 3 blocks : the brand, the navigation button for small screen and the content #}
         <div class="container-fluid">
@@ -73,29 +72,37 @@
             {# Left part of the navbar #}
             <ul class="navbar-nav me-auto mb-2 mb-md-0">
               <li class="nav-item">
-                <a {{ currentRoute starts with 'home' ? activeLink|raw : otherLink|raw }} href="{{ path('home_index') }}">{{ 'layout.navbar.home'|trans }}</a>
+                {% set active = app.current_route starts with 'home' %}
+                <a class="nav-link {{ m.active_class('home') }}" href="{{ path('home_index') }}" {{ m.active_attr(active) }}>{{ 'layout.navbar.home'|trans }}</a>
               </li>
               <li class="nav-item">
-                <a {{ currentRoute starts with 'game' ? activeLink|raw : otherLink|raw }} href="{{ path('game_index') }}">{{ 'layout.navbar.game'|trans }}</a>
+                {% set active = app.current_route starts with 'game' %}
+                <a class="nav-link {{ m.active_class(active) }}" href="{{ path('game_index') }}" {{ m.active_attr(active) }}>{{ 'layout.navbar.game'|trans }}</a>
               </li>
             </ul>
             {# Right part of the navbar #}
             <ul class="navbar-nav">
               <li class="nav-item dropdown">
+                {% set active = (app.current_route == 'review_index' and (app.current_route_parameters.id|default(app.user.id)) == app.user.id)
+                  or app.current_route == 'review_edit'
+                  or app.current_route == 'review_new'
+                %}
                 <a
-                  class="nav-link {{ currentRoute starts with 'review' ? 'active' }} dropdown-toggle app-dropdown-left app-dropdown-smooth d-flex align-items-center"
+                  class="nav-link dropdown-toggle app-dropdown-left app-dropdown-smooth d-flex align-items-center {{ m.active_class(active) }}"
                   href="#"
                   role="button"
                   data-bs-toggle="dropdown"
                   aria-expanded="false"
                   aria-haspopup="true"
-                  {{ currentRoute starts with 'review' ? 'aria-current="page" aria-selected="true"' }}
+                  {{ m.active_attr(active) }}
                 >
                   <span class="me-2">{{ app.user.username }}</span>
                   {{ m.user_avatar(app.user) }}
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end" role="menu">
-                  <li><a class="dropdown-item py-2" role="menuitem" href="{{ path('review_index') }}">{{ 'layout.navbar.account.myReviews'|trans }}</a></li>
+                  <li>
+                    <a class="dropdown-item py-2 {{ m.active_class(active) }}" role="menuitem" href="{{ path('review_index') }}">{{ 'layout.navbar.account.myReviews'|trans }}</a>
+                  </li>
                   <li><hr class="dropdown-divider" /></li>
                   <li><a class="dropdown-item" role="menuitem" href="{{ path('home_account') }}" data-turbo-prefetch="false">{{ 'layout.navbar.account.myAccount'|trans }}</a></li>
                   <li><a class="dropdown-item" role="menuitem" href="{{ '/'|generate_root }}" data-turbo-prefetch="false">{{ 'layout.navbar.account.backToHub'|trans }}</a></li>

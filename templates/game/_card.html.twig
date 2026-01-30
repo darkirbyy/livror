@@ -113,7 +113,7 @@
                 <span class="small">{{ review.firstPlay is not empty ? review.firstPlay|format_datetime('short', 'none') : '-' }}</span>
               </div>
             </div>
-            <div class="col-12 mb-2 py-1 px-2">
+            <div class="col-12 mb-2 p-1">
               {{ m.review_body(review, backpath, true) }}
             </div>
           {% endfor %}
