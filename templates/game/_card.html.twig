@@ -20,17 +20,17 @@
         {{ m.fmt_num_users(gameInfo.numUsers) }}
       </div>
       <div class="flex-basis-0 flex-grow-2 flex-grow-lg-1 py-1 px-2 py-md-2 border-end text-truncate">
-        <span class="fa-solid fa-star fa-sm" aria-hidden="true"></span>
+        <span aria-hidden="true"><span class="fa-regular fa-star fa-sm"></span><sub>μ</sub></span>
         <span class="visually-hidden">{{ 'game.label.avgRating'|trans([], 'validators') }} :</span>
         {{ m.fmt_avg_rating(gameInfo.avgRating) }}
       </div>
       <div class="flex-basis-0 flex-grow-2 flex-grow-lg-1 py-1 px-2 py-md-2 border-end text-truncate">
-        <span class="fa-regular fa-hourglass-half fa-sm" aria-hidden="true"></span>
+        <span aria-hidden="true"><span class="fa-regular fa-hourglass-half fa-sm"></span><sub>Σ</sub></span>
         <span class="visually-hidden">{{ 'game.label.totHourSpend'|trans([], 'validators') }} :</span>
         {{ m.fmt_tot_hour_spend(gameInfo.totHourSpend) }}
       </div>
       <div class="flex-basis-0 flex-grow-3 flex-grow-lg-1 py-1 px-2 py-md-2 text-truncate">
-        <span class="fa-regular fa-calendar-days fa-sm" aria-hidden="true"></span>
+        <span aria-hidden="true"><span class="fa-regular fa-calendar-days fa-sm"></span><sub>m</sub></span>
         <span class="visually-hidden">{{ 'game.label.minFirstPlay'|trans([], 'validators') }} :</span>
         <span class="small">{{ m.fmt_min_first_play(gameInfo.minFirstPlay) }}</span>
       </div>
@@ -94,7 +94,7 @@
                 <span class="ms-1 d-none d-lg-inline align-middle">{{ review.user.username }}</span>
               </div>
               <div class="flex-basis-0 flex-grow-2 flex-grow-lg-1 p-2 border-start border-end text-truncate">
-                <span class="fa-solid fa-star fa-sm" aria-hidden="true"></span>
+                <span class="fa-regular fa-star fa-sm" aria-hidden="true"></span>
                 <span class="visually-hidden">{{ 'review.label.rating'|trans([], 'validators') }} :</span>
                 {{ review.rating is not empty ? review.rating|format_number({ fraction_digit: 1 }) : '-' }}
               </div>
