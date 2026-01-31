@@ -2,9 +2,7 @@
 // Bootswatch
 @use 'sass:color';
 
-// $theme: 'superhero' !default;
-
-// // Color system
+// Color system
 
 $white: #ffffff !default;
 $gray-100: #ebebeb !default;
@@ -103,6 +101,10 @@ $form-range-track-height: 0.15rem;
 $form-range-thumb-width: 1.25rem;
 $form-range-thumb-height: 0.9rem;
 $input-transition: 0;
+
+// Popover
+
+$popover-bg: $body-secondary-bg-dark;
 
 // // Fonts
 

@@ -133,9 +133,11 @@ input[disabled] {
 // Users //////////////////////////
 
 .app-user-cell {
+  color: tint-color($primary, 30%);
+
   &:hover,
   &:active {
-    background-color: $dark-bg-subtle-dark;
+    background-color: tint-color($secondary-bg-subtle-dark, 5%);
     cursor: pointer;
 
     span {
