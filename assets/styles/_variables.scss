@@ -106,6 +106,19 @@ $input-transition: 0;
 
 $popover-bg: $body-secondary-bg-dark;
 
+// Navbar
+
+$navbar-padding-y: 0;
+$navbar-brand-margin-end: 0;
+$navbar-toggler-focus-width: 0.1rem;
+$nav-link-padding-y: 0;
+$nav-link-padding-x: 0;
+$navbar-nav-link-padding-x: 0;
+$navbar-light-color: $body-color-dark;
+$navbar-light-hover-color: tint-color($body-color-dark, 20%);
+$navbar-light-active-color: tint-color($body-color-dark, 20%);
+$navbar-toggler-transition: 0;
+
 // // Fonts
 
 // // stylelint-disable-next-line value-keyword-case
