@@ -173,8 +173,8 @@
 
 {# Macro to display the title of the game in the game and review index #}
 {%- macro game_title(game, backpath = null, show = false, edit = false) -%}
-  <div class="text-center text-md-start p-1 ps-md-2 position-relative">
-    <div class="position-absolute end-0 float-end pe-1">
+  <div class="text-center text-md-start p-1 position-relative">
+    <div class="position-absolute end-0 float-end px-1 bg-primary bg-gradient">
       {% if show %}
         {% set url = path('game_show', { id: game.id, backpath: backpath }) %}
         <a href="{{ url }}" class="btn btn-sm btn-outline-light" aria-label="{{ 'game.index.button.editGame'|trans }}" data-turbo-frame="_top">

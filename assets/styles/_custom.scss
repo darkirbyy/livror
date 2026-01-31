@@ -6,13 +6,18 @@
 
 .navbar-nav {
   .nav-item {
-    padding: $spacer * 0.75 $spacer * 0.75;
-    color: $body-color-dark;
+    padding: 0;
 
-    &:hover,
-    &.active,
-    &:has(a[aria-expanded='true']) {
-      background-color: shade-color($primary, $btn-hover-bg-shade-amount);
+    & > a {
+      padding: $spacer * 0.75 $spacer * 0.75 !important;
+      color: $body-color-dark;
+
+      &:hover,
+      &:focus,
+      &.active,
+      &:has(a[aria-expanded='true']) {
+        background-color: shade-color($primary, $btn-hover-bg-shade-amount);
+      }
     }
   }
 }
@@ -146,7 +151,8 @@ input[disabled] {
 // Users //////////////////////////
 
 .app-user-cell {
-  color: tint-color($primary, 30%);
+  color: tint-color($primary, 60%);
+  line-height: 1rem;
 
   &:hover,
   &:active {

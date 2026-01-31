@@ -9,8 +9,6 @@
       <meta name="turbo-visit-control" content="reload" />
     {% endif %}
     <meta name="turbo-prefetch" content="{{ env.app.enable_prefetch ? 'true' : 'false' }}" />
-    {# <meta name="turbo-refresh-method" content="morph" /> #}
-    {# <meta name="turbo-refresh-scroll" content="preserve" /> #}
 
     <title>
       {{ title ~ ' - ' ~ ('layout.name'|trans) }}
@@ -68,12 +66,12 @@
             {# Left part of the navbar #}
             <ul class="navbar-nav me-auto">
               {% set active = app.current_route starts with 'home' %}
-              <li class="nav-item {{ m.active_class(active) }}">
-                <a class="nav-link" href="{{ path('home_index') }}" {{ m.active_attr(active) }}>{{ 'layout.navbar.home'|trans }}</a>
+              <li class="nav-item">
+                <a class="nav-link {{ m.active_class(active) }}" href="{{ path('home_index') }}" {{ m.active_attr(active) }}>{{ 'layout.navbar.home'|trans }}</a>
               </li>
               {% set active = app.current_route starts with 'game' %}
-              <li class="nav-item {{ m.active_class(active) }}">
-                <a class="nav-link" href="{{ path('game_index') }}" {{ m.active_attr(active) }}>{{ 'layout.navbar.game'|trans }}</a>
+              <li class="nav-item">
+                <a class="nav-link {{ m.active_class(active) }}" href="{{ path('game_index') }}" {{ m.active_attr(active) }}>{{ 'layout.navbar.game'|trans }}</a>
               </li>
             </ul>
             {# Right part of the navbar #}
@@ -82,7 +80,7 @@
                 or app.current_route == 'review_edit'
                 or app.current_route == 'review_new'
               %}
-              <li class="nav-item dropdown {{ m.active_class(active) }}">
+              <li class="nav-item dropdown">
                 <a
                   class="nav-link dropdown-toggle app-dropdown-left d-flex align-items-center {{ m.active_class(active) }}"
                   href="#"

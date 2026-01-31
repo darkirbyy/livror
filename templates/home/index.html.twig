@@ -88,7 +88,7 @@
                     {% set classes = 'flex-basis-0 flex-grow-1 p-2 border-end text-truncate d-flex justify-content-center align-items-center app-user-cell' %}
                     <div class="{{ classes }}" tabindex="0" data-bs-toggle="popover" data-bs-content="{{ popover|e }}">
                       {{ m.user_avatar(review.user) }}
-                      <span class="ms-1 align-middle d-none d-lg-inline">{{ review.user.username }}</span>
+                      <span class="ms-2 d-none d-lg-inline align-middle">{{ review.user.username }}</span>
                     </div>
                     {{ m.review_information(review) }}
                   </div>
