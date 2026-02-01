@@ -22,7 +22,7 @@
       </div>
 
       {# Turboframe to refresh only the main section when sorting the results #}
-      <turbo-frame id="main-section">
+      <turbo-frame role="none" id="main-section">
         {# Number of games added in the app #}
         <div class="mx-auto card-max-large card-max-md-none text-start fw-light mb-2">
           {{ 'game.index.numberDisplayed'|trans({ displayed: numbers.displayed, total: numbers.total }) }}
