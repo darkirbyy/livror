@@ -4,6 +4,10 @@
 // Boostrap improvements //////////
 ///////////////////////////////////
 
+.navbar-brand img {
+  max-height: $line-height-base + 1.2 * $spacer;
+}
+
 .navbar-nav {
   .nav-item {
     padding: 0;

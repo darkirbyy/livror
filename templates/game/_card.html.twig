@@ -14,7 +14,7 @@
     </div>
     {# 4 piece of information : player who have written a review, average rating, total hour spend, minimum first play date #}
     <div class="col-12 text-center d-flex align-items-center col-md-auto flex-even bg-primary bg-gradient-off bg-gradient-md-on">
-      <div class="flex-basis-0 flex-grow-2 flex-grow-lg-1 py-1 px-2 py-md-2 border-end text-truncate">
+      <div class="flex-basis-0 flex-grow-2 flex-grow-md-1 flex-grow-lg-1 py-1 px-2 py-md-2 border-end text-truncate">
         <span class="fa-solid fa-user-group fa-sm" aria-hidden="true"></span>
         <span class="visually-hidden">{{ 'game.label.numUsers'|trans([], 'validators') }} :</span>
         {{ m.fmt_num_users(gameInfo.numUsers) }}
@@ -88,7 +88,7 @@
           {% for review in game.reviews|filter(review => review.user is not empty) %}
             <div class="col-12 text-center d-flex bg-secondary-subtle align-items-center border-bottom {{ loop.index0 > 0 ? 'border-top' }} col-md-auto flex-even">
               {% set popover = m.user_popover(review.user) %}
-              {% set classes = 'flex-basis-0 flex-grow-2 flex-grow-lg-1 text-truncate p-2 h-100 app-user-cell' %}
+              {% set classes = 'flex-basis-0 flex-grow-2 flex-grow-md-1 flex-grow-lg-1 text-truncate p-2 h-100 app-user-cell' %}
               <div class="{{ classes }}" tabindex="0" data-bs-toggle="popover" data-bs-content="{{ popover|e }}">
                 {{ m.user_avatar(review.user) }}
                 <span class="ms-1 d-none d-lg-inline align-middle">{{ review.user.username }}</span>
