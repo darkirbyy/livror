@@ -18,6 +18,7 @@ export default class extends Controller {
         trigger: 'focus',
         placement: 'top',
         html: true,
+        animation: false,
       });
     });
   }

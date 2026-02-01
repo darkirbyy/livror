@@ -155,7 +155,7 @@ input[disabled] {
 // Users //////////////////////////
 
 .app-user-cell {
-  color: tint-color($primary, 60%);
+  color: $light;
   line-height: 1rem;
 
   &:hover,
@@ -164,6 +164,7 @@ input[disabled] {
     cursor: pointer;
 
     span {
+      color: shadow-color($light, 15%);
       text-decoration: underline;
     }
 
