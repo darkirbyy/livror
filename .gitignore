@@ -1,5 +1,6 @@
 .vscode/
 public/uploads
+config/reference.php
 
 ###> symfony/framework-bundle ###
 /.env.local
