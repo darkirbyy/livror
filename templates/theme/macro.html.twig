@@ -225,7 +225,7 @@
 {# Macro to display the information of a review #}
 {%- macro review_information(review) -%}
   <div class="flex-basis-0 flex-grow-1 p-2 border-end text-truncate">
-    <span class="fa-regular fa-star fa-sm" aria-hidden="true"></span>
+    <span class="fa-regular db-sausage fa-sm" aria-hidden="true"></span>
     <span class="visually-hidden">{{ 'review.label.rating'|trans([], 'validators') }} :</span>
     {{ review.rating is not empty ? review.rating|format_number({ fraction_digit: 1 }) : '-' }}
   </div>

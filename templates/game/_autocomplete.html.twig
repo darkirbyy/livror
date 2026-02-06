@@ -18,7 +18,7 @@
       {{ 'home.index.search.reviewedBy'|trans }} : {{ game.reviews|map(r => r.user.username)|sort|join(', ')|default('-') }}<br />
       {{ 'home.index.search.avgRating'|trans }} : {{ m.fmt_avg_rating(object.avgRating) }}
       {% if object.avgRating is not empty %}
-        <span class="fa-regular fa-star fa-sm" aria-hidden="true"></span>
+        <span class="fa-regular db-sausage fa-sm" aria-hidden="true"></span>
       {% endif %}
     </div>
   </div>
