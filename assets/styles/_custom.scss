@@ -276,6 +276,10 @@ input[disabled] {
     box-shadow: $focus-ring-box-shadow;
     border-color: $input-focus-border-color;
   }
+
+  .active-last {
+    outline: 2px solid $gray-100;
+  }
 }
 
 .app-rating-container {
@@ -294,8 +298,6 @@ input[disabled] {
   flex: 1;
   min-width: 0;
   background-color: rgba($border-color, 0.5);
-
-  // height: calc(20% + (var(--bar-index) / 60 * 80%));
   height: calc(4px + (var(--bar-index) * 1px));
 
   &.active {
@@ -304,10 +306,6 @@ input[disabled] {
       hsl(calc(120 - var(--bar-index) * 2) 70% 50%),
       hsl(calc(120 - var(--bar-index) * 2) 70% 45%)
     );
-  }
-
-  &.active-last {
-    outline: 2px solid $gray-100;
   }
 }
 

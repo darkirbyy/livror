@@ -33,22 +33,27 @@
           <div class="app-form-row" {{ stimulus_controller('rating-slide', { lazy: false }) }}>
             {{ form_label(form.rating, 'review.label.rating') }}
 
-            <div class="form-control d-flex align-items-center app-rating">
+            <div class="form-control px-0 d-flex align-items-center app-rating">
               {# Hidden native range input for accessibility #}
               <div class="visually-hidden">
                 {{ form_widget(form.rating, { attr: { 'data-rating-slide-target': 'range' } }) }}
               </div>
 
               {# Custom visual bars #}
-              <div class="flex-fill py-1 d-flex align-items-center gap-1 app-rating-container" data-rating-slide-target="container" role="presentation" aria-hidden="true">
+              <div
+                class="flex-fill ps-2 py-2 d-flex align-items-end gap-px-1 gap-px-sm-2 gap-px-lg-3 app-rating-container"
+                data-rating-slide-target="container"
+                role="presentation"
+                aria-hidden="true"
+              >
                 {% for i in range(0, 59) %}
                   <div class="app-rating-bar" data-rating-slide-target="bar" data-index="{{ i }}" style="--bar-index: {{ i }}"></div>
                 {% endfor %}
               </div>
 
               {# Label value #}
-              <div class="app-rating-label text-end">
-                <span data-rating-slide-target="label" class="fs-5 align-middle">{{ '3.0'|format_number({ fraction_digit: 1 }) }}</span>
+              <div class="app-rating-label text-center px-2">
+                <span data-rating-slide-target="label" class="fs-4 align-middle">{{ '3.0'|format_number({ fraction_digit: 1 }) }}</span><br />
                 <span class="fa-regular fa-star align-middle" aria-hidden="true"></span>
               </div>
             </div>

@@ -16,6 +16,7 @@ export default class extends Controller {
     // bind events
     this.rangeTarget.addEventListener('change', () => this.updateDisplay());
     this.containerTarget.addEventListener('mousedown', (event) => this.startDrag(event));
+    this.containerTarget.addEventListener('touchstart', (event) => this.startDrag(event), { passive: false });
     this.containerTarget.addEventListener('click', (event) => this.handleClick(event));
 
     // bind methods for event listeners
