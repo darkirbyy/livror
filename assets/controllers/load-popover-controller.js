@@ -15,9 +15,11 @@ export default class extends Controller {
     const popoverTriggerList = this.element.querySelectorAll('[data-bs-toggle="popover"]');
     popoverTriggerList.forEach((item) => {
       new Popover(item, {
+        container: item.parentElement,
         trigger: 'focus',
         placement: 'top',
         html: true,
+        delay: { show: 0, hide: 100 },
         animation: false,
       });
     });
