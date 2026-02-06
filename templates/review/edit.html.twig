@@ -29,23 +29,42 @@
             {{ form_row(form.game, { label: 'review.label.game' }) }}
           {% endif %}
 
-          {# Display the rating range cursor with custom stimulus controller to display the value #}
+          {# Display the rating range cursor with custom stimulus controller #}
           <div class="app-form-row" {{ stimulus_controller('rating-slide', { lazy: false }) }}>
             {{ form_label(form.rating, 'review.label.rating') }}
-            <div class="form-control py-2 d-flex align-items-center">
-              <div class="flex-grow-1 mt-1 app-form-range-tick" style="--step:1; --min:0; --max:6">
-                {{ form_widget(form.rating, { attr: { 'data-rating-slide-target': 'range' } }) }}
+
+            <div class="form-control py-2">
+              {# Hidden native range input for accessibility #}
+              <div class="visually-hidden">
+                {{ form_widget(form.rating, { attr: { 'data-rating-slide-target': 'range', 'data-action': 'input->rating-slide#updateDisplay' } }) }}
               </div>
-              <div class="app-rating-display text-end px-2">
+
+              {# Custom visual bars #}
+              <div
+                class="app-rating-bars-container d-flex align-items-end gap-1"
+                data-rating-slide-target="barsContainer"
+                data-action="mousedown->rating-slide#startDrag click->rating-slide#handleClick"
+                role="presentation"
+                aria-hidden="true"
+              >
+                {% for i in range(0, 60) %}
+                  <div class="app-rating-bar" data-rating-slide-target="bar" data-index="{{ i }}" style="--bar-index: {{ i }}"></div>
+                {% endfor %}
+              </div>
+
+              {# Display value #}
+              <div class="app-rating-display text-end mt-2">
                 <span data-rating-slide-target="display" class="fs-5 align-middle">{{ '3.0'|format_number({ fraction_digit: 1 }) }}</span>
                 <span class="fa-regular fa-star align-middle" aria-hidden="true"></span>
               </div>
             </div>
+
             <datalist id="rating-list" data-rating-slide-target="datalist">
               {% for rating in range(0, 6, 0.1) %}
                 <option value="{{ rating }}" label="{{ rating|format_number({ fraction_digit: 1 }) }}" />
               {% endfor %}
             </datalist>
+
             {{ form_errors(form.rating) }}
           </div>
 

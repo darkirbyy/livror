@@ -244,36 +244,52 @@ input[disabled] {
   --bs-btn-active-border-color: #{$input-border-color};
 }
 
-.app-form-range-tick {
-  --thickness: 2px;
-  --height: 30%;
-  --color: #{$form-range-track-bg};
-
-  display: inline-block;
-  background: linear-gradient(to right, var(--color) var(--thickness), transparent 1px) repeat-x;
-  background-size: calc(100% / ((var(--max) - var(--min)) / var(--step)) - 0.45%) var(--height);
-  background-position: 1.5% bottom;
-  position: relative;
+/* Container for the bars */
+.app-rating-bars-container {
+  height: 60px;
+  padding: 4px 0;
+  cursor: pointer;
+  user-select: none;
+  touch-action: none;
 }
 
-// todo : display in and max ?
-// .range::before, .range::after {
-//   font: 12px monospace;
-//   content: counter(x);
-//   position: absolute;
-//   bottom: -2ch;
-// }
+/* Individual bar */
+.app-rating-bar {
+  flex: 1;
+  min-width: 0;
+  background-color: #e9ecef;
+  border-radius: 2px;
+  transition: background-color 0.15s ease;
 
-// .range::before {
-//   counter-reset: x var(--min);
-//   transform: translateX(-50%);
-// }
+  /* Height grows based on index (0 to 60) */
+  height: calc(20% + (var(--bar-index) / 60 * 80%));
+}
 
-// .range::after {
-//   counter-reset: x var(--max);
-//   right: 0;
-//   transform: translateX(50%);
-// }
+/* Active bars (to the left of current value) */
+.app-rating-bar.active {
+  /* Gradient from green to red based on position */
+  background: linear-gradient(
+    to bottom,
+    hsl(calc(120 - var(--bar-index) * 2) 70% 50%),
+    hsl(calc(120 - var(--bar-index) * 2) 70% 45%)
+  );
+}
+
+/* Hover effect */
+.app-rating-bars-container:hover .app-rating-bar {
+  background-color: #dee2e6;
+}
+
+.app-rating-bars-container:hover .app-rating-bar.active {
+  filter: brightness(1.1);
+}
+
+/* Focus visible for accessibility */
+.app-rating-bars-container:has(+ input:focus-visible) {
+  outline: 2px solid #0d6efd;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
 
 .app-no-border-bottom {
   transition: border-radius 0.3s ease-in-out;
