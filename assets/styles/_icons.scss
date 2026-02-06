@@ -11,11 +11,8 @@
   font-display: block;
 }
 
-.db,
-[class^='db-'],
-[class*=' db-'] {
-  /* Use !important to prevent extensions from overriding this font. */
-  font-family: darkirbible, sans-serif !important;
+.db {
+  font-family: darkirbible, sans-serif;
   font-style: normal;
   font-weight: normal;
   font-variant: normal;
@@ -27,12 +24,8 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-:root {
-  --db-sausage: '\f001';
-}
-
 .db-sausage::before {
-  content: var(--db-sausage);
+  content: '\f001';
 }
 
 ///////////////////////////////////

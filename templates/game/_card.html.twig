@@ -20,7 +20,7 @@
         {{ m.fmt_num_users(gameInfo.numUsers) }}
       </div>
       <div class="flex-basis-0 flex-grow-2 flex-grow-lg-1 py-1 px-2 py-md-2 border-end text-truncate">
-        <span aria-hidden="true"><span class="fa-regular db-sausage fa-sm"></span><sub>μ</sub></span>
+        <span aria-hidden="true"><span class="db db-sausage"></span><sub>μ</sub></span>
         <span class="visually-hidden">{{ 'game.label.avgRating'|trans([], 'validators') }} :</span>
         {{ m.fmt_avg_rating(gameInfo.avgRating) }}
       </div>
@@ -94,7 +94,7 @@
                 <span class="ms-1 d-none d-lg-inline align-middle">{{ review.user.username }}</span>
               </div>
               <div class="flex-basis-0 flex-grow-2 flex-grow-lg-1 p-2 border-start border-end text-truncate">
-                <span class="fa-regular db-sausage fa-sm" aria-hidden="true"></span>
+                <span class="db db-sausage" aria-hidden="true"></span>
                 <span class="visually-hidden">{{ 'review.label.rating'|trans([], 'validators') }} :</span>
                 {{ review.rating is not empty ? review.rating|format_number({ fraction_digit: 1 }) : '-' }}
               </div>
