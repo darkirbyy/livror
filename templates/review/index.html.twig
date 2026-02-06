@@ -24,7 +24,7 @@
       <div class="mx-auto card-max-large card-max-md-none text-center mt-2 mb-4">
         {% if isOwner %}
           <a href="{{ path('review_new') }}" class="btn btn-primary {{ cannotAdd ? 'disabled' }}" data-turbo-frame="_top" aria-label="{{ 'review.index.button.addReview'|trans }}">
-            <span class="bi bi-plus-square-fill me-md-1" aria-hidden="true"></span>
+            <span class="bi bi-plus-square me-md-1" aria-hidden="true"></span>
             <span>{{ 'review.index.button.addReview'|trans }}</span>
           </a>
         {% else %}

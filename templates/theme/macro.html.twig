@@ -51,7 +51,7 @@
         <div class="modal-footer">
           <form action="{{ path }}" method="post">
             <button type="submit" class="btn btn-danger">
-              <span class="bi bi-trash-fill me-1" aria-hidden="true"></span>
+              <span class="lnr lnr-trash me-1" aria-hidden="true"></span>
               {{ 'form.button.delete'|trans }}
             </button>
             <input type="hidden" name="_token" data-controller="csrf-protection" value="{{ csrf_token('livror/delete') }}" />
@@ -73,7 +73,7 @@
     {% if isEditMode %}
       <div>
         <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#delete-modal">
-          <span class="bi bi-trash-fill me-1" aria-hidden="true"></span>
+          <span class="lnr lnr-trash me-1" aria-hidden="true"></span>
           {{ 'form.button.delete'|trans }}
         </button>
       </div>
@@ -123,7 +123,7 @@
           {% set new_param = { offset: 0, limit: env.app.default_limit, sorts: { (queryParam.sorts|keys|first): direction_way == 'asc' ? 'desc' : 'asc' } } %}
           {% set direction_url = _self.path_with_query_param(queryParam|clone_with(new_param)) %}
           <a href="{{ direction_url }}" class="btn btn-outline-light app-btn-input-border" aria-label="{{ ('aria.order.' ~ direction_way)|trans }}" data-turbo-prefetch="false">
-            <span class="bi bi-arrow-{{ direction_way == 'asc' ? 'up' : 'down' }}" aria-hidden="true"></span>
+            <span class="lnr lnr-arrow-{{ direction_way == 'asc' ? 'up' : 'down' }}" aria-hidden="true"></span>
           </a>
         </div>
       </div>
@@ -164,7 +164,7 @@
       <div>
         {% set reinit_url = _self.path_with_query_param(queryParam|clone_reset) %}
         <a href="{{ reinit_url }}" class="btn btn-outline-light app-btn-input-border" aria-label="{{ 'form.button.reset'|trans }}">
-          <span class="bi bi-arrow-counterclockwise" aria-hidden="true"></span>
+          <span class="lnr lnr-undo" aria-hidden="true"></span>
         </a>
       </div>
     </div>
@@ -178,13 +178,13 @@
       {% if show %}
         {% set url = path('game_show', { id: game.id, backpath: backpath }) %}
         <a href="{{ url }}" class="btn btn-sm btn-outline-light" aria-label="{{ 'game.index.button.editGame'|trans }}" data-turbo-frame="_top">
-          <span class="bi bi-eye" aria-hidden="true"></span>
+          <span class="lnr lnr-eye" aria-hidden="true"></span>
         </a>
       {% endif %}
       {% if edit %}
         {% set url = path('game_edit', { id: game.id, backpath: backpath }) %}
         <a href="{{ url }}" class="btn btn-sm btn-outline-light" aria-label="{{ 'game.index.button.editGame'|trans }}" data-turbo-frame="_top">
-          <span class="bi bi-pen" aria-hidden="true"></span>
+          <span class="lnr lnr-pencil" aria-hidden="true"></span>
         </a>
       {% endif %}
     </div>
@@ -197,7 +197,7 @@
   {% if game.imgUrl is not empty %}
     <img src="{{ game.imgUrl }}" class="app-card-img-fit" alt="{{ 'aria.cover'|trans({ name: game.name }) }}" />
   {% else %}
-    <div class="bi bi-image text-center app-card-img-fit app-card-img-missing-index bg-body-secondary" aria-hidden="true"></div>
+    <div class="lnr lnr-frame-expand text-center app-card-img-fit app-card-img-missing-index bg-body-secondary" aria-hidden="true"></div>
   {% endif %}
 {%- endmacro -%}
 
@@ -230,12 +230,12 @@
     {{ review.rating is not empty ? review.rating|format_number({ fraction_digit: 1 }) : '-' }}
   </div>
   <div class="flex-basis-0 flex-grow-1 p-2 border-end text-truncate">
-    <span class="fa-regular fa-hourglass-half fa-sm" aria-hidden="true"></span>
+    <span class="lnr lnr-hourglass" aria-hidden="true"></span>
     <span class="visually-hidden">{{ 'review.label.hourSpend'|trans([], 'validators') }} :</span>
     {{ review.hourSpend is not empty ? review.hourSpend ~ 'h' : '-' }}
   </div>
   <div class="flex-basis-0 flex-grow-1 p-2 text-truncate">
-    <span class="fa-regular fa-calendar-days fa-sm" aria-hidden="true"></span>
+    <span class="lnr lnr-calendar-full" aria-hidden="true"></span>
     <span class="visually-hidden">{{ 'review.label.firstPlay'|trans([], 'validators') }} :</span>
     <span class="small">{{ review.firstPlay is not empty ? review.firstPlay|format_datetime('short', 'none') : '-' }}</span>
   </div>
@@ -251,7 +251,7 @@
         aria-label="{{ 'review.index.button.editReview'|trans }}"
         data-turbo-frame="_top"
       >
-        <span class="bi bi-pen" aria-hidden="true"></span>
+        <span class="lnr lnr-pencil" aria-hidden="true"></span>
         <span class="d-none d-md-inline">{{ 'review.index.button.editReview'|trans }}</span>
       </a>
     </div>

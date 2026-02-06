@@ -15,7 +15,7 @@
     {# 4 piece of information : player who have written a review, average rating, total hour spend, minimum first play date #}
     <div class="col-12 text-center d-flex align-items-center col-md-auto flex-even bg-primary bg-gradient-off bg-gradient-md-on">
       <div class="flex-basis-0 flex-grow-2 flex-grow-md-1 flex-grow-lg-1 py-1 px-2 py-md-2 border-end text-truncate">
-        <span class="fa-solid fa-user-group fa-sm" aria-hidden="true"></span>
+        <span class="lnr lnr-users" aria-hidden="true"></span>
         <span class="visually-hidden">{{ 'game.label.numUsers'|trans([], 'validators') }} :</span>
         {{ m.fmt_num_users(gameInfo.numUsers) }}
       </div>
@@ -25,12 +25,12 @@
         {{ m.fmt_avg_rating(gameInfo.avgRating) }}
       </div>
       <div class="flex-basis-0 flex-grow-2 flex-grow-lg-1 py-1 px-2 py-md-2 border-end text-truncate">
-        <span aria-hidden="true"><span class="fa-regular fa-hourglass-half fa-sm"></span><sub>Σ</sub></span>
+        <span aria-hidden="true"><span class="lnr lnr-hourglass"></span><sub>Σ</sub></span>
         <span class="visually-hidden">{{ 'game.label.totHourSpend'|trans([], 'validators') }} :</span>
         {{ m.fmt_tot_hour_spend(gameInfo.totHourSpend) }}
       </div>
       <div class="flex-basis-0 flex-grow-3 flex-grow-lg-1 py-1 px-2 py-md-2 text-truncate">
-        <span aria-hidden="true"><span class="fa-regular fa-calendar-days fa-sm"></span><sub>m</sub></span>
+        <span aria-hidden="true"><span class="lnr lnr-calendar-full"></span><sub>m</sub></span>
         <span class="visually-hidden">{{ 'game.label.minFirstPlay'|trans([], 'validators') }} :</span>
         <span class="small">{{ m.fmt_min_first_play(gameInfo.minFirstPlay) }}</span>
       </div>
@@ -99,12 +99,12 @@
                 {{ review.rating is not empty ? review.rating|format_number({ fraction_digit: 1 }) : '-' }}
               </div>
               <div class="flex-basis-0 flex-grow-2 flex-grow-lg-1 p-2 border-end text-truncate">
-                <span class="fa-regular fa-hourglass-half fa-sm" aria-hidden="true"></span>
+                <span class="lnr lnr-hourglass" aria-hidden="true"></span>
                 <span class="visually-hidden">{{ 'review.label.hourSpend'|trans([], 'validators') }} :</span>
                 {{ review.hourSpend is not empty ? review.hourSpend ~ 'h' : '-' }}
               </div>
               <div class="flex-basis-0 flex-grow-3 flex-grow-lg-1 p-2 text-truncate">
-                <span class="fa-regular fa-calendar-days fa-sm" aria-hidden="true"></span>
+                <span class="lnr lnr-calendar-full" aria-hidden="true"></span>
                 <span class="visually-hidden">{{ 'review.label.firstPlay'|trans([], 'validators') }} :</span>
                 <span class="small">{{ review.firstPlay is not empty ? review.firstPlay|format_datetime('short', 'none') : '-' }}</span>
               </div>
@@ -116,7 +116,7 @@
           {% if not (app.user.id in (game.reviews|map(review => review.userId))) %}
             <div class="mt-3 mb-4 text-center">
               <a href="{{ path('review_new', { gameId: game.id, backpath: backpath }) }}" class="btn btn-primary" data-turbo-frame="_top">
-                <span class="bi bi-plus-square-fill me-md-1" aria-hidden="true"></span>
+                <span class="bi bi-plus-square me-md-1" aria-hidden="true"></span>
                 {{ 'review.index.button.addReview'|trans }}
               </a>
             </div>

@@ -55,9 +55,11 @@
   {% set attr = attr|merge(custom_attr) %}
   <div class="form-control">
     {{- parent() -}}
-    <button class="btn btn-outline-light" type="button" data-collec-field-target="add">
-      <span class="bi bi-plus-square me-1" aria-hidden="true"></span>{{ 'form.button.add'|trans }}
-    </button>
+    <div class="text-start">
+      <button class="btn btn-outline-light" type="button" data-collec-field-target="add" aria-label="{{ 'form.button.add'|trans }}">
+        <span class="bi bi-plus-square" aria-hidden="true"></span>
+      </button>
+    </div>
   </div>
 {% endblock %}
 
@@ -68,7 +70,7 @@
       {{ form_row(row) }}
     {% endfor %}
     <button class="btn btn-outline-danger mt-4 app-btn-max-height" type="button" data-collec-field-target="remove" aria-label="{{ 'form.button.delete'|trans }}">
-      <span class="bi bi-trash" aria-hidden="true"></span>
+      <span class="lnr lnr-trash" aria-hidden="true"></span>
     </button>
   </div>
 {% endblock %}

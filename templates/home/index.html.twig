@@ -16,7 +16,7 @@
         <div class="mt-2 border border-primary rounded" {{ stimulus_controller('search-select') }}>
           <h4 class="text-center bg-primary bg-gradient p-2 mb-0">{{ 'home.index.search.title'|trans }}</h4>
           <div class="input-group p-3 bg-body-secondary" role="group" aria-label="{{ 'form.button.search'|trans }}">
-            <label class="input-group-text"><span class="bi bi-search" aria-hidden="true"></span></label>
+            <label class="input-group-text"><span class="lnr lnr-magnifier" aria-hidden="true"></span></label>
             {% set autocomplete = prepare_attributes('global', 'game_autocomplete') %}
             <input class="form-control" type="text" {{ autocomplete|raw }} />
           </div>
