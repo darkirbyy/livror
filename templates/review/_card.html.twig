@@ -7,12 +7,12 @@
   {# Card title bar with the the title on one side, and 3 infos on the other side (or on top of each other on small screen) #}
   <div class="row gx-0 bg-primary bg-gradient text-center">
     {# Actual title with the edit button #}
-    <div class="col-12 border-bottom col-md-6 border-bottom-md-0 border-end-md card-max-md-large">
+    <div class="col-12 border-bottom col-md-6 border-bottom-md-0 card-max-md-large">
       {{ m.game_title(review.game, backpath, true, true) }}
     </div>
     {# 3 piece of information : player rating, hour spend, and first play date #}
     <div class="col-12 d-flex align-items-center col-md-auto flex-even">
-      {{ m.review_information(review) }}
+      {{ m.review_information(review, { rating: 'flex-grow-1', hourSpend: 'flex-grow-1', firstPlay: 'flex-grow-1' }) }}
     </div>
   </div>
 

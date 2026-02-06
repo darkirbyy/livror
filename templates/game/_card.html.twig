@@ -93,21 +93,7 @@
                 {{ m.user_avatar(review.user) }}
                 <span class="ms-1 d-none d-lg-inline align-middle">{{ review.user.username }}</span>
               </div>
-              <div class="flex-basis-0 flex-grow-2 flex-grow-lg-1 p-2 border-start border-end text-truncate">
-                <span class="db db-sausage" aria-hidden="true"></span>
-                <span class="visually-hidden">{{ 'review.label.rating'|trans([], 'validators') }} :</span>
-                {{ review.rating is not empty ? review.rating|format_number({ fraction_digit: 1 }) : '-' }}
-              </div>
-              <div class="flex-basis-0 flex-grow-2 flex-grow-lg-1 p-2 border-end text-truncate">
-                <span class="lnr lnr-hourglass" aria-hidden="true"></span>
-                <span class="visually-hidden">{{ 'review.label.hourSpend'|trans([], 'validators') }} :</span>
-                {{ review.hourSpend is not empty ? review.hourSpend ~ 'h' : '-' }}
-              </div>
-              <div class="flex-basis-0 flex-grow-3 flex-grow-lg-1 p-2 text-truncate">
-                <span class="lnr lnr-calendar-full" aria-hidden="true"></span>
-                <span class="visually-hidden">{{ 'review.label.firstPlay'|trans([], 'validators') }} :</span>
-                <span class="small">{{ review.firstPlay is not empty ? review.firstPlay|format_datetime('short', 'none') : '-' }}</span>
-              </div>
+              {{ m.review_information(review, { rating: 'flex-grow-2 flex-grow-lg-1 ', hourSpend: 'flex-grow-2 flex-grow-lg-1 ', firstPlay: 'flex-grow-3 flex-grow-lg-1' }) }}
             </div>
             <div class="col-12 mb-2 p-1">
               {{ m.review_body(review, backpath, true) }}

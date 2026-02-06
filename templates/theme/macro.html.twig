@@ -223,18 +223,18 @@
 {%- endmacro -%}
 
 {# Macro to display the information of a review #}
-{%- macro review_information(review) -%}
-  <div class="flex-basis-0 flex-grow-1 p-2 border-end text-truncate">
+{%- macro review_information(review, flexClass) -%}
+  <div class="flex-basis-0 p-2 border-start text-truncate {{ flexClass.rating }}">
     <span class="db db-sausage" aria-hidden="true"></span>
     <span class="visually-hidden">{{ 'review.label.rating'|trans([], 'validators') }} :</span>
     {{ review.rating is not empty ? review.rating|format_number({ fraction_digit: 1 }) : '-' }}
   </div>
-  <div class="flex-basis-0 flex-grow-1 p-2 border-end text-truncate">
+  <div class="flex-basis-0 p-2 border-start text-truncate {{ flexClass.hourSpend }}">
     <span class="lnr lnr-hourglass" aria-hidden="true"></span>
     <span class="visually-hidden">{{ 'review.label.hourSpend'|trans([], 'validators') }} :</span>
     {{ review.hourSpend is not empty ? review.hourSpend ~ 'h' : '-' }}
   </div>
-  <div class="flex-basis-0 flex-grow-1 p-2 text-truncate">
+  <div class="flex-basis-0 p-2 border-start text-truncate {{ flexClass.firstPlay }}">
     <span class="lnr lnr-calendar-full" aria-hidden="true"></span>
     <span class="visually-hidden">{{ 'review.label.firstPlay'|trans([], 'validators') }} :</span>
     <span class="small">{{ review.firstPlay is not empty ? review.firstPlay|format_datetime('short', 'none') : '-' }}</span>
