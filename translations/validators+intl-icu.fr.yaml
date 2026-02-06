@@ -36,7 +36,6 @@ review:
     game: Jeu
     attachments: Documents joints
   help:
-    rating: Entre 0 et 6
     attachments: Chaque fichier ne doit pas dépasser 10Mio.
   error:
     game:

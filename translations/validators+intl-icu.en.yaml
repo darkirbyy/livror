@@ -36,7 +36,6 @@ review:
     game: Game
     attachments: Attachments
   help:
-    rating: Between 0 and 6
     attachments: Each file must not exceed 10Mio.
   error:
     game:

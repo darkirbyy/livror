@@ -32,7 +32,6 @@
           {# Display the rating range cursor with custom stimulus controller to display the value #}
           <div class="app-form-row" {{ stimulus_controller('rating-slide', { lazy: false }) }}>
             {{ form_label(form.rating, 'review.label.rating') }}
-            {# {{ form_help(form.rating, { help_html: true, help: 'review.help.rating' }) }} #}
             <div class="form-control py-2 d-flex align-items-center">
               <div class="flex-grow-1 mt-1 app-form-range-tick" style="--step:1; --min:0; --max:6">
                 {{ form_widget(form.rating, { attr: { 'data-rating-slide-target': 'range' } }) }}
