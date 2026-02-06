@@ -33,28 +33,22 @@
           <div class="app-form-row" {{ stimulus_controller('rating-slide', { lazy: false }) }}>
             {{ form_label(form.rating, 'review.label.rating') }}
 
-            <div class="form-control py-2">
+            <div class="form-control d-flex align-items-center app-rating">
               {# Hidden native range input for accessibility #}
               <div class="visually-hidden">
-                {{ form_widget(form.rating, { attr: { 'data-rating-slide-target': 'range', 'data-action': 'input->rating-slide#updateDisplay' } }) }}
+                {{ form_widget(form.rating, { attr: { 'data-rating-slide-target': 'range' } }) }}
               </div>
 
               {# Custom visual bars #}
-              <div
-                class="app-rating-bars-container d-flex align-items-end gap-1"
-                data-rating-slide-target="barsContainer"
-                data-action="mousedown->rating-slide#startDrag click->rating-slide#handleClick"
-                role="presentation"
-                aria-hidden="true"
-              >
-                {% for i in range(0, 60) %}
+              <div class="flex-fill py-1 d-flex align-items-center gap-1 app-rating-container" data-rating-slide-target="container" role="presentation" aria-hidden="true">
+                {% for i in range(0, 59) %}
                   <div class="app-rating-bar" data-rating-slide-target="bar" data-index="{{ i }}" style="--bar-index: {{ i }}"></div>
                 {% endfor %}
               </div>
 
-              {# Display value #}
-              <div class="app-rating-display text-end mt-2">
-                <span data-rating-slide-target="display" class="fs-5 align-middle">{{ '3.0'|format_number({ fraction_digit: 1 }) }}</span>
+              {# Label value #}
+              <div class="app-rating-label text-end">
+                <span data-rating-slide-target="label" class="fs-5 align-middle">{{ '3.0'|format_number({ fraction_digit: 1 }) }}</span>
                 <span class="fa-regular fa-star align-middle" aria-hidden="true"></span>
               </div>
             </div>

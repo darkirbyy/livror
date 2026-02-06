@@ -244,63 +244,12 @@ input[disabled] {
   --bs-btn-active-border-color: #{$input-border-color};
 }
 
-/* Container for the bars */
-.app-rating-bars-container {
-  height: 60px;
-  padding: 4px 0;
-  cursor: pointer;
-  user-select: none;
-  touch-action: none;
-}
-
-/* Individual bar */
-.app-rating-bar {
-  flex: 1;
-  min-width: 0;
-  background-color: #e9ecef;
-  border-radius: 2px;
-  transition: background-color 0.15s ease;
-
-  /* Height grows based on index (0 to 60) */
-  height: calc(20% + (var(--bar-index) / 60 * 80%));
-}
-
-/* Active bars (to the left of current value) */
-.app-rating-bar.active {
-  /* Gradient from green to red based on position */
-  background: linear-gradient(
-    to bottom,
-    hsl(calc(120 - var(--bar-index) * 2) 70% 50%),
-    hsl(calc(120 - var(--bar-index) * 2) 70% 45%)
-  );
-}
-
-/* Hover effect */
-.app-rating-bars-container:hover .app-rating-bar {
-  background-color: #dee2e6;
-}
-
-.app-rating-bars-container:hover .app-rating-bar.active {
-  filter: brightness(1.1);
-}
-
-/* Focus visible for accessibility */
-.app-rating-bars-container:has(+ input:focus-visible) {
-  outline: 2px solid #0d6efd;
-  outline-offset: 2px;
-  border-radius: 4px;
-}
-
 .app-no-border-bottom {
   transition: border-radius 0.3s ease-in-out;
 
   &[aria-expanded='false'] {
     border-bottom: none !important;
   }
-}
-
-.app-rating-display {
-  width: 5rem !important;
 }
 
 .app-form-steam {
@@ -318,6 +267,52 @@ input[disabled] {
     --bs-btn-active-border-color: #{$input-border-color};
     --bs-focus-ring-color: #{$steam};
   }
+}
+
+// Slider ////////////////////////
+
+.app-rating {
+  &:focus-within {
+    box-shadow: $focus-ring-box-shadow;
+    border-color: $input-focus-border-color;
+  }
+}
+
+.app-rating-container {
+  cursor: pointer;
+  user-select: none;
+  touch-action: none;
+  filter: brightness(0.9);
+
+  &:hover,
+  &.dragged {
+    filter: brightness(1.2);
+  }
+}
+
+.app-rating-bar {
+  flex: 1;
+  min-width: 0;
+  background-color: rgba($border-color, 0.5);
+
+  // height: calc(20% + (var(--bar-index) / 60 * 80%));
+  height: calc(4px + (var(--bar-index) * 1px));
+
+  &.active {
+    background: linear-gradient(
+      to bottom,
+      hsl(calc(120 - var(--bar-index) * 2) 70% 50%),
+      hsl(calc(120 - var(--bar-index) * 2) 70% 45%)
+    );
+  }
+
+  &.active-last {
+    outline: 2px solid $gray-100;
+  }
+}
+
+.app-rating-label {
+  width: 4rem !important;
 }
 
 // Others /////////////////////////
