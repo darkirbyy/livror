@@ -2,7 +2,7 @@ import { Controller } from '@hotwired/stimulus';
 
 // Controller that handle the custom slider for the rating (bars and label)
 export default class extends Controller {
-  static targets = ['range', 'label', 'bar', 'container', 'datalist'];
+  static targets = ['range', 'datalist', 'bar', 'container', 'text', 'icon'];
 
   /////////////////////////////////
   // Initialize ///////////////////
@@ -34,24 +34,26 @@ export default class extends Controller {
 
   updateDisplay() {
     const newValue = parseFloat(this.rangeTarget.value);
-    this.updateLabel(newValue);
-    this.updateBars(newValue);
+    const newBarCount = Math.round(newValue * 10);
+
+    this.updateLabel(newValue, newBarCount);
+    this.updateBars(newBarCount);
   }
 
-  updateLabel(newValue) {
+  updateLabel(newValue, newBarCount) {
     const newOption = [...this.datalistTarget.children].find((option) => {
       return parseFloat(option.getAttribute('value')) == newValue;
     });
+    this.textTarget.textContent = newOption.getAttribute('label');
 
-    this.labelTarget.textContent = newOption.getAttribute('label');
+    this.textTarget.setAttribute('style', '--rating: ' + newBarCount.toString());
+    this.iconTarget.setAttribute('style', '--rating: ' + newBarCount.toString());
   }
 
-  updateBars(newValue) {
-    const activeBarCount = Math.round(newValue * 10);
-
+  updateBars(newBarCount) {
     this.barTargets.forEach((bar, index) => {
-      index < activeBarCount ? bar.classList.add('active') : bar.classList.remove('active');
-      index == activeBarCount - 1 ? bar.classList.add('active-last') : bar.classList.remove('active-last');
+      index < newBarCount ? bar.classList.add('active') : bar.classList.remove('active');
+      index == newBarCount - 1 ? bar.classList.add('active-last') : bar.classList.remove('active-last');
     });
   }
 

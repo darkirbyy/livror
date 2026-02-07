@@ -46,15 +46,15 @@
                 role="presentation"
                 aria-hidden="true"
               >
-                {% for i in range(0, 59) %}
-                  <div class="app-rating-bar" data-rating-slide-target="bar" data-index="{{ i }}" style="--bar-index: {{ i }}"></div>
+                {% for i in range(1, 60) %}
+                  <div class="app-rating-bar" data-rating-slide-target="bar" style="--rating: {{ i }}"></div>
                 {% endfor %}
               </div>
 
               {# Label value #}
               <div class="fs-4 text-center px-2 app-rating-label">
-                <span data-rating-slide-target="label" class="align-middle">{{ '3.0'|format_number({ fraction_digit: 1 }) }}</span><br />
-                <span class="livror livror-rating align-middle" aria-hidden="true"></span>
+                <span data-rating-slide-target="text" class="align-middle app-rating-color">{{ '3.0'|format_number({ fraction_digit: 1 }) }}</span><br />
+                <span data-rating-slide-target="icon" class="livror livror-rating align-middle app-rating-color" aria-hidden="true"></span>
               </div>
             </div>
 

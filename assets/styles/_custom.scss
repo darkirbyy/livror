@@ -91,7 +91,7 @@ input[disabled] {
       padding: 0.4rem;
 
       .highlight {
-        background-color: $primary-bg-subtle-dark;
+        background-color: rgba($primary, 1);
       }
     }
 
@@ -301,16 +301,20 @@ input[disabled] {
   flex: 1;
   min-width: 0;
   background-color: rgba($border-color, 0.5);
-  height: calc(4px + (var(--bar-index) * 1px));
+  height: calc(4px + (var(--rating) * 1px));
 
   &.active {
-    background: linear-gradient(to bottom, rating-color(var(--bar-index)), rating-color(var(--bar-index), 50%));
+    background: linear-gradient(to bottom, rating-color(var(--rating)), rating-color(var(--rating), 50%));
   }
 }
 
 .app-rating-label {
   width: 4rem !important;
   line-height: 1.5rem;
+}
+
+.app-rating-color {
+  color: rating-color(var(--rating));
 }
 
 // Spinner ////////////////////////
