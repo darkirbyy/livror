@@ -269,7 +269,10 @@ input[disabled] {
   }
 }
 
-// Slider ////////////////////////
+// Rating slider ////////////////////
+@function rating-color($rating, $percentage: 50%) {
+  @return hsl(calc(120 - $rating * 2) 70% $percentage);
+}
 
 .app-rating {
   &:focus-within {
@@ -301,11 +304,7 @@ input[disabled] {
   height: calc(4px + (var(--bar-index) * 1px));
 
   &.active {
-    background: linear-gradient(
-      to bottom,
-      hsl(calc(120 - var(--bar-index) * 2) 70% 50%),
-      hsl(calc(120 - var(--bar-index) * 2) 70% 45%)
-    );
+    background: linear-gradient(to bottom, rating-color(var(--bar-index)), rating-color(var(--bar-index), 50%));
   }
 }
 
