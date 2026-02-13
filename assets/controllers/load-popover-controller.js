@@ -21,6 +21,7 @@ export default class extends Controller {
         html: true,
         delay: { show: 0, hide: 100 },
         animation: false,
+        customClass: item.classList.contains('app-cell-secondary') ? 'bg-body-secondary' : 'bg-primary bg-gradient',
       });
     });
   }
