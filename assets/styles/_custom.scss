@@ -131,6 +131,7 @@ input[disabled] {
 ///////////////////////////////////
 
 // Avatars ////////////////////////
+
 @mixin app-avatar($size) {
   object-fit: cover;
   object-position: center;
@@ -155,7 +156,7 @@ input[disabled] {
 // Users //////////////////////////
 
 .app-user-cell {
-  color: $light;
+  // color: $light;
   line-height: 1rem;
 
   &:hover,
@@ -165,12 +166,26 @@ input[disabled] {
 
     span {
       color: shadow-color($light, 15%);
-      text-decoration: underline;
+
+      // text-decoration: underline;
     }
 
     img {
       box-shadow: $box-shadow !important;
     }
+  }
+}
+
+// Title //////////////////////////
+
+.app-game-title {
+  color: $gray-100;
+  text-decoration: none;
+
+  &:hover,
+  &:active {
+    text-decoration: underline;
+    color: shadow-color($light, 15%);
   }
 }
 
@@ -270,6 +285,7 @@ input[disabled] {
 }
 
 // Rating slider ////////////////////
+
 @function rating-color($rating, $percentage: 50%) {
   @return hsl(calc(120 - $rating * 2) 70% $percentage);
 }
