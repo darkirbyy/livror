@@ -155,10 +155,7 @@ input[disabled] {
 
 // Users //////////////////////////
 
-.app-user-cell {
-  // color: $light;
-  line-height: 1rem;
-
+.app-review-cell {
   &:hover,
   &:active {
     background-color: tint-color($secondary-bg-subtle-dark, 5%);
@@ -166,8 +163,6 @@ input[disabled] {
 
     span {
       color: shadow-color($light, 15%);
-
-      // text-decoration: underline;
     }
 
     img {

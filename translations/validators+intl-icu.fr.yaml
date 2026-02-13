@@ -9,13 +9,13 @@ game:
     genres: Genre(s)
     description:  Description
     imgUrl: URL de l'image
-    numUsers : Nombre de joueurs
-    avgRating : Moyenne des saucisses
-    totHourSpend : Total d'heures de jeu
-    minFirstPlay : Premier lancement
   help:
     steamId: Si la recherche automatique ne fonctionne pas, merci de récupérer l'ID Steam sur <a class="link-light" href='https://steamdb.info/' target='_blank'>SteamDB</a>.
     commaSeparated: Séparés par des virgules
+    numUsers : Nombre de joueurs
+    avgRating : Moyenne des saucisses sur six
+    totHourSpend : Total du nombre d'heures jouées
+    minFirstPlay : Première des dates de lancement
   error:
     steamId:
       empty: L'ID Steam est vide.
@@ -36,6 +36,9 @@ review:
     game: Jeu
     attachments: Documents joints
   help:
+    rating: Saucisses sur six
+    hourSpend: Nombre d'heures jouées
+    firstPlay: Date de lancement
     attachments: Chaque fichier ne doit pas dépasser 10Mio.
   error:
     game:

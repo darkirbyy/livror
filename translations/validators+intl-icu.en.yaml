@@ -9,13 +9,14 @@ game:
     genres: Genre(s)
     description: Description
     imgUrl: Image URL
-    numUsers: Number of players
-    avgRating: Average rating
-    totHourSpend: Total playtime
-    minFirstPlay: First launch
+  
   help:
     steamId: If automatic search doesn't work, please retrieve the Steam ID from <a class="link-light" ref='https://steamdb.info/' target='_blank'>SteamDB</a>.
     commaSeparated: Separated by commas
+    numUsers: Number of players
+    avgRating: Average rating over six
+    totHourSpend: Total time spent in hours
+    minFirstPlay: First of launch date
   error:
     steamId:
       empty: The Steam ID is empty.
@@ -37,6 +38,9 @@ review:
     attachments: Attachments
   help:
     attachments: Each file must not exceed 10Mio.
+    rating: Rating over six
+    hourSpend: Time spent in hours
+    firstPlay: Launch date 
   error:
     game:
       notUnique: A review already exists for this game.
