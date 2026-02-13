@@ -3,7 +3,7 @@
 {% set reviewId = 'review-' ~ review.id %}
 
 {# Each game is displayed on a "card" containing all the data #}
-<div id="{{ reviewId }}" class="card-max-large card-max-md-none mx-auto my-3 rounded-3 border border-primary overflow-hidden">
+<div id="{{ reviewId }}" class="card-max-large card-max-md-none mx-auto my-3 rounded-3 border border-primary">
   {# Card title bar with the the title on one side, and 3 infos on the other side (or on top of each other on small screen) #}
   <div class="row gx-0 bg-primary bg-gradient text-center">
     {# Actual title with the edit button #}
@@ -12,7 +12,7 @@
     </div>
     {# 3 piece of information : player rating, hour spend, and first play date #}
     <div class="col-12 d-flex align-items-center col-md-auto flex-even">
-      {{ m.review_information(review, { rating: 'flex-grow-1', hourSpend: 'flex-grow-1', firstPlay: 'flex-grow-1' }) }}
+      {{ m.review_information(review, 'primary', { rating: 'flex-grow-1', hourSpend: 'flex-grow-1', firstPlay: 'flex-grow-1' }) }}
     </div>
   </div>
 

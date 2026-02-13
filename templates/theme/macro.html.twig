@@ -220,8 +220,8 @@
 {%- endmacro -%}
 
 {# Macro to display the information of a review #}
-{%- macro review_information(review, flexClass) -%}
-  {% set baseClasses = 'flex-basis-0 p-2 h-100 border-start text-truncate focus-ring app-review-cell ' %}
+{%- macro review_information(review, level, flexClass) -%}
+  {% set baseClasses = 'flex-basis-0 p-2 h-100 border-start text-truncate focus-ring app-cell-' ~ level ~ ' ' %}
 
   {% set popover = 'review.help.rating'|trans([], 'validators') %}
   <div role="button" class="{{ baseClasses ~ flexClass.rating }}" tabindex="0" data-bs-toggle="popover" data-bs-content="{{ popover|e }}">

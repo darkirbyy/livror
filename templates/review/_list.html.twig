@@ -1,10 +1,12 @@
 {% import 'theme/macro.html.twig' as m %}
 
 {% if (reviews|length) > 0 %}
-  {% for review in reviews %}
-    {% set backpath = m.path_with_query_param(queryParam|clone_with({ offset: 0, limit: queryParam.limit + queryParam.offset }), 'review-' ~ review.id) %}
-    {{ include('review/_card.html.twig') }}
-  {% endfor %}
+  <div {{ stimulus_controller('load-popover') }}>
+    {% for review in reviews %}
+      {% set backpath = m.path_with_query_param(queryParam|clone_with({ offset: 0, limit: queryParam.limit + queryParam.offset }), 'review-' ~ review.id) %}
+      {{ include('review/_card.html.twig') }}
+    {% endfor %}
+  </div>
 
   {% if hasMore %}
     {{ m.more_button(queryParam) }}

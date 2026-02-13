@@ -5,7 +5,7 @@
 {% set collapsed = collapsed is defined ? collapsed : true %}
 
 {# Each game is displayed on a "card" containing all the data #}
-<div id="{{ gameId }}" class="card-max-large card-max-md-none mx-auto my-3 rounded-3 border border-primary overflow-hidden">
+<div id="{{ gameId }}" class="card-max-large card-max-md-none mx-auto my-3 rounded-3 border border-primary">
   {# Card title bar with the the title on one side, and 3 infos on the other side (or on top of each other on small screen) #}
   <div class="row gx-0">
     {# Actual title with the edit button #}
@@ -88,12 +88,13 @@
           {% for review in game.reviews|filter(review => review.user is not empty) %}
             <div class="col-12 text-center d-flex bg-secondary-subtle align-items-center border-bottom {{ loop.index0 > 0 ? 'border-top' }} col-md-auto flex-even">
               {% set popover = m.user_popover(review.user) %}
-              {% set classes = 'flex-basis-0 flex-grow-2 flex-grow-md-1 flex-grow-lg-1 text-truncate p-2 h-100 focus-ring lh-1 app-review-cell' %}
+              {% set classes = 'flex-basis-0 flex-grow-2 flex-grow-md-1 flex-grow-lg-1 text-truncate p-2 h-100 focus-ring lh-1 app-cell-secondary' %}
               <div role="button" class="{{ classes }}" tabindex="0" data-bs-toggle="popover" data-bs-content="{{ popover|e }}">
                 {{ m.user_avatar(review.user) }}
                 <span class="ms-1 d-none d-lg-inline align-middle">{{ review.user.username }}</span>
               </div>
-              {{ m.review_information(review, { rating: 'flex-grow-2 flex-grow-lg-1', hourSpend: 'flex-grow-2 flex-grow-lg-1', firstPlay: 'flex-grow-3 flex-grow-lg-1' }) }}
+              {% set flexClass = { rating: 'flex-grow-2 flex-grow-lg-1', hourSpend: 'flex-grow-2 flex-grow-lg-1', firstPlay: 'flex-grow-3 flex-grow-lg-1' } %}
+              {{ m.review_information(review, 'secondary', flexClass) }}
             </div>
             <div class="col-12 mb-2 p-1">
               {{ m.review_body(review, backpath, true) }}

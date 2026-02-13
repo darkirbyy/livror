@@ -154,11 +154,10 @@ input[disabled] {
 }
 
 // Users //////////////////////////
-
-.app-review-cell {
+@mixin app-cell($bg-color) {
   &:hover,
   &:active {
-    background-color: tint-color($secondary-bg-subtle-dark, 5%);
+    background-color: $bg-color;
     cursor: pointer;
 
     span {
@@ -169,6 +168,14 @@ input[disabled] {
       box-shadow: $box-shadow !important;
     }
   }
+}
+
+.app-cell-primary {
+  @include app-cell(shade-color($primary, $btn-hover-bg-shade-amount));
+}
+
+.app-cell-secondary {
+  @include app-cell(tint-color($secondary-bg-subtle-dark, 5%));
 }
 
 // Title //////////////////////////
