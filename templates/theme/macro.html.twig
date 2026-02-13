@@ -226,21 +226,21 @@
   {% set popover = 'review.help.rating'|trans([], 'validators') %}
   <div role="button" class="{{ baseClasses ~ flexClass.rating }}" tabindex="0" data-bs-toggle="popover" data-bs-content="{{ popover|e }}">
     <span class="livror livror-rating" aria-hidden="true"></span>
-    <span class="visually-hidden">{{ 'review.label.rating'|trans([], 'validators') }} :</span>
+    <span class="visually-hidden">{{ popover }} :</span>
     {{ review.rating is not empty ? review.rating|format_number({ fraction_digit: 1 }) : '-' }}
   </div>
 
   {% set popover = 'review.help.hourSpend'|trans([], 'validators') %}
   <div role="button" class="{{ baseClasses ~ flexClass.hourSpend }}" tabindex="0" data-bs-toggle="popover" data-bs-content="{{ popover|e }}">
     <span class="lnr lnr-hourglass" aria-hidden="true"></span>
-    <span class="visually-hidden">{{ 'review.label.hourSpend'|trans([], 'validators') }} :</span>
+    <span class="visually-hidden">{{ popover }} :</span>
     {{ review.hourSpend is not empty ? review.hourSpend ~ 'h' : '-' }}
   </div>
 
   {% set popover = 'review.help.firstPlay'|trans([], 'validators') %}
   <div role="button" class="{{ baseClasses ~ flexClass.firstPlay }}" tabindex="0" data-bs-toggle="popover" data-bs-content="{{ popover|e }}">
     <span class="lnr lnr-calendar-full" aria-hidden="true"></span>
-    <span class="visually-hidden">{{ 'review.label.firstPlay'|trans([], 'validators') }} :</span>
+    <span class="visually-hidden">{{ popover }} :</span>
     <span class="small">{{ review.firstPlay is not empty ? review.firstPlay|format_datetime('short', 'none') : '-' }}</span>
   </div>
 {%- endmacro -%}
