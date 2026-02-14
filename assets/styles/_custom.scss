@@ -67,6 +67,10 @@ input[disabled] {
   --bs-btn-hover-bg: #{rgba($gray-500, 0.4)};
 }
 
+.alert-dismissible .btn-close {
+  padding: 1rem !important;
+}
+
 :not(.modal) .popover {
   z-index: 10 !important;
 }
@@ -154,6 +158,7 @@ input[disabled] {
 }
 
 // Users //////////////////////////
+
 @mixin app-cell($bg-color) {
   &:hover,
   &:active {
@@ -175,7 +180,7 @@ input[disabled] {
 }
 
 .app-cell-secondary {
-  @include app-cell(tint-color($secondary-bg-subtle-dark, 5%));
+  @include app-cell(shade-color($secondary-bg-subtle-dark, $btn-hover-bg-shade-amount));
 }
 
 // Title //////////////////////////
