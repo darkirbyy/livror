@@ -174,11 +174,13 @@
 {# Macro to display the title of the game in the game and review index #}
 {%- macro game_title(game, backpath = null, show = false, edit = false) -%}
   <div class="d-flex">
-    {% set url = show ? path('game_show', { id: game.id, backpath: backpath }) : '#' %}
-    <a class="btn w-100 px-2 py-1 fs-5 text-center text-md-start text-truncate flex-fill focus-ring app-cell-primary" href="{{ url }}" data-turbo-frame="_top">{{ game.name }}</a>
+    {% set url_show = show ? path('game_show', { id: game.id, backpath: backpath }) : '#' %}
+    <a class="btn w-100 px-2 py-1 fs-5 text-center text-md-start text-truncate flex-fill focus-ring app-cell-primary" href="{{ url_show }}" data-turbo-frame="_top">
+      {{ game.name }}
+    </a>
     {% if edit %}
-      {% set url = path('game_edit', { id: game.id, backpath: backpath }) %}
-      <a href="{{ url }}" class="btn border-start focus-ring app-cell-primary" aria-label="{{ 'game.index.button.editGame'|trans }}" data-turbo-frame="_top">
+      {% set url_edit = path('game_edit', { id: game.id, backpath: backpath }) %}
+      <a href="{{ url_edit }}" class="btn border-start focus-ring app-cell-primary" aria-label="{{ 'game.index.button.editGame'|trans }}" data-turbo-frame="_top">
         <span class="lnr lnr-pencil" aria-hidden="true"></span>
       </a>
     {% endif %}
@@ -186,9 +188,12 @@
 {%- endmacro -%}
 
 {# Macro to display the image of a game from the URL or a placeholder if empty #}
-{%- macro game_image(game) -%}
+{%- macro game_image(game, backpath = null, show = false) -%}
+  {% set url = show ? path('game_show', { id: game.id, backpath: backpath }) : '#' %}
   {% if game.imgUrl is not empty %}
-    <img src="{{ game.imgUrl }}" class="app-card-img-fit" alt="{{ 'aria.cover'|trans({ name: game.name }) }}" />
+    <a href="{{ url }}" data-turbo-frame="_top" tabindex="-1">
+      <img src="{{ game.imgUrl }}" class="app-card-img-fit app-card-img-hover" alt="{{ 'aria.cover'|trans({ name: game.name }) }}" />
+    </a>
   {% else %}
     <div class="lnr lnr-frame-expand text-center app-card-img-fit app-card-img-missing-index bg-body-secondary" aria-hidden="true"></div>
   {% endif %}

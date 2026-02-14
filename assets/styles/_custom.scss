@@ -235,6 +235,10 @@ input[disabled] {
   aspect-ratio: 460 / 215;
 }
 
+.app-card-img-hover:hover {
+  filter: brightness(90%);
+}
+
 // Form ///////////////////////////
 
 .app-form-row {
