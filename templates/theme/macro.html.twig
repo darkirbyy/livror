@@ -251,7 +251,7 @@
   {% if edit and review.user.id == app.user.id %}
     <div class="float-end">
       <a
-        class="btn btn-sm btn-outline-light app-btn-input-border"
+        class="btn btn-sm btn-outline-light app-btn-input-border border-top-0"
         href="{{ path('review_edit', { id: review.id, backpath: backpath }) }}"
         aria-label="{{ 'review.index.button.editReview'|trans }}"
         data-turbo-frame="_top"
@@ -261,7 +261,7 @@
       </a>
     </div>
   {% endif %}
-  <div class="px-1">
+  <div class="py-1 px-2">
     <span class="small fw-light">
       {% set date_add = review.dateAdd|format_datetime('relative_medium', 'none') %}
       {% set date_update = review.dateUpdate|format_datetime('relative_medium', 'none') %}
