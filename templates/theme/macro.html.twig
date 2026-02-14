@@ -175,7 +175,12 @@
 {%- macro game_title(game, backpath = null, show = false, edit = false) -%}
   <div class="d-flex">
     {% set url_show = show ? path('game_show', { id: game.id, backpath: backpath }) : '#' %}
-    <a class="btn w-100 px-2 py-1 fs-5 text-center text-md-start text-truncate flex-fill focus-ring app-cell-primary" href="{{ url_show }}" data-turbo-frame="_top">
+    <a
+      id="title-{{ game.id }}"
+      class="btn w-100 px-2 py-1 fs-5 text-center text-md-start text-truncate flex-fill focus-ring app-cell-primary"
+      href="{{ url_show }}"
+      data-turbo-frame="_top"
+    >
       {{ game.name }}
     </a>
     {% if edit %}

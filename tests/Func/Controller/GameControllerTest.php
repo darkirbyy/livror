@@ -26,7 +26,7 @@ class GameControllerTest extends AbstractControllerTest
 
         $crawler = $this->client->request('GET', '/game?' . $queryString);
 
-        $gamesTitleCrawler = $crawler->filter('div[id^=game] h5');
+        $gamesTitleCrawler = $crawler->filter('a[id^=title]');
         $gamesTitle = array_map('trim', $gamesTitleCrawler->extract(['_text']));
 
         $this->assertResponseIsSuccessful();
@@ -56,7 +56,7 @@ class GameControllerTest extends AbstractControllerTest
         $xmlUrl = $showMoreButton->ancestors()->first()->attr('data-load-more-url-value');
         $xmlCrawler = $this->client->xmlHttpRequest('GET', $xmlUrl);
 
-        $gamesTitleXmlCrawler = $xmlCrawler->filter('div[id^=game] h5');
+        $gamesTitleXmlCrawler = $xmlCrawler->filter('a[id^=title]');
         $gamesTitle = array_map('trim', $gamesTitleXmlCrawler->extract(['_text']));
 
         $this->assertResponseIsSuccessful();
@@ -100,7 +100,7 @@ class GameControllerTest extends AbstractControllerTest
 
         $crawler = $this->client->request('GET', '/game/' . $game->getId());
 
-        $gamesTitleCrawler = $crawler->filter('div[id^=game] h5');
+        $gamesTitleCrawler = $crawler->filter('a[id^=title]');
         $gamesTitle = array_map('trim', $gamesTitleCrawler->extract(['_text']));
 
         $this->assertResponseIsSuccessful();
