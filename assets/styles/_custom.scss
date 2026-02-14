@@ -160,14 +160,12 @@ input[disabled] {
 // Users //////////////////////////
 
 @mixin app-cell($bg-color) {
-  &:hover,
-  &:active {
-    background-color: $bg-color;
-    cursor: pointer;
+  cursor: pointer;
 
-    span {
-      color: shadow-color($light, 15%);
-    }
+  &:hover,
+  &:active,
+  &:focus {
+    background-color: $bg-color;
 
     img {
       box-shadow: $box-shadow !important;
@@ -181,19 +179,6 @@ input[disabled] {
 
 .app-cell-secondary {
   @include app-cell(shade-color($secondary-bg-subtle-dark, $btn-hover-bg-shade-amount));
-}
-
-// Title //////////////////////////
-
-.app-game-title {
-  color: $gray-100;
-  text-decoration: none;
-
-  &:hover,
-  &:active {
-    text-decoration: underline;
-    color: shadow-color($light, 15%);
-  }
 }
 
 // Dropdown ///////////////////////

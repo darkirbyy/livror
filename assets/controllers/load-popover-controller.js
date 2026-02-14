@@ -14,6 +14,9 @@ export default class extends Controller {
     // load each popover
     const popoverTriggerList = this.element.querySelectorAll('[data-bs-toggle="popover"]');
     popoverTriggerList.forEach((item) => {
+      const customClass = item.classList.contains('app-cell-secondary')
+        ? 'bg-body-secondary'
+        : 'bg-primary-subtle bg-gradient';
       new Popover(item, {
         container: item.parentElement,
         trigger: 'focus',
@@ -21,7 +24,7 @@ export default class extends Controller {
         html: true,
         delay: { show: 0, hide: 100 },
         animation: false,
-        customClass: item.classList.contains('app-cell-secondary') ? 'bg-body-secondary' : 'bg-primary bg-gradient',
+        customClass: customClass,
       });
     });
   }

@@ -43,7 +43,7 @@ $body-bg-dark: shade-color($gray-900, 60%) !default;
 $body-color-dark: $gray-100 !default;
 $body-secondary-bg-dark: shade-color($gray-800, 55%) !default;
 $body-secondary-color-dark: rgba($body-color-dark, 0.75) !default;
-$primary-bg-subtle-dark: shade-color($primary, 50%) !default;
+$primary-bg-subtle-dark: shade-color($primary, 15%) !default;
 $secondary-bg-subtle-dark: shade-color($secondary, 35%) !default;
 $gradient: linear-gradient(180deg, rgba($dark, 0.2), rgba($dark, 0));
 

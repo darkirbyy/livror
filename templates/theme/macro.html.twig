@@ -173,19 +173,15 @@
 
 {# Macro to display the title of the game in the game and review index #}
 {%- macro game_title(game, backpath = null, show = false, edit = false) -%}
-  <div class="text-center text-md-start p-1 position-relative">
-    <div class="position-absolute end-0 float-end px-1 bg-primary bg-gradient">
-      {% if edit %}
-        {% set url = path('game_edit', { id: game.id, backpath: backpath }) %}
-        <a href="{{ url }}" class="btn btn-sm btn-outline-light" aria-label="{{ 'game.index.button.editGame'|trans }}" data-turbo-frame="_top">
-          <span class="lnr lnr-pencil" aria-hidden="true"></span>
-        </a>
-      {% endif %}
-    </div>
-    <h5 class="mb-0 p-1 text-truncate">
-      {% set url = show ? path('game_show', { id: game.id, backpath: backpath }) : '#' %}
-      <a href="{{ url }}" class="app-game-title" data-turbo-frame="_top">{{ game.name }}</a>
-    </h5>
+  <div class="d-flex">
+    {% set url = show ? path('game_show', { id: game.id, backpath: backpath }) : '#' %}
+    <a class="btn w-100 px-2 py-1 fs-5 text-center text-md-start text-truncate flex-fill focus-ring app-cell-primary" href="{{ url }}" data-turbo-frame="_top">{{ game.name }}</a>
+    {% if edit %}
+      {% set url = path('game_edit', { id: game.id, backpath: backpath }) %}
+      <a href="{{ url }}" class="btn border-start focus-ring app-cell-primary" aria-label="{{ 'game.index.button.editGame'|trans }}" data-turbo-frame="_top">
+        <span class="lnr lnr-pencil" aria-hidden="true"></span>
+      </a>
+    {% endif %}
   </div>
 {%- endmacro -%}
 
@@ -221,7 +217,7 @@
 
 {# Macro to display the information of a review #}
 {%- macro review_information(review, level, flexClass) -%}
-  {% set baseClasses = 'flex-basis-0 p-2 h-100 border-start text-truncate focus-ring app-cell-' ~ level ~ ' ' %}
+  {% set baseClasses = 'flex-basis-0 p-2 h-100 border-start text-truncate focus-ring focus-ring-light app-cell-' ~ level ~ ' ' %}
 
   {% set popover = 'review.help.rating'|trans([], 'validators') %}
   <div role="button" class="{{ baseClasses ~ flexClass.rating }}" tabindex="0" data-bs-toggle="popover" data-bs-content="{{ popover|e }}">

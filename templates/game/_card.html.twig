@@ -97,7 +97,7 @@
           {% for review in game.reviews|filter(review => review.user is not empty) %}
             <div class="col-12 text-center d-flex bg-secondary-subtle align-items-center border-bottom {{ loop.index0 > 0 ? 'border-top' }} col-md-auto flex-even">
               {% set popover = m.user_popover(review.user) %}
-              {% set classes = 'flex-basis-0 flex-grow-2 flex-grow-md-1 flex-grow-lg-1 text-truncate p-2 h-100 focus-ring lh-1 app-cell-secondary' %}
+              {% set classes = 'flex-basis-0 flex-grow-2 flex-grow-md-1 flex-grow-lg-1 text-truncate p-2 h-100 lh-1 focus-ring focus-ring-light app-cell-secondary' %}
               <div role="button" class="{{ classes }}" tabindex="0" data-bs-toggle="popover" data-bs-content="{{ popover|e }}">
                 {{ m.user_avatar(review.user) }}
                 <span class="ms-1 d-none d-lg-inline align-middle">{{ review.user.username }}</span>
