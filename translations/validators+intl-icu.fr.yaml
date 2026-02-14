@@ -48,3 +48,6 @@ attachment:
   label:
     file: Fichier
     description: Description
+  error:
+    file: 
+      tooLargeOrCorrupted: Le fichier est trop volumineux ou corrompu.

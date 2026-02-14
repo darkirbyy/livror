@@ -27,7 +27,11 @@ class Attachment
 
     #[Vich\UploadableField(mapping: 'attachments', fileNameProperty: 'fileMeta.name', size: 'fileMeta.size', mimeType: 'fileMeta.mimeType', originalName: 'fileMeta.originalName')]
     #[VichAssert\FileRequired(target: 'fileMeta')]
-    #[Assert\AtLeastOneOf([new Assert\File(maxSize: '10Mi'), new Assert\Image(maxSize: '10Mi', detectCorrupted: true)])]
+    #[Assert\AtLeastOneOf(
+        constraints: [new Assert\File(maxSize: '10Mi'), new Assert\Image(maxSize: '10Mi', detectCorrupted: true)],
+        includeInternalMessages: false,
+        message: 'attachment.error.file.tooLargeOrCorrupted',
+    ),]
     private ?File $file = null;
 
     #[ORM\Embedded(class: FileMeta::class)]

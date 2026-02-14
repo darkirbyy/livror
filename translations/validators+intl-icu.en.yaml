@@ -9,7 +9,6 @@ game:
     genres: Genre(s)
     description: Description
     imgUrl: Image URL
-  
   help:
     steamId: If automatic search doesn't work, please retrieve the Steam ID from <a class="link-light" ref='https://steamdb.info/' target='_blank'>SteamDB</a>.
     commaSeparated: Separated by commas
@@ -49,3 +48,6 @@ attachment:
   label:
     file: File
     description: Description
+  error:
+    file:
+      tooLargeOrCorrupted: The file is too large or corrupted.
