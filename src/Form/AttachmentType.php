@@ -43,6 +43,7 @@ class AttachmentType extends DefaultType
 
             $fileOptions = $form->get('file')->getConfig()->getOptions();
             $fileOptions['download_label'] = $attachment->getFileMeta()->getName();
+            $fileOptions['required'] = false;
             $form->add('file', VichFileType::class, $fileOptions);
         });
     }
