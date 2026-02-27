@@ -168,8 +168,8 @@ jobs:
         SCRIPT_AFTER: |
           mkdir -p ${{ vars.SERV_PATH }}/var && chmod 775 ${{ vars.SERV_PATH }}/var
           touch ${{ vars.SERV_PATH }}/.env.local.php && chmod 664 ${{ vars.SERV_PATH }}/.env.local.php
-          sudo /usr/bin/docker exec -u php-fpm php-fpm upgrade-app ${{ vars.SERV_PATH }}
-          sudo /usr/bin/docker restart php-fpm
+          sudo /usr/bin/docker exec -u php-fpm php-fpm symfony-upgrade-app ${{ vars.SERV_PATH }}
+          sudo /usr/bin/docker exec -u php-fpm php-fpm opcache-clear-app ${{ vars.SERV_PATH }}
    
     - name: Update coverage badge
       uses: schneegans/dynamic-badges-action@v1.7.0
