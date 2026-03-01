@@ -11,7 +11,7 @@
 {% if (reviewsByUser.reviews|length) > 0 %}
 {{ '- ' ~ 'discord.notify.numberPublishedReviewsBy'|trans({ number: reviewsByUser.reviews|length, name: reviewsByUser.user.username }) -}}
 {{- maxNumberReviews == (reviewsByUser.reviews|length) ? ' :trophy:' -}}
-{{- ' : ' ~ reviewsByUser.reviews|slice(0, ellipsis)|join(', ') ~ (games|length > ellipsis ? ', ...') }}
+{{- ' : ' ~ reviewsByUser.reviews|slice(0, ellipsis)|join(', ') ~ (reviewsByUser.reviews|length > ellipsis ? ', ...') }}
 {% endif %}
 {%- endfor -%}
 
