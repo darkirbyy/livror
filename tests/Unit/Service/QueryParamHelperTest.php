@@ -11,7 +11,6 @@ use PHPUnit\Framework\Attributes as PU;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBag;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 
@@ -28,7 +27,6 @@ final class QueryParamHelperTest extends TestCase
 
     public function setUp(): void
     {
-        $this->attributeBag = new AttributeBag();
         $this->session = new Session(new MockArraySessionStorage());
         $this->session->start();
 
