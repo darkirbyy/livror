@@ -28,9 +28,9 @@
   <body class="d-flex flex-column min-vh-100" data-bs-theme="dark">
     {# Bar not visible in prod env #}
     {% if env.app.env != 'prod' %}
-      <div class="container-fluid p-0 m-0 text-center fw-bold d-flex justify-content-around app-env-dev">
-        {%- for i in 1..5 -%}
-          <span>{{ env.app.env|upper }}</span>
+      <div class="container-fluid p-0 m-0 text-center fw-bold d-flex justify-content-around app-env-{{ env.app.env }}">
+        {%- for i in 1..10 -%}
+          <span>{{ ('layout.env.' ~ env.app.env)|trans|upper }}</span>
         {%- endfor -%}
       </div>
     {% endif %}

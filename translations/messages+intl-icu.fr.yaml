@@ -182,6 +182,11 @@ layout:
     madeWith: Réalisé avec
     version: Version
     releaseDate: Mise à jour le
+  env:
+    dev: dev
+    test: test
+    stag: qualif
+    prod: prod
 
 enum:
   typePrice:

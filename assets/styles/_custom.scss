@@ -353,6 +353,18 @@ input[disabled] {
 
 .app-env-dev {
   z-index: 1000;
-  color: #4d2e00;
-  background: repeating-linear-gradient(45deg, #e7b871, #e7b871 10px, #ce994b 10px, #ce994b 20px);
+  color: #031124;
+  background: repeating-linear-gradient(45deg, #718de7, #718de7 10px, #93ace2 10px, #93ace2 20px);
+}
+
+.app-env-test {
+  z-index: 1000;
+  color: #082403;
+  background: repeating-linear-gradient(45deg, #85e771, #85e771 10px, #ace293 10px, #ace293 20px);
+}
+
+.app-env-stag {
+  z-index: 1000;
+  color: #160701;
+  background: repeating-linear-gradient(45deg, #e77171, #e77171 10px, #f88282 10px, #f88282 20px);
 }
