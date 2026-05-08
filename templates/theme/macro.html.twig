@@ -334,7 +334,8 @@
 {% endmacro %}
 
 {% macro user_avatar(user, size = 'sm') %}
-  <img src="{{ user.avatarPath|generate_root }}" class="img-fluid app-avatar-{{ size }}" alt="{{ 'aria.avatar'|trans({ name: user.username }) }}" />
+  {# TODO : change #}
+  <img src="{{ app.user.toArray.picture }}" class="img-fluid app-avatar-{{ size }}" alt="{{ 'aria.avatar'|trans({ name: user.username }) }}" />
 {% endmacro %}
 
 {% macro user_popover(user) %}

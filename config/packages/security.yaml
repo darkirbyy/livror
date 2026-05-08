@@ -5,26 +5,38 @@ security:
     providers:
         account_user_provider:
             id: App\Security\AccountUserProvider
+        mainick_keycloak_user_provider:
+            id: Mainick\KeycloakClientBundle\Security\User\KeycloakUserProvider
 
     firewalls:
         dev:
             pattern: ^/(_profiler|_wdt|build)/
             security: false
+        # main:
+        #     pattern: ^/
+        #     security: true
+        #     lazy: true
+        #     provider: account_user_provider
+        #     entry_point: App\Security\AccountEntryPoint
         main:
             pattern: ^/
-            security: true
             lazy: true
-            provider: account_user_provider
-            entry_point: App\Security\AccountEntryPoint
-
+            provider: mainick_keycloak_user_provider
+            entry_point: Mainick\KeycloakClientBundle\Security\EntryPoint\KeycloakAuthenticationEntryPoint
+            custom_authenticator:
+                - Mainick\KeycloakClientBundle\Security\Authenticator\KeycloakAuthenticator
+            logout:
+                path: mainick_keycloak_security_auth_logout
+        
     access_control:
-        - { path: ^/, roles: ROLE_LIVROR_USER }
+        - { path: /auth/keycloak/connect, roles: PUBLIC_ACCESS }
+        - { path: ^/, roles: ROLE_USER }
 
 when@dev:
     security:
         firewalls:
             main: # Allow to create and connect with local dummy user
-             form_login: 
+                form_login: 
 
 when@test:
     security:

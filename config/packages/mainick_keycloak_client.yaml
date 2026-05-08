@@ -1,0 +1,14 @@
+mainick_keycloak_client:
+  security:
+    default_target_route_name: home_index
+  keycloak:
+    verify_ssl: true
+    realm: web
+    client_id: 'livror-%app.env%'
+    client_secret: '%env(IAM_CLIENT_SECRET)%'
+    base_url: '%env(IAM_BASE_URL)%'
+    redirect_uri: '%env(IAM_REDIRECT_URI)%'
+    encryption_algorithm: '%env(IAM_ENCRYPTION_ALGORITHM)%'
+    encryption_key: '%env(IAM_ENCRYPTION_KEY)%'
+    encryption_key_path: ''
+    version: '%env(IAM_VERSION)%'
