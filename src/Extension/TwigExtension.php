@@ -8,7 +8,6 @@ use App\Dto\QueryParam;
 use App\Enum\TypePriceEnum;
 use App\Service\AutocompletionHelper;
 use App\Service\BackpathUrlGenerator;
-use App\Service\HubUrlGenerator;
 use App\Service\QueryParamHelper;
 use Symfony\UX\StimulusBundle\Dto\StimulusAttributes;
 use Twig\Attribute\AsTwigFilter;
@@ -17,7 +16,6 @@ use Twig\Attribute\AsTwigFunction;
 class TwigExtension
 {
     public function __construct(
-        private HubUrlGenerator $hubUrlGenerator,
         private BackpathUrlGenerator $backpathUrlGenerator,
         private QueryParamHelper $queryParamHelper,
         private AutocompletionHelper $autocompletionHelper,
@@ -28,20 +26,6 @@ class TwigExtension
     public function fullPriceToTypePrice(?int $fullPrice): TypePriceEnum
     {
         return TypePriceEnum::fromPrice($fullPrice);
-    }
-
-    // Add the full url of the hub root path
-    #[AsTwigFilter(name: 'generate_root')]
-    public function hubUrlGenerateRoot(string $route): string
-    {
-        return $this->hubUrlGenerator->generateRoot($route);
-    }
-
-    // Add the full url of the hub account path
-    #[AsTwigFilter(name: 'generate_account')]
-    public function hubUrlGenerateAccount(string $route, array $parameters = []): string
-    {
-        return $this->hubUrlGenerator->generateAccount($route, $parameters);
     }
 
     // Generate the backpath if exists and valid, keep the given path otherwise

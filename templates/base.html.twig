@@ -94,17 +94,11 @@
                 <ul class="dropdown-menu dropdown-menu-end" role="menu">
                   <li><a class="dropdown-item py-2" role="menuitem" href="{{ path('review_index') }}">{{ 'layout.navbar.account.myReviews'|trans }}</a></li>
                   <li><hr class="dropdown-divider" /></li>
-                  <li><a class="dropdown-item" role="menuitem" href="{{ path('home_account') }}" data-turbo-prefetch="false">{{ 'layout.navbar.account.myAccount'|trans }}</a></li>
-                  <li><a class="dropdown-item" role="menuitem" href="{{ '/'|generate_root }}" data-turbo-prefetch="false">{{ 'layout.navbar.account.backToHub'|trans }}</a></li>
+                  <li><a class="dropdown-item" role="menuitem" href="{{ env.app.iam_url }}" data-turbo-prefetch="false">{{ 'layout.navbar.account.myAccount'|trans }}</a></li>
+                  <li><a class="dropdown-item" role="menuitem" href="{{ env.app.hub_url }}" data-turbo-prefetch="false">{{ 'layout.navbar.account.backToHub'|trans }}</a></li>
                   <li>
                     {# Disable turbo : we may leave this app on logout #}
-                    <a
-                      class="dropdown-item text-danger"
-                      role="menuitem"
-                      href="{{ '/logout'|generate_account({ 'disconnect_user[_token]': csrf_token('hub/logout') }) }}"
-                      data-turbo-prefetch="false"
-                      data-turbo="false"
-                    >
+                    <a class="dropdown-item text-danger" role="menuitem" href="{{ path('mainick_keycloak_security_auth_logout') }}" data-turbo-prefetch="false" data-turbo="false">
                       {{ 'layout.navbar.account.signOut'|trans }}
                     </a>
                   </li>

@@ -7,10 +7,8 @@ namespace App\Controller;
 use App\Enum\DateFieldEnum;
 use App\Repository\GameRepository;
 use App\Repository\ReviewRepository;
-use App\Service\HubUrlGenerator;
 use App\Service\UserManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
@@ -32,14 +30,5 @@ class HomeController extends AbstractController
             'gamesInfo' => $gamesInfo,
             'reviews' => $reviews,
         ]);
-    }
-
-    #[Route('/account', name: 'account', methods: ['GET'])]
-    public function account(Request $request, HubUrlGenerator $hubUrlGenerator): Response
-    {
-        $referer = $request->headers->get('referer', $request->getSchemeAndHttpHost());
-        $request->getSession()->set('hub/back-target-path', $referer);
-
-        return $this->redirect($hubUrlGenerator->generateAccount(''));
     }
 }

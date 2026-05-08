@@ -13,6 +13,8 @@ twig:
                 max_limit: '%app.max_limit%'
                 enable_prefetch: '%app.enable_prefetch%'
                 enable_autoload: '%app.enable_autoload%'
+                hub_url: '%app.hub_url%'
+                iam_url: '%app.iam_url%'
             versioning:
                 version: '%versioning.version%'
                 version_hash: '%versioning.version_hash%'

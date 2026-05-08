@@ -26,9 +26,9 @@ parameters:
     app.enable_prefetch: '%env(bool:APP_ENABLE_PREFETCH)%'
     app.enable_autoload: '%env(bool:APP_ENABLE_AUTOLOAD)%'
     app.mock_api: '%env(bool:APP_MOCK_API)%'
-    app.mock_hub: '%env(bool:APP_MOCK_HUB)%'
-    hub.base_url: '%env(string:HUB_BASE_URL)%'
-    hub.account_route: '%env(string:HUB_ACCOUNT_ROUTE)%'
+    app.mock_keycloak: '%env(bool:APP_MOCK_KEYCLOAK)%'
+    app.hub_url: '%env(string:HUB_BASE_URL)%'
+    app.iam_url: '%env(string:IAM_BASE_URL)%'
 
 imports:
     - { resource: 'version.yaml' }
