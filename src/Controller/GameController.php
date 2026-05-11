@@ -120,6 +120,7 @@ class GameController extends AbstractController
     {
         $flashSuccess = new FlashMessage('game.index.flash.deleteGame', ['name' => $game->getName()]);
         if ($fm->checkTokenAndRemove('livror/delete', $game, $flashSuccess)) {
+            //todo : what if backpath is the game show page ?
             return $this->redirect($backpathUrlGenerator->generate($this->generateUrl('game_index')), Response::HTTP_SEE_OTHER);
         }
 

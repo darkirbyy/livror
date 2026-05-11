@@ -9,6 +9,7 @@ use App\Entity\Review;
 use App\Enum\DateFieldEnum;
 use App\Service\QueryParamHelper;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\DBAL\ParameterType;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Uid\Uuid;
@@ -90,6 +91,7 @@ class ReviewRepository extends ServiceEntityRepository
 
     public function countByUserUuid(): array
     {
+        // todo check the aggregation gy uuid
         $qb = $this->createQueryBuilder('r');
         $qb->select('r.userUuid, COUNT(r.id) as numberReviews')->groupBy('r.userUuid');
 
@@ -108,6 +110,6 @@ class ReviewRepository extends ServiceEntityRepository
 
     private function joinGameAndUser(QueryBuilder $qb, Uuid $userUuid): void
     {
-        $qb->leftJoin('r.game', 'g')->where('r.userUuid = :userUuid')->setParameter('userUuid', $userUuid);
+        $qb->leftJoin('r.game', 'g')->where('r.userUuid = :userUuid')->setParameter('userUuid', $userUuid->toBinary(), ParameterType::BINARY);
     }
 }

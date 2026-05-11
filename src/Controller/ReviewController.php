@@ -49,7 +49,7 @@ class ReviewController extends AbstractController
             'reviews' => array_slice($reviews, 0, $queryParam->limit), // remove on result as we have fetched one more that configured
             'hasMore' => count($reviews) > $queryParam->limit, // determine if there is more games to fetch
             'numbers' => $numbers,
-            'cannotAdd' => 0 == $gameRepo->countWithoutReview($userUuid),
+            'cannotAdd' => 0 == $gameRepo->countWithoutReview($user->uuid),
             'user' => $user,
         ];
 

@@ -7,6 +7,7 @@ namespace App\Service;
 use App\Dto\QueryParam;
 use Doctrine\ORM\QueryBuilder;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\Uid\Uuid;
 
 class QueryParamHelper
 {
@@ -68,7 +69,7 @@ class QueryParamHelper
         $queryParam->filters = array_map(fn($values) => '' !== $values ? $values : [], $queryParam->filters);
         $queryParam->filters = array_filter(
             $queryParam->filters,
-            fn($values, $key): bool => in_array($key, $allowedFiltersKeys, true) && is_array($values) && array_all($values, fn($value) => ctype_alnum($value)),
+            fn($values, $key): bool => in_array($key, $allowedFiltersKeys, true) && is_array($values) && array_all($values, fn($value) => ctype_alnum($value) || Uuid::isValid($value)),
             ARRAY_FILTER_USE_BOTH,
         );
     }

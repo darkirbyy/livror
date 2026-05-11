@@ -12,6 +12,8 @@ use App\Enum\DateFieldEnum;
 use App\Service\QueryParamHelper;
 use DateTime;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\DBAL\ArrayParameterType;
+use Doctrine\DBAL\ParameterType;
 use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
@@ -84,7 +86,7 @@ class GameRepository extends ServiceEntityRepository
 
         // Restrict to game not reviewed by user with userUuid (if not null)
         if (!is_null($userUuid)) {
-            $qb->leftJoin('g.reviews', 'rf', Join::WITH, 'rf.userUuid = :userUuid')->where('rf.id IS NULL')->setParameter('userUuid', $userUuid);
+            $qb->leftJoin('g.reviews', 'rf', Join::WITH, 'rf.userUuid = :userUuid')->where('rf.id IS NULL')->setParameter('userUuid', $userUuid->toBinary(), ParameterType::BINARY);
         }
 
         // Select and limit by relevance thanks to mariadb fulltext search
@@ -107,7 +109,7 @@ class GameRepository extends ServiceEntityRepository
 
         // Restrict to game not reviewed by user with userUuid (if not null)
         if (!is_null($userUuid)) {
-            $qb->leftJoin('g.reviews', 'rf', Join::WITH, 'rf.userUuid = :userUuid')->where('rf.id IS NULL')->setParameter('userUuid', $userUuid);
+            $qb->leftJoin('g.reviews', 'rf', Join::WITH, 'rf.userUuid = :userUuid')->where('rf.id IS NULL')->setParameter('userUuid', $userUuid->toBinary(), ParameterType::BINARY);
         }
 
         // Select and limit using basic like clause
@@ -149,7 +151,7 @@ class GameRepository extends ServiceEntityRepository
         $qb = $this->createQueryBuilder('g');
         $qb->leftJoin('g.reviews', 'r', Join::WITH, 'r.userUuid = :userUuid')
             ->where('r.id IS NULL')
-            ->setParameter('userUuid', $userUuid)
+            ->setParameter('userUuid', $userUuid->toBinary(), ParameterType::BINARY)
             ->orderBy('g.name', 'ASC')
             ->addOrderBy('g.id', 'ASC');
 
@@ -159,7 +161,10 @@ class GameRepository extends ServiceEntityRepository
     public function countWithoutReview(Uuid $userUuid): int
     {
         $qb = $this->createQueryBuilder('g');
-        $qb->select('COUNT(g.id)')->leftJoin('g.reviews', 'r', Join::WITH, 'r.userUuid = :userUuid')->where('r.id IS NULL')->setParameter('userUuid', $userUuid);
+        $qb->select('COUNT(g.id)')
+            ->leftJoin('g.reviews', 'r', Join::WITH, 'r.userUuid = :userUuid')
+            ->where('r.id IS NULL')
+            ->setParameter('userUuid', $userUuid->toBinary(), ParameterType::BINARY);
 
         return (int) $qb->getQuery()->getSingleScalarResult();
     }
@@ -175,7 +180,7 @@ class GameRepository extends ServiceEntityRepository
             // prettier-ignore
             $conditionsOr[] = 'EXISTS (SELECT 1 FROM ' . Review::class . ' ru WHERE ru.game = g AND ru.userUuid IN (:users)
                                GROUP BY ru.game HAVING COUNT(DISTINCT ru.userUuid) = :userCount)';
-            $qb->setParameter('users', $queryParam->filters['users']);
+            $qb->setParameter('users', array_map(fn(string $s) => Uuid::fromString($s)->toBinary(), $queryParam->filters['users']), ArrayParameterType::BINARY);
             $qb->setParameter('userCount', count($queryParam->filters['users']));
         } else {
             $conditionsOr[] = 'EXISTS (SELECT 1 FROM ' . Review::class . ' ru WHERE ru.game = g)';
