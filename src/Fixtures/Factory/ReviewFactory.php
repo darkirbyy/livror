@@ -2,7 +2,8 @@
 
 namespace App\Fixtures\Factory;
 
-use App\Entity\Main\Review;
+use App\Entity\Review;
+use Symfony\Component\Uid\Uuid;
 use Zenstruck\Foundry\Persistence\PersistentProxyObjectFactory;
 
 final class ReviewFactory extends PersistentProxyObjectFactory
@@ -23,7 +24,7 @@ final class ReviewFactory extends PersistentProxyObjectFactory
         $defaults['comment'] = self::faker()
             ->optional(0.75)
             ->paragraph(self::faker()->numberBetween(1, 10));
-        $defaults['userId'] = self::faker()->numberBetween(0, 10000);
+        $defaults['userUuid'] = self::faker()->uuid();
 
         return $defaults;
     }
@@ -51,11 +52,11 @@ final class ReviewFactory extends PersistentProxyObjectFactory
         });
     }
 
-    public function withUserId(int $userId): self
+    public function withUserUuid(Uuid $userUuid): self
     {
-        return $this->with(function () use ($userId) {
+        return $this->with(function () use ($userUuid) {
             $defaults = [];
-            $defaults['userId'] = $userId;
+            $defaults['userUuid'] = $userUuid;
 
             return $defaults;
         });

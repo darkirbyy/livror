@@ -2,7 +2,7 @@
 
 namespace App\Fixtures\Factory;
 
-use App\Entity\Main\Steam;
+use App\Entity\Steam;
 use Zenstruck\Foundry\Persistence\PersistentProxyObjectFactory;
 
 final class SteamFactory extends PersistentProxyObjectFactory

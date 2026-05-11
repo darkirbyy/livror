@@ -74,7 +74,8 @@
             </ul>
             {# Right part of the navbar #}
             <ul class="navbar-nav">
-              {% set active = (app.current_route == 'review_index' and (app.current_route_parameters.id|default(app.user.id)) == app.user.id)
+              {% set routeUuid = app.current_route_parameters.uuid|default(userConnected.uuid) %}
+              {% set active = (app.current_route == 'review_index' and routeUuid.toString == userConnected.uuid.toString)
                 or app.current_route == 'review_edit'
                 or app.current_route == 'review_new'
               %}
@@ -88,8 +89,8 @@
                   aria-haspopup="true"
                   {{ m.active_attr(active) }}
                 >
-                  <span class="me-2">{{ app.user.username }}</span>
-                  {{ m.user_avatar(app.user) }}
+                  <span class="me-2">{{ userConnected.username }}</span>
+                  {{ m.user_avatar(userConnected) }}
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end" role="menu">
                   <li><a class="dropdown-item py-2" role="menuitem" href="{{ path('review_index') }}">{{ 'layout.navbar.account.myReviews'|trans }}</a></li>

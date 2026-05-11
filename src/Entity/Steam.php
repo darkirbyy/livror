@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Entity\Main;
+namespace App\Entity;
 
 use App\Repository\GameRepository;
 use Doctrine\ORM\Mapping as ORM;

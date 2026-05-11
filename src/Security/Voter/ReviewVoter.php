@@ -4,8 +4,7 @@ declare(strict_types=1);
 
 namespace App\Security\Voter;
 
-use App\Entity\Account\User;
-use App\Entity\Main\Review;
+use App\Entity\Review;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Vote;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
@@ -38,8 +37,7 @@ class ReviewVoter extends Voter
     {
         /** @var Review $review */
         $review = $subject;
-        $user = $token->getUser();
 
-        return $review->getUserId() === $user->getId();
+        return $review->getUserUuid()->toString() === $token->getUser()->getId();
     }
 }

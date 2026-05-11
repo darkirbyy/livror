@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Command;
 
-use App\Entity\Main\Steam;
+use App\Entity\Steam;
 use Doctrine\DBAL\ParameterType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
@@ -125,7 +125,7 @@ class SteamScrapV2Command extends Command
 
             return Command::SUCCESS;
         } catch (\Exception $e) {
-            $connection->isConnected() ? $connection->rollBack() : null;
+            isset($connection) && $connection->isConnected() ? $connection->rollBack() : null;
             $output->writeln(' Failed.');
             if ($input->getOption('verbose')) {
                 $output->write($e->getMessage());

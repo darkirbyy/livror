@@ -2,14 +2,12 @@
 
 namespace App\Fixtures\Story;
 
-use App\Entity\Account\User;
-use App\Entity\Main\Game;
-use App\Entity\Main\Review;
+use App\Entity\Game;
+use App\Entity\Review;
 use App\Fixtures\Factory\GameFactory;
 use App\Fixtures\Factory\SteamFactory;
-use App\Fixtures\Factory\UserFactory;
+use App\Service\KeycloakManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
-use Symfony\Component\Asset\Packages;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Zenstruck\Foundry\Story;
@@ -20,7 +18,7 @@ final class DevStory extends Story
         private ParameterBagInterface $parameterBag,
         private ManagerRegistry $managerRegistry,
         private Filesystem $filesystem,
-        private Packages $packages,
+        private KeycloakManagerInterface $keycloakManager
     ) {}
 
     public function build(): void
@@ -36,24 +34,12 @@ final class DevStory extends Story
             $this->managerRegistry->getManager()->getClassMetadata($entityClass)->setLifecycleCallbacks([]);
         }
 
-        if ($this->parameterBag->get('app.mock_hub')) {
-            UserFactory::repository()->truncate();
-            // Create four dummy users
-            UserFactory::new()
-                ->sequence(array_map(fn($i) => ['username' => 'user' . $i, 'avatarPath' => $this->packages->getUrl('build/tests/avatar' . $i . '.png')], range(1, 4)))
-                ->create();
-            $usersId = array_map(fn(User $u) => $u->getId(), UserFactory::repository()->findAll());
-        } else {
-            // Fetch the users id available through the account connection
-            $userRepository = $this->managerRegistry->getManager('account')->getRepository(User::class);
-            $usersId = array_map(fn(User $u) => $u->getId(), $userRepository->findAll());
-        }
+        // Fetch the users uuid through the current provider
+        $usersUuid = array_column($this->keycloakManager->getUsersAuthorized(), 'uuid');
 
         // Create 50 games with "0" to "number of users" reviews, and 200 steam game
-        GameFactory::new()->withUsersId($usersId, false, 'random')->many(50)->create();
-        SteamFactory::new()
-            ->sequence(array_map(fn($i) => ['id' => $i], range(1, 200)))
-            ->create();
+        GameFactory::new()->withUsersUuid($usersUuid, false, 'random')->many(50)->create();
+        SteamFactory::new()->sequence(array_map(fn($i) => ['id' => $i], range(1, 200)))->create();
 
         // Reenable PrePersit and PreUpdate event
         foreach ([Game::class, Review::class] as $entityClass) {

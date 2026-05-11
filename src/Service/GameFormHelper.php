@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Service;
 
 use App\Dto\FlashMessage;
-use App\Entity\Main\Game;
+use App\Entity\Game;
 use App\Enum\SteamSearchStatusEnum;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormInterface;

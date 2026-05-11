@@ -3,8 +3,6 @@ security:
         Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'
         
     providers:
-        account_user_provider:
-            id: App\Security\AccountUserProvider
         mainick_keycloak_user_provider:
             id: Mainick\KeycloakClientBundle\Security\User\KeycloakUserProvider
 
@@ -12,12 +10,6 @@ security:
         dev:
             pattern: ^/(_profiler|_wdt|build)/
             security: false
-        # main:
-        #     pattern: ^/
-        #     security: true
-        #     lazy: true
-        #     provider: account_user_provider
-        #     entry_point: App\Security\AccountEntryPoint
         main:
             pattern: ^/
             lazy: true
@@ -27,16 +19,20 @@ security:
                 - Mainick\KeycloakClientBundle\Security\Authenticator\KeycloakAuthenticator
             logout:
                 path: mainick_keycloak_security_auth_logout
-        
+                
     access_control:
         - { path: /auth/keycloak/connect, roles: PUBLIC_ACCESS }
         - { path: ^/, roles: ROLE_USER }
 
 when@dev:
     security:
+        providers:
+            keycloak_mock_user_provider:
+                id: App\Tests\Mock\KeycloakMockUserProvider
         firewalls:
             main: # Allow to create and connect with local dummy user
-                form_login: 
+                entry_point: App\Tests\Mock\KeycloakMockEntryPoint
+                provider: keycloak_mock_user_provider
 
 when@test:
     security:
@@ -46,3 +42,11 @@ when@test:
                 cost: 4 # Lowest possible value for bcrypt
                 time_cost: 3 # Lowest possible value for argon
                 memory_cost: 10 # Lowest possible value for argon
+        providers:
+            keycloak_mock_user_provider:
+                id: App\Tests\Mock\KeycloakMockUserProvider
+        firewalls:
+            main: # Allow to create and connect with local dummy user
+                entry_point: App\Tests\Mock\KeycloakMockEntryPoint
+                provider: keycloak_mock_user_provider
+

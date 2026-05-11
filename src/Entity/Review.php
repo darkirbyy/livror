@@ -2,21 +2,23 @@
 
 declare(strict_types=1);
 
-namespace App\Entity\Main;
+namespace App\Entity;
 
-use App\Entity\Account\User;
+use App\Dto\User;
 use App\Repository\ReviewRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Types\UuidType;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ReviewRepository::class)]
 #[ORM\HasLifecycleCallbacks]
-#[ORM\UniqueConstraint(fields: ['userId', 'game'])]
-#[UniqueEntity(fields: ['userId', 'game'], errorPath: 'game', message: 'review.error.game.notUnique')]
+#[ORM\UniqueConstraint(fields: ['userUuid', 'game'])]
+#[UniqueEntity(fields: ['userUuid', 'game'], errorPath: 'game', message: 'review.error.game.notUnique')]
 class Review
 {
     // /////////////////////////////////////////////////////
@@ -54,11 +56,11 @@ class Review
     #[ORM\JoinColumn(nullable: false)]
     private ?Game $game = null;
 
-    #[ORM\Column]
+    #[ORM\Column(type: UuidType::NAME)]
     #[Assert\NotNull]
-    private ?int $userId = null;
+    private ?Uuid $userUuid = null;
 
-    // No ORM column because it comes from a different doctrine mapping
+    // No ORM column because it comes from a external user provider
     private ?User $user = null;
 
     /**
@@ -184,14 +186,14 @@ class Review
         return $this;
     }
 
-    public function getUserId(): ?int
+    public function getUserUuid(): ?Uuid
     {
-        return $this->userId;
+        return $this->userUuid;
     }
 
-    public function setUserId(?int $userId): static
+    public function setUserUuid(?Uuid $userUuid): static
     {
-        $this->userId = $userId;
+        $this->userUuid = $userUuid;
 
         return $this;
     }

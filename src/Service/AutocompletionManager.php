@@ -4,18 +4,15 @@ declare(strict_types=1);
 
 namespace App\Service;
 
-use App\Entity\Main\Steam;
 use App\Enum\SearchModeEnum;
 use App\Repository\GameRepository;
 use App\Repository\SteamRepository;
-use Symfony\Bundle\SecurityBundle\Security;
 
 class AutocompletionManager
 {
     public function __construct(
         private int $autocompletionLimit,
         private int $autocompletionMinLength,
-        private Security $security,
         private SteamRepository $steamRepo,
         private GameRepository $gameRepo,
         private UserManager $userManager,
@@ -51,10 +48,13 @@ class AutocompletionManager
         }
 
         // Query the database and return the results with users plugged into each review
-        $userId = $this->security->getUser()->getId();
+        $userUuid = $this->userManager->getUserConnected()->uuid;
         $repoMethod = $searchMode->toRepoMethod();
-        $gamesInfo = $this->gameRepo->$repoMethod($search, $this->autocompletionLimit, $withoutReview ? $userId : null);
-        $this->userManager->plugToGamesInfo($gamesInfo, $this->userManager->findWithReview());
+        $gamesInfo = $this->gameRepo->$repoMethod($search, $this->autocompletionLimit, $withoutReview ? $userUuid : null);
+
+        // Plug the users into the Game Infos
+        $users = $this->userManager->getUserList();
+        $this->userManager->plugToGamesInfo($gamesInfo, $users);
 
         return $gamesInfo;
     }

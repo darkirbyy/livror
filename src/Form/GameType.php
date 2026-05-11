@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Form;
 
-use App\Entity\Main\Game;
+use App\Entity\Game;
 use App\Enum\TypeGameEnum;
 use App\Enum\TypePriceEnum;
 use App\Service\GameFormHelper;

@@ -64,12 +64,12 @@ class DiscordNotifyCommand extends Command
 
             $output->write('Retriving games and reviews...');
             $dateTime = \DateTime::createFromTimestamp($since);
-            $users = $this->userManager->findWithReview();
+            $users = $this->userManager->getUserList();
             $games = $this->gameRepo->findSince($dateTime);
             $reviewsByUsers = [];
             foreach ($users as $user) {
-                $reviewsByUsers[$user->getId()]['user'] = $user;
-                $reviewsByUsers[$user->getId()]['reviews'] = $this->reviewRepo->findSince($dateTime, $user->getId());
+                $reviewsByUsers[$user->uuid->toString()]['user'] = $user;
+                $reviewsByUsers[$user->uuid->toString()]['reviews'] = $this->reviewRepo->findSince($dateTime, $user->uuid);
             }
             $output->writeln(' Done.');
 

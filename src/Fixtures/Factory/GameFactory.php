@@ -2,7 +2,7 @@
 
 namespace App\Fixtures\Factory;
 
-use App\Entity\Main\Game;
+use App\Entity\Game;
 use App\Enum\TypeGameEnum;
 use App\Tests\Mock\ApiMockData;
 use Zenstruck\Foundry\Persistence\PersistentProxyObjectFactory;
@@ -35,10 +35,10 @@ final class GameFactory extends PersistentProxyObjectFactory
         return $defaults;
     }
 
-    public function withUsersId(array $usersId, bool $atLeastOne, string $attachmentMode = 'none'): self
+    public function withUsersUuid(array $usersUuid, bool $atLeastOne, string $attachmentMode = 'none'): self
     {
-        return $this->with(function () use ($attachmentMode, $usersId, $atLeastOne) {
-            $users = self::faker()->randomElements($usersId, self::faker()->numberBetween($atLeastOne ? 1 : 0, count($usersId)), false);
+        return $this->with(function () use ($attachmentMode, $usersUuid, $atLeastOne) {
+            $users = self::faker()->randomElements($usersUuid, self::faker()->numberBetween($atLeastOne ? 1 : 0, count($usersUuid)), false);
             $attachmentsResolver = function () use ($attachmentMode) {
                 return match ($attachmentMode) {
                     'random' => self::faker()->boolean(10) ? self::faker()->numberBetween(1, 2) : 0,
@@ -55,7 +55,7 @@ final class GameFactory extends PersistentProxyObjectFactory
                 ->withReleaseYear($defaults['releaseYear'])
                 ->withGameDateAdd($defaults['dateAdd'])
                 ->withAttachments($attachmentsResolver)
-                ->sequence(array_map(fn($userId) => ['userId' => $userId], $users));
+                ->sequence(array_map(fn($userUuid) => ['userUuid' => $userUuid], $users));
 
             return $defaults;
         });

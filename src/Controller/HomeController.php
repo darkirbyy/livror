@@ -18,7 +18,7 @@ class HomeController extends AbstractController
     #[Route('', name: 'index', methods: ['GET'])]
     public function index(UserManager $userManager, GameRepository $gameRepository, ReviewRepository $reviewRepository): Response
     {
-        $users = $userManager->findWithReview();
+        $users = $userManager->getUserList();
 
         $gamesInfo = $gameRepository->findLast(DateFieldEnum::ADD, $this->getParameter('app.home_game_limit'));
         $reviews = $reviewRepository->findLast(DateFieldEnum::ADD, $this->getParameter('app.home_review_limit'));

@@ -93,11 +93,6 @@ services:
             $locale: '%app.locale%'
             $currency: '%app.currency%'
 
-    App\Service\HubUrlGenerator:
-        arguments:
-            $hubBaseUrl: '%hub.base_url%'
-            $hubAccountRoute: '%hub.account_route%'
-
     App\Service\QueryParamHelper:
         arguments:
             $defaultLimit: '%app.default_limit%'
@@ -121,8 +116,17 @@ when@dev: &services_dev
                 $discordDir: '%discord.dir%'
                 $filesystem: '@Symfony\Component\Filesystem\Filesystem'
 
-        App\Tests\Mock\AccountEntryPoint:
-            decorates: 'App\Security\AccountEntryPoint'
+        App\Tests\Mock\KeycloakMockEntryPoint:
+            decorates: 'Mainick\KeycloakClientBundle\Security\EntryPoint\KeycloakAuthenticationEntryPoint'
+            autowire: true
+            autoconfigure: true
+
+        App\Tests\Mock\KeycloakMockUserProvider:
+            autowire: true
+            autoconfigure: true
+
+        App\Tests\Mock\KeycloakMockManager:
+            decorates: 'App\Service\KeycloakManager'
             autowire: true
             autoconfigure: true
 

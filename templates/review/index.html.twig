@@ -1,7 +1,7 @@
 {% extends 'base.html.twig' %}
 {% import 'theme/macro.html.twig' as m %}
 
-{% set isOwner = app.user == user %}
+{% set isOwner = userConnected.uuid.toString == user.uuid.toString %}
 {% set title = isOwner ? 'review.index.title.owner'|trans : 'review.index.title.other'|trans({ name: user.username }) %}
 
 {% block main %}

@@ -6,7 +6,7 @@ namespace App\Controller;
 
 use App\Dto\FlashMessage;
 use App\Dto\QueryParam;
-use App\Entity\Main\Game;
+use App\Entity\Game;
 use App\Enum\SearchModeEnum;
 use App\Form\GameType;
 use App\Repository\GameRepository;
@@ -30,7 +30,7 @@ class GameController extends AbstractController
     public function index(#[MapQueryString] QueryParam $queryParam, UserManager $userManager, GameRepository $gameRepo, Request $request): Response
     {
         // Fetch all distinct users that have written at least one review
-        $users = $userManager->findWithReview();
+        $users = $userManager->getUserList();
 
         // Make the database query and get the corresponding games, and link the users
         $gamesInfo = $gameRepo->findIndex($queryParam);
@@ -83,7 +83,7 @@ class GameController extends AbstractController
     #[Route('/{id}', name: 'show', methods: ['GET'], requirements: ['id' => Requirement::DIGITS])]
     public function show(Game $game, UserManager $userManager, GameRepository $gameRepo): Response
     {
-        $users = $userManager->findWithReview();
+        $users = $userManager->getUserList();
 
         $gameInfo = $gameRepo->findShow($game);
         $userManager->plugToGameInfo($gameInfo, $users);

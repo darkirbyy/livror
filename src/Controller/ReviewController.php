@@ -6,15 +6,13 @@ namespace App\Controller;
 
 use App\Dto\FlashMessage;
 use App\Dto\QueryParam;
-use App\Entity\Account\User;
-use App\Entity\Main\Review;
+use App\Entity\Review;
 use App\Form\ReviewType;
 use App\Repository\GameRepository;
 use App\Repository\ReviewRepository;
 use App\Service\BackpathUrlGenerator;
 use App\Service\FormManager;
 use App\Service\UserManager;
-use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -22,28 +20,28 @@ use Symfony\Component\HttpKernel\Attribute\MapQueryString;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Routing\Requirement\Requirement;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Component\Uid\Uuid;
 
 #[Route('/review', name: 'review_')]
 class ReviewController extends AbstractController
 {
     // List and find reviews
-    #[Route('/{id?}', name: 'index', methods: ['GET'], requirements: ['id' => Requirement::DIGITS])]
+    #[Route('/{uuid?}', name: 'index', methods: ['GET'], requirements: ['uuid' => Requirement::UUID])]
     public function index(
-        #[MapEntity] ?User $user,
         #[MapQueryString] QueryParam $queryParam,
+        ?Uuid $userUuid,
         UserManager $userManager,
         GameRepository $gameRepo,
         ReviewRepository $reviewRepo,
         Request $request,
     ): Response {
         // Retrieve the user from the route param, or the current user otherwise
-        $user ??= $this->getUser();
-        $userId = $user->getId();
+        $user = !empty($userUuid) ? $userManager->getUserByUuid($userUuid) : $userManager->getUserConnected();
 
         // Make the database query and get the corresponding reviews
-        $reviews = $reviewRepo->findIndex($queryParam, $userId);
-        $numbers = $reviewRepo->countIndex($queryParam, $userId);
-        $userManager->plugToReviews($reviews, [$userId => $user]);
+        $reviews = $reviewRepo->findIndex($queryParam, $user->uuid);
+        $numbers = $reviewRepo->countIndex($queryParam, $user->uuid);
+        $userManager->plugToReviews($reviews, [$user->uuid->toString() => $user]);
 
         // Prepare the data for the twig renderer
         $data = [
@@ -51,7 +49,7 @@ class ReviewController extends AbstractController
             'reviews' => array_slice($reviews, 0, $queryParam->limit), // remove on result as we have fetched one more that configured
             'hasMore' => count($reviews) > $queryParam->limit, // determine if there is more games to fetch
             'numbers' => $numbers,
-            'cannotAdd' => 0 == $gameRepo->countWithoutReview($userId),
+            'cannotAdd' => 0 == $gameRepo->countWithoutReview($userUuid),
             'user' => $user,
         ];
 
@@ -65,16 +63,19 @@ class ReviewController extends AbstractController
 
     // Add new review
     #[Route('/new', name: 'new', methods: ['GET', 'POST'])]
-    public function new(GameRepository $gameRepo, Request $request, FormManager $fm, BackpathUrlGenerator $backpathUrlGenerator): Response
+    public function new(GameRepository $gameRepo, UserManager $userManager, Request $request, FormManager $fm, BackpathUrlGenerator $backpathUrlGenerator): Response
     {
-        $userId = $this->getUser()->getId();
+        // Retrieve the connected user and its uuid
+        $user = $userManager->getUserConnected();
+        $userUuid = $user->uuid;
+
         $gameId = 'GET' == $request->getMethod() ? $request->query->get('gameId') : null;
-        if (0 == $gameRepo->countWithoutReview($userId)) {
-            throw new \RuntimeException('No game available for user ' . $this->getUser()->getUserIdentifier() . '.');
+        if (0 == $gameRepo->countWithoutReview($userUuid)) {
+            throw new \RuntimeException('No game available for user ' . $user->getUserIdentifier() . '.');
         }
 
         $review = new Review();
-        $form = $this->createForm(ReviewType::class, $review, ['userId' => $userId, 'gameId' => $gameId]);
+        $form = $this->createForm(ReviewType::class, $review, ['userUuid' => $userUuid, 'gameId' => $gameId]);
         $form->handleRequest($request);
 
         $flashSuccess = new FlashMessage('review.index.flash.newReview', ['name' => $review->getGame()?->getName()]);

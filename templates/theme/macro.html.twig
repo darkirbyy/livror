@@ -253,7 +253,7 @@
 
 {# Macro to display the body of a review (button to edit, date added, comment) #}
 {% macro review_body(review, backpath = null, edit = false) %}
-  {% if edit and review.user.id == app.user.id %}
+  {% if edit and review.user.uuid.toString == userConnected.uuid.toString %}
     <div class="float-end">
       <a
         class="btn btn-sm btn-outline-light app-btn-input-border border-top-0"
@@ -334,8 +334,7 @@
 {% endmacro %}
 
 {% macro user_avatar(user, size = 'sm') %}
-  {# TODO : change #}
-  <img src="{{ app.user.toArray.picture }}" class="img-fluid app-avatar-{{ size }}" alt="{{ 'aria.avatar'|trans({ name: user.username }) }}" />
+  <img src="{{ user.avatarPath }}" class="img-fluid app-avatar-{{ size }}" alt="{{ 'aria.avatar'|trans({ name: user.username }) }}" />
 {% endmacro %}
 
 {% macro user_popover(user) %}
@@ -344,9 +343,11 @@
     <div>
       <h6 class="fs-5 mb-0">{{ user.username }}</h6>
       <div class="mb-1">
-        {{ 'review.index.numberPublished'|trans({ published: user.numberReviews }) }}
+        {# todo : reenable #}
+        {# {{ 'review.index.numberPublished'|trans({ published: user.numberReviews }) }} #}
+        {{ 'review.index.numberPublished'|trans({ published: 0 }) }}
       </div>
-      <a data-turbo-frame="_top" href="{{ path('review_index', { id: user.id }) }}" class="link-primary icon-link icon-link-hover icon-link-right">
+      <a data-turbo-frame="_top" href="{{ path('review_index', { uuid: user.uuid }) }}" class="link-primary icon-link icon-link-hover icon-link-right">
         Voir les avis
         <span class="bi bi-arrow-right" aria-hidden="true"></span>
       </a>

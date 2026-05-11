@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Form;
 
-use App\Entity\Main\Game;
-use App\Entity\Main\Review;
+use App\Entity\Game;
+use App\Entity\Review;
 use App\Repository\GameRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
@@ -28,11 +28,11 @@ class ReviewType extends DefaultType
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        if ($options['userId']) {
+        if ($options['userUuid']) {
             $builder->add('game', EntityType::class, [
                 'required' => true,
                 'class' => Game::class,
-                'choices' => $this->gameRepo->findWithoutReview($options['userId']),
+                'choices' => $this->gameRepo->findWithoutReview($options['userUuid']),
                 'choice_label' => fn(Game $game) => $game->getName(),
             ]);
         }
@@ -75,10 +75,10 @@ class ReviewType extends DefaultType
                 $review->setGame($this->gameRepo->find($options['gameId']));
             });
         }
-        if ($options['userId']) {
+        if ($options['userUuid']) {
             $builder->addEventListener(FormEvents::SUBMIT, function (FormEvent $event) use ($options) {
                 $review = $event->getData();
-                $review->setUserId($options['userId']);
+                $review->setUserUuid($options['userUuid']);
             });
         }
     }
@@ -87,9 +87,9 @@ class ReviewType extends DefaultType
     {
         parent::configureOptions($resolver);
 
-        $resolver->setRequired(['userId', 'gameId']);
+        $resolver->setRequired(['userUuid', 'gameId']);
         $resolver->setDefaults([
-            'userId' => null,
+            'userUuid' => null,
             'gameId' => null,
             'data_class' => Review::class,
         ]);

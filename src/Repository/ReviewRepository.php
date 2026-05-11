@@ -5,13 +5,13 @@ declare(strict_types=1);
 namespace App\Repository;
 
 use App\Dto\QueryParam;
-use App\Entity\Main\Review;
+use App\Entity\Review;
 use App\Enum\DateFieldEnum;
 use App\Service\QueryParamHelper;
-use DateTime;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\Uid\Uuid;
 
 class ReviewRepository extends ServiceEntityRepository
 {
@@ -20,7 +20,7 @@ class ReviewRepository extends ServiceEntityRepository
         parent::__construct($registry, Review::class);
     }
 
-    public function findIndex(QueryParam $queryParam, int $userId): array
+    public function findIndex(QueryParam $queryParam, Uuid $userUuid): array
     {
         // Define allowed sort and filter parameters and the conversion to the doctrine field
         $sortsConversion = ['name' => 'g.name', 'rating' => 'r.rating', 'hourSpend' => 'r.hourSpend', 'firstPlay' => 'r.firstPlay'];
@@ -34,7 +34,7 @@ class ReviewRepository extends ServiceEntityRepository
 
         // Build the base query (with select, join and group)
         $qb = $this->createQueryBuilder('r');
-        $this->joinGameAndUser($qb, $userId);
+        $this->joinGameAndUser($qb, $userUuid);
 
         // Apply the query param
         $this->queryParamHelper->applyButFiltersToQb($queryParam, $qb, $sortsConversion);
@@ -44,28 +44,20 @@ class ReviewRepository extends ServiceEntityRepository
         return $qb->getQuery()->getResult();
     }
 
-    public function countIndex(QueryParam $queryParam, int $userId): array
+    public function countIndex(QueryParam $queryParam, Uuid $userUuid): array
     {
         // Count the displayed (with filters) number of reviews
         $qb = $this->createQueryBuilder('r')->select('COUNT(r.id)');
-        $this->joinGameAndUser($qb, $userId);
+        $this->joinGameAndUser($qb, $userUuid);
         $this->applyFiltersToQb($queryParam, $qb);
         $displayed = $qb->getQuery()->getSingleScalarResult();
 
         // Count the total number of reviews
         $qb = $this->createQueryBuilder('r')->select('COUNT(r.id)');
-        $this->joinGameAndUser($qb, $userId);
+        $this->joinGameAndUser($qb, $userUuid);
         $total = $qb->getQuery()->getSingleScalarResult();
 
         return ['displayed' => $displayed, 'total' => $total];
-    }
-
-    public function countByUserId(): array
-    {
-        $qb = $this->createQueryBuilder('r');
-        $qb->indexBy('r', 'r.userId')->select('r.userId, COUNT(r.id) as numberReviews')->groupBy('r.userId');
-
-        return $qb->getQuery()->getResult();
     }
 
     public function findLast(DateFieldEnum $dateField, int $limit): array
@@ -82,11 +74,11 @@ class ReviewRepository extends ServiceEntityRepository
         return $qb->getQuery()->getResult();
     }
 
-    public function findSince(\DateTime $dateTime, int $userId): array
+    public function findSince(\DateTime $dateTime, Uuid $userUuid): array
     {
         // Build the base query (with select, join and group)
         $qb = $this->createQueryBuilder('r');
-        $this->joinGameAndUser($qb, $userId);
+        $this->joinGameAndUser($qb, $userUuid);
         $qb->select('g.name');
 
         // Find all since given datetime, ordered by name
@@ -94,6 +86,14 @@ class ReviewRepository extends ServiceEntityRepository
 
         // Execute and fetch the query
         return $qb->getQuery()->getSingleColumnResult();
+    }
+
+    public function countByUserUuid(): array
+    {
+        $qb = $this->createQueryBuilder('r');
+        $qb->select('r.userUuid, COUNT(r.id) as numberReviews')->groupBy('r.userUuid');
+
+        return $qb->getQuery()->getResult();
     }
 
     private function applyFiltersToQb(QueryParam $queryParam, QueryBuilder $qb): QueryBuilder
@@ -106,8 +106,8 @@ class ReviewRepository extends ServiceEntityRepository
         return $qb;
     }
 
-    private function joinGameAndUser(QueryBuilder $qb, int $userId): void
+    private function joinGameAndUser(QueryBuilder $qb, Uuid $userUuid): void
     {
-        $qb->leftJoin('r.game', 'g')->where('r.userId = :userId')->setParameter('userId', $userId);
+        $qb->leftJoin('r.game', 'g')->where('r.userUuid = :userUuid')->setParameter('userUuid', $userUuid);
     }
 }

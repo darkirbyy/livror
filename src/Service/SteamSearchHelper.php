@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Service;
 
-use App\Entity\Main\Game;
+use App\Entity\Game;
 use App\Enum\SteamSearchStatusEnum;
 use App\Enum\TypeGameEnum;
 use Symfony\Contracts\HttpClient\HttpClientInterface;

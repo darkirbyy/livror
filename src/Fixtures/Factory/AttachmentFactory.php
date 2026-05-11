@@ -2,7 +2,7 @@
 
 namespace App\Fixtures\Factory;
 
-use App\Entity\Main\Attachment;
+use App\Entity\Attachment;
 use Vich\UploaderBundle\FileAbstraction\ReplacingFile;
 use Zenstruck\Foundry\Persistence\PersistentObjectFactory;
 

@@ -6,22 +6,17 @@ namespace App\Extension;
 
 use App\Dto\QueryParam;
 use App\Enum\TypePriceEnum;
-use App\Service\AutocompletionHelper;
 use App\Service\BackpathUrlGenerator;
 use App\Service\QueryParamHelper;
-use Symfony\UX\StimulusBundle\Dto\StimulusAttributes;
 use Twig\Attribute\AsTwigFilter;
-use Twig\Attribute\AsTwigFunction;
 
-class TwigExtension
+class TwigFilter
 {
     public function __construct(
         private BackpathUrlGenerator $backpathUrlGenerator,
         private QueryParamHelper $queryParamHelper,
-        private AutocompletionHelper $autocompletionHelper,
     ) {}
 
-    // Transform a full price to a type of price
     #[AsTwigFilter(name: 'to_type_price')]
     public function fullPriceToTypePrice(?int $fullPrice): TypePriceEnum
     {
@@ -54,12 +49,5 @@ class TwigExtension
     public function queryParamToArray(QueryParam $queryParam): array
     {
         return $this->queryParamHelper->toArray($queryParam);
-    }
-
-    // Prepare html attributes for stimulus autocompletion
-    #[AsTwigFunction(name: 'prepare_attributes')]
-    public function autocompletePrepareAttributes(string $placeholderKey, string $route, array $parameters = []): StimulusAttributes
-    {
-        return $this->autocompletionHelper->prepareAttributes($placeholderKey, $route, $parameters);
     }
 }

@@ -6,8 +6,8 @@ namespace App\Repository;
 
 use App\Dto\GameInfo;
 use App\Dto\QueryParam;
-use App\Entity\Main\Game;
-use App\Entity\Main\Review;
+use App\Entity\Game;
+use App\Entity\Review;
 use App\Enum\DateFieldEnum;
 use App\Service\QueryParamHelper;
 use DateTime;
@@ -15,6 +15,7 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\Uid\Uuid;
 
 class GameRepository extends ServiceEntityRepository
 {
@@ -75,15 +76,15 @@ class GameRepository extends ServiceEntityRepository
         return $qb->getQuery()->getSingleResult();
     }
 
-    public function findPattern(string $pattern, int $limit, ?int $userId): array
+    public function findPattern(string $pattern, int $limit, ?Uuid $userUuid): array
     {
         // Build the base query (with select, join and group)
         $qb = $this->createQueryBuilder('g');
         $this->selectDto($qb);
 
-        // Restrict to game not reviewed by user with userId (if not null)
-        if (!is_null($userId)) {
-            $qb->leftJoin('g.reviews', 'rf', Join::WITH, 'rf.userId = :userId')->where('rf.id IS NULL')->setParameter('userId', $userId);
+        // Restrict to game not reviewed by user with userUuid (if not null)
+        if (!is_null($userUuid)) {
+            $qb->leftJoin('g.reviews', 'rf', Join::WITH, 'rf.userUuid = :userUuid')->where('rf.id IS NULL')->setParameter('userUuid', $userUuid);
         }
 
         // Select and limit by relevance thanks to mariadb fulltext search
@@ -98,15 +99,15 @@ class GameRepository extends ServiceEntityRepository
         return $qb->getQuery()->getResult();
     }
 
-    public function findLike(string $like, int $limit, ?int $userId): array
+    public function findLike(string $like, int $limit, ?Uuid $userUuid): array
     {
         // Build the base query (with select, join and group)
         $qb = $this->createQueryBuilder('g');
         $this->selectDto($qb);
 
-        // Restrict to game not reviewed by user with userId (if not null)
-        if (!is_null($userId)) {
-            $qb->leftJoin('g.reviews', 'rf', Join::WITH, 'rf.userId = :userId')->where('rf.id IS NULL')->setParameter('userId', $userId);
+        // Restrict to game not reviewed by user with userUuid (if not null)
+        if (!is_null($userUuid)) {
+            $qb->leftJoin('g.reviews', 'rf', Join::WITH, 'rf.userUuid = :userUuid')->where('rf.id IS NULL')->setParameter('userUuid', $userUuid);
         }
 
         // Select and limit using basic like clause
@@ -143,22 +144,22 @@ class GameRepository extends ServiceEntityRepository
         return $qb->getQuery()->getSingleColumnResult();
     }
 
-    public function findWithoutReview(int $userId): array
+    public function findWithoutReview(Uuid $userUuid): array
     {
         $qb = $this->createQueryBuilder('g');
-        $qb->leftJoin('g.reviews', 'r', Join::WITH, 'r.userId = :userId')
+        $qb->leftJoin('g.reviews', 'r', Join::WITH, 'r.userUuid = :userUuid')
             ->where('r.id IS NULL')
-            ->setParameter('userId', $userId)
+            ->setParameter('userUuid', $userUuid)
             ->orderBy('g.name', 'ASC')
             ->addOrderBy('g.id', 'ASC');
 
         return $qb->getQuery()->getResult();
     }
 
-    public function countWithoutReview(int $userId): int
+    public function countWithoutReview(Uuid $userUuid): int
     {
         $qb = $this->createQueryBuilder('g');
-        $qb->select('COUNT(g.id)')->leftJoin('g.reviews', 'r', Join::WITH, 'r.userId = :userId')->where('r.id IS NULL')->setParameter('userId', $userId);
+        $qb->select('COUNT(g.id)')->leftJoin('g.reviews', 'r', Join::WITH, 'r.userUuid = :userUuid')->where('r.id IS NULL')->setParameter('userUuid', $userUuid);
 
         return (int) $qb->getQuery()->getSingleScalarResult();
     }
@@ -172,8 +173,8 @@ class GameRepository extends ServiceEntityRepository
 
         if (array_key_exists('users', $queryParam->filters) && !empty($queryParam->filters['users'])) {
             // prettier-ignore
-            $conditionsOr[] = 'EXISTS (SELECT 1 FROM ' . Review::class . ' ru WHERE ru.game = g AND ru.userId IN (:users)
-                               GROUP BY ru.game HAVING COUNT(DISTINCT ru.userId) = :userCount)';
+            $conditionsOr[] = 'EXISTS (SELECT 1 FROM ' . Review::class . ' ru WHERE ru.game = g AND ru.userUuid IN (:users)
+                               GROUP BY ru.game HAVING COUNT(DISTINCT ru.userUuid) = :userCount)';
             $qb->setParameter('users', $queryParam->filters['users']);
             $qb->setParameter('userCount', count($queryParam->filters['users']));
         } else {
