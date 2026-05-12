@@ -29,7 +29,7 @@ when@test:
                 path: "%kernel.logs_dir%/%kernel.environment%.log"
                 level: debug
 
-when@prod:
+when@prod: &monolog-prod
     monolog:
         handlers:
             main:
@@ -42,7 +42,7 @@ when@prod:
             nested:
                 type: stream
                 path: php://stderr
-                level: debug
+                level: info
                 formatter: monolog.formatter.json
             console:
                 type: console
@@ -53,3 +53,5 @@ when@prod:
                 channels: [deprecation]
                 path: php://stderr
                 formatter: monolog.formatter.json
+
+when@stag: *monolog-prod

@@ -15,6 +15,7 @@ doctrine:
         auto_mapping: true
         mappings:
             App:
+                type: attribute
                 is_bundle: false
                 dir: '%kernel.project_dir%/src/Entity'
                 prefix: 'App\Entity'
@@ -31,7 +32,7 @@ when@test:
             # "TEST_TOKEN" is typically set by ParaTest
             dbname_suffix: '_test%env(default::TEST_TOKEN)%'
 
-when@prod:
+when@prod: &doctrine-prod
     doctrine:
         orm:
             auto_generate_proxy_classes: false
@@ -50,3 +51,5 @@ when@prod:
                     adapter: cache.app
                 doctrine.system_cache_pool:
                     adapter: cache.system
+
+when@stag: *doctrine-prod

@@ -6,7 +6,7 @@ framework:
     session: 
         handler_id: null
         storage_factory_id: session.storage.factory.native
-        name: symfony_php_session
+        name: 'php_session_%app.name%'
         cookie_secure: auto
         cookie_samesite: lax
         cookie_httponly: true
@@ -28,6 +28,10 @@ when@test:
             stateless_token_ids:
         error_controller: App\Controller\ErrorController::show
 
-when@prod:
+when@prod: &framework-prod
     framework:
-        error_controller: App\Controller\ErrorController::show
+        error_controller: App\Controller\Home\ErrorController::show
+        session:
+            cookie_path: '/%app.name%'
+
+when@stag: *framework-prod
