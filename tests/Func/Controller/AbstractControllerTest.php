@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Tests\Func\Controller;
 
 use App\Fixtures\Story\TestStory;
+use App\Service\KeycloakManagerInterface;
+use App\Tests\Mock\KeycloakMockUser;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\Filesystem\Filesystem;
@@ -23,7 +25,8 @@ abstract class AbstractControllerTest extends WebTestCase
         parent::setUp();
         $this->client = static::createClient();
 
-        $this->client->loginUser(TestStory::get('connected-user'));
+        $user = new KeycloakMockUser(TestStory::get('connected-user'));
+        $this->client->loginUser($user);
     }
 
     public function tearDown(): void

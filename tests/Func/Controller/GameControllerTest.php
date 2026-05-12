@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Func\Controller;
 
-use App\Entity\Main\Game;
+use App\Entity\Game;
 use App\Enum\TypeGameEnum;
 use App\Fixtures\Factory\GameFactory;
 use App\Fixtures\Story\Game\GameAutocompleteStory;

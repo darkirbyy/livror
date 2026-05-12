@@ -28,15 +28,15 @@ class ReviewController extends AbstractController
     // List and find reviews
     #[Route('/{uuid?}', name: 'index', methods: ['GET'], requirements: ['uuid' => Requirement::UUID])]
     public function index(
+        ?string $uuid,
         #[MapQueryString] QueryParam $queryParam,
-        ?Uuid $userUuid,
         UserManager $userManager,
         GameRepository $gameRepo,
         ReviewRepository $reviewRepo,
         Request $request,
     ): Response {
         // Retrieve the user from the route param, or the current user otherwise
-        $user = !empty($userUuid) ? $userManager->getUserByUuid($userUuid) : $userManager->getUserConnected();
+        $user = !empty($uuid) ? $userManager->getUserByUuid(Uuid::fromString($uuid)) : $userManager->getUserConnected();
 
         // Make the database query and get the corresponding reviews
         $reviews = $reviewRepo->findIndex($queryParam, $user->uuid);
@@ -71,7 +71,7 @@ class ReviewController extends AbstractController
 
         $gameId = 'GET' == $request->getMethod() ? $request->query->get('gameId') : null;
         if (0 == $gameRepo->countWithoutReview($userUuid)) {
-            throw new \RuntimeException('No game available for user ' . $user->getUserIdentifier() . '.');
+            throw new \RuntimeException('No game available for user ' . $user->username . '.');
         }
 
         $review = new Review();

@@ -4,12 +4,11 @@ declare(strict_types=1);
 
 namespace App\Tests\Func\Controller;
 
-use App\Entity\Main\Game;
-use App\Entity\Main\Review;
+use App\Entity\Game;
+use App\Entity\Review;
 use App\Fixtures\Factory\GameFactory;
 use App\Fixtures\Factory\ReviewFactory;
 use App\Fixtures\Story\Home\HomeIndexStory;
-use App\Service\HubUrlGenerator;
 use PHPUnit\Framework\Attributes as PU;
 
 class HomeControllerTest extends AbstractControllerTest
@@ -40,18 +39,5 @@ class HomeControllerTest extends AbstractControllerTest
         $this->assertSame($expectedSectionsTitle, $sectionsTitle);
         $this->assertSame($expectedGamesTitles, $gamesTitle);
         $this->assertSame($expectedReviewsTitles, $reviewsTitle);
-    }
-
-    #[PU\Test]
-    public function account(): void
-    {
-        $hubUrlGenerator = static::getContainer()->get(HubUrlGenerator::class);
-        $expectedUrl = $hubUrlGenerator->generateAccount('');
-
-        $this->client->request('GET', '/account');
-        $session = $this->client->getRequest()->getSession();
-
-        $this->assertResponseRedirects($expectedUrl);
-        $this->assertTrue($session->has('hub/back-target-path'));
     }
 }

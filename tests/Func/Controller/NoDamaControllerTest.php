@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Tests\Func\Controller;
 
-use App\Entity\Main\Game;
-use App\Entity\Main\Review;
-use App\Entity\Main\Steam;
+use App\Entity\Game;
+use App\Entity\Review;
+use App\Entity\Steam;
 use App\Fixtures\Story\Game\GameAutocompleteStory;
 use App\Fixtures\Story\Steam\SteamAutocompleteStory;
 use DAMA\DoctrineTestBundle\Doctrine\DBAL\StaticDriver;

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Func\Controller;
 
-use App\Entity\Main\Review;
+use App\Entity\Review;
 use App\Fixtures\Factory\AttachmentFactory;
 use App\Fixtures\Factory\ReviewFactory;
 use App\Fixtures\Story\Review\ReviewIndexAllStory;
@@ -23,8 +23,8 @@ class ReviewControllerTest extends AbstractControllerTest
     {
         $storyClass::load();
 
-        $user1 = TestStory::get('connected-user');
-        $reviews = ReviewFactory::repository()->findBy(['userId' => $user1->getId()]);
+        $connectedUserUuid = TestStory::get('connected-user-uuid');
+        $reviews = ReviewFactory::repository()->findBy(['userUuid' => $connectedUserUuid]);
         usort($reviews, fn(Review $r1, Review $r2) => $r1->getGame()->getName() <=> $r2->getGame()->getName());
         $gamesTitleExpected = array_slice(array_map(fn(Review $r) => $r->getGame()->getName(), $reviews), 0, $expectedNbGames);
 
@@ -60,8 +60,8 @@ class ReviewControllerTest extends AbstractControllerTest
             return;
         }
 
-        $user1 = TestStory::get('connected-user');
-        $reviews = ReviewFactory::repository()->findBy(['userId' => $user1->getId()]);
+        $connectedUserUuid = TestStory::get('connected-user-uuid');
+        $reviews = ReviewFactory::repository()->findBy(['userUuid' => $connectedUserUuid]);
         usort($reviews, fn(Review $r1, Review $r2) => $r1->getGame()->getName() <=> $r2->getGame()->getName());
         $gamesTitleExpected = array_slice(array_map(fn(Review $r) => $r->getGame()->getName(), $reviews), $expectedNbGames, $expectedNbGames);
 
@@ -83,12 +83,12 @@ class ReviewControllerTest extends AbstractControllerTest
     {
         $storyClass::load();
 
-        $userOther = TestStory::getRandom('other-users');
-        $reviews = ReviewFactory::repository()->findBy(['userId' => $userOther->getId()]);
+        $otherUserUuid = TestStory::getRandom('other-users-uuid');
+        $reviews = ReviewFactory::repository()->findBy(['userUuid' => $otherUserUuid]);
         usort($reviews, fn(Review $r1, Review $r2) => $r1->getGame()->getName() <=> $r2->getGame()->getName());
         $gamesTitleExpected = array_slice(array_map(fn(Review $r) => $r->getGame()->getName(), $reviews), 0, $expectedNbGames);
 
-        $crawler = $this->client->request('GET', '/review/' . $userOther->getId() . '?' . $queryString);
+        $crawler = $this->client->request('GET', '/review/' . $otherUserUuid . '?' . $queryString);
 
         $gamesTitleCrawler = $crawler->filter('a[id^=title]');
         $gamesTitle = array_map('trim', $gamesTitleCrawler->extract(['_text']));
@@ -143,8 +143,9 @@ class ReviewControllerTest extends AbstractControllerTest
     {
         ReviewPersistStory::load();
 
+        $connectedUserUuid = TestStory::get('connected-user-uuid');
         $previousCount = ReviewFactory::repository()->count();
-        $review = ReviewFactory::repository()->findOneBy(['userId' => TestStory::get('connected-user')->getId()]);
+        $review = ReviewFactory::repository()->findOneBy(['userUuid' =>   $connectedUserUuid]);
 
         $crawler = $this->client->request('GET', '/review/' . $review->getId() . '/edit');
         $form = $crawler->filter('form[name=review]')->form();
@@ -169,8 +170,9 @@ class ReviewControllerTest extends AbstractControllerTest
     {
         ReviewPersistAttachmentStory::load();
 
+        $connectedUserUuid = TestStory::get('connected-user-uuid');
         $previousCount = AttachmentFactory::repository()->count();
-        $review = ReviewFactory::repository()->findOneBy(['userId' => TestStory::get('connected-user')->getId()]);
+        $review = ReviewFactory::repository()->findOneBy(['userUuid' => $connectedUserUuid]);
 
         $crawler = $this->client->request('GET', '/review/' . $review->getId() . '/edit');
 
@@ -204,8 +206,9 @@ class ReviewControllerTest extends AbstractControllerTest
     {
         ReviewPersistAttachmentStory::load();
 
+        $connectedUserUuid = TestStory::get('connected-user-uuid');
         $previousCount = AttachmentFactory::repository()->count();
-        $review = ReviewFactory::repository()->findOneBy(['userId' => TestStory::get('connected-user')->getId()]);
+        $review = ReviewFactory::repository()->findOneBy(['userUuid' => $connectedUserUuid]);
 
         $crawler = $this->client->request('GET', '/review/' . $review->getId() . '/edit');
         $form = $crawler->filter('form[name=review]')->form();
@@ -229,8 +232,9 @@ class ReviewControllerTest extends AbstractControllerTest
     {
         ReviewPersistAttachmentStory::load();
 
+        $connectedUserUuid = TestStory::get('connected-user-uuid');
         $previousCount = AttachmentFactory::repository()->count();
-        $review = ReviewFactory::repository()->findOneBy(['userId' => TestStory::get('connected-user')->getId()]);
+        $review = ReviewFactory::repository()->findOneBy(['userUuid' => $connectedUserUuid]);
 
         $crawler = $this->client->request('GET', '/review/' . $review->getId() . '/edit');
         $form = $crawler->filter('form[name=review]')->form();
@@ -252,8 +256,9 @@ class ReviewControllerTest extends AbstractControllerTest
     {
         ReviewPersistStory::load();
 
+        $connectedUserUuid = TestStory::get('connected-user-uuid');
         $previousCount = ReviewFactory::repository()->count();
-        $review = ReviewFactory::repository()->findOneBy(['userId' => TestStory::get('connected-user')->getId()]);
+        $review = ReviewFactory::repository()->findOneBy(['userUuid' => $connectedUserUuid]);
 
         $crawler = $this->client->request('GET', '/review/' . $review->getId() . '/edit');
         $tokenValue = $validToken ? $crawler->filter('div[role=dialog] form input[type=hidden]')->attr('value') : '';

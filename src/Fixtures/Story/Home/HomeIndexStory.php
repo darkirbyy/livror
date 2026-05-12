@@ -2,11 +2,10 @@
 
 namespace App\Fixtures\Story\Home;
 
-use App\Entity\Account\User;
-use App\Entity\Main\Game;
-use App\Entity\Main\Review;
+use App\Entity\Game;
+use App\Entity\Review;
 use App\Fixtures\Factory\GameFactory;
-use App\Fixtures\Factory\UserFactory;
+use App\Fixtures\Story\TestStory;
 use Doctrine\Persistence\ManagerRegistry;
 use Zenstruck\Foundry\Story;
 
@@ -24,8 +23,8 @@ final class HomeIndexStory extends Story
         }
 
         // Create 20 games with "1" to "number of users" reviews
-        $usersId = array_map(fn(User $u) => $u->getId(), UserFactory::all());
-        GameFactory::new()->withUsersId($usersId, 1)->many(50)->create();
+        $allUsersUuid = TestStory::getPool('all-users-uuid');
+        GameFactory::new()->withUsersUuid($allUsersUuid, 1)->many(50)->create();
 
         // Reenable PrePersit and PreUpdate event
         foreach ([Game::class, Review::class] as $entityClass) {

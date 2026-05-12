@@ -74,8 +74,8 @@
             </ul>
             {# Right part of the navbar #}
             <ul class="navbar-nav">
-              {% set routeUuid = app.current_route_parameters.uuid|default(userConnected.uuid) %}
-              {% set active = (app.current_route == 'review_index' and routeUuid.toString == userConnected.uuid.toString)
+              {% set routeUuid = app.current_route_parameters.uuid|default(userConnected.uuid.toString) %}
+              {% set active = (app.current_route == 'review_index' and routeUuid == userConnected.uuid.toString)
                 or app.current_route == 'review_edit'
                 or app.current_route == 'review_new'
               %}

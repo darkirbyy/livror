@@ -4,29 +4,13 @@ declare(strict_types=1);
 
 namespace App\Tests\Func\Controller;
 
-use App\Entity\Account\User;
 use App\Fixtures\Factory\ReviewFactory;
 use App\Fixtures\Story\Error\ErrorAllStory;
 use App\Fixtures\Story\TestStory;
-use App\Service\HubUrlGenerator;
 use PHPUnit\Framework\Attributes as PU;
 
 class ErrorControllerTest extends AbstractControllerTest
 {
-    #[PU\Test]
-    public function notLoggedIn(): void
-    {
-        // disconnect the user
-        $this->client->restart();
-
-        $hubUrlGenerator = static::getContainer()->get(HubUrlGenerator::class);
-        $expectedUrl = $hubUrlGenerator->generateAccount('/login');
-
-        $this->client->request('GET', '');
-
-        $this->assertResponseRedirects($expectedUrl);
-    }
-
     #[PU\Test]
     #[PU\DataProvider('error404Values')]
     public function error404(string $method, string $route): void
@@ -44,7 +28,8 @@ class ErrorControllerTest extends AbstractControllerTest
     public function error403(string $method, string $route): void
     {
         ErrorAllStory::load();
-        $review = ReviewFactory::repository()->findOneBy(['userId' => array_map(fn(User $u) => $u->getId(), TestStory::getPool('other-users'))]);
+        $otherUsersUuid = TestStory::getPool('other-users-uuid');
+        $review = ReviewFactory::repository()->findOneBy(['userUuid' => $otherUsersUuid]);
 
         $this->client->request($method, '/review/' . $review->getId() . $route);
 
@@ -76,9 +61,9 @@ class ErrorControllerTest extends AbstractControllerTest
     public static function error403Values(): array
     {
         return [
-            'review edit' => ['GET', '/edit'],
-            'review post' => ['POST', '/edit'],
-            'review post' => ['POST', '/delete'],
+            'review edit get' => ['GET', '/edit'],
+            'review edit post' => ['POST', '/edit'],
+            'review delete post' => ['POST', '/delete'],
         ];
     }
 }

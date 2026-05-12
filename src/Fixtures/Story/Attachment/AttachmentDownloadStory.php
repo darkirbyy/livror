@@ -2,16 +2,15 @@
 
 namespace App\Fixtures\Story\Attachment;
 
-use App\Entity\Account\User;
 use App\Fixtures\Factory\GameFactory;
-use App\Fixtures\Factory\UserFactory;
+use App\Fixtures\Story\TestStory;
 use Zenstruck\Foundry\Story;
 
 final class AttachmentDownloadStory extends Story
 {
     public function build(): void
     {
-        $usersId = array_map(fn(User $u) => $u->getId(), UserFactory::all());
-        GameFactory::new()->withUsersId($usersId, true, 'forced')->many(5)->create();
+        $allUsersUuid = TestStory::getPool('all-users-uuid');
+        GameFactory::new()->withUsersUuid($allUsersUuid, true, 'forced')->many(5)->create();
     }
 }
