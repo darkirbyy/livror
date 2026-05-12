@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Unit\Service;
 
-use App\Entity\Main\Game;
+use App\Entity\Game;
 use App\Enum\SteamSearchStatusEnum as Status;
 use App\Service\GameFormHelper;
 use App\Service\SteamSearchHelper;
@@ -19,15 +19,15 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 #[PU\AllowMockObjectsWithoutExpectations]
 final class GameFormHelperTest extends TestCase
 {
-    private $form;
-    private $game;
-    private $session;
+    private Session $session;
+    private Game $game;
+    private FormInterface $form;
 
-    private $requestStack;
-    private $trans;
-    private $steamSearchHelper;
+    private RequestStack $requestStack;
+    private TranslatorInterface $trans;
+    private SteamSearchHelper $steamSearchHelper;
 
-    private $gameFormHelper;
+    private GameFormHelper $gameFormHelper;
 
     public function setUp(): void
     {

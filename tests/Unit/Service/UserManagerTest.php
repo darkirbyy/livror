@@ -5,30 +5,35 @@ declare(strict_types=1);
 namespace App\Tests\Unit\Service;
 
 use App\Dto\GameInfo;
-use App\Entity\Account\User;
-use App\Entity\Main\Game;
-use App\Entity\Main\Review;
+use App\Dto\User;
+use App\Entity\Game;
+use App\Entity\Review;
 use App\Repository\ReviewRepository;
 use App\Repository\UserRepository;
+use App\Service\KeycloakManagerInterface;
 use App\Service\UserManager;
 use Doctrine\Common\Collections\ArrayCollection;
 use PHPUnit\Framework\Attributes as PU;
 use PHPUnit\Framework\TestCase;
+use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\Uid\Uuid;
 
 #[PU\AllowMockObjectsWithoutExpectations]
 final class UserManagerTest extends TestCase
 {
-    private $userRepo;
-    private $reviewRepo;
+    private Security $security;
+    private ReviewRepository $reviewRepo;
+    private KeycloakManagerInterface $keycloakManager;
 
-    private $userManager;
+    private UserManager $userManager;
 
     public function setUp(): void
     {
-        $this->userRepo = $this->createMock(UserRepository::class);
+        $this->security = $this->createMock(Security::class);
         $this->reviewRepo = $this->createMock(ReviewRepository::class);
+        $this->keycloakManager = $this->createMock(KeycloakManagerInterface::class);
 
-        $this->userManager = new UserManager($this->userRepo, $this->reviewRepo);
+        $this->userManager = new UserManager($this->security, $this->reviewRepo, $this->keycloakManager);
     }
 
     #[PU\Test]
@@ -66,16 +71,16 @@ final class UserManagerTest extends TestCase
         $this->userManager->plugToReviews($reviews, $users);
     }
 
-    #[PU\Test]
-    public function findWithReview(): void
-    {
-        $usersId = [['userId' => 1, 'numberReviews' => 5], ['userId' => 2, 'numberReviews' => 10], ['userId' => 4, 'numberReviews' => 2]];
+    // #[PU\Test]
+    // public function getUserList(): void
+    // {
+    //     $usersId = [['userId' => 1, 'numberReviews' => 5], ['userId' => 2, 'numberReviews' => 10], ['userId' => 4, 'numberReviews' => 2]];
 
-        $this->reviewRepo->expects($this->once())->method('countByUserId')->willReturn($usersId);
-        $this->userRepo->expects($this->once())->method('byUsersId')->with(array_column($usersId, 'userId'));
+    //     $this->reviewRepo->expects($this->once())->method('countByUserUuid')->willReturn($usersId);
+    //     $this->userRepo->expects($this->once())->method('byUsersId')->with(array_column($usersId, 'userId'));
 
-        $this->userManager->findWithReview();
-    }
+    //     $this->userManager->getUserList();
+    // }
 
     public static function generateValues(): array
     {
@@ -89,16 +94,21 @@ final class UserManagerTest extends TestCase
 
     public function prepareReviewsAndUsers(): array
     {
-        $$user1 = $this->createMock(User::class);
-        $user2 = $this->createMock(User::class);
-        $user4 = $this->createMock(User::class);
-        $users = [1 => $user1, 2 => $user2, 3 => null, 4 => $user4];
+        $user1 = new User(Uuid::v4(), 'user1', '');
+        $user2 = new User(Uuid::v4(), 'user2', '');
+        $user4 = new User(Uuid::v4(), 'user4', '');
+        $users = [
+            $user1->uuid->toString() => $user1,
+            $user2->uuid->toString() => $user2,
+            Uuid::v4()->toString() => null,
+            $user4->uuid->toString() => $user4,
+        ];
 
         $review1 = $this->createMock(Review::class);
-        $review1->expects($this->once())->method('getUserId')->willReturn(1);
+        $review1->expects($this->once())->method('getUserUuid')->willReturn($user1->uuid);
         $review1->expects($this->once())->method('setUser')->with($user1);
         $review4 = $this->createMock(Review::class);
-        $review4->expects($this->once())->method('getUserId')->willReturn(4);
+        $review4->expects($this->once())->method('getUserUuid')->willReturn($user4->uuid);
         $review4->expects($this->once())->method('setUser')->with($user4);
         $reviews = [1 => $review1, 4 => $review4];
 

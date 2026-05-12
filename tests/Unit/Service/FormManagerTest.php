@@ -12,6 +12,7 @@ use Doctrine\DBAL\Exception\DriverException;
 use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\Attributes as PU;
 use PHPUnit\Framework\TestCase;
+use stdClass;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -22,18 +23,18 @@ use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 #[PU\AllowMockObjectsWithoutExpectations]
 final class FormManagerTest extends TestCase
 {
-    private $driverException;
-    private $request;
-    private $session;
-    private $game;
-    private $form;
+    private DriverException $driverException;
+    private Request $request;
+    private Session $session;
+    private object $game;
+    private FormInterface $form;
 
-    private $entityManager;
-    private $requestStack;
-    private $csrfTokenManager;
-    private $exceptionManager;
+    private EntityManagerInterface $entityManager;
+    private RequestStack $requestStack;
+    private CsrfTokenManagerInterface $csrfTokenManager;
+    private ExceptionManager $exceptionManager;
 
-    private $formManager;
+    private FormManager $formManager;
 
     public function setUp(): void
     {

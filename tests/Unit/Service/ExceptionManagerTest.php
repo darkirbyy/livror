@@ -52,7 +52,6 @@ final class ExceptionManagerTest extends TestCase
 
     public static function handleDatabaseValues(): array
     {
-        // Faux TheDriverException compatible avec la signature
         $fakeDriver = new class extends \Exception implements \Doctrine\DBAL\Driver\Exception {
             public function getSQLState(): ?string
             {

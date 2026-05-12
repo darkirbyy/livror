@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Tests\Unit\Service;
 
-use App\Entity\Account\User;
-use App\Entity\Main\Game;
-use App\Entity\Main\Steam;
+use App\Dto\User;
+use App\Entity\Game;
+use App\Entity\Steam;
 use App\Enum\SearchModeEnum;
 use App\Repository\GameRepository;
 use App\Repository\SteamRepository;
@@ -14,35 +14,26 @@ use App\Service\AutocompletionManager;
 use App\Service\UserManager;
 use PHPUnit\Framework\Attributes as PU;
 use PHPUnit\Framework\TestCase;
-use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\Uid\Uuid;
 
 #[PU\AllowMockObjectsWithoutExpectations]
 final class AutocompletionManagerTest extends TestCase
 {
     private static $autocompletionLimit = 20;
     private static $autocompletionMinLength = 5;
-    private $security;
-    private $steamRepo;
-    private $gameRepo;
-    private $userManager;
+    private SteamRepository $steamRepo;
+    private GameRepository $gameRepo;
+    private UserManager $userManager;
 
-    private $autocompletionManager;
+    private AutocompletionManager $autocompletionManager;
 
     public function setUp(): void
     {
-        $this->security = $this->createMock(Security::class);
         $this->steamRepo = $this->createMock(SteamRepository::class);
         $this->gameRepo = $this->createMock(GameRepository::class);
         $this->userManager = $this->createMock(UserManager::class);
 
-        $this->autocompletionManager = new AutocompletionManager(
-            self::$autocompletionLimit,
-            self::$autocompletionMinLength,
-            $this->security,
-            $this->steamRepo,
-            $this->gameRepo,
-            $this->userManager,
-        );
+        $this->autocompletionManager = new AutocompletionManager(self::$autocompletionLimit, self::$autocompletionMinLength, $this->steamRepo, $this->gameRepo, $this->userManager);
     }
 
     #[PU\Test]
@@ -93,18 +84,16 @@ final class AutocompletionManagerTest extends TestCase
         $game1 = $this->createMock(Game::class);
         $game2 = $this->createMock(Game::class);
 
-        $userId = 10;
-        $user = $this->createMock(User::class);
-        $user->expects($this->once())->method('getId')->willReturn($userId);
+        $user = new User(Uuid::v4(), 'user1', '');
 
-        $this->security->expects($this->once())->method('getUser')->willReturn($user);
+        $this->userManager->expects($this->once())->method('getUserConnected')->willReturn($user);
         $this->gameRepo
             ->expects($this->once())
             ->method($searchMode->toRepoMethod())
-            ->with($expectedSearch, self::$autocompletionLimit, $userId)
+            ->with($expectedSearch, self::$autocompletionLimit, $user->uuid)
             ->willReturn([$game1, $game2]);
         $this->userManager->expects($this->once())->method('plugToGamesInfo');
-        $this->userManager->expects($this->once())->method('findWithReview');
+        $this->userManager->expects($this->once())->method('getUserList');
 
         $objects = $this->autocompletionManager->fromGame($search, $searchMode, true);
 

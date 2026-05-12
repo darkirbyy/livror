@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Tests\Unit\Service;
 
-use App\Entity\Main\Game;
-use App\Entity\Main\Steam;
+use App\Entity\Game;
+use App\Entity\Steam;
 use App\Service\AutocompletionHelper;
 use PHPUnit\Framework\Attributes as PU;
 use PHPUnit\Framework\TestCase;
@@ -19,12 +19,12 @@ use Twig\Environment;
 final class AutocompletionHelperTest extends TestCase
 {
     private static $autocompletionMinLength = 5;
-    private $trans;
-    private $stimulusHelper;
-    private $urlGenerator;
-    private $twig;
+    private TranslatorInterface  $trans;
+    private StimulusHelper $stimulusHelper;
+    private UrlGeneratorInterface $urlGenerator;
+    private Environment $twig;
 
-    private $autocompletionHelper;
+    private AutocompletionHelper $autocompletionHelper;
 
     public function setUp(): void
     {

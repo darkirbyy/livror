@@ -17,13 +17,13 @@ use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 #[PU\AllowMockObjectsWithoutExpectations]
 final class QueryParamHelperTest extends TestCase
 {
-    private $session;
+    private Session $session;
 
     private static $defaultLimit = 10;
     private static $maxLimit = 50;
-    private $requestStack;
+    private RequestStack $requestStack;
 
-    private $queryParamHelper;
+    private QueryParamHelper $queryParamHelper;
 
     public function setUp(): void
     {

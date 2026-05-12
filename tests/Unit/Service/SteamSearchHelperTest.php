@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Unit\Service;
 
-use App\Entity\Main\Game;
+use App\Entity\Game;
 use App\Enum\SteamSearchStatusEnum as Status;
 use App\Service\ExceptionManager;
 use App\Service\SteamSearchHelper;
@@ -13,17 +13,18 @@ use PHPUnit\Framework\Attributes as PU;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpClient\MockHttpClient;
 use Symfony\Component\HttpClient\Response\MockResponse;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 #[PU\AllowMockObjectsWithoutExpectations]
 final class SteamSearchHelperTest extends TestCase
 {
     private static $requestTimeout = 5;
-    private $locale;
-    private $currency;
-    private $exceptionManager;
-    private $httpClient;
+    private string $locale;
+    private string $currency;
+    private ExceptionManager $exceptionManager;
+    private HttpClientInterface $httpClient;
 
-    private $steamSearchHelper;
+    private SteamSearchHelper $steamSearchHelper;
 
     public function setUp(): void
     {
