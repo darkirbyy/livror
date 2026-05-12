@@ -21,8 +21,8 @@ final class DiscordNotifyCommandTest extends KernelTestCase
     use ResetDatabase;
     use Factories;
 
-    private $commandTester;
-    private $discordDir;
+    private CommandTester $commandTester;
+    private string $discordDir;
 
     public function setUp(): void
     {

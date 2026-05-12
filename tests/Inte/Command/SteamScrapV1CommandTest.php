@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Inte\Command;
 
-use App\Entity\Main\Steam;
+use App\Entity\Steam;
 use App\Tests\Mock\ApiMockData;
 use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\Attributes as PU;
@@ -22,9 +22,9 @@ final class SteamScrapV1CommandTest extends KernelTestCase
     use ResetDatabase;
     use Factories;
 
-    private $commandTester;
-    private $entityManager;
-    private $tableName;
+    private CommandTester $commandTester;
+    private EntityManagerInterface $entityManager;
+    private string $tableName;
 
     public function setUp(): void
     {

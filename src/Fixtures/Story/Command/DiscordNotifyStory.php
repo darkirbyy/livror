@@ -3,8 +3,8 @@
 namespace App\Fixtures\Story\Command;
 
 use App\Entity\Account\User;
-use App\Entity\Main\Game;
-use App\Entity\Main\Review;
+use App\Entity\Game;
+use App\Entity\Review;
 use App\Fixtures\Factory\GameFactory;
 use App\Fixtures\Story\TestStory;
 use Doctrine\Persistence\ManagerRegistry;
@@ -23,17 +23,14 @@ final class DiscordNotifyStory extends Story
             $this->managerRegistry->getManager()->getClassMetadata($entityClass)->setLifecycleCallbacks([]);
         }
 
-        $user1 = TestStory::get('connected-user');
-        $usersButUser1Id = array_map(fn(User $u) => $u->getId(), TestStory::getPool('other-users'));
+        $connectedUserUuid = TestStory::get('connected-user-uuid');
+        $otherUsersUuid = TestStory::getPool('other-users-uuid');
 
-        // Create 5 games NOT reviewed by user 1
-        GameFactory::new()->withUsersId($usersButUser1Id, true)->many(5)->create();
+        // Create 5 games NOT reviewed by user 1 (=connected)
+        GameFactory::new()->withUsersUuid($otherUsersUuid, true)->many(5)->create();
 
-        // Create 10 games only reviewed by user 1
-        GameFactory::new()
-            ->withUsersId([$user1->getId()], true)
-            ->many(10)
-            ->create();
+        // Create 10 games only reviewed by user 1 (=connected)
+        GameFactory::new()->withUsersUuid([$connectedUserUuid], true)->many(10)->create();
 
         // Reenable PrePersit and PreUpdate event
         foreach ([Game::class, Review::class] as $entityClass) {
