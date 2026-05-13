@@ -53,8 +53,8 @@ class AutocompletionManager
         $gamesInfo = $this->gameRepo->$repoMethod($search, $this->autocompletionLimit, $withoutReview ? $userUuid : null);
 
         // Plug the users into the Game Infos
-        $users = $this->userManager->getUserList();
-        $this->userManager->plugToGamesInfo($gamesInfo, $users);
+        $usersInfo = $this->userManager->getUsersInfo();
+        $this->userManager->plugToGamesInfo($gamesInfo, $usersInfo);
 
         return $gamesInfo;
     }

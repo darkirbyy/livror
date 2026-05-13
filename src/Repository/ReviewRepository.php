@@ -91,9 +91,8 @@ class ReviewRepository extends ServiceEntityRepository
 
     public function countByUserUuid(): array
     {
-        // todo check the aggregation gy uuid
         $qb = $this->createQueryBuilder('r');
-        $qb->select('r.userUuid, COUNT(r.id) as numberReviews')->groupBy('r.userUuid');
+        $qb->select('r.userUuid as userUuid, COUNT(r.id) as numberReviews')->groupBy('r.userUuid');
 
         return $qb->getQuery()->getResult();
     }

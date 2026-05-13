@@ -6,46 +6,50 @@ namespace App\Service;
 
 use App\Dto\GameInfo;
 use App\Dto\User;
+use App\Dto\UserInfo;
 use App\Entity\Review;
 use App\Repository\ReviewRepository;
 use LogicException;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Uid\Uuid;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Service to retrieve and link user DTO to reviews.
  */
 class UserManager
 {
-
-    public function __construct(private Security $security, private ReviewRepository $reviewRepo, private KeycloakManagerInterface $keycloakManager) {}
+    public function __construct(
+        private Security $security,
+        private ReviewRepository $reviewRepo,
+        private KeycloakManagerInterface $keycloakManager,
+        private TranslatorInterface $trans,
+    ) {}
 
     /**
-     * Retrieve all the users with the numberReviews field completed, and anonymous user for not authorized one
+     * Retrieve all the users and the numberReviews associated, or anonymous user for not authorized one
      *
      * @return array   the list of users
      */
-    public function getUserList(): array
+    public function getUsersInfo(): array
     {
-        // // TODO : rework, two functions (userinfos or user, add anonymous, optimize plug)
-        // // Find all distinct users id among the reviews, adn the number of reviews for each one
-        // $usersInfo = $this->reviewRepo->countByUserUuid();
-
-        // // Create an array with all users that have reviewed and replace the authorized-ones
-        // $users = array_fill_keys(array_column($usersInfo, 'userUuid'), new User(Uuid::v7(), 'user deleted', ''));
-        // $users = array_replace($users, $this->keycloakManager->getUsersAuthorized());
-
-        // // Plug the number of reviews in each User
-        // foreach ($usersInfo as $userInfo) {
-        //     $users[$userInfo['userUuid']->toString()]->numberReviews = $userInfo['numberReviews'];
-        // }
-
-        $users = [];
+        $usersInfo = [];
         foreach ($this->keycloakManager->getUsersAuthorized() as $user) {
-            $users[$user->uuid->toString()] = $user;
+            $usersInfo[$user->uuid->toString()] = new UserInfo($user, 0);
         }
 
-        return $users;
+        foreach ($this->reviewRepo->countByUserUuid() as $countByUserUuid) {
+            $userUuid = $countByUserUuid['userUuid']->toString();
+            if (array_key_exists($userUuid, $usersInfo)) {
+                $usersInfo[$userUuid]->numberReviews = $countByUserUuid['numberReviews'];
+            } else {
+                $deletedUsername = $this->trans->trans('layout.deletedUser');
+                $deletedUser = new User($countByUserUuid['userUuid'], $deletedUsername, '');
+                $usersInfo[$userUuid] = new UserInfo($deletedUser, $countByUserUuid['numberReviews']);
+            }
+        }
+
+        return $usersInfo;
     }
 
     /**
@@ -82,34 +86,34 @@ class UserManager
      * Extract all reviews of a gameInfo DTO, then plug the user.
      *
      * @param GameInfo $gameInfo one gameInfo DTO with each review with null user
-     * @param array    $users    list of all users necessary to plug
+     * @param array    $usersInfo    list of all usersInfo necessary to plug
      */
-    public function plugToGameInfo(GameInfo $gameInfo, array $users): void
+    public function plugToGameInfo(GameInfo $gameInfo, array $usersInfo): void
     {
         $reviews = $gameInfo->game->getReviews()->toArray();
-        $this->plugToReviews($reviews, $users);
+        $this->plugToReviews($reviews, $usersInfo);
     }
 
     /**
      * Extract and flatten all reviews of each game inside a list of gameInfo DTOs, then plug the user.
      *
      * @param array $gamesInfo list of gameInfo DTO with each review with null user
-     * @param array $users     list of all users necessary to plug
+     * @param array $usersInfo     list of all usersInfo necessary to plug
      */
-    public function plugToGamesInfo(array &$gamesInfo, array $users): void
+    public function plugToGamesInfo(array &$gamesInfo, array $usersInfo): void
     {
         $reviews = array_merge(...array_map(fn(GameInfo $g) => $g->game->getReviews()->toArray(), $gamesInfo));
-        $this->plugToReviews($reviews, $users);
+        $this->plugToReviews($reviews, $usersInfo);
     }
 
     /**
      * Plug the user in each of the entity Review using the userUuid field.
      *
      * @param array $reviews list of Review entity with null user
-     * @param array $users   list of all users necessary to plug
+     * @param array $usersInfo   list of all usersInfo necessary to plug
      */
-    public function plugToReviews(array &$reviews, array $users): void
+    public function plugToReviews(array &$reviews, array $usersInfo): void
     {
-        array_walk($reviews, fn(Review $r) => $r->setUser($users[$r->getUserUuid()->toString()]));
+        array_walk($reviews, fn(Review $r) => $r->setUserInfo($usersInfo[$r->getUserUuid()->toString()]));
     }
 }

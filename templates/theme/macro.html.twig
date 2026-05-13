@@ -253,7 +253,7 @@
 
 {# Macro to display the body of a review (button to edit, date added, comment) #}
 {% macro review_body(review, backpath = null, edit = false) %}
-  {% if edit and review.user.uuid.toString == userConnected.uuid.toString %}
+  {% if edit and review.userInfo.user.uuid.toString == userConnected.uuid.toString %}
     <div class="float-end">
       <a
         class="btn btn-sm btn-outline-light app-btn-input-border border-top-0"
@@ -341,15 +341,14 @@
   {% endif %}
 {% endmacro %}
 
-{% macro user_popover(user) %}
+{% macro user_info_popover(userInfo) %}
   <div class="d-flex align-items-center gap-3">
+    {% set user = userInfo.user %}
     {{ _self.user_avatar(user, 'md') }}
     <div>
       <h6 class="fs-5 mb-0">{{ user.username }}</h6>
       <div class="mb-1">
-        {# todo : reenable #}
-        {# {{ 'review.index.numberPublished'|trans({ published: user.numberReviews }) }} #}
-        {{ 'review.index.numberPublished'|trans({ published: 0 }) }}
+        {{ 'review.index.numberPublished'|trans({ published: userInfo.numberReviews }) }}
       </div>
       <a data-turbo-frame="_top" href="{{ path('review_index', { uuid: user.uuid }) }}" class="link-primary icon-link icon-link-hover icon-link-right">
         Voir les avis

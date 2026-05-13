@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
-use App\Dto\User;
+use App\Dto\UserInfo;
 use App\Repository\ReviewRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -61,7 +61,7 @@ class Review
     private ?Uuid $userUuid = null;
 
     // No ORM column because it comes from a external user provider
-    private ?User $user = null;
+    private ?UserInfo $userInfo = null;
 
     /**
      * @var Collection<int, Attachment>
@@ -198,14 +198,14 @@ class Review
         return $this;
     }
 
-    public function getUser(): ?User
+    public function getUserInfo(): ?UserInfo
     {
-        return $this->user;
+        return $this->userInfo;
     }
 
-    public function setUser(?User $user): static
+    public function setUserInfo(?UserInfo $userInfo): static
     {
-        $this->user = $user;
+        $this->userInfo = $userInfo;
 
         return $this;
     }

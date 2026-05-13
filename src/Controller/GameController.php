@@ -30,12 +30,12 @@ class GameController extends AbstractController
     public function index(#[MapQueryString] QueryParam $queryParam, UserManager $userManager, GameRepository $gameRepo, Request $request): Response
     {
         // Fetch all distinct users that have written at least one review
-        $users = $userManager->getUserList();
+        $usersInfo = $userManager->getUsersInfo();
 
         // Make the database query and get the corresponding games, and link the users
         $gamesInfo = $gameRepo->findIndex($queryParam);
         $numbers = $gameRepo->countIndex($queryParam);
-        $userManager->plugToGamesInfo($gamesInfo, $users);
+        $userManager->plugToGamesInfo($gamesInfo, $usersInfo);
 
         // Prepare the data for the twig renderer
         $data = [
@@ -43,7 +43,7 @@ class GameController extends AbstractController
             'gamesInfo' => array_slice($gamesInfo, 0, $queryParam->limit), // remove one result as we have fetched one more that configured
             'hasMore' => count($gamesInfo) > $queryParam->limit, // determine if there is more games to fetch
             'numbers' => $numbers,
-            'users' => $users,
+            'usersInfo' => $usersInfo,
         ];
 
         // Render only the game list block when the request comes from the JavaScript, otherwise render the whole page
@@ -83,10 +83,10 @@ class GameController extends AbstractController
     #[Route('/{id}', name: 'show', methods: ['GET'], requirements: ['id' => Requirement::DIGITS])]
     public function show(Game $game, UserManager $userManager, GameRepository $gameRepo): Response
     {
-        $users = $userManager->getUserList();
+        $usersInfo = $userManager->getUsersInfo();
 
         $gameInfo = $gameRepo->findShow($game);
-        $userManager->plugToGameInfo($gameInfo, $users);
+        $userManager->plugToGameInfo($gameInfo, $usersInfo);
 
         return $this->render('game/show.html.twig', [
             'gameInfo' => $gameInfo,

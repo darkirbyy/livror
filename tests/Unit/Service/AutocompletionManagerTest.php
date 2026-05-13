@@ -93,7 +93,7 @@ final class AutocompletionManagerTest extends TestCase
             ->with($expectedSearch, self::$autocompletionLimit, $user->uuid)
             ->willReturn([$game1, $game2]);
         $this->userManager->expects($this->once())->method('plugToGamesInfo');
-        $this->userManager->expects($this->once())->method('getUserList');
+        $this->userManager->expects($this->once())->method('getUsersInfo');
 
         $objects = $this->autocompletionManager->fromGame($search, $searchMode, true);
 

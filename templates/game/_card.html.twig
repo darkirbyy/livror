@@ -94,13 +94,13 @@
 
         {# Reviews content #}
         <div class="row gx-0 p-0 m-0 {{ collapsed ? 'collapse' }} d-md-flex" id="{{ collapseId }}">
-          {% for review in game.reviews|filter(review => review.user is not empty) %}
+          {% for review in game.reviews|filter(review => review.userInfo is not empty) %}
             <div class="col-12 text-center d-flex bg-secondary-subtle align-items-center border-bottom {{ loop.index0 > 0 ? 'border-top' }} col-md-auto flex-even">
-              {% set popover = m.user_popover(review.user) %}
+              {% set popover = m.user_info_popover(review.userInfo) %}
               {% set classes = 'flex-basis-0 flex-grow-2 flex-grow-md-1 flex-grow-lg-1 text-truncate p-2 h-100 lh-1 focus-ring focus-ring-light app-cell-secondary' %}
               <div role="button" class="{{ classes }}" tabindex="0" data-bs-toggle="popover" data-bs-content="{{ popover|e }}">
-                {{ m.user_avatar(review.user) }}
-                <span class="ms-1 d-none d-lg-inline align-middle">{{ review.user.username }}</span>
+                {{ m.user_avatar(review.userInfo.user) }}
+                <span class="ms-1 d-none d-lg-inline align-middle">{{ review.userInfo.user.username }}</span>
               </div>
               {% set flexClass = { rating: 'flex-grow-2 flex-grow-lg-1', hourSpend: 'flex-grow-2 flex-grow-lg-1', firstPlay: 'flex-grow-3 flex-grow-lg-1' } %}
               {{ m.review_information(review, 'secondary', flexClass) }}

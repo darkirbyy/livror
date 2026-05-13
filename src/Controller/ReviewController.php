@@ -6,6 +6,7 @@ namespace App\Controller;
 
 use App\Dto\FlashMessage;
 use App\Dto\QueryParam;
+use App\Dto\UserInfo;
 use App\Entity\Review;
 use App\Form\ReviewType;
 use App\Repository\GameRepository;
@@ -41,7 +42,7 @@ class ReviewController extends AbstractController
         // Make the database query and get the corresponding reviews
         $reviews = $reviewRepo->findIndex($queryParam, $user->uuid);
         $numbers = $reviewRepo->countIndex($queryParam, $user->uuid);
-        $userManager->plugToReviews($reviews, [$user->uuid->toString() => $user]);
+        $userManager->plugToReviews($reviews, [$user->uuid->toString() => new UserInfo($user,0)]);
 
         // Prepare the data for the twig renderer
         $data = [

@@ -84,13 +84,13 @@
                   </div>
                   {# 3 piece of information : player rating, hour spend, and first play date #}
                   <div class="col-12 d-flex align-items-center flex-even bg-secondary-subtle">
-                    {% set popover = m.user_popover(review.user) %}
+                    {% set popover = m.user_info_popover(review.userInfo) %}
                     {% set classes =
                       'flex-basis-0 flex-grow-1 p-2 text-truncate d-flex justify-content-center align-items-center focus-ring focus-ring-light lh-1 app-cell-secondary'
                     %}
                     <div role="button" class="{{ classes }}" tabindex="0" data-bs-toggle="popover" data-bs-content="{{ popover|e }}">
-                      {{ m.user_avatar(review.user) }}
-                      <span class="ms-2 d-none d-lg-inline align-middle">{{ review.user.username }}</span>
+                      {{ m.user_avatar(review.userInfo.user) }}
+                      <span class="ms-2 d-none d-lg-inline align-middle">{{ review.userInfo.user.username }}</span>
                     </div>
                     {{ m.review_information(review, 'secondary', { rating: 'flex-grow-1', hourSpend: 'flex-grow-1', firstPlay: 'flex-grow-1' }) }}
                   </div>

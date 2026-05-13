@@ -182,6 +182,7 @@ layout:
     madeWith: Réalisé avec
     version: Version
     releaseDate: Mise à jour le
+  deletedUser: Utilisateur supprimé
   env:
     dev: dev
     test: test

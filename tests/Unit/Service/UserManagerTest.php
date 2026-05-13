@@ -6,6 +6,7 @@ namespace App\Tests\Unit\Service;
 
 use App\Dto\GameInfo;
 use App\Dto\User;
+use App\Dto\UserInfo;
 use App\Entity\Game;
 use App\Entity\Review;
 use App\Repository\ReviewRepository;
@@ -17,6 +18,7 @@ use PHPUnit\Framework\Attributes as PU;
 use PHPUnit\Framework\TestCase;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Uid\Uuid;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 #[PU\AllowMockObjectsWithoutExpectations]
 final class UserManagerTest extends TestCase
@@ -24,6 +26,7 @@ final class UserManagerTest extends TestCase
     private Security $security;
     private ReviewRepository $reviewRepo;
     private KeycloakManagerInterface $keycloakManager;
+    private TranslatorInterface $trans;
 
     private UserManager $userManager;
 
@@ -32,8 +35,9 @@ final class UserManagerTest extends TestCase
         $this->security = $this->createMock(Security::class);
         $this->reviewRepo = $this->createMock(ReviewRepository::class);
         $this->keycloakManager = $this->createMock(KeycloakManagerInterface::class);
+        $this->trans = $this->createMock(TranslatorInterface::class);
 
-        $this->userManager = new UserManager($this->security, $this->reviewRepo, $this->keycloakManager);
+        $this->userManager = new UserManager($this->security, $this->reviewRepo, $this->keycloakManager, $this->trans);
     }
 
     #[PU\Test]
@@ -94,22 +98,22 @@ final class UserManagerTest extends TestCase
 
     public function prepareReviewsAndUsers(): array
     {
-        $user1 = new User(Uuid::v4(), 'user1', '');
-        $user2 = new User(Uuid::v4(), 'user2', '');
-        $user4 = new User(Uuid::v4(), 'user4', '');
+        $userInfo1 = new UserInfo(new User(Uuid::v4(), 'user1', ''),0);
+        $userInfo2 = new UserInfo(new User(Uuid::v4(), 'user2', ''),5);
+        $userInfo4 = new UserInfo(new User(Uuid::v4(), 'user4', ''),7);
         $users = [
-            $user1->uuid->toString() => $user1,
-            $user2->uuid->toString() => $user2,
+            $userInfo1->user->uuid->toString() => $userInfo1,
+            $userInfo2->user->uuid->toString() => $userInfo2,
             Uuid::v4()->toString() => null,
-            $user4->uuid->toString() => $user4,
+            $userInfo4->user->uuid->toString() => $userInfo4,
         ];
 
         $review1 = $this->createMock(Review::class);
-        $review1->expects($this->once())->method('getUserUuid')->willReturn($user1->uuid);
-        $review1->expects($this->once())->method('setUser')->with($user1);
+        $review1->expects($this->once())->method('getUserUuid')->willReturn($userInfo1->user->uuid);
+        $review1->expects($this->once())->method('setUserInfo')->with($userInfo1);
         $review4 = $this->createMock(Review::class);
-        $review4->expects($this->once())->method('getUserUuid')->willReturn($user4->uuid);
-        $review4->expects($this->once())->method('setUser')->with($user4);
+        $review4->expects($this->once())->method('getUserUuid')->willReturn($userInfo4->user->uuid);
+        $review4->expects($this->once())->method('setUserInfo')->with($userInfo4);
         $reviews = [1 => $review1, 4 => $review4];
 
         return [$reviews, $users];

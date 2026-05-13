@@ -50,7 +50,8 @@
         {% endset %}
         {% set filterContentUsers %}
           <ul class="p-0 m-0">
-            {% for user in users|filter(u => u is not null)|sort((a, b) => a.username <=> b.username) %}
+            {% for userInfo in usersInfo|filter(u => u is not null)|sort((a, b) => a.user.username <=> b.user.username) %}
+              {% set user = userInfo.user %}
               {% set checked = queryParam.filters.users is not defined or user.uuid.toString in queryParam.filters.users %}
               {% set filtersUserUuid = 'filters-users-' ~ user.uuid %}
               <li class="dropdown-item">

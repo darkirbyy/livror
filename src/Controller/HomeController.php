@@ -18,13 +18,13 @@ class HomeController extends AbstractController
     #[Route('', name: 'index', methods: ['GET'])]
     public function index(UserManager $userManager, GameRepository $gameRepository, ReviewRepository $reviewRepository): Response
     {
-        $users = $userManager->getUserList();
+        $usersInfo = $userManager->getUsersInfo();
 
         $gamesInfo = $gameRepository->findLast(DateFieldEnum::ADD, $this->getParameter('app.home_game_limit'));
         $reviews = $reviewRepository->findLast(DateFieldEnum::ADD, $this->getParameter('app.home_review_limit'));
 
-        $userManager->plugToGamesInfo($gamesInfo, $users);
-        $userManager->plugToReviews($reviews, $users);
+        $userManager->plugToGamesInfo($gamesInfo, $usersInfo);
+        $userManager->plugToReviews($reviews, $usersInfo);
 
         return $this->render('home/index.html.twig', [
             'gamesInfo' => $gamesInfo,
