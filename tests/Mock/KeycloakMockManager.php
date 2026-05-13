@@ -18,11 +18,7 @@ use ValueError;
  */
 class KeycloakMockManager implements KeycloakManagerInterface
 {
-    public function __construct(
-        private KeycloakManager $inner,
-        private ParameterBagInterface $parameterBag,
-        private Packages $packages
-    ) {}
+    public function __construct(private KeycloakManager $inner, private ParameterBagInterface $parameterBag, private Packages $packages) {}
 
     #[Override]
     public function getUsersAuthorized(): array
@@ -44,7 +40,7 @@ class KeycloakMockManager implements KeycloakManagerInterface
         if ($i < 1 || $i > 4) {
             throw new ValueError('Dummy user $i must be between 1 and 4, ' . $i . ' given');
         }
-        $uuid = UuidV4::fromString('11111111-1111-4111-8111-' . (111111111111 * $i));
+        $uuid = UuidV4::fromString('11111111-1111-4111-8111-' . 111111111111 * $i);
         $username = 'user' . $i;
         $avatarPath = $this->packages->getUrl('build/tests/avatar' . $i . '.png');
 
