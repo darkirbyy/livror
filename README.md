@@ -9,7 +9,7 @@ Small webapp to share reviews of games with my friends, developed while learning
 
 - Back-end:
   - **Symfony**: 7.4 framework
-  - **PHP**: 8.4 (compatible with Symfony 7.4)
+  - **PHP**: 8.4 (compatible with Symfony 7.4) with APCU extension for caching
   - **Composer**: >= 2.8 for dependency management
   - **MariaDB**: 11.8 through **docker** for the database
 - Front-end:

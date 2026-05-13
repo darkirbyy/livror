@@ -9,9 +9,7 @@ use App\Dto\User;
 use App\Dto\UserInfo;
 use App\Entity\Review;
 use App\Repository\ReviewRepository;
-use LogicException;
 use Symfony\Bundle\SecurityBundle\Security;
-use Symfony\Component\Uid\Uuid;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
