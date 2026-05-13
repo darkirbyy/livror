@@ -28,9 +28,9 @@ class QueryParamHelper
     public function load(QueryParam $queryParam, string $sessionKey): void
     {
         $isQueryEmpty = array_all((array) $queryParam, fn($value, $key): bool => is_null($value));
-        $this->isLoadFromSesion = $isQueryEmpty && $this->requestStack->getSession()->has('livror/' . $sessionKey);
+        $this->isLoadFromSesion = $isQueryEmpty && $this->requestStack->getSession()->has($sessionKey);
         if ($this->isLoadFromSesion) {
-            foreach ($this->requestStack->getSession()->get('livror/' . $sessionKey) as $property => $value) {
+            foreach ($this->requestStack->getSession()->get($sessionKey) as $property => $value) {
                 $queryParam->$property = $value;
             }
         }
@@ -86,7 +86,7 @@ class QueryParamHelper
         $queryParamCloned = clone $queryParam;
         $queryParamCloned->offset = 0;
         $queryParamCloned->limit = $this->defaultLimit;
-        $this->requestStack->getSession()->set('livror/' . $sessionKey, $queryParamCloned);
+        $this->requestStack->getSession()->set($sessionKey, $queryParamCloned);
     }
 
     /**

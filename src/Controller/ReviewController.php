@@ -114,7 +114,7 @@ class ReviewController extends AbstractController
     public function delete(Review $review, FormManager $fm, BackpathUrlGenerator $backpathUrlGenerator): Response
     {
         $flashSuccess = new FlashMessage('review.index.flash.deleteReview', ['name' => $review->getGame()->getName()]);
-        if ($fm->checkTokenAndRemove('livror/delete', $review, $flashSuccess)) {
+        if ($fm->checkTokenAndRemove('delete', $review, $flashSuccess)) {
             return $this->redirect($backpathUrlGenerator->generate($this->generateUrl('review_index')), Response::HTTP_SEE_OTHER);
         }
 

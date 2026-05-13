@@ -11,7 +11,7 @@
   4 types of flashes: info, success, warning, danger #}
 {% block flash %}
   <div aria-live="polite">
-    {% for flash in app.flashes('livror/info') %}
+    {% for flash in app.flashes('info') %}
       <div class="alert alert-info alert-dismissible fade show" role="alert">
         <div class="lnr lnr-thumbs-up">
           {{ _self.trans_flash(flash) }}
@@ -19,7 +19,7 @@
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="{{ 'form.button.close'|trans }}"></button>
       </div>
     {% endfor %}
-    {% for flash in app.flashes('livror/success') %}
+    {% for flash in app.flashes('success') %}
       <div class="alert alert-success alert-dismissible fade show" role="alert">
         <div class="lnr lnr-checkmark-circle">
           {{ _self.trans_flash(flash) }}
@@ -27,7 +27,7 @@
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="{{ 'form.button.close'|trans }}"></button>
       </div>
     {% endfor %}
-    {% for flash in app.flashes('livror/warning') %}
+    {% for flash in app.flashes('warning') %}
       <div class="alert alert-warning alert-dismissible fade show" role="alert">
         <div class="lnr lnr-warning">
           {{ _self.trans_flash(flash) }}
@@ -35,7 +35,7 @@
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="{{ 'form.button.close'|trans }}"></button>
       </div>
     {% endfor %}
-    {% for flash in app.flashes('livror/danger') %}
+    {% for flash in app.flashes('danger') %}
       <div class="alert alert-danger alert-dismissible fade show" role="alert">
         <div class="lnr lnr-cross-circle">
           {{ _self.trans_flash(flash) }}

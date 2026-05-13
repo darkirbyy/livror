@@ -16,8 +16,8 @@ framework:
     csrf_protection:
         check_header: true
         stateless_token_ids:
-            - livror/submit
-            - livror/delete
+            - submit
+            - delete
 
 when@test:
     framework:

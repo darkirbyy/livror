@@ -42,7 +42,7 @@ final class QueryParamHelperTest extends TestCase
         $storedQueryParam = new QueryParam(5, 20, [], []);
         $storedSessionKey = 'game';
 
-        $this->session->set('livror/' . $storedSessionKey, $storedQueryParam);
+        $this->session->set($storedSessionKey, $storedQueryParam);
         $this->requestStack->expects($this->exactly($expectedGet))->method('getSession')->willReturn($this->session);
 
         $this->queryParamHelper->load($queryParam, $sessionKey);
@@ -96,7 +96,7 @@ final class QueryParamHelperTest extends TestCase
         $this->queryParamHelper->save($queryParam, $sessionKey);
 
         $this->assertSame((array) $queryParamCloned, (array) $queryParam);
-        $this->assertSame((array) $expectedQueryParam, (array) $this->session->get('livror/' . $sessionKey));
+        $this->assertSame((array) $expectedQueryParam, (array) $this->session->get($sessionKey));
     }
 
     #[PU\Test]

@@ -70,6 +70,6 @@ class GameFormHelper
     private function addFlashMessage(string $type, string $transKey): void
     {
         $flashBag = $this->requestStack->getSession()->getFlashBag();
-        $flashBag->add('livror/' . $type, new FlashMessage('game.edit.flash.steamSearch.' . $transKey));
+        $flashBag->add($type, new FlashMessage('game.edit.flash.steamSearch.' . $transKey));
     }
 }
