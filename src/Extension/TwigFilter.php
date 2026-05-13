@@ -25,9 +25,9 @@ class TwigFilter
 
     // Generate the backpath if exists and valid, keep the given path otherwise
     #[AsTwigFilter(name: 'generate_backpath')]
-    public function backpathUrlGenerate(string $defaultRoute): string
+    public function backpathUrlGenerate(string $defaultRoute, array $forbiddenRoutes = []): string
     {
-        return $this->backpathUrlGenerator->generate($defaultRoute);
+        return $this->backpathUrlGenerator->generate($defaultRoute, $forbiddenRoutes);
     }
 
     // Change one queryParam property without modyfiny the original instance

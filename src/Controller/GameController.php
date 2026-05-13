@@ -105,7 +105,7 @@ class GameController extends AbstractController
 
         $flashSuccess = new FlashMessage('game.index.flash.updateGame', ['name' => $game->getName()]);
         if ($fm->validateAndPersist($form, $game, $flashSuccess)) {
-            return $this->redirect($backpathUrlGenerator->generate($this->generateUrl('game_index')), Response::HTTP_SEE_OTHER);
+            return $this->redirect($backpathUrlGenerator->generate('game_index'), Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('game/edit.html.twig', [
@@ -120,8 +120,7 @@ class GameController extends AbstractController
     {
         $flashSuccess = new FlashMessage('game.index.flash.deleteGame', ['name' => $game->getName()]);
         if ($fm->checkTokenAndRemove('delete', $game, $flashSuccess)) {
-            //todo : what if backpath is the game show page ?
-            return $this->redirect($backpathUrlGenerator->generate($this->generateUrl('game_index')), Response::HTTP_SEE_OTHER);
+            return $this->redirect($backpathUrlGenerator->generate('game_index', ['game_show']), Response::HTTP_SEE_OTHER);
         }
 
         return $this->redirectToRoute('game_edit', ['id' => $game->getId()], Response::HTTP_SEE_OTHER);

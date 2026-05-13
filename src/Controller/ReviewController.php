@@ -80,7 +80,7 @@ class ReviewController extends AbstractController
 
         $flashSuccess = new FlashMessage('review.index.flash.newReview', ['name' => $review->getGame()?->getName()]);
         if ($fm->validateAndPersist($form, $review, $flashSuccess)) {
-            return $this->redirect($backpathUrlGenerator->generate($this->generateUrl('review_index')), Response::HTTP_SEE_OTHER);
+            return $this->redirect($backpathUrlGenerator->generate('review_index'), Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('review/edit.html.twig', [
@@ -99,7 +99,7 @@ class ReviewController extends AbstractController
 
         $flashSuccess = new FlashMessage('review.index.flash.updateReview', ['name' => $review->getGame()->getName()]);
         if ($fm->validateAndPersist($form, $review, $flashSuccess)) {
-            return $this->redirect($backpathUrlGenerator->generate($this->generateUrl('review_index')), Response::HTTP_SEE_OTHER);
+            return $this->redirect($backpathUrlGenerator->generate('review_index'), Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('review/edit.html.twig', [
@@ -115,7 +115,7 @@ class ReviewController extends AbstractController
     {
         $flashSuccess = new FlashMessage('review.index.flash.deleteReview', ['name' => $review->getGame()->getName()]);
         if ($fm->checkTokenAndRemove('delete', $review, $flashSuccess)) {
-            return $this->redirect($backpathUrlGenerator->generate($this->generateUrl('review_index')), Response::HTTP_SEE_OTHER);
+            return $this->redirect($backpathUrlGenerator->generate('review_index'), Response::HTTP_SEE_OTHER);
         }
 
         return $this->redirectToRoute('review_edit', ['id' => $review->getId()], Response::HTTP_SEE_OTHER);
