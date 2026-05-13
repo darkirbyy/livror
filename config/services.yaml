@@ -44,6 +44,16 @@ services:
     Symfony\Component\Dotenv\Command\DotenvDumpCommand: ~
     Symfony\UX\StimulusBundle\Helper\StimulusHelper: '@stimulus.helper'
     
+    Mainick\KeycloakClientBundle\Provider\KeycloakAdminClient:
+        bind:
+            bool $verify_ssl: true
+            string $base_url: '%env(IAM_ADMIN_BASE_URL)%'
+            string $admin_realm: master
+            string $admin_client_id: admin-cli
+            string $admin_username: '%env(IAM_ADMIN_USERNAME)%'
+            string $admin_password: '%env(IAM_ADMIN_PASSWORD)%'
+            string $version: '%env(IAM_VERSION)%'
+    
     Vich\UploaderBundle\Naming\SlugNamer:
         arguments:
             $service: '@App\Repository\AttachmentRepository'
@@ -86,6 +96,10 @@ services:
     App\Service\AutocompletionHelper:
         arguments:
             $autocompletionMinLength: '%app.autocompletion_min_length%'
+
+    App\Service\KeycloakManager:
+        arguments:
+            $clientId: '%mainick_keycloak_client.keycloak.client_id%'
 
     App\Service\SteamSearchHelper:
         arguments:

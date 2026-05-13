@@ -5,22 +5,39 @@ declare(strict_types=1);
 namespace App\Service;
 
 use App\Dto\User;
-use LogicException;
-use Mainick\KeycloakClientBundle\Provider\KeycloakAdminClient;
-use Symfony\Bundle\SecurityBundle\Security;
+use Mainick\KeycloakClientBundle\Interface\IamAdminClientInterface;
+use Mainick\KeycloakClientBundle\Service\Criteria;
+use RuntimeException;
+use Symfony\Component\Uid\Uuid;
 
 /**
  * Service to retrieve all users from Keycloak.
  */
 class KeycloakManager implements KeycloakManagerInterface
 {
-   public function __construct(
-      //private  KeycloakAdminClient $keycloakAdminClient
-   ) {}
+    public function __construct(private string $clientId, private IamAdminClientInterface $keycloakAdminClient) {}
 
-   public function getUsersAuthorized(): array
-   {
-      // todo : implement
-      throw new \Exception('Not implemented');
-   }
+    public function getUsersAuthorized(): array
+    {
+        $clients = $this->keycloakAdminClient->clients()->all('web', new Criteria(['clientId' => $this->clientId]));
+        if ($clients->count() !== 1) {
+            throw new RuntimeException('Expect one client, received ' . $clients->count());
+        }
+        
+        $usersKeycloak = $this->keycloakAdminClient->clients()->getRoleUsers('web', $clients->first()->id, 'USER');
+        if ($usersKeycloak->count() === 0) {
+            throw new RuntimeException('No user authorized for this app');
+        }
+
+        $users = [];
+        foreach ($usersKeycloak->getIterator() as $userKeycloak) {
+            if ($userKeycloak->attributes->contains('picture') && !empty($userKeycloak->attributes->get('picture')[0])) {
+                $avatarPath = $userKeycloak->attributes->get('picture')[0];
+            } else {
+                $avatarPath = '';
+            }
+            $users[$userKeycloak->id] = new User(Uuid::fromString($userKeycloak->id), $userKeycloak->username, $avatarPath);
+        }
+        return $users;
+    }
 }

@@ -34,8 +34,8 @@ class UserManager
     public function getUsersInfo(): array
     {
         $usersInfo = [];
-        foreach ($this->keycloakManager->getUsersAuthorized() as $user) {
-            $usersInfo[$user->uuid->toString()] = new UserInfo($user, 0);
+        foreach ($this->keycloakManager->getUsersAuthorized() as $userUuid => $user) {
+            $usersInfo[$userUuid] = new UserInfo($user, 0);
         }
 
         foreach ($this->reviewRepo->countByUserUuid() as $countByUserUuid) {
@@ -57,9 +57,10 @@ class UserManager
      *
      * @return User   the fecthed user or null if not found
      */
-    public function getUserByUuid(Uuid $userUuid): ?User
+    public function getUserByUuid(string $userUuid): ?User
     {
-        return array_find($this->keycloakManager->getUsersAuthorized(), fn(User $u) => $u->uuid->toString() === $userUuid->toString());
+        $usersAuthorized = $this->keycloakManager->getUsersAuthorized();
+        return array_key_exists($userUuid, $usersAuthorized) ? $usersAuthorized[$userUuid] : null;
     }
 
     /**
@@ -69,17 +70,8 @@ class UserManager
      */
     public function getUserConnected(): ?User
     {
-        $userSecurity = $this->security->getUser();
-        if (is_null($userSecurity)) {
-            return null;
-        }
-        $usersAuthorized = $this->keycloakManager->getUsersAuthorized();
-        $userSecurityUuid = $userSecurity->getId();
-        if (!array_key_exists($userSecurityUuid, $usersAuthorized)) {
-            return null;
-        }
-
-        return $usersAuthorized[$userSecurityUuid];
+        $userUuid = $this->security->getUser()?->getId();
+        return !is_null($userUuid) ? $this->getUserByUuid($userUuid) : null;
     }
 
     /**
