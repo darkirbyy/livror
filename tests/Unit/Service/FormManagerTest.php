@@ -12,7 +12,6 @@ use Doctrine\DBAL\Exception\DriverException;
 use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\Attributes as PU;
 use PHPUnit\Framework\TestCase;
-use stdClass;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -65,7 +64,7 @@ final class FormManagerTest extends TestCase
     public function validateAndPersistCheck(bool $isSubmitted, bool $isValid): void
     {
         $this->form->expects($this->once())->method('isSubmitted')->willReturn($isSubmitted);
-        $this->form->expects($this->any())->method('isValid')->willReturn($isValid);
+        $this->form->expects($this->exactly((int) $isSubmitted))->method('isValid')->willReturn($isValid);
 
         $success = $this->formManager->validateAndPersist($this->form, $this->game, null);
 
@@ -77,10 +76,7 @@ final class FormManagerTest extends TestCase
     {
         $this->form->expects($this->once())->method('isSubmitted')->willReturn(true);
         $this->form->expects($this->once())->method('isValid')->willReturn(true);
-        $this->entityManager
-            ->expects($this->once())
-            ->method('flush')
-            ->willThrowException(new ConstraintViolationException($this->driverException, null));
+        $this->entityManager->expects($this->once())->method('flush')->willThrowException(new ConstraintViolationException($this->driverException, null));
         $this->form->expects($this->once())->method('addError');
 
         $success = $this->formManager->validateAndPersist($this->form, $this->game, null);
@@ -134,10 +130,7 @@ final class FormManagerTest extends TestCase
         $errorMessage = 'error';
 
         $this->entityManager->expects($this->once())->method('persist')->with($this->game);
-        $this->entityManager
-            ->expects($this->once())
-            ->method('flush')
-            ->willThrowException(new ConstraintViolationException($this->driverException, null));
+        $this->entityManager->expects($this->once())->method('flush')->willThrowException(new ConstraintViolationException($this->driverException, null));
         $this->exceptionManager->expects($this->once())->method('handleDatabase')->willReturn($errorMessage);
 
         $this->assertFalse($this->formManager->persist($this->game));
@@ -171,10 +164,7 @@ final class FormManagerTest extends TestCase
         $errorMessage = 'error';
 
         $this->entityManager->expects($this->once())->method('remove')->with($this->game);
-        $this->entityManager
-            ->expects($this->once())
-            ->method('flush')
-            ->willThrowException(new ConstraintViolationException($this->driverException, null));
+        $this->entityManager->expects($this->once())->method('flush')->willThrowException(new ConstraintViolationException($this->driverException, null));
         $this->exceptionManager->expects($this->once())->method('handleDatabase')->willReturn($errorMessage);
 
         $this->assertFalse($this->formManager->remove($this->game));

@@ -19,7 +19,7 @@ use Twig\Environment;
 final class AutocompletionHelperTest extends TestCase
 {
     private static $autocompletionMinLength = 5;
-    private TranslatorInterface  $trans;
+    private TranslatorInterface $trans;
     private StimulusHelper $stimulusHelper;
     private UrlGeneratorInterface $urlGenerator;
     private Environment $twig;
@@ -41,7 +41,7 @@ final class AutocompletionHelperTest extends TestCase
     public function prepareAttributes(string $placeholderKey, string $route, ?array $params): void
     {
         $this->urlGenerator->expects($this->once())->method('generate')->with($route, $params);
-        $this->trans->expects($this->any())->method('trans');
+        $this->trans->expects($this->atLeastOnce())->method('trans');
 
         $stimulusAttributes = $this->autocompletionHelper->prepareAttributes($placeholderKey, $route, $params);
 
