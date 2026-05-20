@@ -86,7 +86,7 @@
                   <div class="col-12 d-flex align-items-center flex-even bg-secondary-subtle">
                     {% set popover = m.user_info_popover(review.userInfo) %}
                     {% set classes =
-                      'flex-basis-0 flex-grow-1 p-2 text-truncate d-flex justify-content-center align-items-center focus-ring focus-ring-light lh-1 app-cell-secondary'
+                      'flex-basis-0 flex-grow-1 h-100 p-2 text-truncate d-flex justify-content-center align-items-center focus-ring focus-ring-light lh-1 app-cell-secondary'
                     %}
                     <div role="button" class="{{ classes }}" tabindex="0" data-bs-toggle="popover" data-bs-content="{{ popover|e }}">
                       {{ m.user_avatar(review.userInfo.user) }}
