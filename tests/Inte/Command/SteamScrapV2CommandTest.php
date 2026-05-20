@@ -33,7 +33,7 @@ final class SteamScrapV2CommandTest extends KernelTestCase
         self::bootKernel();
         $application = new Application(self::$kernel);
 
-        $command = $application->find('steam:scrap:v2');
+        $command = $application->find('app:steam:scrap:v2');
         $this->commandTester = new CommandTester($command);
 
         $this->entityManager = static::getContainer()->get(EntityManagerInterface::class);
@@ -66,7 +66,7 @@ final class SteamScrapV2CommandTest extends KernelTestCase
 
     #[PU\Test]
     #[PU\DataProvider('updateValues')]
-    public function update(int $since, $expectedSteamNb): void
+    public function update(int $since, int $expectedSteamNb): void
     {
         $this->commandTester->execute([
             'mode' => 'update',

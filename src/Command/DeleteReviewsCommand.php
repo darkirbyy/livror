@@ -40,6 +40,7 @@ class DeleteReviewsCommand extends Command
         $reviews = $this->reviewRepo->findDelete($userUuid);
         if (0 === count($reviews)) {
             $output->writeln('This user has not written any reviews.');
+            $output->writeln('Canceled.');
 
             return Command::SUCCESS;
         }
@@ -50,6 +51,8 @@ class DeleteReviewsCommand extends Command
             false,
         );
         if (!$helper->ask($input, $output, $question)) {
+            $output->writeln('Canceled.');
+
             return Command::SUCCESS;
         }
 
@@ -62,7 +65,7 @@ class DeleteReviewsCommand extends Command
 
             return Command::SUCCESS;
         } catch (\Exception $e) {
-            $output->writeln(' Failed.');
+            $output->writeln('Failed.');
             if ($input->getOption('verbose')) {
                 $output->write($e->getMessage());
             }

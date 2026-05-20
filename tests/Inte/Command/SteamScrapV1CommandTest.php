@@ -33,7 +33,7 @@ final class SteamScrapV1CommandTest extends KernelTestCase
         self::bootKernel();
         $application = new Application(self::$kernel);
 
-        $command = $application->find('steam:scrap:v1');
+        $command = $application->find('app:steam:scrap:v1');
         $this->commandTester = new CommandTester($command);
 
         $this->entityManager = static::getContainer()->get(EntityManagerInterface::class);

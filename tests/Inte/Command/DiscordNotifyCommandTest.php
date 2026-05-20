@@ -31,7 +31,7 @@ final class DiscordNotifyCommandTest extends KernelTestCase
         self::bootKernel();
         $application = new Application(self::$kernel);
 
-        $command = $application->find('discord:notify');
+        $command = $application->find('app:discord:notify');
         $this->commandTester = new CommandTester($command);
 
         $this->discordDir = self::getContainer()->getParameter('discord.dir');
