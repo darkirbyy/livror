@@ -97,6 +97,15 @@ class ReviewRepository extends ServiceEntityRepository
         return $qb->getQuery()->getResult();
     }
 
+    public function findDelete(Uuid $userUuid): array
+    {
+        // Build the base query (with select, join and group)
+        $qb = $this->createQueryBuilder('r');
+        $this->joinGameAndUser($qb, $userUuid);
+
+        return $qb->getQuery()->getResult();
+    }
+
     private function applyFiltersToQb(QueryParam $queryParam, QueryBuilder $qb): QueryBuilder
     {
         // Filter logic : type of game
