@@ -19,6 +19,7 @@ security:
                 - Mainick\KeycloakClientBundle\Security\Authenticator\KeycloakAuthenticator
             logout:
                 path: mainick_keycloak_security_auth_logout
+            access_denied_handler: App\Security\AccessDeniedHandler
                 
     access_control:
         - { path: /auth/keycloak/connect, roles: PUBLIC_ACCESS }
