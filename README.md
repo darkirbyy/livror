@@ -56,7 +56,7 @@ To use default git hooks, run `git config core.hooksPath ./githooks`. Current ho
 - prettify and linting all staged files before commit
 - running tests before push : all tests for `main` branch, unit tests otherwise
 
-## User provider
+## User provider TODO : rework
 
 In production, this app is designed to rely on the [Hub app](https://github.com/darkirbyy/hub) to provide and authentify users, thanks to a shared session.
 In dev, it's possible to emulate this behavior or to mock the hub by creating dummy users.

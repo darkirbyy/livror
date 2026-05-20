@@ -5,9 +5,7 @@ declare(strict_types=1);
 namespace App\Service;
 
 use App\Dto\User;
-use Mainick\KeycloakClientBundle\Interface\IamAdminClientInterface;
 use Mainick\KeycloakClientBundle\Service\Criteria;
-use RuntimeException;
 use Symfony\Component\DependencyInjection\Attribute\Target;
 use Symfony\Component\Uid\Uuid;
 use Symfony\Contracts\Cache\CacheInterface;
@@ -17,23 +15,19 @@ use Symfony\Contracts\Cache\CacheInterface;
  */
 class KeycloakManager implements KeycloakManagerInterface
 {
-    public function __construct(
-        private string $clientId,
-        private IamAdminClientInterface $keycloakAdminClient,
-        #[Target('cache.keycloak_manager')] private CacheInterface $cache,
-    ) {}
+    public function __construct(private string $clientId, private KeycloakClient $keycloakClient, #[Target('cache.keycloak_manager')] private CacheInterface $cache) {}
 
     public function getUsersAuthorized(): array
     {
         $makeQueries = function () {
-            $clients = $this->keycloakAdminClient->clients()->all('web', new Criteria(['clientId' => $this->clientId]));
-            if ($clients->count() !== 1) {
-                throw new RuntimeException('Expect one client, received ' . $clients->count());
+            $clients = $this->keycloakClient->clients()->all('web', new Criteria(['clientId' => $this->clientId]));
+            if (1 !== $clients->count()) {
+                throw new \RuntimeException('Expect one client, received ' . $clients->count());
             }
 
-            $usersKeycloak = $this->keycloakAdminClient->clients()->getRoleUsers('web', $clients->first()->id, 'USER');
-            if ($usersKeycloak->count() === 0) {
-                throw new RuntimeException('No user authorized for this app');
+            $usersKeycloak = $this->keycloakClient->clients()->getRoleUsers('web', $clients->first()->id, 'USER');
+            if (0 === $usersKeycloak->count()) {
+                throw new \RuntimeException('No user authorized for this app');
             }
 
             $users = [];
@@ -45,6 +39,7 @@ class KeycloakManager implements KeycloakManagerInterface
                 }
                 $users[$userKeycloak->id] = new User(Uuid::fromString($userKeycloak->id), $userKeycloak->username, $avatarPath);
             }
+
             return $users;
         };
 
