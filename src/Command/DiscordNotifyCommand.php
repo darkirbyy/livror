@@ -32,12 +32,12 @@ class DiscordNotifyCommand extends Command
         private TranslatorInterface $translator,
         private HttpClientInterface $client,
     ) {
-        parent::__construct('discord:notify');
+        parent::__construct('app:discord:notify');
     }
 
     protected function configure(): void
     {
-        $this->setDescription('')
+        $this->setDescription('Send a notification of most recent updates to a discord channel.')
             ->addOption('since', 's', InputOption::VALUE_REQUIRED, 'only notify games and reviews modified since this date', -1)
             ->addOption('timeout', 't', InputOption::VALUE_REQUIRED, 'http request timeout in seconds', $this->requestTimeout);
     }
@@ -65,12 +65,12 @@ class DiscordNotifyCommand extends Command
             $output->write('Retriving games and reviews...');
             $dateTime = \DateTime::createFromTimestamp($since);
             $usersInfo = $this->userManager->getUsersInfo();
-            $games = $this->gameRepo->findSince($dateTime);
+            $games = $this->gameRepo->findTitleSince($dateTime);
             $reviewsByUsers = [];
             foreach ($usersInfo as $userInfo) {
                 $user = $userInfo->user;
                 $reviewsByUsers[$user->uuid->toString()]['user'] = $user;
-                $reviewsByUsers[$user->uuid->toString()]['reviews'] = $this->reviewRepo->findSince($dateTime, $user->uuid);
+                $reviewsByUsers[$user->uuid->toString()]['reviews'] = $this->reviewRepo->findTitleSince($dateTime, $user->uuid);
             }
             $output->writeln(' Done.');
 

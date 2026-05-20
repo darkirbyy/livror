@@ -134,7 +134,7 @@ class GameRepository extends ServiceEntityRepository
         return $qb->getQuery()->getResult();
     }
 
-    public function findSince(\DateTime $dateTime): array
+    public function findTitleSince(\DateTime $dateTime): array
     {
         // Build the base query (games only)
         $qb = $this->createQueryBuilder('g')->select('g.name');

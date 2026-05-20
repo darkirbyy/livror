@@ -75,7 +75,7 @@ class ReviewRepository extends ServiceEntityRepository
         return $qb->getQuery()->getResult();
     }
 
-    public function findSince(\DateTime $dateTime, Uuid $userUuid): array
+    public function findTitleSince(\DateTime $dateTime, Uuid $userUuid): array
     {
         // Build the base query (with select, join and group)
         $qb = $this->createQueryBuilder('r');

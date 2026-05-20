@@ -20,7 +20,7 @@ class SteamScrapV1Command extends Command
 
     public function __construct(private int $requestTimeout, private int $batchSize, private EntityManagerInterface $entityManager, private HttpClientInterface $client)
     {
-        parent::__construct('steam:scrap:v1');
+        parent::__construct('app:steam:scrap:v1');
     }
 
     protected function configure(): void

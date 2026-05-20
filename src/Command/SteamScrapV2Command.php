@@ -26,7 +26,7 @@ class SteamScrapV2Command extends Command
         private EntityManagerInterface $entityManager,
         private HttpClientInterface $client,
     ) {
-        parent::__construct('steam:scrap:v2');
+        parent::__construct('app:steam:scrap:v2');
     }
 
     protected function configure(): void
