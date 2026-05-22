@@ -56,46 +56,37 @@ To use default git hooks, run `git config core.hooksPath ./githooks`. Current ho
 - prettify and linting all staged files before commit
 - running tests before push : all tests for `main` branch, unit tests otherwise
 
-## User provider TODO : rework
+## User provider and authentication
 
-In production, this app is designed to rely on the [Hub app](https://github.com/darkirbyy/hub) to provide and authentify users, thanks to a shared session.
-In dev, it's possible to emulate this behavior or to mock the hub by creating dummy users.
+In production, this app is designed to rely on a Keycloak instance to provide and authentify users.
+In dev, it's possible to use a real connection to a Keycloak instance configured with a dedicated dev client + admin client or to mock this connection with fake users.
 
-### Emulate the prod behavior
+### Real connection
 
-- clone the Hub project, install it, and configure it as explained.
-- start the hub server first, so the port will probably be `8000` for the http and `3306` for the database
-- create an application with these parameters :
-  - **status** : `user only`
-  - **name** : `livror`
-  - **path** : `https://127.0.0.1:8001/`
-  - **right** : add one with **role** = `user`.
-  - the rest can be random
-- create one or more users, add add the right `livror - user` to them.
-- in this project, in the `.env.local` file, set :
-  - `HUB_DATABASE_URL="mysql://root:hub_password@127.0.0.1:3306/hub_db"`
-  - `HUB_BASE_URL="https://127.0.0.1:8000"`
-  - `HUB_ACCOUNT_ROUTE=/account`
-- start this project, so the port will probably be `8001` for the http and `3307` for the database
-- that's it ! when visiting a page, you'll be automatically redirected to the hub to log in.
+- create a dev client `livror-dev` with:
+  - Access settings: root URL = `https://localhost:8000` and Valid redirects URIs = `/*`
+  - Roles : USER without the ROLE_ prefix
+  - Client authentication: ON with `Standard flow`
+  - Client scopes: select the dedicated one, then `Add mapper` -> `By configuration`:
+    - Client ID: `livror-dev`
+    - Client Role Prefix: `ROLE_`
+    - Token Claim Name: `resource_access.${client_id}.roles`
+    - Add to userinfo: ON
 
-### Mock the hub and use dummy users
+- create the admin client (see [Deploy](#deploy)).
 
-- in the `.env.local` file, set :
-  - `APP_MOCK_HUB=true`
-  - `HUB_DATABASE_URL="mysql://root:livror_password@127.0.0.1:3306/user_db"`
-  - `HUB_BASE_URL=""`
-  - `HUB_ACCOUNT_ROUTE=""`
-- execute theses commands to create and prepare the user database along with the app database :
-  - `symfony console doctrine:database:create --connection=account`
-  - `symfony console doctrine:schema:update --em=account --force`.
+- in the `.env.local` file, adapt all variables inside the `###> mainick/keycloak-client-bundle ###` block.
+
+### Mock connection
+
+- in the `.env.local` file, set `APP_MOCK_KEYCLOAK=true`.
 - that's it ! when loading fixtures (see [Dev](#dev)), four dummy users will be created and you'll be connected as the first one.
 
 ## Dev
 
 To generate fake random data, use the Foundry `DevStory` with `symfony console doctrine:fixtures:load`.  
 
-To mock the external API calls, set the `APP_MOCK_HUB=true` in the `.env.local` file:
+To mock the external API calls, set the `APP_MOCK_API=true` in the `.env.local` file:
   
 - Steam API GET responses will be replaced with dummy data from `test/Mock/ApiMockData.php` file
 - Discord API POST will be written into `var/discord/` directory
@@ -115,3 +106,8 @@ To start all tests, run `composer tests-all`.
 
 A workflow to test, build and deploy the application is preconfigured.  
 The workflow can be triggered manually in GitHub Actions or automatically when pushing to main (for prod) or to develop (for stag).  
+
+Along with the authentication client, this application requires a connection to Keycloak REST API, to retrieve all authorized users. For that, create an admin client `livror-admin`:
+
+- Client authentication: ON with `Service account roles`
+- Service account roles: add `view-users`, `view-realm` and `view-clients` from `realm-managment`

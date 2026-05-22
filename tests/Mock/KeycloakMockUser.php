@@ -32,12 +32,4 @@ class KeycloakMockUser implements UserInterface
     }
 
     public function eraseCredentials(): void {}
-
-    //todo: complete or delete
-    // public function toArray(): array{
-    //     return [
-    //         'sub' => $this->user->uuid,
-    //         'picture' => $this->user->avatarPath,
-    //     ];
-    // }
 }
