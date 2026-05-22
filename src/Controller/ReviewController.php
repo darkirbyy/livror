@@ -21,7 +21,6 @@ use Symfony\Component\HttpKernel\Attribute\MapQueryString;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Routing\Requirement\Requirement;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
-use Symfony\Component\Uid\Uuid;
 
 #[Route('/review', name: 'review_')]
 class ReviewController extends AbstractController
@@ -42,7 +41,7 @@ class ReviewController extends AbstractController
         // Make the database query and get the corresponding reviews
         $reviews = $reviewRepo->findIndex($queryParam, $user->uuid);
         $numbers = $reviewRepo->countIndex($queryParam, $user->uuid);
-        $userManager->plugToReviews($reviews, [$user->uuid->toString() => new UserInfo($user,0)]);
+        $userManager->plugToReviews($reviews, [$user->uuid->toString() => new UserInfo($user, 0)]);
 
         // Prepare the data for the twig renderer
         $data = [

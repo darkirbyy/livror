@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Tests\Func\Controller;
 
 use App\Fixtures\Story\TestStory;
-use App\Service\KeycloakManagerInterface;
 use App\Tests\Mock\KeycloakMockUser;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
