@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Service;
 
 use App\Dto\User;
+use App\Security\KeycloakClient;
 use Mainick\KeycloakClientBundle\Service\Criteria;
 use Symfony\Component\DependencyInjection\Attribute\Target;
 use Symfony\Component\Uid\Uuid;

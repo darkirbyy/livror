@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Unit\Service;
 
 use App\Dto\User;
-use App\Service\KeycloakClient;
+use App\Security\KeycloakClient;
 use App\Service\KeycloakManager;
 use Mainick\KeycloakClientBundle\Representation\ClientRepresentation;
 use Mainick\KeycloakClientBundle\Representation\Collection\ClientCollection;

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Security\Voter;
+namespace App\Security;
 
 use App\Entity\Review;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;

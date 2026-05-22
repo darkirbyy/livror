@@ -87,17 +87,6 @@ services:
         arguments:
             $autocompletionMinLength: '%app.autocompletion_min_length%'
 
-    App\Service\KeycloakClient:
-        bind:
-            bool $verify_ssl: true
-            string $base_url: '%env(IAM_ADMIN_BASE_URL)%'
-            string $admin_realm: web
-            string $admin_client_id: livror-admin
-            string $admin_username: ''
-            string $admin_password: ''
-            string $version: '%env(IAM_VERSION)%'
-            string $admin_client_secret: '%env(IAM_ADMIN_CLIENT_SECRET)%'
-
     App\Service\KeycloakManager:
         arguments:
             $clientId: '%mainick_keycloak_client.keycloak.client_id%'
@@ -116,6 +105,17 @@ services:
     App\Security\AccessDeniedHandler:
         arguments:
             $hubUrl: '%app.hub_url%'
+
+    App\Security\KeycloakClient:
+        bind:
+            bool $verify_ssl: true
+            string $base_url: '%env(IAM_ADMIN_BASE_URL)%'
+            string $admin_realm: web
+            string $admin_client_id: livror-admin
+            string $admin_username: ''
+            string $admin_password: ''
+            string $version: '%env(IAM_VERSION)%'
+            string $admin_client_secret: '%env(IAM_ADMIN_CLIENT_SECRET)%'
 
     App\Validator\ImageUrlValidator:
         arguments:
