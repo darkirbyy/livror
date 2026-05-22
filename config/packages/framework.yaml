@@ -41,7 +41,7 @@ when@test:
 
 when@prod: &framework-prod
     framework:
-        error_controller: App\Controller\Home\ErrorController::show
+        error_controller: App\Controller\ErrorController::show
         session:
             cookie_path: '/%app.name%'
 
