@@ -137,17 +137,6 @@ final class UserManagerTest extends TestCase
         $this->userManager->plugToReviews($reviews, $users);
     }
 
-    // #[PU\Test]
-    // public function getUserList(): void
-    // {
-    //     $usersId = [['userId' => 1, 'numberReviews' => 5], ['userId' => 2, 'numberReviews' => 10], ['userId' => 4, 'numberReviews' => 2]];
-
-    //     $this->reviewRepo->expects($this->once())->method('countByUserUuid')->willReturn($usersId);
-    //     $this->userRepo->expects($this->once())->method('byUsersId')->with(array_column($usersId, 'userId'));
-
-    //     $this->userManager->getUserList();
-    // }
-
     public static function generateValues(): array
     {
         return [

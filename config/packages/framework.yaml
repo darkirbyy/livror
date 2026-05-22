@@ -33,6 +33,11 @@ when@test:
         csrf_protection:
             stateless_token_ids:
         error_controller: App\Controller\ErrorController::show
+        cache:
+            pools:
+                cache.keycloak_manager:
+                    default_lifetime: 10
+                    adapter: cache.adapter.filesystem
 
 when@prod: &framework-prod
     framework:
