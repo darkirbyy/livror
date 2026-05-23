@@ -174,7 +174,7 @@ jobs:
    
     - name: Update coverage badge
       if: inputs.environment == 'prod'
-      uses: schneegans/dynamic-badges-action@v1.7.0
+      uses: schneegans/dynamic-badges-action@v1.8.0
       with:
         auth: ${{ secrets.GIST_KEY }}
         gistID: 07bb4b086f8e7dea73754e73bc5c1bb2
@@ -187,7 +187,7 @@ jobs:
 
     - name: Update version badge
       if: inputs.environment == 'prod'
-      uses: schneegans/dynamic-badges-action@v1.7.0
+      uses: schneegans/dynamic-badges-action@v1.8.0
       with:
         auth: ${{ secrets.GIST_KEY }}
         gistID: 07bb4b086f8e7dea73754e73bc5c1bb2
