@@ -112,7 +112,7 @@ services:
         tags:
             - { name: kernel.event_listener, event: 'Symfony\Component\Security\Http\Event\LogoutEvent', priority: -30 }
 
-    App\Security\KeycloakClient:
+    App\Security\KeycloakAdminClient:
         bind:
             bool $verify_ssl: true
             string $base_url: '%env(IAM_ADMIN_BASE_URL)%'

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Unit\Service;
 
 use App\Dto\User;
-use App\Security\KeycloakClient;
+use App\Security\KeycloakAdminClient;
 use App\Service\KeycloakManager;
 use Mainick\KeycloakClientBundle\Representation\ClientRepresentation;
 use Mainick\KeycloakClientBundle\Representation\Collection\ClientCollection;
@@ -23,17 +23,17 @@ use Symfony\Contracts\Cache\CacheInterface;
 final class KeycloakManagerTest extends TestCase
 {
     private static $clientId = 'livror-test';
-    private KeycloakClient $keycloakClient;
+    private KeycloakAdminClient $keycloakAdminClient;
     private CacheInterface $cache;
 
     private KeycloakManager $keycloakManager;
 
     public function setUp(): void
     {
-        $this->keycloakClient = $this->createMock(KeycloakClient::class);
+        $this->keycloakAdminClient = $this->createMock(KeycloakAdminClient::class);
         $this->cache = new ArrayAdapter();
 
-        $this->keycloakManager = new KeycloakManager(self::$clientId, $this->keycloakClient, $this->cache);
+        $this->keycloakManager = new KeycloakManager(self::$clientId, $this->keycloakAdminClient, $this->cache);
     }
 
     #[PU\Test]
@@ -44,7 +44,7 @@ final class KeycloakManagerTest extends TestCase
         $cacheContent = [$user1->uuid->toString() => $user1, $user2->uuid->toString() => $user2];
 
         $this->cache->get('users-authorized', fn() => $cacheContent);
-        $this->keycloakClient->expects($this->never())->method('clients');
+        $this->keycloakAdminClient->expects($this->never())->method('clients');
 
         $usersAuthorized = $this->keycloakManager->getUsersAuthorized();
         $this->assertCount(2, $usersAuthorized);
@@ -64,7 +64,7 @@ final class KeycloakManagerTest extends TestCase
         $clients = $this->createMock(ClientsService::class);
         $clients->expects($this->once())->method('all')->willReturn($clientCollection);
 
-        $this->keycloakClient->expects($this->once())->method('clients')->willReturn($clients);
+        $this->keycloakAdminClient->expects($this->once())->method('clients')->willReturn($clients);
 
         $this->expectException(\RuntimeException::class);
         $this->keycloakManager->getUsersAuthorized();
@@ -80,7 +80,7 @@ final class KeycloakManagerTest extends TestCase
         $clients->expects($this->once())->method('all')->willReturn($clientCollection);
         $clients->expects($this->once())->method('getRoleUsers')->willReturn($userCollection);
 
-        $this->keycloakClient->expects($this->exactly(2))->method('clients')->willReturn($clients);
+        $this->keycloakAdminClient->expects($this->exactly(2))->method('clients')->willReturn($clients);
 
         $this->expectException(\RuntimeException::class);
         $this->keycloakManager->getUsersAuthorized();
@@ -102,7 +102,7 @@ final class KeycloakManagerTest extends TestCase
         $clients->expects($this->once())->method('all')->willReturn($clientCollection);
         $clients->expects($this->once())->method('getRoleUsers')->willReturn($userCollection);
 
-        $this->keycloakClient->expects($this->exactly(2))->method('clients')->willReturn($clients);
+        $this->keycloakAdminClient->expects($this->exactly(2))->method('clients')->willReturn($clients);
 
         $usersAuthorized = $this->keycloakManager->getUsersAuthorized();
         $this->assertCount(2, $usersAuthorized);

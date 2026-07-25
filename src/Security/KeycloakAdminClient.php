@@ -6,11 +6,11 @@ namespace App\Security;
 
 use Mainick\KeycloakClientBundle\Exception\KeycloakAuthenticationException;
 use Mainick\KeycloakClientBundle\Interface\AccessTokenInterface;
-use Mainick\KeycloakClientBundle\Provider\KeycloakAdminClient;
+use Mainick\KeycloakClientBundle\Provider\KeycloakAdminClient as KeycloakAdminClientBundle;
 use Mainick\KeycloakClientBundle\Token\AccessToken;
 use Psr\Log\LoggerInterface;
 
-class KeycloakClient extends KeycloakAdminClient
+class KeycloakAdminClient extends KeycloakAdminClientBundle
 {
     private string $baseUrl;
     private string $adminRealm;
