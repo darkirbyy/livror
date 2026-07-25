@@ -106,6 +106,12 @@ services:
         arguments:
             $hubUrl: '%app.hub_url%'
 
+    App\Security\KeycloakLogoutListener:
+        arguments:
+            $hubUrl: '%app.hub_url%'
+        tags:
+            - { name: kernel.event_listener, event: 'Symfony\Component\Security\Http\Event\LogoutEvent', priority: -30 }
+
     App\Security\KeycloakClient:
         bind:
             bool $verify_ssl: true
