@@ -145,7 +145,7 @@ class ReviewControllerTest extends AbstractControllerTest
 
         $connectedUserUuid = TestStory::get('connected-user-uuid');
         $previousCount = ReviewFactory::repository()->count();
-        $review = ReviewFactory::repository()->findOneBy(['userUuid' =>   $connectedUserUuid]);
+        $review = ReviewFactory::repository()->findOneBy(['userUuid' => $connectedUserUuid]);
 
         $crawler = $this->client->request('GET', '/review/' . $review->getId() . '/edit');
         $form = $crawler->filter('form[name=review]')->form();

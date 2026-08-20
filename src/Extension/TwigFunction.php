@@ -10,9 +10,7 @@ use Twig\Attribute\AsTwigFunction;
 
 class TwigFunction
 {
-    public function __construct(
-        private AutocompletionHelper $autocompletionHelper,
-    ) {}
+    public function __construct(private AutocompletionHelper $autocompletionHelper) {}
 
     // Prepare html attributes for stimulus autocompletion
     #[AsTwigFunction(name: 'prepare_attributes')]

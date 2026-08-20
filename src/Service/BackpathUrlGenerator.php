@@ -31,17 +31,17 @@ class BackpathUrlGenerator
             try {
                 $match = $this->urlMatcher->match(parse_url($backpath, PHP_URL_PATH));
                 $route = $match['_route'];
-            } catch (ResourceNotFoundException | MethodNotAllowedException $e) {
+            } catch (ResourceNotFoundException|MethodNotAllowedException $e) {
                 $route = null;
             } finally {
                 $this->urlMatcher->setContext($originalContext);
             }
         }
 
-        if ($route === null || in_array($route, $forbiddenRoutes)) {
+        if (null === $route || in_array($route, $forbiddenRoutes)) {
             return $this->urlGenerator->generate($defaultRoute);
-        } else {
-            return $backpath;
         }
+
+        return $backpath;
     }
 }

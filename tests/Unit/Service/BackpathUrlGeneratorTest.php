@@ -63,7 +63,10 @@ final class BackpathUrlGeneratorTest extends TestCase
         $this->request->initialize(['backpath' => $backpath]);
         $this->urlGenerator->expects($this->once())->method('generate')->with('review_index')->willReturn('/review');
         $this->urlMatcher->expects($this->exactly(2))->method('setContext');
-        $this->urlMatcher->expects($this->once())->method('match')->willReturn(['_route' => $route]);
+        $this->urlMatcher
+            ->expects($this->once())
+            ->method('match')
+            ->willReturn(['_route' => $route]);
 
         $this->assertSame('/review', $this->backpathUrlGenerator->generate('review_index', $forbiddenRoutes));
     }
@@ -75,7 +78,10 @@ final class BackpathUrlGeneratorTest extends TestCase
         $this->request->initialize(['backpath' => $backpath]);
         $this->urlGenerator->expects($this->never())->method('generate');
         $this->urlMatcher->expects($this->exactly(2))->method('setContext');
-        $this->urlMatcher->expects($this->once())->method('match')->willReturn(['_route' => $route]);
+        $this->urlMatcher
+            ->expects($this->once())
+            ->method('match')
+            ->willReturn(['_route' => $route]);
 
         $this->assertSame($backpath, $this->backpathUrlGenerator->generate('review_index'));
     }

@@ -12,10 +12,7 @@ use Twig\Attribute\AsTwigFilter;
 
 class TwigFilter
 {
-    public function __construct(
-        private BackpathUrlGenerator $backpathUrlGenerator,
-        private QueryParamHelper $queryParamHelper,
-    ) {}
+    public function __construct(private BackpathUrlGenerator $backpathUrlGenerator, private QueryParamHelper $queryParamHelper) {}
 
     #[AsTwigFilter(name: 'to_type_price')]
     public function fullPriceToTypePrice(?int $fullPrice): TypePriceEnum

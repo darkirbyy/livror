@@ -30,7 +30,10 @@ final class DiscordNotifyStory extends Story
         GameFactory::new()->withUsersUuid($otherUsersUuid, true)->many(5)->create();
 
         // Create 10 games only reviewed by user 1 (=connected)
-        GameFactory::new()->withUsersUuid([$connectedUserUuid], true)->many(10)->create();
+        GameFactory::new()
+            ->withUsersUuid([$connectedUserUuid], true)
+            ->many(10)
+            ->create();
 
         // Reenable PrePersit and PreUpdate event
         foreach ([Game::class, Review::class] as $entityClass) {

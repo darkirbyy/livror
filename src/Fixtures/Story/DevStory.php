@@ -18,7 +18,7 @@ final class DevStory extends Story
         private ParameterBagInterface $parameterBag,
         private ManagerRegistry $managerRegistry,
         private Filesystem $filesystem,
-        private KeycloakManagerInterface $keycloakManager
+        private KeycloakManagerInterface $keycloakManager,
     ) {}
 
     public function build(): void

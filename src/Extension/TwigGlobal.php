@@ -10,14 +10,12 @@ use Twig\Extension\GlobalsInterface;
 
 class TwigGlobal extends AbstractExtension implements GlobalsInterface
 {
-    public function __construct(
-        private UserManager $userManager,
-    ) {}
+    public function __construct(private UserManager $userManager) {}
 
     public function getGlobals(): array
     {
         return [
-            'userConnected' => $this->userManager->getUserConnected()
+            'userConnected' => $this->userManager->getUserConnected(),
         ];
     }
 }

@@ -12,13 +12,8 @@ use Symfony\Component\Security\Http\Event\LogoutEvent;
 
 final readonly class KeycloakLogoutListener
 {
-    public function __construct(
-        private string $hubUrl,
-        private LoggerInterface $keycloakClientLogger,
-        private IamClientInterface $iamClient,
-    ) {
-    }
-   
+    public function __construct(private string $hubUrl, private LoggerInterface $keycloakClientLogger, private IamClientInterface $iamClient) {}
+
     /**
      * Event to fix the URL computed in LogoutAuthListener.php from mainick/keycloak-bundle.
      */

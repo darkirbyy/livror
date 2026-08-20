@@ -19,7 +19,7 @@ class KeycloakMockEntryPoint implements AuthenticationEntryPointInterface
         private AuthenticationEntryPointInterface $inner,
         private ParameterBagInterface $parameterBag,
         private TokenStorageInterface $tokenStorage,
-        private KeycloakManagerInterface $keycloakManager
+        private KeycloakManagerInterface $keycloakManager,
     ) {}
 
     public function start(Request $request, ?AuthenticationException $authException = null): RedirectResponse
@@ -32,8 +32,8 @@ class KeycloakMockEntryPoint implements AuthenticationEntryPointInterface
             $request->getSession()->save();
 
             return new RedirectResponse('/');
-        } else {
-            return $this->inner->start($request, $authException);
         }
+
+        return $this->inner->start($request, $authException);
     }
 }

@@ -335,7 +335,7 @@
 
 {% macro user_avatar(user, size = 'sm') %}
   {% if user.avatarPath is not empty %}
-    <img src="{{ user.avatarPath }}" class="img-fluid app-avatar-{{ size }}" alt="{{ 'aria.avatar'|trans({ name: user.username }) }}" aria-hidden="true"/>
+    <img src="{{ user.avatarPath }}" class="img-fluid app-avatar-{{ size }}" alt="{{ 'aria.avatar'|trans({ name: user.username }) }}" aria-hidden="true" />
   {% else %}
     <span class="bi bi-person-fill align-middle" aria-hidden="true"></span>
   {% endif %}
