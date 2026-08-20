@@ -142,7 +142,7 @@ jobs:
     environment: ${{ inputs.environment }}
     steps:
     - name: Setup WARP to enable IPv6
-      uses: fscarmen/warp-on-actions@v1.2
+      uses: fscarmen/warp-on-actions@v1.4
       with:
         stack: dual
 
@@ -174,7 +174,7 @@ jobs:
    
     - name: Update coverage badge
       if: inputs.environment == 'prod'
-      uses: schneegans/dynamic-badges-action@v1.8.0
+      uses: schneegans/dynamic-badges-action@v1.9.0
       with:
         auth: ${{ secrets.GIST_KEY }}
         gistID: 07bb4b086f8e7dea73754e73bc5c1bb2
@@ -187,7 +187,7 @@ jobs:
 
     - name: Update version badge
       if: inputs.environment == 'prod'
-      uses: schneegans/dynamic-badges-action@v1.8.0
+      uses: schneegans/dynamic-badges-action@v1.9.0
       with:
         auth: ${{ secrets.GIST_KEY }}
         gistID: 07bb4b086f8e7dea73754e73bc5c1bb2
