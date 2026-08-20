@@ -29,6 +29,7 @@ parameters:
     app.mock_keycloak: '%env(bool:APP_MOCK_KEYCLOAK)%'
     app.hub_url: '%env(string:HUB_BASE_URL)%'
     app.iam_url: '%env(string:IAM_BASE_URL)%'
+    app.default_uri: '%env(string:DEFAULT_URI)%'
 
 imports:
     - { resource: 'version.yaml' }
@@ -86,6 +87,10 @@ services:
     App\Service\AutocompletionHelper:
         arguments:
             $autocompletionMinLength: '%app.autocompletion_min_length%'
+
+    App\Service\BackpathUrlGenerator:
+        arguments:
+            $defaultUri: '%app.default_uri%'
 
     App\Service\KeycloakManager:
         arguments:

@@ -30,7 +30,7 @@ final class BackpathUrlGeneratorTest extends TestCase
         $this->urlGenerator = $this->createMock(UrlGeneratorInterface::class);
         $this->urlMatcher = $this->createMock(UrlMatcherInterface::class);
 
-        $this->backpathUrlGenerator = new BackpathUrlGenerator($this->requestStack, $this->urlGenerator, $this->urlMatcher);
+        $this->backpathUrlGenerator = new BackpathUrlGenerator('/', $this->requestStack, $this->urlGenerator, $this->urlMatcher);
     }
 
     #[PU\Test]
