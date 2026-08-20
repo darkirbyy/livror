@@ -34,11 +34,11 @@ class AutocompletionHelper
             'noResultsFoundText' => $this->trans->trans('form.autocomplete.noResults'),
             'minCharacters' => $this->autocompletionMinLength,
             'preload' => false,
+            'optionsAsHtml' => true,
             'tomSelectOptions' => [
                 'create' => false,
                 'openOnFocus' => false,
                 'maxItems' => 1,
-                'optionsAsHtml' => true,
                 'closeAfterSelect' => true,
                 'placeholder' => $this->trans->trans('form.autocomplete.placeholder.' . $placeholderKey),
                 'loadThrottle' => 500,
