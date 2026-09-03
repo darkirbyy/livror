@@ -132,7 +132,6 @@ jobs:
           templates/
           translations/
           vendor/
-          composer.json
           .env
           .env.${{ inputs.environment }}
 

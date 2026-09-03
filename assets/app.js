@@ -1,5 +1,5 @@
-// start the Stimulus application
-import './bootstrap';
+// Bootstrap the Stimulus application
+import './stimulus_bootstrap.js';
 
 // import boostrap plugins (you can specify which plugins you need)
 import { Tooltip, Toast, Popover } from 'bootstrap';
