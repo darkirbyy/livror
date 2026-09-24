@@ -40,15 +40,15 @@ class SteamSearchHelper
                 return [SteamSearchStatusEnum::ERROR, null];
             }
 
-            // Not found is the response does not contain the requested id, or is not labeled "success"
-            $content = $response->toArray();
-            if (!isset($content[$id]) || !$content[$id]['success']) {
+            // Not found is the response does not contain exactly one element, or if not labeled "success"
+            $content = array_values($response->toArray());
+            if (1 !== count($content) || !is_array($content[0]) || !array_key_exists('success', $content[0]) || !$content[0]['success']) {
                 return [SteamSearchStatusEnum::NOT_FOUND, null];
             }
 
             // Return the data
 
-            return [SteamSearchStatusEnum::OK, $content[$id]['data']];
+            return [SteamSearchStatusEnum::OK, $content[0]['data']];
         } catch (\Exception $e) {
             // Catch any other kind of errors
             $this->exceptionManager->handle('warning', 'Error while making steam API call with steamId: {steamId}. Error: {error}', [

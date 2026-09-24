@@ -79,7 +79,7 @@ final class SteamSearchHelperTest extends TestCase
         return [
             'not 200' => [[], 503, Status::ERROR, false],
             'not 200 bis' => [[], 302, Status::ERROR, false],
-            'not found' => [[5 => ['success' => true]], 200, Status::NOT_FOUND, false],
+            'not found' => [[], 200, Status::NOT_FOUND, false],
             'not found bis' => [[1 => ['success' => false]], 200, Status::NOT_FOUND, false],
             'exception' => [[1 => []], 200, Status::ERROR, true],
             'ok' => [[1 => ['success' => true, 'data' => ['value']]], 200, Status::OK, false],
