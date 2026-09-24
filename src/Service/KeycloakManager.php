@@ -38,7 +38,7 @@ class KeycloakManager implements KeycloakManagerInterface
                 } else {
                     $avatarPath = '';
                 }
-                $users[$userKeycloak->id] = new User(Uuid::fromString($userKeycloak->id), $userKeycloak->username, $avatarPath);
+                $users[$userKeycloak->id] = new User(Uuid::fromString($userKeycloak->id), $userKeycloak->username, $avatarPath, false);
             }
 
             return $users;

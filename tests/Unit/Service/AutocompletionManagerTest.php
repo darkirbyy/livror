@@ -84,7 +84,7 @@ final class AutocompletionManagerTest extends TestCase
         $game1 = $this->createMock(Game::class);
         $game2 = $this->createMock(Game::class);
 
-        $user = new User(Uuid::v4(), 'user1', '');
+        $user = new User(Uuid::v4(), 'user1', '', false);
 
         $this->userManager->expects($this->once())->method('getUserConnected')->willReturn($user);
         $this->gameRepo

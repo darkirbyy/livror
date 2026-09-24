@@ -39,8 +39,8 @@ final class KeycloakManagerTest extends TestCase
     #[PU\Test]
     public function cacheFull(): void
     {
-        $user1 = new User(Uuid::v4(), 'user1', '');
-        $user2 = new User(Uuid::v4(), 'user2', '/url/to/picture');
+        $user1 = new User(Uuid::v4(), 'user1', '', false);
+        $user2 = new User(Uuid::v4(), 'user2', '/url/to/picture', false);
         $cacheContent = [$user1->uuid->toString() => $user1, $user2->uuid->toString() => $user2];
 
         $this->cache->get('users-authorized', fn() => $cacheContent);
@@ -89,8 +89,8 @@ final class KeycloakManagerTest extends TestCase
     #[PU\Test]
     public function validUserAuthorized(): void
     {
-        $user1 = new User(Uuid::v4(), 'user1', '');
-        $user2 = new User(Uuid::v4(), 'user2', '/url/to/picture');
+        $user1 = new User(Uuid::v4(), 'user1', '', false);
+        $user2 = new User(Uuid::v4(), 'user2', '/url/to/picture', false);
 
         $clientCollection = new ClientCollection([new ClientRepresentation('1')]);
         $userCollection = new UserCollection([

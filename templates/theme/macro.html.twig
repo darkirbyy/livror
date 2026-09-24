@@ -333,6 +333,10 @@
   </div>
 {% endmacro %}
 
+{% macro user_username(user) %}
+  {{ user.deleted ? 'layout.deletedUser'|trans : user.username }}
+{% endmacro %}
+
 {% macro user_avatar(user, size = 'sm') %}
   {% if user.avatarPath is not empty %}
     <img src="{{ user.avatarPath }}" class="img-fluid app-avatar-{{ size }}" alt="{{ 'aria.avatar'|trans({ name: user.username }) }}" aria-hidden="true" />
@@ -346,14 +350,16 @@
     {% set user = userInfo.user %}
     {{ _self.user_avatar(user, 'md') }}
     <div>
-      <h6 class="fs-5 mb-0">{{ user.username }}</h6>
+      <h6 class="fs-5 mb-0">{{ _self.user_username(user) }}</h6>
       <div class="mb-1">
         {{ 'review.index.numberPublished'|trans({ published: userInfo.numberReviews }) }}
       </div>
-      <a data-turbo-frame="_top" href="{{ path('review_index', { uuid: user.uuid }) }}" class="link-primary icon-link icon-link-hover icon-link-right">
-        Voir les avis
-        <span class="bi bi-arrow-right" aria-hidden="true"></span>
-      </a>
+      {% if not user.deleted %}
+        <a data-turbo-frame="_top" href="{{ path('review_index', { uuid: user.uuid }) }}" class="link-primary icon-link icon-link-hover icon-link-right">
+          Voir les avis
+          <span class="bi bi-arrow-right" aria-hidden="true"></span>
+        </a>
+      {% endif %}
     </div>
   </div>
 {% endmacro %}

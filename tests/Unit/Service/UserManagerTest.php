@@ -18,7 +18,6 @@ use PHPUnit\Framework\Attributes as PU;
 use PHPUnit\Framework\TestCase;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Uid\Uuid;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 #[PU\AllowMockObjectsWithoutExpectations]
 final class UserManagerTest extends TestCase
@@ -26,7 +25,6 @@ final class UserManagerTest extends TestCase
     private Security $security;
     private ReviewRepository $reviewRepo;
     private KeycloakManagerInterface $keycloakManager;
-    private TranslatorInterface $trans;
 
     private UserManager $userManager;
 
@@ -35,9 +33,8 @@ final class UserManagerTest extends TestCase
         $this->security = $this->createMock(Security::class);
         $this->reviewRepo = $this->createMock(ReviewRepository::class);
         $this->keycloakManager = $this->createMock(KeycloakManagerInterface::class);
-        $this->trans = $this->createMock(TranslatorInterface::class);
 
-        $this->userManager = new UserManager($this->security, $this->reviewRepo, $this->keycloakManager, $this->trans);
+        $this->userManager = new UserManager($this->security, $this->reviewRepo, $this->keycloakManager);
     }
 
     #[PU\Test]
@@ -45,19 +42,18 @@ final class UserManagerTest extends TestCase
     {
         $user1Uuid = Uuid::v4();
         $user1NumberReviews = 5;
-        $user1 = new User($user1Uuid, 'user1', '');
+        $user1 = new User($user1Uuid, 'user1', '', false);
         $user2Uuid = Uuid::v4();
         $user2NumberReviews = 0; // dynamic variable, don't delete
-        $user2 = new User($user2Uuid, 'user2', '');
+        $user2 = new User($user2Uuid, 'user2', '', false);
         $user3Uuid = Uuid::v4();
         $user3NumberReviews = 10;
-        $user3 = new User($user3Uuid, 'deleted', ''); // dynamic variable, don't delete
+        $user3 = new User($user3Uuid, '', '', true); // dynamic variable, don't delete
 
         $keycloakManagerReturn = [$user1Uuid->toString() => $user1, $user2Uuid->toString() => $user2];
         $reviewRepoReturn = [['userUuid' => $user1Uuid, 'numberReviews' => $user1NumberReviews], ['userUuid' => $user3Uuid, 'numberReviews' => $user3NumberReviews]];
         $this->keycloakManager->expects($this->once())->method('getUsersAuthorized')->willReturn($keycloakManagerReturn);
         $this->reviewRepo->expects($this->once())->method('countByUserUuid')->willReturn($reviewRepoReturn);
-        $this->trans->expects($this->once())->method('trans')->with('layout.deletedUser')->willReturn('deleted');
 
         $usersInfo = $this->userManager->getUsersInfo();
         $this->assertCount(3, $usersInfo);
@@ -76,7 +72,7 @@ final class UserManagerTest extends TestCase
     public function getUserByUuid(): void
     {
         $user1Uuid = Uuid::v4();
-        $user1 = new User($user1Uuid, 'user1', '');
+        $user1 = new User($user1Uuid, 'user1', '', false);
         $keycloakManagerReturn = [$user1Uuid->toString() => $user1];
 
         $this->keycloakManager->expects($this->once())->method('getUsersAuthorized')->willReturn($keycloakManagerReturn);
@@ -90,7 +86,7 @@ final class UserManagerTest extends TestCase
     public function getUserConnected(): void
     {
         $user1Uuid = Uuid::v4();
-        $user1 = new User($user1Uuid, 'user1', '');
+        $user1 = new User($user1Uuid, 'user1', '', false);
         $keycloakManagerReturn = [$user1Uuid->toString() => $user1];
         $keycloakUser = new KeycloakMockUser($user1);
 
@@ -149,9 +145,9 @@ final class UserManagerTest extends TestCase
 
     public function prepareReviewsAndUsersInfo(): array
     {
-        $userInfo1 = new UserInfo(new User(Uuid::v4(), 'user1', ''), 0);
-        $userInfo2 = new UserInfo(new User(Uuid::v4(), 'user2', ''), 5);
-        $userInfo4 = new UserInfo(new User(Uuid::v4(), 'user4', ''), 7);
+        $userInfo1 = new UserInfo(new User(Uuid::v4(), 'user1', '', false), 0);
+        $userInfo2 = new UserInfo(new User(Uuid::v4(), 'user2', '', false), 5);
+        $userInfo4 = new UserInfo(new User(Uuid::v4(), 'user4', '', false), 7);
         $users = [
             $userInfo1->user->uuid->toString() => $userInfo1,
             $userInfo2->user->uuid->toString() => $userInfo2,

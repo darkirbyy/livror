@@ -90,7 +90,7 @@
                     %}
                     <div role="button" class="{{ classes }}" tabindex="0" data-bs-toggle="popover" data-bs-content="{{ popover|e }}">
                       {{ m.user_avatar(review.userInfo.user) }}
-                      <span class="ms-2 d-none d-lg-inline align-middle">{{ review.userInfo.user.username }}</span>
+                      <span class="ms-2 d-none d-lg-inline align-middle">{{ m.user_username(review.userInfo.user) }}</span>
                     </div>
                     {{ m.review_information(review, 'secondary', { rating: 'flex-grow-1', hourSpend: 'flex-grow-1', firstPlay: 'flex-grow-1' }) }}
                   </div>

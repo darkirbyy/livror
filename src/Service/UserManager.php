@@ -10,19 +10,13 @@ use App\Dto\UserInfo;
 use App\Entity\Review;
 use App\Repository\ReviewRepository;
 use Symfony\Bundle\SecurityBundle\Security;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Service to retrieve and link user DTO to reviews.
  */
 class UserManager
 {
-    public function __construct(
-        private Security $security,
-        private ReviewRepository $reviewRepo,
-        private KeycloakManagerInterface $keycloakManager,
-        private TranslatorInterface $trans,
-    ) {}
+    public function __construct(private Security $security, private ReviewRepository $reviewRepo, private KeycloakManagerInterface $keycloakManager) {}
 
     /**
      * Retrieve all the users and the numberReviews associated, or anonymous user for not authorized one.
@@ -41,9 +35,7 @@ class UserManager
             if (array_key_exists($userUuid, $usersInfo)) {
                 $usersInfo[$userUuid]->numberReviews = $countByUserUuid['numberReviews'];
             } else {
-                $deletedUsername = $this->trans->trans('layout.deletedUser');
-                $deletedUser = new User($countByUserUuid['userUuid'], $deletedUsername, '');
-                $usersInfo[$userUuid] = new UserInfo($deletedUser, $countByUserUuid['numberReviews']);
+                $usersInfo[$userUuid] = new UserInfo(new User($countByUserUuid['userUuid'], '', '', true), $countByUserUuid['numberReviews']);
             }
         }
 

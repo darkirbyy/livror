@@ -36,7 +36,10 @@ class ReviewController extends AbstractController
         Request $request,
     ): Response {
         // Retrieve the user from the route param, or the current user otherwise
-        $user = !empty($uuid) ? $userManager->getUserByUuid($uuid) : $userManager->getUserConnected();
+        if (!empty($uuid)) {
+            $user = $userManager->getUserByUuid($uuid);
+        }
+        $user ??= $userManager->getUserConnected();
 
         // Make the database query and get the corresponding reviews
         $reviews = $reviewRepo->findIndex($queryParam, $user->uuid);

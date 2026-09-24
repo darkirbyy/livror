@@ -43,6 +43,6 @@ class KeycloakMockManager implements KeycloakManagerInterface
         $username = 'user' . $i;
         $avatarPath = $this->packages->getUrl('build/tests/avatar' . $i . '.png');
 
-        return new User($uuid, $username, $avatarPath);
+        return new User($uuid, $username, $avatarPath, false);
     }
 }

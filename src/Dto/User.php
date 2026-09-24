@@ -8,5 +8,5 @@ use Symfony\Component\Uid\Uuid;
 
 class User
 {
-    public function __construct(public Uuid $uuid, public string $username, public string $avatarPath) {}
+    public function __construct(public Uuid $uuid, public string $username, public string $avatarPath, public bool $deleted) {}
 }
