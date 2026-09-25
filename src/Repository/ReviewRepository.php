@@ -67,8 +67,8 @@ class ReviewRepository extends ServiceEntityRepository
         $qb = $this->createQueryBuilder('r');
 
         // Find last ones by the given field
-        $qb->orderBy('r.' . $dateField->toDatabaseField(), 'DESC')
-            ->addOrderBy('r.id', 'ASC')
+        $qb->orderBy('r.' . $dateField->toDatabaseField(), \SortDirection::Descending)
+            ->addOrderBy('r.id', \SortDirection::Ascending)
             ->setMaxResults($limit);
 
         // Execute and fetch the query
@@ -83,7 +83,7 @@ class ReviewRepository extends ServiceEntityRepository
         $qb->select('g.name');
 
         // Find all since given datetime, ordered by name
-        $qb->andWhere('r.dateAdd >= :dateTime')->setParameter('dateTime', $dateTime)->orderBy('g.name', 'ASC');
+        $qb->andWhere('r.dateAdd >= :dateTime')->setParameter('dateTime', $dateTime)->orderBy('g.name', \SortDirection::Ascending);
 
         // Execute and fetch the query
         return $qb->getQuery()->getSingleColumnResult();

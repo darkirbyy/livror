@@ -76,7 +76,7 @@ class Game
      * @var Collection<int, Review>
      */
     #[ORM\OneToMany(targetEntity: Review::class, mappedBy: 'game', orphanRemoval: true)]
-    #[ORM\OrderBy(['dateAdd' => 'ASC'])]
+    #[ORM\OrderBy(['dateAdd' => \SortDirection::Ascending])]
     private Collection $reviews;
 
     // /////////////////////////////////////////////////////
@@ -93,14 +93,14 @@ class Game
     #[ORM\PrePersist]
     public function onPrePersit(): void
     {
-        $this->dateAdd = new \DateTimeImmutable();
+        $this->dateAdd = new \DateTime();
         $this->onPreUpdate();
     }
 
     #[ORM\PreUpdate]
     public function onPreUpdate(): void
     {
-        $this->dateUpdate = new \DateTimeImmutable();
+        $this->dateUpdate = new \DateTime();
     }
 
     // /////////////////////////////////////////////////////

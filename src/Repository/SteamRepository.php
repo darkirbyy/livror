@@ -21,8 +21,8 @@ class SteamRepository extends ServiceEntityRepository
         $qb->addSelect('MATCH_AGAINST(s.name, :pattern) as HIDDEN relevance')
             ->where('MATCH_AGAINST(s.name, :pattern) > 0')
             ->setParameter('pattern', $pattern)
-            ->orderBy('relevance', 'DESC')
-            ->addOrderBy('s.name', 'ASC')
+            ->orderBy('relevance', \SortDirection::Descending)
+            ->addOrderBy('s.name', \SortDirection::Ascending)
             ->setMaxResults($limit);
 
         return $qb->getQuery()->getResult();
@@ -31,7 +31,7 @@ class SteamRepository extends ServiceEntityRepository
     public function findLike(string $like, int $limit): mixed
     {
         $qb = $this->createQueryBuilder('s');
-        $qb->where('s.name LIKE :like')->setParameter('like', $like)->orderBy('s.name', 'ASC')->setMaxResults($limit);
+        $qb->where('s.name LIKE :like')->setParameter('like', $like)->orderBy('s.name', \SortDirection::Ascending)->setMaxResults($limit);
 
         return $qb->getQuery()->getResult();
     }

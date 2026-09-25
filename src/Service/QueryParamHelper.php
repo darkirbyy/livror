@@ -97,7 +97,7 @@ class QueryParamHelper
     public function applyButFiltersToQb(QueryParam $queryParam, QueryBuilder $qb, array $sortsConversion): void
     {
         foreach ($queryParam->sorts as $key => $direction) {
-            $qb->addOrderBy($sortsConversion[$key], strtoupper($direction));
+            $qb->addOrderBy($sortsConversion[$key], 'desc' == $direction ? \SortDirection::Descending : \SortDirection::Ascending);
         }
 
         $qb->setMaxResults($queryParam->limit + 1);

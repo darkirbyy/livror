@@ -45,7 +45,7 @@ class GameRepository extends ServiceEntityRepository
         // Apply alls the query param and add last sort by id
         $this->queryParamHelper->applyButFiltersToQb($queryParam, $qb, $sortsConversion);
         $this->applyFiltersToQb($queryParam, $qb);
-        $qb->addOrderBy('g.id', 'ASC');
+        $qb->addOrderBy('g.id', \SortDirection::Ascending);
 
         // Execute and fetch the query
         return $qb->getQuery()->getResult();
@@ -93,8 +93,8 @@ class GameRepository extends ServiceEntityRepository
         $qb->addSelect('MATCH_AGAINST(g.name, :pattern) as HIDDEN relevance')
             ->andWhere('MATCH_AGAINST(g.name, :pattern) > 0')
             ->setParameter('pattern', $pattern)
-            ->orderBy('relevance', 'DESC')
-            ->addOrderBy('g.name', 'ASC')
+            ->orderBy('relevance', \SortDirection::Descending)
+            ->addOrderBy('g.name', \SortDirection::Ascending)
             ->setMaxResults($limit);
 
         // Execute and fetch the query
@@ -113,7 +113,7 @@ class GameRepository extends ServiceEntityRepository
         }
 
         // Select and limit using basic like clause
-        $qb->andWhere('g.name LIKE :like')->setParameter('like', $like)->orderBy('g.name', 'ASC')->setMaxResults($limit);
+        $qb->andWhere('g.name LIKE :like')->setParameter('like', $like)->orderBy('g.name', \SortDirection::Ascending)->setMaxResults($limit);
 
         // Execute and fetch the query
         return $qb->getQuery()->getResult();
@@ -126,8 +126,8 @@ class GameRepository extends ServiceEntityRepository
         $this->selectDto($qb);
 
         // Find last ones by the given field
-        $qb->orderBy('g.' . $dateField->toDatabaseField(), 'DESC')
-            ->addOrderBy('g.id', 'ASC')
+        $qb->orderBy('g.' . $dateField->toDatabaseField(), \SortDirection::Descending)
+            ->addOrderBy('g.id', \SortDirection::Ascending)
             ->setMaxResults($limit);
 
         // Execute and fetch the query
@@ -140,7 +140,7 @@ class GameRepository extends ServiceEntityRepository
         $qb = $this->createQueryBuilder('g')->select('g.name');
 
         // Find all since given datetime, ordered by name
-        $qb->where('g.dateAdd >= :dateTime')->setParameter('dateTime', $dateTime)->orderBy('g.name', 'ASC');
+        $qb->where('g.dateAdd >= :dateTime')->setParameter('dateTime', $dateTime)->orderBy('g.name', \SortDirection::Ascending);
 
         // Execute and fetch the query
         return $qb->getQuery()->getSingleColumnResult();
@@ -152,8 +152,8 @@ class GameRepository extends ServiceEntityRepository
         $qb->leftJoin('g.reviews', 'r', Join::WITH, 'r.userUuid = :userUuid')
             ->where('r.id IS NULL')
             ->setParameter('userUuid', $userUuid->toBinary(), ParameterType::BINARY)
-            ->orderBy('g.name', 'ASC')
-            ->addOrderBy('g.id', 'ASC');
+            ->orderBy('g.name', \SortDirection::Ascending)
+            ->addOrderBy('g.id', \SortDirection::Ascending);
 
         return $qb->getQuery()->getResult();
     }
