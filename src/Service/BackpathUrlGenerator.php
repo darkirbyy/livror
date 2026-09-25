@@ -26,7 +26,7 @@ class BackpathUrlGenerator
     public function generate(string $defaultRoute, array $forbiddenRoutes = []): string
     {
         $backpath = $this->requestStack->getMainRequest()->query->get('backpath');
-        $baseUriTrimmed = rtrim(parse_url($this->defaultUri, PHP_URL_PATH), '/');
+        $baseUriTrimmed = rtrim(parse_url($this->defaultUri, PHP_URL_PATH) ?? '', '/');
 
         // pass if backpath is empty or not valid (should start with '/' or '/<sub-folder>/' )
         if (empty($backpath) || !str_starts_with($backpath, $baseUriTrimmed . '/')) {
