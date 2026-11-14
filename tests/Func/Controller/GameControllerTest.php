@@ -171,7 +171,7 @@ class GameControllerTest extends AbstractControllerTest
         $this->assertResponseIsSuccessful();
         $this->assertJson($content);
         $this->assertArrayHasKey('results', $contentArray);
-        $this->assertSame($expectedNbGames, count($contentArray['results']));
+        $this->assertCount($expectedNbGames, $contentArray['results']);
     }
 
     public static function indexValues(): array

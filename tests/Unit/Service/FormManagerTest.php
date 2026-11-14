@@ -81,7 +81,7 @@ final class FormManagerTest extends TestCase
 
         $success = $this->formManager->validateAndPersist($this->form, $this->game, null);
 
-        $this->assertSame(false, $success);
+        $this->assertFalse($success);
     }
 
     #[PU\Test]

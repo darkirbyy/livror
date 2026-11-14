@@ -65,7 +65,7 @@ final class AutocompletionHelperTest extends TestCase
         $data = $this->autocompletionHelper->renderItems('template.html.twig', $objects);
 
         $this->assertArrayHasKey('results', $data);
-        $this->assertSame($nbObjects, count($data['results']));
+        $this->assertCount($nbObjects, $data['results']);
         array_walk($data['results'], function ($result, $index) {
             $this->assertArrayHasKey('value', $result);
             $this->assertArrayHasKey('text', $result);

@@ -35,8 +35,6 @@ final class DeleteReviewsCommandTest extends KernelTestCase
         $this->commandTester = new CommandTester($command);
     }
 
-    public function tearDown(): void {}
-
     #[PU\Test]
     #[PU\DataProvider('invalidInputsValues')]
     public function invalidInputs(array $inputs): void

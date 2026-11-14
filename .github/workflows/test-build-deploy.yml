@@ -68,9 +68,10 @@ jobs:
         npm install
         npm run build
 
-    - name: Run all test suites and check coverage
+    - name: Run phpstan, then all test suites and check coverage
       id: phpunit
       run: |
+        php vendor/bin/phpstan 
         php vendor/bin/phpunit 
         php vendor/bin/coverage-check var/coverage/clover.xml ${{ vars.MIN_COVERAGE }}
         coverage=$(php vendor/bin/coverage-check var/coverage/clover.xml 1 --only-percentage | grep -Eo '[0-9.]+%' | sed 's/%//')

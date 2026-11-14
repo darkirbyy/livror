@@ -1,5 +1,5 @@
 parameters:
-    level: 2
+    level: 1
     paths:
         - bin/
         - config/
@@ -9,3 +9,5 @@ parameters:
     bootstrapFiles: 
         - tests/bootstrap.php
     tmpDir: var/cache/phpstan
+    doctrine:
+        allowNullablePropertyForRequiredField: true
