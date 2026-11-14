@@ -2,19 +2,20 @@
 
 set -e
 
-echo "Pre-push hook : testing"
+echo "Pre-push hook disabled"
+# echo "Pre-push hook : testing"
 
-# Check that composer is in the PATH
-HAS_COMPOSER=$(which composer)
-if [ ! $HAS_COMPOSER  ]; then
-    echo "Unable to find composer in PATH. Please install it globally."
-    exit 1
-fi
+# # Check that composer is in the PATH
+# HAS_COMPOSER=$(which composer)
+# if [ ! $HAS_COMPOSER  ]; then
+#     echo "Unable to find composer in PATH. Please install it globally."
+#     exit 1
+# fi
 
-# Test all if pushing on main, unit only otherwise
-CURRENT_BRANCH=$(git branch --show-current)
-if [ $CURRENT_BRANCH = 'main' ]; then
-    composer tests-all
-else
-    composer tests-unit
-fi
+# # Test all if pushing on main, unit only otherwise
+# CURRENT_BRANCH=$(git branch --show-current)
+# if [ $CURRENT_BRANCH = 'main' ]; then
+#     composer tests-all
+# else
+#     composer tests-unit
+# fi

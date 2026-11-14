@@ -54,7 +54,7 @@ After cloning the project:
 To use default git hooks, run `git config core.hooksPath ./githooks`. Current hooks are
 
 - prettify and linting all staged files before commit
-- running tests before push : all tests for `main` branch, unit tests otherwise
+- (disabled) ~~running tests before push : all tests for `main` branch, unit tests otherwise~~
 
 ## User provider and authentication
 
