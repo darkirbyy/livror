@@ -98,7 +98,7 @@ To increment the version, use `symfony console bizkit:versioning:increment`.
 To start a specific test suite, run `composer tests-[unit|inte|func]`.  
 To start all tests, run `composer tests-all`.
 
-:warning: Tests that require a database connection use a specific database suffixed with `_test`, automatically created when needed. For Symfony to get the `DATABASE_URL` value from docker in test environnement, it's mandatory to run PHPUnit through symfony with `symfony php bin/phpunit`.
+:warning: Tests that require a database connection use a specific database suffixed with `_test`, automatically created when needed. For Symfony to get the `DATABASE_URL` value from docker in test environnement, it's mandatory to run PHPUnit through symfony with `symfony php vendor/bin/phpunit`.
 
 :information_source: Tests are indenpendant of the chosen user provider, as it will always create temporary users in the test database.
 
