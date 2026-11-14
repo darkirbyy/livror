@@ -1,13 +1,19 @@
 parameters:
-    level: 1
+    level: 6
     paths:
         - bin/
         - config/
         - public/
         - src/
         - tests/
+    tmpDir: var/cache/phpstan
     bootstrapFiles: 
         - tests/bootstrap.php
-    tmpDir: var/cache/phpstan
+    scanDirectories:
+        - var/cache/dev/Symfony/Config
+    scanFiles:
+        - vendor/symfony/dependency-injection/Loader/Configurator/ContainerConfigurator.php
     doctrine:
         allowNullablePropertyForRequiredField: true
+    symfony:
+        containerXmlPath: var/cache/dev/App_KernelDevDebugContainer.xml
