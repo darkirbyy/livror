@@ -1,0 +1,11 @@
+parameters:
+    level: 2
+    paths:
+        - bin/
+        - config/
+        - public/
+        - src/
+        - tests/
+    bootstrapFiles: 
+        - tests/bootstrap.php
+    tmpDir: var/cache/phpstan
